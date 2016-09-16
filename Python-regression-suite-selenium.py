@@ -525,8 +525,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
         time.sleep(2)
 
-
-
+        time.sleep(2)
 
         time.sleep(1)
         # Shutdown browser
