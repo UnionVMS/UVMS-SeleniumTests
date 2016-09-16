@@ -524,10 +524,17 @@ class UnionVMSTestCase(unittest.TestCase):
         # Select Positions tab
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
         time.sleep(2)
+        # Click on New manual report
+        self. driver.find_element_by_xpath("//button[@type='submit']").click()
 
+        # Enter IRCS value
+        self.driver.find_element_by_name("ircs").send_keys(ircsValue)
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("strong").click()
         time.sleep(2)
 
-        time.sleep(1)
+
+        time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
 
