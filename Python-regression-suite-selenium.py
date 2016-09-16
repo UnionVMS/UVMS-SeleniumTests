@@ -535,6 +535,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
         # Continue -- Date and time field
 
+
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
