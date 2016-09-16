@@ -533,6 +533,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("strong").click()
         time.sleep(2)
 
+        # Continue -- Date and time field
 
         time.sleep(5)
         # Shutdown browser
