@@ -3,6 +3,8 @@ import time
 import datetime
 import random
 import sys
+from unittest.case import _AssertRaisesContext
+
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
@@ -11,6 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import subprocess
 import os
 import psycopg2
+import requests
+import urllib.request
 
 # Globals
 # Assets
@@ -18,12 +22,14 @@ countryValue = 'SWE'
 ircsValue = "F1001"
 vesselName = "Fartyg1001"
 cfrValue = "SWE0000F1001"
+externalMarkingValue = "EXT3"
 #imoValue = str(random.randint(0, 9999999))
 #imoValue = imoValue.zfill(7)
 imoValue = "0261917"
 #mmsiValue = str(random.randint(0, 999999999))
 #mmsiValue = mmsiValue.zfill(9)
 mmsiValue = "302331238"
+homeportValue = "GOT"
 # Mobile Terminals
 serialNoValue = "M1001"
 #transceiverType = str(random.randint(1, 100))
@@ -48,6 +54,9 @@ inPortFrequencyMinutes = "0"
 deltaTimeValue = 4
 latitudePositionValue = "57.326"
 longitudePositionValue = "16.996"
+reportedSpeedValue = 5
+reportedCourseValue = 180
+httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
 
 def externalError(process):
    print("Process '%s' returned code %s" % (process.args, process.returncode))
@@ -249,13 +258,13 @@ class UnionVMSTestCase(unittest.TestCase):
         # Enter Name value
         self.driver.find_element_by_name("name").send_keys(vesselName)
         # Enter External Marking Value
-        self.driver.find_element_by_name("externalMarking").send_keys("EXT3")
+        self.driver.find_element_by_name("externalMarking").send_keys(externalMarkingValue)
         # Enter CFR Value
         self.driver.find_element_by_name("cfr").send_keys(cfrValue)
         # Enter IMO Value
         self.driver.find_element_by_name("imo").send_keys(imoValue)
         # Enter HomePort Value
-        self.driver.find_element_by_name("homeport").send_keys("GOT")
+        self.driver.find_element_by_name("homeport").send_keys(homeportValue)
         # Select Gear Type value
         self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
         self.driver.find_element_by_link_text("Dermersal").click()
@@ -557,15 +566,83 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F1001")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+
+
+
+
+        # Click on
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
 
 
+    def test_08_generate_NAF_position(self):
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
 
+        # Generate NAF string to send
+        nafSource = '//SR//FR/'
+        nafSource = nafSource + countryValue
+        nafSource = nafSource + "//AD/UVM//TM/POS//RC/"
+        nafSource = nafSource + ircsValue
+        nafSource = nafSource + "//IR/"
+        nafSource = nafSource + cfrValue
+        nafSource = nafSource + "//XR/"
+        nafSource = nafSource + externalMarkingValue
+        nafSource = nafSource + "//LT/"
+        nafSource = nafSource + latitudePositionValue
+        nafSource = nafSource + "//LG/"
+        nafSource = nafSource + longitudePositionValue
+        nafSource = nafSource + "//SP/"
+        nafSource = nafSource + str(reportedSpeedValue * 10)
+        nafSource = nafSource + "//CO/"
+        nafSource = nafSource + str(reportedCourseValue)
+        nafSource = nafSource + "//DA/"
+        nafSource = nafSource + earlierPositionDateValueString
+        nafSource = nafSource + "//TI/"
+        nafSource = nafSource + earlierPositionTimeValueString
+        nafSource = nafSource + "//NA/"
+        nafSource = nafSource + vesselName
+        nafSource = nafSource + "//FS/"
+        nafSource = nafSource + countryValue
+        nafSource = nafSource + "//ER//"
 
-    def test_08_special(self):
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        print(nafSourceURLcoded)
+
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        print(totalNAFrequest)
+
+        # Generate request
+        r = requests.get(totalNAFrequest)
+
+        # Check if request is OK (200)
+        if r.ok:
+            print("OK")
+        else:
+            print("NOT OK")
+
+        """
+        r = requests.get("http://hj.se")
+
+        print('Display actual page\n')
+        for line in r:
+            print(line.strip())
+
+        print('\nDisplay all headers\n')
+        print(r.headers)
+        print(r.ok)
+        """
+
+    def test_special(self):
         a = datetime.datetime.utcnow()
         b = a - datetime.timedelta(hours=3)
         print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
