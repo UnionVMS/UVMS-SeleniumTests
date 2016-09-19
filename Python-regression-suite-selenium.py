@@ -45,7 +45,9 @@ gracePeriodFrequencyHours = "30"
 gracePeriodFrequencyMinutes = "0"
 inPortFrequencyHours = "3"
 inPortFrequencyMinutes = "0"
-
+deltaTimeValue = 4
+latitudePositionValue = "57.326"
+longitudePositionValue = "16.996"
 
 def externalError(process):
    print("Process '%s' returned code %s" % (process.args, process.returncode))
@@ -533,12 +535,41 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("strong").click()
         time.sleep(2)
 
-        # Continue -- Date and time field
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
+        self.driver.find_element_by_id("manual-movement-date-picker").clear()
+        self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionTimeValueString)
+        # Close Date picker
+        #self.driver.find_element_by_xpath("(//button[@type='button'])[70]").click
 
+
+        # Enter Position, Speed and Course
+        self.driver.find_element_by_name("latitude").clear()
+        self.driver.find_element_by_name("latitude").send_keys(latitudePositionValue)
+        self.driver.find_element_by_name("longitude").clear()
+        self.driver.find_element_by_name("longitude").send_keys(longitudePositionValue)
+        self.driver.find_element_by_name("measuredSpeed").send_keys("5")
+        self.driver.find_element_by_name("course").send_keys("180")
+        # Click on Save Button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(2)
+        # Click on Confirm button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
+
+
+
+
+    def test_08_special(self):
+        a = datetime.datetime.utcnow()
+        b = a - datetime.timedelta(hours=3)
+        print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
+        print(datetime.datetime.strftime(b, '%Y-%m-%d %H:%M:%S'))
 
 
 if __name__ == '__main__':
