@@ -570,10 +570,20 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F1001")
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
 
+        # Continue
+        # Enter Fartyg to verify position data
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td.ng-binding").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual("F1001", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual("2016-09-19 09:12:00", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
+        self.assertEqual("57.326", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[7]").text)
+        self.assertEqual("16.996", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
+        self.assertEqual("5.00 kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
+        self.assertEqual(u"180°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
+        self.assertEqual("NAF", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
 
 
 
-        # Click on
 
         time.sleep(5)
         # Shutdown browser
@@ -613,34 +623,15 @@ class UnionVMSTestCase(unittest.TestCase):
         nafSource = nafSource + "//FS/"
         nafSource = nafSource + countryValue
         nafSource = nafSource + "//ER//"
-
-        print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-        print(nafSourceURLcoded)
-
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-        print(totalNAFrequest)
-
         # Generate request
         r = requests.get(totalNAFrequest)
-
         # Check if request is OK (200)
         if r.ok:
             print("OK")
         else:
             print("NOT OK")
-
-        """
-        r = requests.get("http://hj.se")
-
-        print('Display actual page\n')
-        for line in r:
-            print(line.strip())
-
-        print('\nDisplay all headers\n')
-        print(r.headers)
-        print(r.ok)
-        """
 
     def test_special(self):
         a = datetime.datetime.utcnow()
