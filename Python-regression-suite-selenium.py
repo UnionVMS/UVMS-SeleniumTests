@@ -57,6 +57,7 @@ longitudePositionValue = "16.996"
 reportedSpeedValue = 5
 reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
+SourceValue= ('NAF', 'MANUAL')
 
 def externalError(process):
    print("Process '%s' returned code %s" % (process.args, process.returncode))
@@ -236,7 +237,7 @@ class UnionVMSTestCase(unittest.TestCase):
         populateIridiumImarsatCData()
         # Populate Sanity Rule Data
         populateSanityRuleData()
-        time.sleep(5)
+        time.sleep(15)
 
 
     def test_02_create_one_new_asset(self):
@@ -528,7 +529,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-    def test_07_generate_manual_position(self):
+    def test_07_generate_and_verify_manual_position(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -550,9 +551,6 @@ class UnionVMSTestCase(unittest.TestCase):
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
         self.driver.find_element_by_id("manual-movement-date-picker").clear()
         self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionTimeValueString)
-        # Close Date picker
-        #self.driver.find_element_by_xpath("(//button[@type='button'])[70]").click
-
 
         # Enter Position, Speed and Course
         self.driver.find_element_by_name("latitude").clear()
@@ -563,39 +561,45 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_name("course").send_keys("180")
         # Click on Save Button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(2)
+        time.sleep(5)
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(2)
+        time.sleep(5)
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F1001")
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        time.sleep(5)
 
-        # Continue
-        # Enter Fartyg to verify position data
+        # Enter IRCS for newly created position
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        self.driver.find_element_by_xpath("//input[@type='text']").clear()
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue)
+        # Click on search button
+        self.driver.find_element_by_link_text("Custom").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        time.sleep(5)
+
+        # Verifies position data
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td.ng-binding").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[3]").text)
-        self.assertEqual("F1001", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        self.assertEqual("2016-09-19 09:12:00", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
-        self.assertEqual("57.326", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[7]").text)
-        self.assertEqual("16.996", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
-        self.assertEqual("5.00 kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
-        self.assertEqual(u"180°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
-        self.assertEqual("NAF", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
-
-
-
-
+        self.assertEqual(ircsValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(earlierPositionTimeValueString, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
+        self.assertEqual(latitudePositionValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[7]").text)
+        self.assertEqual(longitudePositionValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
+        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
+        self.assertEqual(str(reportedCourseValue) + u"°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
+        self.assertEqual(SourceValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
 
 
-    def test_08_generate_NAF_position(self):
+    def test_08_generate_NAF_and_verify_position(self):
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
 
         # Generate NAF string to send
         nafSource = '//SR//FR/'
@@ -629,15 +633,57 @@ class UnionVMSTestCase(unittest.TestCase):
         r = requests.get(totalNAFrequest)
         # Check if request is OK (200)
         if r.ok:
-            print("OK")
+            print("200 OK")
         else:
-            print("NOT OK")
+            print("Request NOT OK!")
+
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Positions tab
+        self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
+        time.sleep(2)
+
+        # Enter IRCS for newly created position
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        self.driver.find_element_by_xpath("//input[@type='text']").clear()
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue)
+        # Click on search button
+        self.driver.find_element_by_link_text("Custom").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        time.sleep(5)
+
+        # Enter Vessel to verify position data
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td.ng-binding").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(ircsValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
+        self.assertEqual(latitudePositionValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[7]").text)
+        self.assertEqual(longitudePositionValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
+        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
+        self.assertEqual(str(reportedCourseValue) + u"°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
+        self.assertEqual(SourceValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
+
 
     def test_special(self):
         a = datetime.datetime.utcnow()
         b = a - datetime.timedelta(hours=3)
         print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
         print(datetime.datetime.strftime(b, '%Y-%m-%d %H:%M:%S'))
+
+        a = 13.9412
+        b = "%.2f" % a
+        print(b)
+        print("%.2f" % reportedSpeedValue + " kts")
+        print(u"180°")
+        print(str(reportedCourseValue) + u"°")
+        if (str(reportedCourseValue) + u"°" == "180°"):
+            print("YES!!!!")
+        else:
+            print("NO!")
 
 
 if __name__ == '__main__':
