@@ -859,6 +859,163 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+    def test_12_check_second_new_mobile_terminal_exists(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(2)
+        # Enter Serial Number in field
+        self.driver.find_element_by_xpath(
+            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
+            send_keys(serialNoValue[1])
+        # Click in search button
+        self.driver.find_element_by_xpath(
+            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
+            click()
+        time.sleep(5)
+        # Check Serial Number in the list
+        self.assertEqual(serialNoValue[1], self.driver.find_element_by_css_selector("td.statusColored.ng-binding").text)
+        # Check Member Number in the list
+        self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath(
+            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        # Check DNID Number in the list
+        self.assertEqual(dnidNumber[1], self.driver.find_element_by_xpath(
+            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on details button
+        self.driver.find_element_by_xpath(
+            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+        time.sleep(2)
+
+        # Check Transceiver Type
+        self.assertEqual(transceiverType, self.driver.find_element_by_xpath("(//input[@type='text'])[27]").get_attribute("value"))
+        # Check Software Version
+        self.assertEqual(softwareVersion, self.driver.find_element_by_xpath("(//input[@type='text'])[28]").get_attribute("value"))
+        # Check Satellite Number
+        self.assertEqual(satelliteNumber[1], self.driver.find_element_by_name("sattelite_number").get_attribute("value"))
+        # Check Antenna Version
+        self.assertEqual(antennaVersion, self.driver.find_element_by_xpath("(//input[@type='text'])[29]").get_attribute("value"))
+        # Check DNID Number
+        self.assertEqual(dnidNumber[1], self.driver.find_element_by_name("dnid").get_attribute("value"))
+        # Check Member Number
+        self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
+        # Check Installed by Name
+        self.assertEqual(installedByName, self.driver.find_element_by_xpath("(//input[@type='text'])[37]").get_attribute("value"))
+
+        # Leave new asset view
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i").\
+            click()
+
+        time.sleep(2)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+    def test_13_unlink_asset_and_mobile_terminal(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(2)
+        # Enter Serial Number in field
+        self.driver.find_element_by_xpath(
+            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
+            send_keys(serialNoValue[0])
+        # Click in search button
+        self.driver.find_element_by_xpath(
+            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
+            click()
+        time.sleep(5)
+        # Click on details button
+        self.driver.find_element_by_xpath(
+            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+        time.sleep(2)
+        # Click on unlinking button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div/button").click()
+        time.sleep(1)
+
+        # Enter comment and click on unlinking button
+        self.driver.find_element_by_name("comment").send_keys("Unlink Asset and MT.")
+        self.driver.find_element_by_xpath("(//button[@type='button'])[65]").click()
+
+        time.sleep(2)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+    def test_14_generate_manual_position_with_no_connected_responder_and_verify_holding_table(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Positions tab
+        self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
+        time.sleep(2)
+        # Click on New manual report
+        self. driver.find_element_by_xpath("//button[@type='submit']").click()
+
+        # Enter IRCS value
+        self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("strong").click()
+        time.sleep(2)
+
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
+        self.driver.find_element_by_id("manual-movement-date-picker").clear()
+        self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionTimeValueString)
+
+        # Enter Position, Speed and Course
+        self.driver.find_element_by_name("latitude").clear()
+        self.driver.find_element_by_name("latitude").send_keys(lolaPositionValues[0][0][0])
+        self.driver.find_element_by_name("longitude").clear()
+        self.driver.find_element_by_name("longitude").send_keys(lolaPositionValues[0][0][1])
+        self.driver.find_element_by_name("measuredSpeed").send_keys("5")
+        self.driver.find_element_by_name("course").send_keys("180")
+        # Click on Save Button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(5)
+        # Click on Confirm button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(5)
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F1001")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        time.sleep(10)
+
+        # Enter IRCS for newly created position
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        self.driver.find_element_by_xpath("//input[@type='text']").clear()
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
+        # Click on search button
+        self.driver.find_element_by_link_text("Custom").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        time.sleep(5)
+
+        # Verifies that time stamp for the generated position does not exist
+        self.assertNotEqual(earlierPositionTimeValueString, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
+        time.sleep(2)
+
+        # Select Alarms tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(2)
+
+        # Select filter "Transponder not found"
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        self.driver.find_element_by_link_text("Transponder not found").click()
+        time.sleep(2)
+
+
+
+
+
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
     def test_special(self):
