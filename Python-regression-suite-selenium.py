@@ -569,7 +569,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
-        self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F1001")
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         time.sleep(10)
 
@@ -982,7 +982,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
-        self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F1001")
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         time.sleep(10)
 
@@ -1007,6 +1007,20 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         self.driver.find_element_by_link_text("Transponder not found").click()
         time.sleep(2)
+
+        # Click on search button
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(2)
+
+        # Check Asset name
+        self.assertEqual(vesselName, self.driver.find_element_by_link_text(vesselName).text)
+
+        # Click on Details button
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        time.sleep(2)
+
+        # Check Position report fields
+        # Continue
 
 
 
