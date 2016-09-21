@@ -347,6 +347,131 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     shutdown_browser(self)
 
 
+def check_new_asset_exists(self, vesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    # Search for the new created asset in the asset list
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/form/div/div/div/div[1]/div/div/div/div[1]/input"). \
+        send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[1]/form/div/div/div/div[1]/div/div/div/div[3]/div/div/button").click()
+    time.sleep(5)
+    # Check that the new asset exists in the list.
+    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+    time.sleep(1)
+    # Click on details button for new asset
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[10]/button/i").click()
+    time.sleep(5)
+    # Check that the F.S value is correct.
+    self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[4]").text)
+    # Check that the IRCS value is correct
+    self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_name("ircs").get_attribute("value"))
+    # Check that the Name value is correct
+    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_name("name").get_attribute("value"))
+    # Check that External Marking Value is correct
+    self.assertEqual("EXT3", self.driver.find_element_by_name("externalMarking").get_attribute("value"))
+    # Check that the CFR value is correct
+    self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_name("cfr").get_attribute("value"))
+    # Check that the IMO value is correct
+    self.assertEqual(imoValue[vesselNumber], self.driver.find_element_by_name("imo").get_attribute("value"))
+    # Check that the HomePort value is correct
+    self.assertEqual("GOT", self.driver.find_element_by_name("homeport").get_attribute("value"))
+    # Check that the Gear Type value is correct.
+    self.assertEqual("Dermersal", self.driver.find_element_by_xpath(
+        "(//button[@type='button'])[5]").text)
+    # Check that the MMSI value is correct
+    self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_name("mmsi").get_attribute("value"))
+    # Check that the License Type value is correct.
+    self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath(
+        "(//button[@type='button'])[6]").text)
+    # Check that the Length Type value is correct.
+    self.assertEqual("14", self.driver.find_element_by_name("lengthValue").get_attribute("value"))
+    # Check that the Gross Tonnage value is correct.
+    self.assertEqual("3", self.driver.find_element_by_name("grossTonnage").get_attribute("value"))
+    # Check that the Power value is correct.
+    self.assertEqual("1300", self.driver.find_element_by_name("power").get_attribute("value"))
+    # Check that the Producer Name value is correct.
+    self.assertEqual("Mikael", self.driver.find_element_by_name("producername").get_attribute("value"))
+    # Check that the Producer Code value is correct.
+    self.assertEqual("123", self.driver.find_element_by_name("producercode").get_attribute("value"))
+    # Check that the Contact Name value is correct.
+    self.assertEqual("Mikael Great", self.driver.find_element_by_name("contactName").get_attribute("value"))
+    # Check that the E-mail value is correct.
+    self.assertEqual("mikael.glemne@havochvatten.se", self.driver.find_element_by_name(
+        "email").get_attribute("value"))
+    # Check that the E-mail value is correct.
+    self.assertEqual("+46720456789", self.driver.find_element_by_name("contactNumber").get_attribute("value"))
+    # Check that the Note comments value is correct.
+    self.assertEqual("This is some notes!", self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
+                     get_attribute("value"))
+    time.sleep(5)
+    # Shutdown browser
+    shutdown_browser(self)
+
+def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Select Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Enter Serial Number in field
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
+        send_keys(serialNoValue[mobileTerminalNumber])
+    # Click in search button
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
+        click()
+    time.sleep(5)
+    # Check Serial Number in the list
+    self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_css_selector("td.statusColored.ng-binding").text)
+    # Check Member Number in the list
+    self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath(
+        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+    # Check DNID Number in the list
+    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath(
+        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+    # Click on details button
+    self.driver.find_element_by_xpath(
+        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    time.sleep(2)
+
+    # Check Transceiver Type
+    self.assertEqual(transceiverType,
+                     self.driver.find_element_by_xpath("(//input[@type='text'])[27]").get_attribute("value"))
+    # Check Software Version
+    self.assertEqual(softwareVersion,
+                     self.driver.find_element_by_xpath("(//input[@type='text'])[28]").get_attribute("value"))
+    # Check Satellite Number
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_name("sattelite_number").get_attribute("value"))
+    # Check Antenna Version
+    self.assertEqual(antennaVersion,
+                     self.driver.find_element_by_xpath("(//input[@type='text'])[29]").get_attribute("value"))
+    # Check DNID Number
+    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_name("dnid").get_attribute("value"))
+    # Check Member Number
+    self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
+    # Check Installed by Name
+    self.assertEqual(installedByName,
+                     self.driver.find_element_by_xpath("(//input[@type='text'])[37]").get_attribute("value"))
+
+    # Leave new asset view
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i"). \
+        click()
+
+    time.sleep(2)
+    # Shutdown browser
+    shutdown_browser(self)
+
 
 class UnionVMSTestCase(unittest.TestCase):
 #    @classmethod
@@ -370,136 +495,23 @@ class UnionVMSTestCase(unittest.TestCase):
         populateSanityRuleData()
         time.sleep(15)
 
-
     def test_02_create_one_new_asset(self):
         # Create new asset (first in the list)
         create_one_new_asset_from_gui(self, 0)
 
-
     def test_03_check_new_asset_exists(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        # Search for the new created asset in the asset list
-        time.sleep(5)
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/form/div/div/div/div[1]/div/div/div/div[1]/input").\
-            send_keys(vesselName[0])
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[1]/form/div/div/div/div[1]/div/div/div/div[3]/div/div/button").click()
-        time.sleep(5)
-        # Check that the new asset exists in the list.
-        self.assertEqual(vesselName[0],self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        time.sleep(1)
-        # Click on details button for new asset
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[10]/button/i").click()
-        time.sleep(5)
-        # Check that the F.S value is correct.
-        self.assertEqual(countryValue,self.driver.find_element_by_xpath("(//button[@type='button'])[4]").text)
-        # Check that the IRCS value is correct
-        self.assertEqual(ircsValue[0], self.driver.find_element_by_name("ircs").get_attribute("value"))
-        # Check that the Name value is correct
-        self.assertEqual(vesselName[0], self.driver.find_element_by_name("name").get_attribute("value"))
-        # Check that External Marking Value is correct
-        self.assertEqual("EXT3", self.driver.find_element_by_name("externalMarking").get_attribute("value"))
-        # Check that the CFR value is correct
-        self.assertEqual(cfrValue[0], self.driver.find_element_by_name("cfr").get_attribute("value"))
-        # Check that the IMO value is correct
-        self.assertEqual(imoValue[0], self.driver.find_element_by_name("imo").get_attribute("value"))
-        # Check that the HomePort value is correct
-        self.assertEqual("GOT", self.driver.find_element_by_name("homeport").get_attribute("value"))
-        # Check that the Gear Type value is correct.
-        self.assertEqual("Dermersal",self.driver.find_element_by_xpath(
-            "(//button[@type='button'])[5]").text)
-        # Check that the MMSI value is correct
-        self.assertEqual(mmsiValue[0], self.driver.find_element_by_name("mmsi").get_attribute("value"))
-        # Check that the License Type value is correct.
-        self.assertEqual("MOCK-license-DB",self.driver.find_element_by_xpath(
-            "(//button[@type='button'])[6]").text)
-        # Check that the Length Type value is correct.
-        self.assertEqual("14", self.driver.find_element_by_name("lengthValue").get_attribute("value"))
-        # Check that the Gross Tonnage value is correct.
-        self.assertEqual("3", self.driver.find_element_by_name("grossTonnage").get_attribute("value"))
-        # Check that the Power value is correct.
-        self.assertEqual("1300", self.driver.find_element_by_name("power").get_attribute("value"))
-        # Check that the Producer Name value is correct.
-        self.assertEqual("Mikael", self.driver.find_element_by_name("producername").get_attribute("value"))
-        # Check that the Producer Code value is correct.
-        self.assertEqual("123", self.driver.find_element_by_name("producercode").get_attribute("value"))
-        # Check that the Contact Name value is correct.
-        self.assertEqual("Mikael Great", self.driver.find_element_by_name("contactName").get_attribute("value"))
-        # Check that the E-mail value is correct.
-        self.assertEqual("mikael.glemne@havochvatten.se", self.driver.find_element_by_name(
-            "email").get_attribute("value"))
-        # Check that the E-mail value is correct.
-        self.assertEqual("+46720456789", self.driver.find_element_by_name("contactNumber").get_attribute("value"))
-        # Check that the Note comments value is correct.
-        self.assertEqual("This is some notes!",self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea").\
-                         get_attribute("value"))
-        time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
-
+        # Check new asset (first in the list)
+        check_new_asset_exists(self, 0)
 
     def test_04_create_one_new_mobile_terminal(self):
+        # Create new Mobile Terminal (first in the list)
         create_one_new_mobile_terminal_from_gui(self, 0)
 
 
     def test_05_check_new_mobile_terminal_exists(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        # Select Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
-        # Enter Serial Number in field
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
-            send_keys(serialNoValue[0])
-        # Click in search button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
-            click()
-        time.sleep(5)
-        # Check Serial Number in the list
-        self.assertEqual(serialNoValue[0], self.driver.find_element_by_css_selector("td.statusColored.ng-binding").text)
-        # Check Member Number in the list
-        self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        # Check DNID Number in the list
-        self.assertEqual(dnidNumber[0], self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+        # Check new Mobile Terminal (first in the list)
+        check_new_mobile_terminal_exists(self, 0)
 
-        # Click on details button
-        self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
-        time.sleep(2)
-
-        # Check Transceiver Type
-        self.assertEqual(transceiverType, self.driver.find_element_by_xpath("(//input[@type='text'])[27]").get_attribute("value"))
-        # Check Software Version
-        self.assertEqual(softwareVersion, self.driver.find_element_by_xpath("(//input[@type='text'])[28]").get_attribute("value"))
-        # Check Satellite Number
-        self.assertEqual(satelliteNumber[0], self.driver.find_element_by_name("sattelite_number").get_attribute("value"))
-        # Check Antenna Version
-        self.assertEqual(antennaVersion, self.driver.find_element_by_xpath("(//input[@type='text'])[29]").get_attribute("value"))
-        # Check DNID Number
-        self.assertEqual(dnidNumber[0], self.driver.find_element_by_name("dnid").get_attribute("value"))
-        # Check Member Number
-        self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
-        # Check Installed by Name
-        self.assertEqual(installedByName, self.driver.find_element_by_xpath("(//input[@type='text'])[37]").get_attribute("value"))
-
-        # Leave new asset view
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i").\
-            click()
-
-        time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
 
     def test_06_link_asset_and_mobile_terminal(self):
         # Startup browser and login
@@ -610,7 +622,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
     def test_08_generate_NAF_and_verify_position(self):
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
@@ -690,180 +701,16 @@ class UnionVMSTestCase(unittest.TestCase):
         create_one_new_asset_from_gui(self, 1)
 
     def test_10_check_new_asset_exists(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        # Search for the new created asset in the asset list
-        time.sleep(5)
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/form/div/div/div/div[1]/div/div/div/div[1]/input"). \
-            send_keys(vesselName[1])
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[1]/form/div/div/div/div[1]/div/div/div/div[3]/div/div/button").click()
-        time.sleep(5)
-        # Check that the new asset exists in the list.
-        self.assertEqual(vesselName[1], self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        time.sleep(1)
-        # Click on details button for new asset
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[10]/button/i").click()
-        time.sleep(5)
-        # Check that the F.S value is correct.
-        self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[4]").text)
-        # Check that the IRCS value is correct
-        self.assertEqual(ircsValue[1], self.driver.find_element_by_name("ircs").get_attribute("value"))
-        # Check that the Name value is correct
-        self.assertEqual(vesselName[1], self.driver.find_element_by_name("name").get_attribute("value"))
-        # Check that External Marking Value is correct
-        self.assertEqual("EXT3", self.driver.find_element_by_name("externalMarking").get_attribute("value"))
-        # Check that the CFR value is correct
-        self.assertEqual(cfrValue[1], self.driver.find_element_by_name("cfr").get_attribute("value"))
-        # Check that the IMO value is correct
-        self.assertEqual(imoValue[1], self.driver.find_element_by_name("imo").get_attribute("value"))
-        # Check that the HomePort value is correct
-        self.assertEqual("GOT", self.driver.find_element_by_name("homeport").get_attribute("value"))
-        # Check that the Gear Type value is correct.
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath(
-            "(//button[@type='button'])[5]").text)
-        # Check that the MMSI value is correct
-        self.assertEqual(mmsiValue[1], self.driver.find_element_by_name("mmsi").get_attribute("value"))
-        # Check that the License Type value is correct.
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath(
-            "(//button[@type='button'])[6]").text)
-        # Check that the Length Type value is correct.
-        self.assertEqual("14", self.driver.find_element_by_name("lengthValue").get_attribute("value"))
-        # Check that the Gross Tonnage value is correct.
-        self.assertEqual("3", self.driver.find_element_by_name("grossTonnage").get_attribute("value"))
-        # Check that the Power value is correct.
-        self.assertEqual("1300", self.driver.find_element_by_name("power").get_attribute("value"))
-        # Check that the Producer Name value is correct.
-        self.assertEqual("Mikael", self.driver.find_element_by_name("producername").get_attribute("value"))
-        # Check that the Producer Code value is correct.
-        self.assertEqual("123", self.driver.find_element_by_name("producercode").get_attribute("value"))
-        # Check that the Contact Name value is correct.
-        self.assertEqual("Mikael Great", self.driver.find_element_by_name("contactName").get_attribute("value"))
-        # Check that the E-mail value is correct.
-        self.assertEqual("mikael.glemne@havochvatten.se", self.driver.find_element_by_name(
-            "email").get_attribute("value"))
-        # Check that the E-mail value is correct.
-        self.assertEqual("+46720456789", self.driver.find_element_by_name("contactNumber").get_attribute("value"))
-        # Check that the Note comments value is correct.
-        self.assertEqual("This is some notes!", self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
-                         get_attribute("value"))
-        time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
-
+        # Check new asset (second in the list)
+        check_new_asset_exists(self, 1)
 
     def test_11_create_second_new_mobile_terminal(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
-        # Click on new terminal button
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/button").\
-            click()
-        time.sleep(3)
-        # Select Transponder system
-        element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'])[21]"))) # Waits until element exists
-        element.click()
-        self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
-        time.sleep(1)
-        # Enter serial number
-        self.driver.find_element_by_name("serialNumber").send_keys(serialNoValue[1])
-        # Enter Transceiver type
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[2]/input").\
-            send_keys(transceiverType)
-        # Enter Software Version
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[3]/input").\
-            send_keys(softwareVersion)
-        # Enter Antenna
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[4]/input").\
-            send_keys(antennaVersion)
-        # Enter Satellite Number
-        self.driver.find_element_by_name("sattelite_number").send_keys(satelliteNumber[1])
-        # Enter DNID Number
-        self.driver.find_element_by_name("dnid").send_keys(dnidNumber[1])
-        # Enter Member Number
-        self.driver.find_element_by_name("memberId").send_keys(memberIdnumber)
-        # Enter Installed by
-        self.driver.find_element_by_xpath("(//input[@type='text'])[37]").send_keys(installedByName)
-        # Expected frequency
-        self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
-        # Grace period
-        self.driver.find_element_by_xpath("(//input[@type='number'])[4]").send_keys(gracePeriodFrequencyHours)
-        # In port
-        self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
-        # Click on save button
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[2]/button[1]").\
-            click()
-        time.sleep(5)
-        # Leave new asset view
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i").\
-            click()
-        time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
+        # Create new Mobile Terminal (second in the list)
+        create_one_new_mobile_terminal_from_gui(self, 1)
 
     def test_12_check_second_new_mobile_terminal_exists(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        # Select Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
-        # Enter Serial Number in field
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
-            send_keys(serialNoValue[1])
-        # Click in search button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
-            click()
-        time.sleep(5)
-        # Check Serial Number in the list
-        self.assertEqual(serialNoValue[1], self.driver.find_element_by_css_selector("td.statusColored.ng-binding").text)
-        # Check Member Number in the list
-        self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        # Check DNID Number in the list
-        self.assertEqual(dnidNumber[1], self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-
-        # Click on details button
-        self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
-        time.sleep(2)
-
-        # Check Transceiver Type
-        self.assertEqual(transceiverType, self.driver.find_element_by_xpath("(//input[@type='text'])[27]").get_attribute("value"))
-        # Check Software Version
-        self.assertEqual(softwareVersion, self.driver.find_element_by_xpath("(//input[@type='text'])[28]").get_attribute("value"))
-        # Check Satellite Number
-        self.assertEqual(satelliteNumber[1], self.driver.find_element_by_name("sattelite_number").get_attribute("value"))
-        # Check Antenna Version
-        self.assertEqual(antennaVersion, self.driver.find_element_by_xpath("(//input[@type='text'])[29]").get_attribute("value"))
-        # Check DNID Number
-        self.assertEqual(dnidNumber[1], self.driver.find_element_by_name("dnid").get_attribute("value"))
-        # Check Member Number
-        self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
-        # Check Installed by Name
-        self.assertEqual(installedByName, self.driver.find_element_by_xpath("(//input[@type='text'])[37]").get_attribute("value"))
-
-        # Leave new asset view
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i").\
-            click()
-
-        time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
-
+        # Check new Mobile Terminal (second in the list)
+        check_new_mobile_terminal_exists(self, 1)
 
     def test_13_unlink_asset_and_mobile_terminal(self):
         # Startup browser and login
@@ -896,7 +743,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         # Shutdown browser
         shutdown_browser(self)
-
 
     def test_14_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
         # Startup browser and login
@@ -979,15 +825,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("%.0f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[7]/div[2]/div[3]/div").text)
         self.assertEqual(str(reportedCourseValue) + " °", self.driver.find_element_by_xpath("//div[7]/div[2]/div[4]/div").text)
         time.sleep(2)
-
         # Close Report Window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
 
     def test_15_link_asset_to_another_mobile_terminal(self):
         # Startup browser and login
@@ -1031,7 +874,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Close page
         self.driver.find_element_by_xpath(
             "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/i").click()
-
         time.sleep(2)
         # Shutdown browser
         shutdown_browser(self)
