@@ -221,6 +221,133 @@ def shutdown_browser(cls):
     cls.driver.quit()
 
 
+def create_one_new_asset_from_gui(self, vesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    self.driver.implicitly_wait(10)
+    # Click on asset tab
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    # Click on new Asset button
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[1]/div[2]/button").click()
+    time.sleep(2)
+    # Select F.S value
+    self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+    self.driver.find_element_by_link_text(countryValue).click()
+    # Enter IRCS value
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    # Enter Name value
+    self.driver.find_element_by_name("name").send_keys(vesselName[vesselNumber])
+    # Enter External Marking Value
+    self.driver.find_element_by_name("externalMarking").send_keys(externalMarkingValue)
+    # Enter CFR Value
+    self.driver.find_element_by_name("cfr").send_keys(cfrValue[vesselNumber])
+    # Enter IMO Value
+    self.driver.find_element_by_name("imo").send_keys(imoValue[vesselNumber])
+    # Enter HomePort Value
+    self.driver.find_element_by_name("homeport").send_keys(homeportValue)
+    # Select Gear Type value
+    self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
+    self.driver.find_element_by_link_text("Dermersal").click()
+    # Enter MMSI Value
+    self.driver.find_element_by_name("mmsi").send_keys(mmsiValue[vesselNumber])
+    # Select License Type value
+    self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+    self.driver.find_element_by_link_text("MOCK-license-DB").click()
+    # Length Value
+    self.driver.find_element_by_name("lengthValue").send_keys("14")
+    # Gross Tonnage Value
+    self.driver.find_element_by_name("grossTonnage").send_keys("3")
+    # Main Power Value
+    self.driver.find_element_by_name("power").send_keys("1300")
+    # Main Producer Name Value
+    self.driver.find_element_by_name("producername").send_keys("Mikael")
+    # Main Producer Code Value
+    self.driver.find_element_by_name("producercode").send_keys("123")
+    # Main Contact Name Value
+    self.driver.find_element_by_name("contactName").send_keys("Mikael Great")
+    # Main E-mail Value
+    self.driver.find_element_by_name("email").send_keys("mikael.glemne@havochvatten.se")
+    # Main Contact Number Value
+    self.driver.find_element_by_name("contactNumber").send_keys("+46720456789")
+    # Note comments
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
+        send_keys("This is some notes!")
+    # Click on Save Asset button
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[3]/button[2]"). \
+        click()
+    # Leave new asset view
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[4]/i"). \
+        click()
+    time.sleep(3)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Click on new terminal button
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/button"). \
+        click()
+    time.sleep(3)
+    # Select Transponder system
+    element = WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'])[21]")))  # Waits until element exists
+    element.click()
+    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
+    time.sleep(1)
+    # Enter serial number
+    self.driver.find_element_by_name("serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
+    # Enter Transceiver type
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[2]/input"). \
+        send_keys(transceiverType)
+    # Enter Software Version
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[3]/input"). \
+        send_keys(softwareVersion)
+    # Enter Antenna
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[4]/input"). \
+        send_keys(antennaVersion)
+    # Enter Satellite Number
+    self.driver.find_element_by_name("sattelite_number").send_keys(satelliteNumber[mobileTerminalNumber])
+    # Enter DNID Number
+    self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
+    # Enter Member Number
+    self.driver.find_element_by_name("memberId").send_keys(memberIdnumber)
+    # Enter Installed by
+    self.driver.find_element_by_xpath("(//input[@type='text'])[37]").send_keys(installedByName)
+    # Expected frequency
+    self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
+    # Grace period
+    self.driver.find_element_by_xpath("(//input[@type='number'])[4]").send_keys(gracePeriodFrequencyHours)
+    # In port
+    self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
+    # Click on save button
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[2]/button[1]"). \
+        click()
+    time.sleep(5)
+    # Leave new asset view
+    self.driver.find_element_by_xpath(
+        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i"). \
+        click()
+    time.sleep(2)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+
 class UnionVMSTestCase(unittest.TestCase):
 #    @classmethod
 #    def setUpClass(cls):
@@ -245,70 +372,8 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     def test_02_create_one_new_asset(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        self.driver.implicitly_wait(10)
-        # Click on asset tab
-        time.sleep(5)
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        # Click on new Asset button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[1]/div[2]/button").click()
-        time.sleep(2)
-        # Select F.S value
-        self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
-        self.driver.find_element_by_link_text(countryValue).click()
-        # Enter IRCS value
-        self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
-        # Enter Name value
-        self.driver.find_element_by_name("name").send_keys(vesselName[0])
-        # Enter External Marking Value
-        self.driver.find_element_by_name("externalMarking").send_keys(externalMarkingValue)
-        # Enter CFR Value
-        self.driver.find_element_by_name("cfr").send_keys(cfrValue[0])
-        # Enter IMO Value
-        self.driver.find_element_by_name("imo").send_keys(imoValue[0])
-        # Enter HomePort Value
-        self.driver.find_element_by_name("homeport").send_keys(homeportValue)
-        # Select Gear Type value
-        self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
-        self.driver.find_element_by_link_text("Dermersal").click()
-        # Enter MMSI Value
-        self.driver.find_element_by_name("mmsi").send_keys(mmsiValue[0])
-        # Select License Type value
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
-        self.driver.find_element_by_link_text("MOCK-license-DB").click()
-        # Length Value
-        self.driver.find_element_by_name("lengthValue").send_keys("14")
-        # Gross Tonnage Value
-        self.driver.find_element_by_name("grossTonnage").send_keys("3")
-        # Main Power Value
-        self.driver.find_element_by_name("power").send_keys("1300")
-        # Main Producer Name Value
-        self.driver.find_element_by_name("producername").send_keys("Mikael")
-        # Main Producer Code Value
-        self.driver.find_element_by_name("producercode").send_keys("123")
-        # Main Contact Name Value
-        self.driver.find_element_by_name("contactName").send_keys("Mikael Great")
-        # Main E-mail Value
-        self.driver.find_element_by_name("email").send_keys("mikael.glemne@havochvatten.se")
-        # Main Contact Number Value
-        self.driver.find_element_by_name("contactNumber").send_keys("+46720456789")
-        # Note comments
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
-            send_keys("This is some notes!")
-        # Click on Save Asset button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[3]/button[2]").\
-            click()
-        # Leave new asset view
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[4]/i").\
-            click()
-        time.sleep(3)
-        # Shutdown browser
-        shutdown_browser(self)
+        # Create new asset (first in the list)
+        create_one_new_asset_from_gui(self, 0)
 
 
     def test_03_check_new_asset_exists(self):
@@ -380,58 +445,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     def test_04_create_one_new_mobile_terminal(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
-        # Click on new terminal button
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/button").\
-            click()
-        time.sleep(3)
-        # Select Transponder system
-        element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'])[21]"))) # Waits until element exists
-        element.click()
-        self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
-        time.sleep(1)
-        # Enter serial number
-        self.driver.find_element_by_name("serialNumber").send_keys(serialNoValue[0])
-        # Enter Transceiver type
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[2]/input").\
-            send_keys(transceiverType)
-        # Enter Software Version
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[3]/input").\
-            send_keys(softwareVersion)
-        # Enter Antenna
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[4]/input").\
-            send_keys(antennaVersion)
-        # Enter Satellite Number
-        self.driver.find_element_by_name("sattelite_number").send_keys(satelliteNumber[0])
-        # Enter DNID Number
-        self.driver.find_element_by_name("dnid").send_keys(dnidNumber[0])
-        # Enter Member Number
-        self.driver.find_element_by_name("memberId").send_keys(memberIdnumber)
-        # Enter Installed by
-        self.driver.find_element_by_xpath("(//input[@type='text'])[37]").send_keys(installedByName)
-        # Expected frequency
-        self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
-        # Grace period
-        self.driver.find_element_by_xpath("(//input[@type='number'])[4]").send_keys(gracePeriodFrequencyHours)
-        # In port
-        self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
-        # Click on save button
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[2]/button[1]").\
-            click()
-        time.sleep(5)
-        # Leave new asset view
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i").\
-            click()
-        time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
+        create_one_new_mobile_terminal_from_gui(self, 0)
 
 
     def test_05_check_new_mobile_terminal_exists(self):
@@ -672,70 +686,8 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
     def test_09_create_second_new_asset(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        self.driver.implicitly_wait(10)
-        # Click on asset tab
-        time.sleep(5)
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        # Click on new Asset button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[1]/div[2]/button").click()
-        time.sleep(2)
-        # Select F.S value
-        self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
-        self.driver.find_element_by_link_text(countryValue).click()
-        # Enter IRCS value
-        self.driver.find_element_by_name("ircs").send_keys(ircsValue[1])
-        # Enter Name value
-        self.driver.find_element_by_name("name").send_keys(vesselName[1])
-        # Enter External Marking Value
-        self.driver.find_element_by_name("externalMarking").send_keys(externalMarkingValue)
-        # Enter CFR Value
-        self.driver.find_element_by_name("cfr").send_keys(cfrValue[1])
-        # Enter IMO Value
-        self.driver.find_element_by_name("imo").send_keys(imoValue[1])
-        # Enter HomePort Value
-        self.driver.find_element_by_name("homeport").send_keys(homeportValue)
-        # Select Gear Type value
-        self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
-        self.driver.find_element_by_link_text("Dermersal").click()
-        # Enter MMSI Value
-        self.driver.find_element_by_name("mmsi").send_keys(mmsiValue[1])
-        # Select License Type value
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
-        self.driver.find_element_by_link_text("MOCK-license-DB").click()
-        # Length Value
-        self.driver.find_element_by_name("lengthValue").send_keys("14")
-        # Gross Tonnage Value
-        self.driver.find_element_by_name("grossTonnage").send_keys("3")
-        # Main Power Value
-        self.driver.find_element_by_name("power").send_keys("1300")
-        # Main Producer Name Value
-        self.driver.find_element_by_name("producername").send_keys("Mikael")
-        # Main Producer Code Value
-        self.driver.find_element_by_name("producercode").send_keys("123")
-        # Main Contact Name Value
-        self.driver.find_element_by_name("contactName").send_keys("Mikael Great")
-        # Main E-mail Value
-        self.driver.find_element_by_name("email").send_keys("mikael.glemne@havochvatten.se")
-        # Main Contact Number Value
-        self.driver.find_element_by_name("contactNumber").send_keys("+46720456789")
-        # Note comments
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
-            send_keys("This is some notes!")
-        # Click on Save Asset button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[3]/button[2]"). \
-            click()
-        # Leave new asset view
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[4]/i"). \
-            click()
-        time.sleep(3)
-        # Shutdown browser
-        shutdown_browser(self)
+        # Create new asset (second in the list)
+        create_one_new_asset_from_gui(self, 1)
 
     def test_10_check_new_asset_exists(self):
         # Startup browser and login
@@ -1087,7 +1039,6 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_16_generate_and_verify_manual_position(self):
         # Startup browser and login
         UnionVMSTestCase.test_07_generate_and_verify_manual_position(self)
-
 
 
 
