@@ -64,7 +64,9 @@ lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
 reportedSpeedValue = 5
 reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
-SourceValue= ('NAF', 'MANUAL')
+sourceValue= ('NAF', 'MANUAL')
+groupName = ("Grupp 1", "Grupp 2")
+
 
 def externalError(process):
    print("Process '%s' returned code %s" % (process.args, process.returncode))
@@ -620,7 +622,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
         self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
         self.assertEqual(str(reportedCourseValue) + u"°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
-        self.assertEqual(SourceValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
+        self.assertEqual(sourceValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -694,7 +696,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
         self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
         self.assertEqual(str(reportedCourseValue) + u"°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
-        self.assertEqual(SourceValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
+        self.assertEqual(sourceValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -890,6 +892,43 @@ class UnionVMSTestCase(unittest.TestCase):
         for x in range(2, 6):
             create_one_new_asset_from_gui(self, x)
             time.sleep(1)
+
+    def test_18_create_one_asset_group(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        self.driver.implicitly_wait(10)
+        # Click on asset tab
+        time.sleep(5)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(2)
+        # Search for "fartyg"
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        time.sleep(2)
+        # Sort on "Name"
+        self.driver.find_element_by_link_text("Name").click()
+        time.sleep(1)
+        # Select Fartyg1001 and Fartyg1002 by click
+        self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        # Select Action "Save as Group"
+        self.driver.find_element_by_xpath("(//button[@type='button'])[18]").click()
+        self.driver.find_element_by_link_text("Save as Group").click()
+        time.sleep(1)
+        # Enter Group name and click on save button
+        self.driver.find_element_by_css_selector("div.form-group.ng-scope > input[name=\"name\"]").send_keys(groupName[0])
+        self.driver.find_element_by_xpath("(//button[@type='button'])[25]").click()
+        time.sleep(3)
+        # Select
+
+
+
+
+        time.sleep(2)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
 
 
     def test_special(self):
