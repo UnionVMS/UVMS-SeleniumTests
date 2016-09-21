@@ -52,7 +52,7 @@ gracePeriodFrequencyMinutes = "0"
 inPortFrequencyHours = "3"
 inPortFrequencyMinutes = "0"
 deltaTimeValue = 4
-# lolaPositionValues [Asset number x, lola position route y, lat=0 / lon=1]
+# lolaPositionValues [Asset number x, lola position route y, lat=0 / lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
                       [["57.934", "11.592"], ["57.935", "11.593"]]]
 
@@ -946,7 +946,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_14_generate_manual_position_with_no_connected_responder_and_verify_holding_table(self):
+    def test_14_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -982,9 +982,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
-        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-        time.sleep(10)
 
         # Enter IRCS for newly created position
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
@@ -1013,18 +1010,26 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
 
         # Check Asset name
-        self.assertEqual(vesselName, self.driver.find_element_by_link_text(vesselName).text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
 
         # Click on Details button
         self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
         time.sleep(2)
 
         # Check Position report fields
-        # Continue
+        self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div/div[2]").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]").text)
+        self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[3]/div[2]/div[3]/div[2]").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[2]/div[4]/div[2]").text)
+        self.assertEqual(earlierPositionTimeValueString, self.driver.find_element_by_xpath("//div[7]/div/div[2]/div").text)
+        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[7]/div[2]/div/div").text)
+        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[7]/div[2]/div[2]/div").text)
+        self.assertEqual("%.0f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[7]/div[2]/div[3]/div").text)
+        self.assertEqual(str(reportedCourseValue) + " °", self.driver.find_element_by_xpath("//div[7]/div[2]/div[4]/div").text)
+        time.sleep(2)
 
-
-
-
+        # Close Report Window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
 
 
         time.sleep(5)
@@ -1042,6 +1047,7 @@ class UnionVMSTestCase(unittest.TestCase):
         b = "%.2f" % a
         print(b)
         print("%.2f" % reportedSpeedValue + " kts")
+        print("%.0f" % reportedSpeedValue + " kts")
         print(u"180°")
         print(str(reportedCourseValue) + u"°")
         if (str(reportedCourseValue) + u"°" == "180°"):
