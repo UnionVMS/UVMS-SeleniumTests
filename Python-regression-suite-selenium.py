@@ -1084,6 +1084,9 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+    def test_16_generate_and_verify_manual_position(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_07_generate_and_verify_manual_position(self)
 
 
 
