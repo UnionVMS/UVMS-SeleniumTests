@@ -25,7 +25,7 @@ cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE
 externalMarkingValue = "EXT3"
 #imoValue = str(random.randint(0, 9999999))
 #imoValue = imoValue.zfill(7)
-imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761901"]
+imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
 #mmsiValue = str(random.randint(0, 999999999))
 #mmsiValue = mmsiValue.zfill(9)
 mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
@@ -886,9 +886,10 @@ class UnionVMSTestCase(unittest.TestCase):
         UnionVMSTestCase.test_07_generate_and_verify_manual_position(self)
 
     def test_17_create_assets_3_4_5_6(self):
-        # Create asset 3-6 in the list
-        create_one_new_asset_from_gui(self, 1)
-
+        # Create assets 3-6 in the list
+        for x in range(2, 6):
+            create_one_new_asset_from_gui(self, x)
+            time.sleep(1)
 
 
     def test_special(self):
@@ -913,7 +914,7 @@ class UnionVMSTestCase(unittest.TestCase):
         print(lolaPositionValues[5][1][1])
 
 
-        for x in range(2, 5):
+        for x in range(2, 6):
             print ("We're on time %d" % (x))
 
 
