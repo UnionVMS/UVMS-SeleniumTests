@@ -920,7 +920,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//button[@type='button'])[25]").click()
         time.sleep(3)
         # Continue
-        # Select
+        # Check that Grupp 1 has been created
 
 
 
