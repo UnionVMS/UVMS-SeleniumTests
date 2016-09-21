@@ -923,8 +923,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check that Grupp 1 has been created
 
 
-
-
         time.sleep(2)
         # Shutdown browser
         shutdown_browser(self)
