@@ -19,19 +19,19 @@ import urllib.request
 # Globals
 # Assets
 countryValue = 'SWE'
-ircsValue = ["F1001", "F1002"]
-vesselName = ["Fartyg1001", "Fartyg1002"]
-cfrValue = ["SWE0000F1001", "SWE0000F1002"]
+ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006"]
+vesselName = ["Fartyg1001", "Fartyg1002", "Fartyg1003", "Fartyg1004", "Fartyg1005", "Fartyg1006"]
+cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE0000F1005", "SWE0000F1006"]
 externalMarkingValue = "EXT3"
 #imoValue = str(random.randint(0, 9999999))
 #imoValue = imoValue.zfill(7)
-imoValue = ["0261917", "0261918"]
+imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761901"]
 #mmsiValue = str(random.randint(0, 999999999))
 #mmsiValue = mmsiValue.zfill(9)
-mmsiValue = ["302331238", "302331239"]
+mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
 homeportValue = "GOT"
 # Mobile Terminals
-serialNoValue = ["M1001", "M1002"]
+serialNoValue = ["M1001", "M1002", "M1003", "M1004", "M1005", "M1006"]
 #transceiverType = str(random.randint(1, 100))
 transceiverType = "Type A"
 #softwareVersionList = ['A', 'B', 'C']
@@ -39,9 +39,9 @@ transceiverType = "Type A"
 softwareVersion = "A"
 antennaVersion = "A"
 #satelliteNumber = str(random.randint(1, 999999999))
-satelliteNumber = ["S1001", "S1002"]
+satelliteNumber = ["S1001", "S1002", "S1003", "S1004", "S1005", "S1006"]
 #dnidNumber = str(random.randint(1, 99999))
-dnidNumber = ["1001", "1002"]
+dnidNumber = ["1001", "1002", "1003", "1004", "1005", "1006"]
 #memberIdnumber = str(random.randint(100, 499))
 memberIdnumber = "100"
 installedByName = "Mike Great"
@@ -52,12 +52,15 @@ gracePeriodFrequencyMinutes = "0"
 inPortFrequencyHours = "3"
 inPortFrequencyMinutes = "0"
 deltaTimeValue = 4
-# lolaPositionValues [Asset number x, lola position route y, lat=0 / lon=1 z]
+# lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
-                      [["57.934", "11.592"], ["57.935", "11.593"]]]
+                      [["57.934", "11.592"], ["57.935", "11.593"]],
+                      [["56.647", "12.840"], ["56.646", "12.834"]],
+                      [["56.659", "16.378"], ["56.659", "16.381"]],
+                      [["57.266", "16.480"], ["57.267", "16.487"]],
+                      [["58.662", "17.129"], ["58.661", "17.137"]]]
 
-#latitudePositionValue = ["57.326", "57.934"]
-#longitudePositionValue = ["16.996", "11.592"]
+
 reportedSpeedValue = 5
 reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
@@ -882,6 +885,10 @@ class UnionVMSTestCase(unittest.TestCase):
         # Startup browser and login
         UnionVMSTestCase.test_07_generate_and_verify_manual_position(self)
 
+    def test_17_create_assets_3_4_5_6(self):
+        # Create asset 3-6 in the list
+        create_one_new_asset_from_gui(self, 1)
+
 
 
     def test_special(self):
@@ -902,7 +909,12 @@ class UnionVMSTestCase(unittest.TestCase):
         else:
             print("NO!")
 
-        print(lolaPositionValues[1][1][0])
+        print(lolaPositionValues[5][1][0])
+        print(lolaPositionValues[5][1][1])
+
+
+        for x in range(2, 5):
+            print ("We're on time %d" % (x))
 
 
 if __name__ == '__main__':
