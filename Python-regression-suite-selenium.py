@@ -919,6 +919,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.form-group.ng-scope > input[name=\"name\"]").send_keys(groupName[0])
         self.driver.find_element_by_xpath("(//button[@type='button'])[25]").click()
         time.sleep(3)
+        # Continue
         # Select
 
 
