@@ -238,7 +238,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
         "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[1]/div[2]/button").click()
     time.sleep(2)
     # Select F.S value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+    self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     self.driver.find_element_by_link_text(countryValue).click()
     # Enter IRCS value
     self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
@@ -253,12 +253,13 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Enter HomePort Value
     self.driver.find_element_by_name("homeport").send_keys(homeportValue)
     # Select Gear Type value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
+    self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
     self.driver.find_element_by_link_text("Dermersal").click()
     # Enter MMSI Value
     self.driver.find_element_by_name("mmsi").send_keys(mmsiValue[vesselNumber])
     # Select License Type value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+    self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+    time.sleep(1)
     self.driver.find_element_by_link_text("MOCK-license-DB").click()
     # Length Value
     self.driver.find_element_by_name("lengthValue").send_keys("14")
@@ -281,13 +282,9 @@ def create_one_new_asset_from_gui(self, vesselNumber):
         "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
         send_keys("This is some notes!")
     # Click on Save Asset button
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[3]/button[2]"). \
-        click()
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
     # Leave new asset view
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[1]/div[2]/div/div[4]/i"). \
-        click()
+    self.driver.find_element_by_css_selector("div.actionContainer.menuTextItem > b").click()
     time.sleep(3)
     # Shutdown browser
     shutdown_browser(self)
@@ -373,7 +370,7 @@ def check_new_asset_exists(self, vesselNumber):
         "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[10]/button/i").click()
     time.sleep(5)
     # Check that the F.S value is correct.
-    self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[4]").text)
+    self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[2]").text)
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_name("ircs").get_attribute("value"))
     # Check that the Name value is correct
@@ -388,12 +385,12 @@ def check_new_asset_exists(self, vesselNumber):
     self.assertEqual("GOT", self.driver.find_element_by_name("homeport").get_attribute("value"))
     # Check that the Gear Type value is correct.
     self.assertEqual("Dermersal", self.driver.find_element_by_xpath(
-        "(//button[@type='button'])[5]").text)
+        "(//button[@type='button'])[3]").text)
     # Check that the MMSI value is correct
     self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_name("mmsi").get_attribute("value"))
     # Check that the License Type value is correct.
     self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath(
-        "(//button[@type='button'])[6]").text)
+        "(//button[@type='button'])[4]").text)
     # Check that the Length Type value is correct.
     self.assertEqual("14", self.driver.find_element_by_name("lengthValue").get_attribute("value"))
     # Check that the Gross Tonnage value is correct.
@@ -427,28 +424,20 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
     # Enter Serial Number in field
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
-        send_keys(serialNoValue[mobileTerminalNumber])
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
-        click()
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(5)
     # Check Serial Number in the list
-    self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_css_selector("td.statusColored.ng-binding").text)
+    self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]").text)
     # Check Member Number in the list
-    self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath(
-        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+    self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
     # Check DNID Number in the list
-    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath(
-        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-
+    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
     # Click on details button
     self.driver.find_element_by_xpath(
         "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     time.sleep(2)
-
     # Check Transceiver Type
     self.assertEqual(transceiverType,
                      self.driver.find_element_by_xpath("(//input[@type='text'])[27]").get_attribute("value"))
@@ -467,12 +456,10 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Check Installed by Name
     self.assertEqual(installedByName,
                      self.driver.find_element_by_xpath("(//input[@type='text'])[37]").get_attribute("value"))
-
     # Leave new asset view
     self.driver.find_element_by_xpath(
         "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i"). \
         click()
-
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
@@ -526,13 +513,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
         # Enter Serial Number in field
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div[2]/input"). \
-            send_keys(serialNoValue[0])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[0])
         # Click in search button
-        self.driver.find_element_by_xpath(
-            "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[1]/div/div/form/div/div/div/div[2]/div[2]/div[1]/button"). \
-            click()
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(5)
 
         # Click on details button
@@ -600,9 +583,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
-        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-        time.sleep(10)
 
         # Enter IRCS for newly created position
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
@@ -614,15 +594,16 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
 
         # Verifies position data
-        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td.ng-binding").text)
-        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[3]").text)
-        self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        self.assertEqual(earlierPositionTimeValueString, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
-        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[7]").text)
-        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
-        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
-        self.assertEqual(str(reportedCourseValue) + u"°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
-        self.assertEqual(sourceValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+        self.assertEqual(earlierPositionTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionTimeValueString + "\"]").text)
+        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
+        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
+        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(reportedCourseValue) + "°" + "\"]").text)
+        self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -919,8 +900,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.form-group.ng-scope > input[name=\"name\"]").send_keys(groupName[0])
         self.driver.find_element_by_xpath("(//button[@type='button'])[25]").click()
         time.sleep(3)
-        # Continue
         # Check that Grupp 1 has been created
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.assertEqual("Grupp 1", self.driver.find_element_by_link_text("Grupp 1").text)
+
+
 
 
         time.sleep(2)
@@ -954,6 +938,10 @@ class UnionVMSTestCase(unittest.TestCase):
 
         for x in range(2, 6):
             print ("We're on time %d" % (x))
+
+
+        print("td[title=\"SWE\"]")
+        print("td[title=\"" + countryValue + "\"]")
 
 
 if __name__ == '__main__':
