@@ -566,9 +566,9 @@ class UnionVMSTestCase(unittest.TestCase):
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
-        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
         self.driver.find_element_by_id("manual-movement-date-picker").clear()
-        self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionTimeValueString)
+        self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionDateTimeValueString)
 
         # Enter Position, Speed and Course
         self.driver.find_element_by_name("latitude").clear()
@@ -598,7 +598,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
-        self.assertEqual(earlierPositionTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionTimeValueString + "\"]").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text)
         self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
         self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
         self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
@@ -657,7 +657,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Select Positions tab
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-        time.sleep(2)
+        time.sleep(7)
 
         # Enter IRCS for newly created position
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
@@ -669,15 +669,16 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
 
         # Enter Vessel to verify position data
-        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td.ng-binding").text)
-        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[3]").text)
-        self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
-        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[7]").text)
-        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[8]").text)
-        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[10]").text)
-        self.assertEqual(str(reportedCourseValue) + u"°", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[12]").text)
-        self.assertEqual(sourceValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[14]").text)
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text)
+        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
+        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
+        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(reportedCourseValue) + "°" + "\"]").text)
+        self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
