@@ -7,6 +7,7 @@ from unittest.case import _AssertRaisesContext
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -1085,12 +1086,46 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
         self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
 
-
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
 
 
+
+    def test_22_delete_second_group_and_check(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        # Click on asset tab
+        time.sleep(5)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+
+        # Click on "saved groups" drop box
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        time.sleep(2)
+        # Click on delete button for Grupp 2
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[3]/span").click()
+        time.sleep(2)
+        # Click on confirmation button
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+
+        # Reload page
+        self.driver.refresh()
+        time.sleep(10)
+
+        # Check that Grupp 1 exists and Grupp 2 does not exist
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        time.sleep(1)
+        self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
+        try:
+            self.assertFalse(self.driver.find_element_by_link_text(groupName[1]).text)
+        except NoSuchElementException:
+            pass
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
     def test_special(self):
