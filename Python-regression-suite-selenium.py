@@ -856,7 +856,6 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_18_create_two_assets_to_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
-        #self.driver.implicitly_wait(10)
         # Click on asset tab
         time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -912,7 +911,6 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_19_add_two_assets_to_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
-        #self.driver.implicitly_wait(10)
         # Click on asset tab
         time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -986,6 +984,56 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_20_remove_one_asset_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
+        # Click on asset tab
+        time.sleep(5)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+        # Click on saved groups
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
+        time.sleep(2)
+        # Click on Grupp 1
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
+        time.sleep(5)
+        # Select Fartyg1002 and Fartyg1005
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
+        time.sleep(1)
+        # Click on action button
+        self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
+        time.sleep(1)
+        # Remove selected assets from Grupp 1
+        self.driver.find_element_by_link_text("Remove from Group").click()
+        time.sleep(10)
+        # Reload page
+        self.driver.refresh()
+        time.sleep(10)
+        # Click on saved groups
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
+        time.sleep(2)
+        # Click on Grupp 1
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
+        time.sleep(5)
+        # Check Assets in Group
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
+        self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
+        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
+        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(vesselName[5], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[5] + "\"]").text)
+        self.assertEqual(ircsValue[5], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[5] + "\"]").text)
+        self.assertEqual(cfrValue[5], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[5] + "\"]").text)
+        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
+        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
 
