@@ -1266,9 +1266,13 @@ class UnionVMSTestCase(unittest.TestCase):
 
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
+        allrows = []
         for row in reader:
+            allrows = allrows + row
             print(row)
         print ("--------------------------------------------------------------------")
+        # Continue ....
+        print(allrows)
 
         ifile.close()
 
