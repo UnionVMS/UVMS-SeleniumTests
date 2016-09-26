@@ -16,6 +16,8 @@ import os
 import psycopg2
 import requests
 import urllib.request
+from os.path import expanduser
+import csv
 
 # Globals
 # Assets
@@ -1179,6 +1181,49 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    def test_24_export_assets_to_excel_file(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        # Click on asset tab
+        time.sleep(7)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(7)
+
+        # Search for "fartyg"
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(5)
+        # Sort on "Name"
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+        time.sleep(2)
+
+        # Select Fartyg1001 and Fartyg1002 by click
+        self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        time.sleep(2)
+
+        # Select Action "Export selection"
+        self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection").click()
+        time.sleep(3)
+
+
+
+
+        home = expanduser("~")
+        os.chdir(home)
+        os.chdir(".\Downloads")
+
+
+
+        time.sleep(20)
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
 
     def test_special(self):
         a = datetime.datetime.utcnow()
@@ -1211,6 +1256,23 @@ class UnionVMSTestCase(unittest.TestCase):
 
         print("td[title=\"SWE\"]")
         print("td[title=\"" + countryValue + "\"]")
+
+        home = expanduser("~")
+        print(home)
+        os.chdir(home)
+        os.chdir(".\Downloads")
+        print(os.getcwd())
+        print ("--------------------------------------------------------------------")
+
+        ifile  = open('assets.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        for row in reader:
+            print(row)
+        print ("--------------------------------------------------------------------")
+
+        ifile.close()
+
+
 
 
 if __name__ == '__main__':
