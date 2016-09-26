@@ -66,7 +66,7 @@ reportedSpeedValue = 5
 reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
 sourceValue= ('NAF', 'MANUAL')
-groupName = ("Grupp 1", "Grupp 2")
+groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
 
 
 def externalError(process):
@@ -1128,6 +1128,58 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    def test_23_advanced_search_of_assets(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        # Click on asset tab
+        time.sleep(8)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(8)
+        # Click on advanced search
+        self.driver.find_element_by_css_selector("div.col-md-10.searchFooter > a > span").click()
+        time.sleep(1)
+        # Search for all Home Ports called GOT
+        self.driver.find_element_by_id("searchhomeport").send_keys("GOT")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[6]").click()
+        time.sleep(8)
+        # Sort on "Name"
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+        time.sleep(1)
+        # Check Assets in List
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
+        self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
+        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
+        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        for x in [1,2,3,4,5]:
+            self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]").text)
+            self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
+            self.assertEqual(vesselName[x], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[x] + "\"]").text)
+            self.assertEqual(ircsValue[x], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[x] + "\"]").text)
+            self.assertEqual(cfrValue[x], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[x] + "\"]").text)
+            self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
+        time.sleep(3)
+        # Click on save group button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div[3]/a[2]/span").click()
+        # Enter Grupp name "Grupp 3" and click on save button
+        self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[2])
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+        # Reload page
+        self.driver.refresh()
+        time.sleep(20)
+        # Check that Grupp 3 exists in the list
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.assertEqual(groupName[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[3]/a/span").text)
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+
     def test_special(self):
         a = datetime.datetime.utcnow()
         b = a - datetime.timedelta(hours=3)
@@ -1151,6 +1203,9 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
         for x in range(2, 6):
+            print ("We're on time %d" % (x))
+
+        for x in [2,3, 6]:
             print ("We're on time %d" % (x))
 
 
