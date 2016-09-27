@@ -1209,16 +1209,32 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection").click()
         time.sleep(3)
 
-
-
-
+        # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
         os.chdir(".\Downloads")
 
+        # Open saved csv file and read all elements to "allrows"
+        ifile  = open('assets.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        allrows =['']
+        for row in reader:
+            print(row)
+            allrows.append(row)
+        ifile.close()
+        del allrows[0]
 
-
-        time.sleep(20)
+        # Check that the elements in csv file is correct
+        for y in range(len(allrows)):
+            if not (y == 0):
+                print("Test row: " + str(y))
+                self.assertEqual(countryValue, allrows[y][0])
+                self.assertEqual(externalMarkingValue, allrows[y][1])
+                self.assertEqual(vesselName[y-1], allrows[y][2])
+                self.assertEqual(ircsValue[y-1], allrows[y][3])
+                self.assertEqual(cfrValue[y-1], allrows[y][4])
+                self.assertEqual("Dermersal", allrows[y][5])
+                self.assertEqual("MOCK-license-DB", allrows[y][6])
 
         time.sleep(5)
         # Shutdown browser
@@ -1275,6 +1291,18 @@ class UnionVMSTestCase(unittest.TestCase):
         ifile.close()
         print ("--------------------------------------------------------------------")
         print (allrows)
+        print ("--------------------------------------------------------------------")
+        del allrows[0]
+        print (allrows)
+        for x in range(len(allrows)):
+            print(allrows[x])
+        print ("--------------------------------------------------------------------")
+        print ("--------------------------------------------------------------------")
+        print ("--------------------------------------------------------------------")
+        for y in range(len(allrows)):
+            if not (y == 0):
+                for x in range(len(allrows[y])):
+                    print(allrows[y][x])
 
 
 
