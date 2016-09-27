@@ -18,6 +18,7 @@ import requests
 import urllib.request
 from os.path import expanduser
 import csv
+import itertools
 
 # Globals
 # Assets
@@ -1266,15 +1267,14 @@ class UnionVMSTestCase(unittest.TestCase):
 
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
-        allrows = []
+        count = 0
+        allrows =['']
         for row in reader:
-            allrows = allrows + row
             print(row)
-        print ("--------------------------------------------------------------------")
-        # Continue ....
-        print(allrows)
-
+            allrows.append(row)
         ifile.close()
+        print ("--------------------------------------------------------------------")
+        print (allrows)
 
 
 
