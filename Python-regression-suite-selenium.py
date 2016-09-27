@@ -1253,8 +1253,22 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(7)
         # Select Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(7)
+        # Sort on "Serial no"
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").click()
         time.sleep(2)
 
+        # Select Not linked row number 2-4 by click
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[5]").click()
+        time.sleep(2)
+
+        # Select Action "Export selection"
+        self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection").click()
+        time.sleep(3)
 
         time.sleep(5)
         # Shutdown browser
