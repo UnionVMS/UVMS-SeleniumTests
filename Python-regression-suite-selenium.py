@@ -1235,10 +1235,31 @@ class UnionVMSTestCase(unittest.TestCase):
                 self.assertEqual(cfrValue[y-1], allrows[y][4])
                 self.assertEqual("Dermersal", allrows[y][5])
                 self.assertEqual("MOCK-license-DB", allrows[y][6])
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+
+    def test_25_create_new_mobile_terminal_3_6(self):
+        # Create new Mobile Terminal (Number 3-6 in the list)
+        for x in [2,3,4,5]:
+            create_one_new_mobile_terminal_from_gui(self, x)
+
+
+    def test_26_export_mobile_terminals_to_excel_file(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(7)
+        # Select Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(2)
+
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
+
 
 
 
@@ -1281,6 +1302,7 @@ class UnionVMSTestCase(unittest.TestCase):
         print(os.getcwd())
         print ("--------------------------------------------------------------------")
 
+        """
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
         count = 0
@@ -1303,7 +1325,7 @@ class UnionVMSTestCase(unittest.TestCase):
             if not (y == 0):
                 for x in range(len(allrows[y])):
                     print(allrows[y][x])
-
+        """
 
 
 
