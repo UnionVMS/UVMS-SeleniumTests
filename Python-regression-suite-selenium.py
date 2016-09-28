@@ -18,7 +18,7 @@ import requests
 import urllib.request
 from os.path import expanduser
 import csv
-import itertools
+import codecs
 
 # Globals
 # Assets
@@ -70,6 +70,9 @@ reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
+transponderType = ("Iridium", "Inmarsat-C")
+assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
+mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
 
 
 def externalError(process):
@@ -1226,7 +1229,13 @@ class UnionVMSTestCase(unittest.TestCase):
 
         # Check that the elements in csv file is correct
         for y in range(len(allrows)):
-            if not (y == 0):
+            if y==0:
+                # Check Headlines
+                for x in range(len(assetHeadline)):
+                    if not (x==0):
+                        self.assertEquals(assetHeadline[x], allrows[y][x])
+            else:
+                # Check values in CSV file
                 print("Test row: " + str(y))
                 self.assertEqual(countryValue, allrows[y][0])
                 self.assertEqual(externalMarkingValue, allrows[y][1])
@@ -1269,6 +1278,53 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection").click()
         time.sleep(3)
+
+        # Change to Download folder for current user
+        home = expanduser("~")
+        os.chdir(home)
+        os.chdir(".\Downloads")
+
+        # Open saved csv file and read all elements to "allrows"
+        ifile  = open('mobileTerminals.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        allrows =['']
+        for row in reader:
+            print(row)
+            allrows.append(row)
+        ifile.close()
+        del allrows[0]
+
+        # Check that the elements in csv file is correct
+        for y in range(len(allrows)):
+            if y==0:
+                # Check Headlines
+                for x in range(len(mobileTerminalHeadline)):
+                    if not (x == 0):
+                        self.assertEqual(mobileTerminalHeadline[x], allrows[y][x])
+            elif y == 1:
+                print("Test row: " + str(y))
+                self.assertEqual(vesselName[0], allrows[y][0])
+                self.assertEqual(serialNoValue[1], allrows[y][1])
+                self.assertEqual(memberIdnumber, allrows[y][2])
+                self.assertEqual(dnidNumber[1], allrows[y][3])
+                self.assertEqual(transponderType[1], allrows[y][4])
+                self.assertEqual(satelliteNumber[1], allrows[y][5])
+                self.assertEqual(mmsiValue[0], allrows[y][6])
+                self.assertEqual("Active", allrows[y][7])
+            else:
+                print("Test row: " + str(y) + " ELSE")
+                self.assertEqual("Not linked", allrows[y][0])
+                self.assertEqual(serialNoValue[y], allrows[y][1])
+                self.assertEqual(memberIdnumber, allrows[y][2])
+                self.assertEqual(dnidNumber[y], allrows[y][3])
+                self.assertEqual(transponderType[1], allrows[y][4])
+                self.assertEqual(satelliteNumber[y], allrows[y][5])
+                self.assertEqual("Active", allrows[y][7])
+
+
+        time.sleep(5)
+
+
 
         time.sleep(5)
         # Shutdown browser
@@ -1316,8 +1372,9 @@ class UnionVMSTestCase(unittest.TestCase):
         print(os.getcwd())
         print ("--------------------------------------------------------------------")
 
-        """
+
         ifile  = open('assets.csv', "rt", encoding="utf8")
+        #ifile = open('assets.csv', "rt")
         reader = csv.reader(ifile, delimiter=';')
         count = 0
         allrows =['']
@@ -1336,10 +1393,9 @@ class UnionVMSTestCase(unittest.TestCase):
         print ("--------------------------------------------------------------------")
         print ("--------------------------------------------------------------------")
         for y in range(len(allrows)):
-            if not (y == 0):
+            #if not (y == 0):
                 for x in range(len(allrows[y])):
                     print(allrows[y][x])
-        """
 
 
 
