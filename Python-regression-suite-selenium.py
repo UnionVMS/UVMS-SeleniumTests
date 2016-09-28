@@ -34,6 +34,7 @@ imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
 #mmsiValue = mmsiValue.zfill(9)
 mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
 homeportValue = "GOT"
+assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
 # Mobile Terminals
 serialNoValue = ["M1001", "M1002", "M1003", "M1004", "M1005", "M1006"]
 #transceiverType = str(random.randint(1, 100))
@@ -56,6 +57,8 @@ gracePeriodFrequencyMinutes = "0"
 inPortFrequencyHours = "3"
 inPortFrequencyMinutes = "0"
 deltaTimeValue = 4
+transponderType = ("Iridium", "Inmarsat-C")
+mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
 # lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
                       [["57.934", "11.592"], ["57.935", "11.593"]],
@@ -64,15 +67,12 @@ lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
                       [["57.266", "16.480"], ["57.267", "16.487"]],
                       [["58.662", "17.129"], ["58.661", "17.137"]]]
 
-
+# Mixed parameters
 reportedSpeedValue = 5
 reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
-transponderType = ("Iridium", "Inmarsat-C")
-assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
-mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
 
 
 def externalError(process):
@@ -1353,6 +1353,20 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+
+
+    def test_28_view_audit_log_with_interval(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(7)
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(7)
+
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
     def test_special(self):
