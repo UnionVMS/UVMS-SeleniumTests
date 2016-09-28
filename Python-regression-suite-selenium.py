@@ -1321,15 +1321,37 @@ class UnionVMSTestCase(unittest.TestCase):
                 self.assertEqual(satelliteNumber[y], allrows[y][5])
                 self.assertEqual("Active", allrows[y][7])
 
-
-        time.sleep(5)
-
-
-
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
 
+
+
+
+    def test_27_view_audit_log(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(7)
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(7)
+        # Click on all sub tabs under Audit Log Tab
+        for x in [2, 3, 4, 5, 6, 7]:
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[" + str(x) + "]/span").click()
+            time.sleep(2)
+        self.driver.find_element_by_css_selector("li.audittab > span").click()
+        time.sleep(2)
+        # Check sub tab names
+        self.assertEqual("ALL", self.driver.find_element_by_css_selector("li.audittab.active > span").text)
+        self.assertEqual("EXCHANGE", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]/span").text)
+        self.assertEqual("POSITION REPORTS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[3]/span").text)
+        self.assertEqual("ASSETS AND TERMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]/span").text)
+        self.assertEqual("GIS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]/span").text)
+        self.assertEqual("ALARMS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]/span").text)
+        self.assertEqual("ACCESS CONTROL", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[7]/span").text)
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
 
@@ -1371,8 +1393,7 @@ class UnionVMSTestCase(unittest.TestCase):
         os.chdir(".\Downloads")
         print(os.getcwd())
         print ("--------------------------------------------------------------------")
-
-
+        """
         ifile  = open('assets.csv', "rt", encoding="utf8")
         #ifile = open('assets.csv', "rt")
         reader = csv.reader(ifile, delimiter=';')
@@ -1396,7 +1417,7 @@ class UnionVMSTestCase(unittest.TestCase):
             #if not (y == 0):
                 for x in range(len(allrows[y])):
                     print(allrows[y][x])
-
+        """
 
 
 if __name__ == '__main__':
