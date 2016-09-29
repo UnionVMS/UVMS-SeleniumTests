@@ -1354,7 +1354,6 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-
     def test_28_view_audit_log_with_interval(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1363,6 +1362,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         time.sleep(7)
 
+        # continue ...
 
         time.sleep(5)
         # Shutdown browser
