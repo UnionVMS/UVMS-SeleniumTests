@@ -130,25 +130,25 @@ def populateIridiumImarsatCData():
         for row in rows:
             print(row[0:])
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
+                    (1050, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+        cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
                     (1051, 1050, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1052, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1052, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1053, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1053, 1050, 'POLLABLE', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1054, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1054, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1055, 1050, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1055, 1056, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1057, 1056, 'MULTIPLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1056, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1058, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1057, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1059, 1056, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1058, 1056, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1060, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
-        cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1061, 1056, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1059, 1056, 'MULTIPLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin_capability""")
         rows = cur.fetchall()
         print("\nPrint out of Database db71t (After 2):\n")
@@ -1433,6 +1433,8 @@ class UnionVMSTestCase(unittest.TestCase):
                     print(allrows[y][x])
         """
 
+    def test_special_2(self):
+        populateIridiumImarsatCData()
 
 if __name__ == '__main__':
     unittest.main()
