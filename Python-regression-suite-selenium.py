@@ -130,25 +130,25 @@ def populateIridiumImarsatCData():
         for row in rows:
             print(row[0:])
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1050, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1051, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1051, 1050, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1052, 1050, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1052, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1053, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1053, 1050, 'POLLABLE', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1054, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1054, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1055, 1050, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1055, 1056, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
-        cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1056, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
-        cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1057, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1057, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
                     (1058, 1056, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
                     (1059, 1056, 'MULTIPLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+        cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
+                    (1060, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+        cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
+                    (1061, 1056, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin_capability""")
         rows = cur.fetchall()
         print("\nPrint out of Database db71t (After 2):\n")
@@ -245,7 +245,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
         "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[1]/div[2]/button").click()
     time.sleep(2)
     # Select F.S value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+    self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
     self.driver.find_element_by_link_text(countryValue).click()
     # Enter IRCS value
     self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
@@ -260,12 +260,12 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Enter HomePort Value
     self.driver.find_element_by_name("homeport").send_keys(homeportValue)
     # Select Gear Type value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+    self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
     self.driver.find_element_by_link_text("Dermersal").click()
     # Enter MMSI Value
     self.driver.find_element_by_name("mmsi").send_keys(mmsiValue[vesselNumber])
     # Select License Type value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+    self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
     time.sleep(1)
     self.driver.find_element_by_link_text("MOCK-license-DB").click()
     # Length Value
@@ -279,19 +279,16 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Main Producer Code Value
     self.driver.find_element_by_name("producercode").send_keys("123")
     # Main Contact Name Value
-    self.driver.find_element_by_name("contactName").send_keys("Mikael Great")
+    self.driver.find_element_by_id("contact-name").send_keys("Mikael Great")
     # Main E-mail Value
-    self.driver.find_element_by_name("email").send_keys("mikael.glemne@havochvatten.se")
+    self.driver.find_element_by_id("contact-email").send_keys("mikael.glemne@havochvatten.se")
     # Main Contact Number Value
-    self.driver.find_element_by_name("contactNumber").send_keys("+46720456789")
-    # Note comments
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
-        send_keys("This is some notes!")
+    self.driver.find_element_by_id("contact-number").send_keys("+46720456789")
     # Click on Save Asset button
-    self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+    self.driver.find_element_by_id("menu-bar-save").click()
+    time.sleep(3)
     # Leave new asset view
-    self.driver.find_element_by_css_selector("div.actionContainer.menuTextItem > b").click()
+    self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
     # Shutdown browser
     shutdown_browser(self)
@@ -304,38 +301,34 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
     # Click on new terminal button
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/button"). \
-        click()
+
+    #self.driver.find_element_by_xpath(
+    #    "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/button"). \
+    #    click()
+    self.driver.find_element_by_id("mob-term-add-terminal").click()
     time.sleep(3)
     # Select Transponder system
     element = WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'])[21]")))  # Waits until element exists
+        EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'])[18]")))  # Waits until element exists
     element.click()
     self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     time.sleep(1)
     # Enter serial number
-    self.driver.find_element_by_name("serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
+    self.driver.find_element_by_id("mob-term-form-details-serial-number").send_keys(serialNoValue[mobileTerminalNumber])
     # Enter Transceiver type
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[2]/input"). \
-        send_keys(transceiverType)
+    self.driver.find_element_by_id("mob-term-form-details-transceiver-type").send_keys(transceiverType)
     # Enter Software Version
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[3]/input"). \
-        send_keys(softwareVersion)
+    self.driver.find_element_by_id("mob-term-form-details-software-version").send_keys(softwareVersion)
     # Enter Antenna
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[2]/div/form/fieldset/div[2]/div/div[1]/div[4]/input"). \
-        send_keys(antennaVersion)
+    self.driver.find_element_by_id("mob-term-form-details-antenna").send_keys(antennaVersion)
     # Enter Satellite Number
-    self.driver.find_element_by_name("sattelite_number").send_keys(satelliteNumber[mobileTerminalNumber])
+    self.driver.find_element_by_id("mob-term-form-details-satelite-number").send_keys(satelliteNumber[mobileTerminalNumber])
     # Enter DNID Number
-    self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
+    self.driver.find_element_by_id("mob-term-form-details-dnid-0").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
-    self.driver.find_element_by_name("memberId").send_keys(memberIdnumber)
+    self.driver.find_element_by_id("mob-term-form-details-member-number-0").send_keys(memberIdnumber)
     # Enter Installed by
-    self.driver.find_element_by_xpath("(//input[@type='text'])[37]").send_keys(installedByName)
+    self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName)
     # Expected frequency
     self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
     # Grace period
@@ -343,14 +336,10 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # In port
     self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
     # Click on save button
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[2]/button[1]"). \
-        click()
+    self.driver.find_element_by_id("menu-bar-save").click()
     time.sleep(5)
     # Leave new asset view
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i"). \
-        click()
+    self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
@@ -377,7 +366,7 @@ def check_new_asset_exists(self, vesselNumber):
         "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[10]/button/i").click()
     time.sleep(5)
     # Check that the F.S value is correct.
-    self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[2]").text)
+    self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[3]").text)
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_name("ircs").get_attribute("value"))
     # Check that the Name value is correct
@@ -392,12 +381,12 @@ def check_new_asset_exists(self, vesselNumber):
     self.assertEqual("GOT", self.driver.find_element_by_name("homeport").get_attribute("value"))
     # Check that the Gear Type value is correct.
     self.assertEqual("Dermersal", self.driver.find_element_by_xpath(
-        "(//button[@type='button'])[3]").text)
+        "(//button[@type='button'])[4]").text)
     # Check that the MMSI value is correct
     self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_name("mmsi").get_attribute("value"))
     # Check that the License Type value is correct.
     self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath(
-        "(//button[@type='button'])[4]").text)
+        "(//button[@type='button'])[5]").text)
     # Check that the Length Type value is correct.
     self.assertEqual("14", self.driver.find_element_by_name("lengthValue").get_attribute("value"))
     # Check that the Gross Tonnage value is correct.
@@ -411,14 +400,9 @@ def check_new_asset_exists(self, vesselNumber):
     # Check that the Contact Name value is correct.
     self.assertEqual("Mikael Great", self.driver.find_element_by_name("contactName").get_attribute("value"))
     # Check that the E-mail value is correct.
-    self.assertEqual("mikael.glemne@havochvatten.se", self.driver.find_element_by_name(
-        "email").get_attribute("value"))
+    self.assertEqual("mikael.glemne@havochvatten.se", self.driver.find_element_by_id("contact-email").get_attribute("value"))
     # Check that the E-mail value is correct.
-    self.assertEqual("+46720456789", self.driver.find_element_by_name("contactNumber").get_attribute("value"))
-    # Check that the Note comments value is correct.
-    self.assertEqual("This is some notes!", self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/form/div[1]/div[2]/div[2]/div/div[3]/div/div[2]/textarea"). \
-                     get_attribute("value"))
+    self.assertEqual("+46720456789", self.driver.find_element_by_id("contact-number").get_attribute("value"))
     time.sleep(5)
     # Shutdown browser
     shutdown_browser(self)
@@ -430,10 +414,10 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Select Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
-    # Enter Serial Number in field
+    # Enter Serial Number in
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
-    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    self.driver.find_element_by_id("mob-term-add-terminal").click()
     time.sleep(5)
     # Check Serial Number in the list
     self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]").text)
@@ -1435,6 +1419,9 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_special_2(self):
         populateIridiumImarsatCData()
+
+    def test_special_3(self):
+        populateSanityRuleData()
 
 if __name__ == '__main__':
     unittest.main()
