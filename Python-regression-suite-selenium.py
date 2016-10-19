@@ -417,7 +417,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Enter Serial Number in
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
-    self.driver.find_element_by_id("mob-term-add-terminal").click()
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(5)
     # Check Serial Number in the list
     self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]").text)
@@ -430,27 +430,21 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
         "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     time.sleep(2)
     # Check Transceiver Type
-    self.assertEqual(transceiverType,
-                     self.driver.find_element_by_xpath("(//input[@type='text'])[27]").get_attribute("value"))
+    self.assertEqual(transceiverType, self.driver.find_element_by_id("mob-term-form-details-transceiver-type").get_attribute("value"))
     # Check Software Version
-    self.assertEqual(softwareVersion,
-                     self.driver.find_element_by_xpath("(//input[@type='text'])[28]").get_attribute("value"))
+    self.assertEqual(softwareVersion, self.driver.find_element_by_id("mob-term-form-details-software-version").get_attribute("value"))
     # Check Satellite Number
-    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_name("sattelite_number").get_attribute("value"))
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_id("mob-term-form-details-satelite-number").get_attribute("value"))
     # Check Antenna Version
-    self.assertEqual(antennaVersion,
-                     self.driver.find_element_by_xpath("(//input[@type='text'])[29]").get_attribute("value"))
+    self.assertEqual(antennaVersion, self.driver.find_element_by_id("mob-term-form-details-antenna").get_attribute("value"))
     # Check DNID Number
-    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_name("dnid").get_attribute("value"))
+    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_id("mob-term-form-details-dnid-0").get_attribute("value"))
     # Check Member Number
-    self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
+    self.assertEqual(memberIdnumber, self.driver.find_element_by_id("mob-term-form-details-member-number-0").get_attribute("value"))
     # Check Installed by Name
-    self.assertEqual(installedByName,
-                     self.driver.find_element_by_xpath("(//input[@type='text'])[37]").get_attribute("value"))
+    self.assertEqual(installedByName, self.driver.find_element_by_id("mob-term-form-details-installed-by-0").get_attribute("value"))
     # Leave new asset view
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[2]/div[4]/div[1]/div[2]/div/div[3]/i"). \
-        click()
+    self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
@@ -508,28 +502,29 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click in search button
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(5)
-
         # Click on details button
         self.driver.find_element_by_xpath(
             "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
-        time.sleep(2)
+        time.sleep(3)
         # Click on Link Asset
         self.driver.find_element_by_id("assignVesselLink").click()
         time.sleep(2)
         # Enter Asset Name and clicks on the search button
-        self.driver.find_element_by_xpath("(//input[@type='text'])[25]").send_keys(vesselName[0])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[19]").send_keys(vesselName[0])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
         # Click on connect button
         self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
         # Click on Link button
         time.sleep(2)
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
+        #self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         # Enter Reason comment
         self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
         time.sleep(2)
         # Click on Link button 2
-        self.driver.find_element_by_xpath("(//button[@type='button'])[66]").click()
+        self.driver.find_element_by_css_selector("div.col-md-12 > button.btn.btn-primary").click()
+        #self.driver.find_element_by_xpath("(//button[@type='button'])[66]").click()
         time.sleep(2)
         # Close page
         self.driver.find_element_by_xpath(
