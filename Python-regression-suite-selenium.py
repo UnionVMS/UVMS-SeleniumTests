@@ -795,24 +795,25 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath(
             "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
         time.sleep(2)
-
         # Click on Link Asset
         self.driver.find_element_by_id("assignVesselLink").click()
         time.sleep(2)
         # Enter Asset Name and clicks on the search button
-        self.driver.find_element_by_xpath("(//input[@type='text'])[25]").send_keys(vesselName[0])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[19]").send_keys(vesselName[0])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
         # Click on connect button
         self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
         # Click on Link button
         time.sleep(2)
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
+        #self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         # Enter Reason comment
         self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
         time.sleep(2)
         # Click on Link button 2
-        self.driver.find_element_by_xpath("(//button[@type='button'])[66]").click()
+        self.driver.find_element_by_css_selector("div.col-md-12 > button.btn.btn-primary").click()
+        #self.driver.find_element_by_xpath("(//button[@type='button'])[66]").click()
         time.sleep(2)
         # Close page
         self.driver.find_element_by_xpath(
@@ -839,8 +840,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        self.driver.find_element_by_xpath("(//input[@type='text'])[16]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(5)
         # Sort on "Name"
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
