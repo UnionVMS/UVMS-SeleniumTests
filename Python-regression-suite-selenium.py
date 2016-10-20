@@ -542,20 +542,17 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         # Click on New manual report
         self. driver.find_element_by_xpath("//button[@type='submit']").click()
-
         # Enter IRCS value
         self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
         time.sleep(3)
         self.driver.find_element_by_css_selector("strong").click()
         time.sleep(2)
-
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
         self.driver.find_element_by_id("manual-movement-date-picker").clear()
         self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionDateTimeValueString)
-
         # Enter Position, Speed and Course
         self.driver.find_element_by_name("latitude").clear()
         self.driver.find_element_by_name("latitude").send_keys(lolaPositionValues[0][0][0])
@@ -569,16 +566,14 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
-
         # Enter IRCS for newly created position
-        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("//input[@type='text']").clear()
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
         # Click on search button
-        self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         time.sleep(5)
-
         # Verifies position data
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
@@ -601,7 +596,6 @@ class UnionVMSTestCase(unittest.TestCase):
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Generate NAF string to send
         nafSource = '//SR//FR/'
         nafSource = nafSource + countryValue
@@ -637,23 +631,20 @@ class UnionVMSTestCase(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
         # Select Positions tab
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
         time.sleep(7)
-
         # Enter IRCS for newly created position
-        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("//input[@type='text']").clear()
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
         # Click on search button
-        self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         time.sleep(5)
-
         # Enter Vessel to verify position data
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
@@ -706,7 +697,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         # Enter comment and click on unlinking button
         self.driver.find_element_by_name("comment").send_keys("Unlink Asset and MT.")
-        self.driver.find_element_by_xpath("(//button[@type='button'])[65]").click()
+        self.driver.find_element_by_css_selector("div.col-md-12 > button.btn.btn-primary").click()
+        #self.driver.find_element_by_xpath("(//button[@type='button'])[65]").click()
         time.sleep(2)
         # Shutdown browser
         shutdown_browser(self)
@@ -745,11 +737,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
         # Enter IRCS for newly created position
-        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("//input[@type='text']").clear()
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
         # Click on search button
-        self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         time.sleep(5)
         # Verifies that time stamp for the generated position does not exist
@@ -759,7 +751,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
         # Select filter "Transponder not found"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[7]").click()
         self.driver.find_element_by_link_text("Transponder not found").click()
         time.sleep(2)
         # Click on search button
@@ -768,7 +760,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check Asset name
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
         # Click on Details button
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[10]").click()
         time.sleep(2)
         # Check Position report fields
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div/div[2]").text)
