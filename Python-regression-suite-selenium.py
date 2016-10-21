@@ -449,6 +449,19 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Shutdown browser
     shutdown_browser(self)
 
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# T E S T    C A S E S
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 
 class UnionVMSTestCase(unittest.TestCase):
 #    @classmethod
@@ -892,17 +905,18 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        self.driver.find_element_by_xpath("(//input[@type='text'])[16]").clear()
+        self.driver.find_element_by_xpath("(//input[@type='text'])[16]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(10)
         # Sort on "Name"
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/i").click()
         time.sleep(1)
         # Select Fartyg1005 and Fartyg1006 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[7]").click()
-        # Select Action "Save as Group"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
+        # Select Action "Add to Group"
+        self.driver.find_element_by_xpath("(//button[@type='button'])[20]").click()
         self.driver.find_element_by_link_text("Add to Group").click()
         time.sleep(1)
         # Select "Grupp 1" and click on save button
@@ -912,7 +926,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(10)
         # Check that Grupp 1 has been created
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
@@ -950,7 +964,6 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(cfrValue[5], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[5] + "\"]").text)
         self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[7]").text)
         self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[8]").text)
-
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
