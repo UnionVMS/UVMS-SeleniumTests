@@ -978,12 +978,18 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on saved groups
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
-        time.sleep(5)
+        time.sleep(3)
+        # Sort on "Name"
+        # Continue...
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/i").click()
+        # self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+
+        time.sleep(1)
         # Select Fartyg1002 and Fartyg1005
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
