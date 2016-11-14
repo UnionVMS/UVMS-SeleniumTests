@@ -336,6 +336,10 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_xpath("(//input[@type='number'])[4]").send_keys(gracePeriodFrequencyHours)
     # In port
     self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
+    # Activate Mobile Terminal button
+    #self.driver.find_element_by_id("mob-term-form-details-active").click()
+    self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[1]/div[4]/div[2]/div/form/fieldset/div[1]/div[1]/div[5]/div/label[2]/div").click()
+    time.sleep(2)
     # Click on save button
     self.driver.find_element_by_id("menu-bar-save").click()
     time.sleep(5)
@@ -505,6 +509,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_05_check_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (first in the list)
+        # Continue...
         check_new_mobile_terminal_exists(self, 0)
 
 
@@ -528,7 +533,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("assignVesselLink").click()
         time.sleep(2)
         # Enter Asset Name and clicks on the search button
-        self.driver.find_element_by_xpath("(//input[@type='text'])[19]").send_keys(vesselName[0])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[0])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
         # Click on connect button
@@ -818,7 +823,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("assignVesselLink").click()
         time.sleep(2)
         # Enter Asset Name and clicks on the search button
-        self.driver.find_element_by_xpath("(//input[@type='text'])[19]").send_keys(vesselName[0])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[0])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
         # Click on connect button
@@ -859,7 +864,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[16]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
         self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(5)
         # Sort on "Name"
@@ -869,7 +874,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         # Select Action "Save as Group"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[20]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
         self.driver.find_element_by_link_text("Save as Group").click()
         time.sleep(1)
         # Enter Group name and click on save button
@@ -904,6 +909,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     def test_19_add_two_assets_to_group_and_check_group(self):
+        # Continue update for release 2.1.2
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
