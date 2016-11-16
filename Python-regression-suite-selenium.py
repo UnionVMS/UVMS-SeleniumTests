@@ -112,10 +112,10 @@ def populateIridiumImarsatCData():
         for row in rows:
             print(row[0:])
         cur.execute("""INSERT INTO mobterm.plugin VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
-                    (1050, 'siriusone', 'eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone', 'IRIDIUM', False,
+                    (1052, 'siriusone', 'eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone', 'IRIDIUM', False,
                      'siriusone', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
-                    (1056, 'twostage', 'eu.europa.ec.fisheries.uvms.plugins.inmarsat', 'INMARSAT_C', False,
+                    (1058, 'twostage', 'eu.europa.ec.fisheries.uvms.plugins.inmarsat', 'INMARSAT_C', False,
                      'twostage', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin""")
         rows = cur.fetchall()
@@ -131,25 +131,25 @@ def populateIridiumImarsatCData():
         for row in rows:
             print(row[0:])
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1051, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1053, 1052, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1052, 1050, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1054, 1052, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1053, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1055, 1052, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1054, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1056, 1052, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1055, 1050, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1057, 1052, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1057, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1059, 1058, 'MULTIPLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1058, 1056, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1060, 1058, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1059, 1056, 'MULTIPLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1061, 1058, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1060, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1062, 1058, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1061, 1056, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1063, 1058, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin_capability""")
         rows = cur.fetchall()
         print("\nPrint out of Database db71t (After 2):\n")
