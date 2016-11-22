@@ -865,16 +865,26 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Search for "fartyg"
         self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[14]").click()
         time.sleep(5)
-        # Sort on "Name"
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
-        time.sleep(1)
+        # Get asset name values in the list
+        assetList = []
+        for x in range(6):
+            tempAssetName = self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            assetList.append(tempAssetName)
+        # Check if asset list is not sorted
+        if sorted(assetList) != assetList:
+            # Sort on "Name" by click on "Name" once
+            self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            time.sleep(1)
+
         # Select Fartyg1001 and Fartyg1002 by click
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         # Select Action "Save as Group"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
         self.driver.find_element_by_link_text("Save as Group").click()
         time.sleep(1)
         # Enter Group name and click on save button
@@ -906,7 +916,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
 
     def test_19_add_two_assets_to_group_and_check_group(self):
         # Continue update for release 2.1.2
@@ -1374,6 +1383,15 @@ class UnionVMSTestCase(unittest.TestCase):
         b = a - datetime.timedelta(hours=3)
         print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
         print(datetime.datetime.strftime(b, '%Y-%m-%d %H:%M:%S'))
+
+        s1 = []
+        s1.append('test1')
+        s1.append('test2')
+        print(s1)
+
+        for x in range(6):
+            print(x)
+
 
         a = 13.9412
         b = "%.2f" % a
