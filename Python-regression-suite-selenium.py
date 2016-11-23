@@ -926,18 +926,27 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[16]").clear()
-        self.driver.find_element_by_xpath("(//input[@type='text'])[16]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
-        time.sleep(10)
-        # Sort on "Name"
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/i").click()
-        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
+        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//button[@type='button'])[14]").click()
+        time.sleep(5)
+        # Get asset name values in the list
+        assetList = []
+        for x in range(6):
+            tempAssetName = self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            assetList.append(tempAssetName)
+        # Check if asset list is not sorted
+        if sorted(assetList) != assetList:
+            # Sort on "Name" by click on "Name" once
+            self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            time.sleep(1)
         # Select Fartyg1005 and Fartyg1006 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[7]").click()
         # Select Action "Add to Group"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[20]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
         self.driver.find_element_by_link_text("Add to Group").click()
         time.sleep(1)
         # Select "Grupp 1" and click on save button
