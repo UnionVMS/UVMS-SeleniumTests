@@ -1134,9 +1134,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
-
         # Click on "saved groups" drop box
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         time.sleep(2)
         # Click on delete button for Grupp 2
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[3]/span").click()
@@ -1144,20 +1143,17 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on confirmation button
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
-
         # Reload page
         self.driver.refresh()
         time.sleep(10)
-
         # Check that Grupp 1 exists and Grupp 2 does not exist
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         try:
             self.assertFalse(self.driver.find_element_by_link_text(groupName[1]).text)
         except NoSuchElementException:
             pass
-
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
