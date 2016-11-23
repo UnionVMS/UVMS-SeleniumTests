@@ -876,8 +876,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath(
-                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
             time.sleep(1)
 
         # Select Fartyg1001 and Fartyg1002 by click
@@ -939,8 +938,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath(
-                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
             time.sleep(1)
         # Select Fartyg1005 and Fartyg1006 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
@@ -1014,27 +1012,34 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Grupp 1
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
         time.sleep(3)
-        # Sort on "Name"
-        # Continue...
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/i").click()
-        # self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
 
-        time.sleep(1)
+        # Get asset name values in the group list
+        assetList = []
+        for x in range(4):
+            tempAssetName = self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            assetList.append(tempAssetName)
+        # Check if asset list is not sorted
+        if sorted(assetList) != assetList:
+            # Sort on "Name" by click on "Name" once
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            time.sleep(1)
+
         # Select Fartyg1002 and Fartyg1005
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         time.sleep(1)
         # Click on action button
-        self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
         time.sleep(1)
         # Remove selected assets from Grupp 1
         self.driver.find_element_by_link_text("Remove from Group").click()
-        time.sleep(10)
+        time.sleep(5)
         # Reload page
         self.driver.refresh()
         time.sleep(10)
         # Click on saved groups
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
