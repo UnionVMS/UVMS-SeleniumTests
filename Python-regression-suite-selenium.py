@@ -878,7 +878,6 @@ class UnionVMSTestCase(unittest.TestCase):
             # Sort on "Name" by click on "Name" once
             self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
             time.sleep(1)
-
         # Select Fartyg1001 and Fartyg1002 by click
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
@@ -1169,13 +1168,23 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on advanced search
         self.driver.find_element_by_css_selector("div.col-md-10.searchFooter > a > span").click()
         time.sleep(1)
-        # Search for all Home Ports called GOT
-        self.driver.find_element_by_id("searchhomeport").send_keys("GOT")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[6]").click()
+        # Search for all External Marking called EXT
+        self.driver.find_element_by_id("searchextno").send_keys("EXT")
+        self.driver.find_element_by_xpath("(//button[@type='button'])[20]").click()
         time.sleep(8)
-        # Sort on "Name"
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
-        time.sleep(1)
+
+        # Get asset name values in the list
+        assetList = []
+        for x in range(6):
+            tempAssetName = self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            assetList.append(tempAssetName)
+        # Check if asset list is not sorted
+        if sorted(assetList) != assetList:
+            # Sort on "Name" by click on "Name" once
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            time.sleep(1)
+
         # Check Assets in List
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
@@ -1201,9 +1210,9 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Reload page
         self.driver.refresh()
-        time.sleep(20)
+        time.sleep(10)
         # Check that Grupp 3 exists in the list
-        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
         self.assertEqual(groupName[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[3]/a/span").text)
         time.sleep(5)
         # Shutdown browser
