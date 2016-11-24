@@ -1223,34 +1223,38 @@ class UnionVMSTestCase(unittest.TestCase):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(7)
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(7)
-
-        # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(5)
-        # Sort on "Name"
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
-        time.sleep(2)
-
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+        # Search for "fartyg"
+        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
+        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
+        self.driver.find_element_by_xpath("(//button[@type='button'])[14]").click()
+        time.sleep(5)
+        # Get asset name values in the list
+        assetList = []
+        for x in range(6):
+            tempAssetName = self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            assetList.append(tempAssetName)
+        # Check if asset list is not sorted
+        if sorted(assetList) != assetList:
+            # Sort on "Name" by click on "Name" once
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").click()
+            time.sleep(1)
         # Select Fartyg1001 and Fartyg1002 by click
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         time.sleep(2)
-
         # Select Action "Export selection"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection").click()
         time.sleep(3)
-
         # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
         os.chdir(".\Downloads")
-
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -1260,7 +1264,6 @@ class UnionVMSTestCase(unittest.TestCase):
             allrows.append(row)
         ifile.close()
         del allrows[0]
-
         # Check that the elements in csv file is correct
         for y in range(len(allrows)):
             if y==0:
