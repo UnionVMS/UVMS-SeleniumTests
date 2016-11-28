@@ -1488,7 +1488,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("GLOBAL SETTINGS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").text)
         self.assertEqual("REPORTING", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[3]").text)
         self.assertEqual("ASSETS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]").text)
-        self.assertEqual("MOBILE TREMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]").text)
+        self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]").text)
 
         # Shutdown browser
