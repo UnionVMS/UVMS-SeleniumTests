@@ -1443,7 +1443,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("POSITION REPORTS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[3]/span").text)
         self.assertEqual("ASSETS AND TERMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]/span").text)
         self.assertEqual("GIS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]/span").text)
-        self.assertEqual("ALARMS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]/span").text)
+        self.assertEqual("ALERTS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]/span").text)
         self.assertEqual("ACCESS CONTROL", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[7]/span").text)
         time.sleep(5)
         # Shutdown browser
@@ -1456,13 +1456,44 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(7)
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+
         time.sleep(7)
 
         # continue ...
+        # Bug UVMS-3051 needs to be fixed first
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
+
+
+    def test_29_view_configuration_page(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(7)
+        # Select Admin tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        self.driver.find_element_by_link_text("CONFIGURATION").click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("li.audittab").click()
+        time.sleep(1)
+        # Click on all sub tabs under Configuration Tab
+        for x in [2, 3, 4, 5, 6]:
+            self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[" + str(x) + "]").click()
+            time.sleep(2)
+        time.sleep(5)
+        # Check sub tab names
+        self.assertEqual("SYSTEM MONITOR", self.driver.find_element_by_css_selector("li.audittab").text)
+        self.assertEqual("GLOBAL SETTINGS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").text)
+        self.assertEqual("REPORTING", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[3]").text)
+        self.assertEqual("ASSETS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]").text)
+        self.assertEqual("MOBILE TREMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]").text)
+        self.assertEqual("EXCHANGE", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]").text)
+
+        # Shutdown browser
+        shutdown_browser(self)
+
 
 
     def test_special(self):
