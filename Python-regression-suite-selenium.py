@@ -1590,7 +1590,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_32_bla_bla(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
+        time.sleep(3)
 
 
     def test_special(self):
