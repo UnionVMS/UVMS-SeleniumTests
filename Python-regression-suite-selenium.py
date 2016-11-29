@@ -1587,6 +1587,11 @@ class UnionVMSTestCase(unittest.TestCase):
         for x in [0,1,2]:
             change_and_check_speed_format(self,x)
 
+    def test_32_bla_bla(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
 
     def test_special(self):
         a = datetime.datetime.utcnow()
