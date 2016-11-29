@@ -74,6 +74,8 @@ reportedCourseValue = 180
 httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
+speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
+speedUnitTypesShort = ("kts", "km/h", "mph")
 
 
 def externalError(process):
@@ -457,6 +459,40 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
+
+
+def change_and_check_speed_format(self,unitNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Select Admin tab
+    self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+    time.sleep(5)
+    self.driver.find_element_by_link_text("CONFIGURATION").click()
+    time.sleep(1)
+    self.driver.find_element_by_css_selector("li.audittab").click()
+    time.sleep(1)
+    # Click on Global setting subtab under Configuration Tab
+    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").click()
+    time.sleep(1)
+    # Set Speed format to knots
+    self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
+    self.driver.find_element_by_link_text(speedUnitTypesInText[unitNumber]).click()
+    time.sleep(2)
+    # Click on Position Tab to check correct speed unit
+    self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
+    time.sleep(5)
+    currentSpeedValue = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]").text
+    print("Current: " +  currentSpeedValue + " Short Unit: " + speedUnitTypesShort[unitNumber])
+    if currentSpeedValue.find(speedUnitTypesShort[unitNumber]) == -1:
+        foundCorrectUnit = False
+    else:
+        foundCorrectUnit = True
+    self.assertTrue(foundCorrectUnit)
+    time.sleep(5)
+    # Shutdown browser
+    shutdown_browser(self)
+
 
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -1495,7 +1531,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_30_change_global_settings_change_date(self):
+    def test_30_change_global_settings_change_date_format(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -1545,6 +1581,10 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+    def test_31_change_global_settings_change_speed_format(self):
+        # Change and check speed unit type for Global Settings
+        for x in [0,1,2]:
+            change_and_check_speed_format(self,x)
 
 
     def test_special(self):
