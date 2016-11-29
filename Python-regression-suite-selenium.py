@@ -1583,7 +1583,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_31_change_global_settings_change_speed_format(self):
         # Change and check speed unit type for Global Settings
-        #
         for x in [0,1,2]:
             change_and_check_speed_format(self,x)
 
