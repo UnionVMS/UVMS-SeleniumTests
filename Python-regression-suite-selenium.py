@@ -1467,7 +1467,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_29_view_configuration_page(self):
+    def test_29_view_configuration_pages(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(7)
@@ -1490,6 +1490,57 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("ASSETS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]").text)
         self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]").text)
+
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+    def test_30_change_global_settings_change_date(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Admin tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        self.driver.find_element_by_link_text("CONFIGURATION").click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("li.audittab").click()
+        time.sleep(1)
+        # Click on Global setting subtab under Configuration Tab
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").click()
+        time.sleep(1)
+        # Check that Date format is correct
+        try:
+            radiobuttonDate1 = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/ng-include/div/div/div[1]/div[2]/div[1]/ul/li[1]/label/input").is_selected()
+        except:
+            print("Did NOT find selected radio button")
+            radiobuttonDate1 = False
+        try:
+            radiobuttonDate2 = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/ng-include/div/div/div[1]/div[2]/div[1]/ul/li[2]/label/input").is_selected()
+        except:
+            print("Did NOT find selected radio button")
+            radiobuttonDate2 = False
+        currentDate = self.driver.find_element_by_css_selector("current-time.currentTime").text
+        print(currentDate)
+        if radiobuttonDate1:
+            self.assertEqual("-", currentDate[4])
+        if radiobuttonDate2:
+            self.assertEqual("/", currentDate[2])
+        time.sleep(1)
+        # Change Date format and check that change is made
+        if radiobuttonDate1:
+            self.driver.find_element_by_xpath("(//input[@name='dateFormat'])[2]").click()
+            time.sleep(2)
+            currentDate = self.driver.find_element_by_css_selector("current-time.currentTime").text
+            self.assertEqual("/", currentDate[2])
+
+        if radiobuttonDate2:
+            self.driver.find_element_by_name("dateFormat").click()
+            time.sleep(2)
+            currentDate = self.driver.find_element_by_css_selector("current-time.currentTime").text
+            self.assertEqual("-", currentDate[4])
+
+        time.sleep(5)
 
         # Shutdown browser
         shutdown_browser(self)
