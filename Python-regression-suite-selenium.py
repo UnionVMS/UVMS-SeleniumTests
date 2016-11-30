@@ -1586,10 +1586,22 @@ class UnionVMSTestCase(unittest.TestCase):
         for x in [0,1,2]:
             change_and_check_speed_format(self,x)
 
-    def test_32_bla_bla(self):
+    def test_32_Check_view_help_text(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Click on User Guide icon (Question mark icon)
+        self.driver.find_element_by_xpath("//a[contains(@href, '#/help')]").click()
         time.sleep(3)
+        # Check User guide page
+        self.assertEqual("Table of contents", self.driver.find_element_by_css_selector("h3").text)
+        time.sleep(1)
+        self.assertEqual("Welcome to Union VMS", self.driver.find_element_by_id("welcome").text)
+        time.sleep(5)
+
+        # Shutdown browser
+        shutdown_browser(self)
+
 
 
     def test_special(self):
