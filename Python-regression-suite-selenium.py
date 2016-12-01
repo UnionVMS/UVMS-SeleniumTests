@@ -253,7 +253,8 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Enter IRCS value
     self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
     # Enter Name value
-    self.driver.find_element_by_name("name").send_keys(vesselName[vesselNumber])
+    # self.driver.find_element_by_name("name").send_keys(vesselName[vesselNumber]) --- seems not to work anymore
+    self.driver.find_element_by_css_selector("input[name=\"name\"]").send_keys(vesselName[vesselNumber])
     # Enter External Marking Value
     self.driver.find_element_by_name("externalMarking").send_keys(externalMarkingValue)
     # Enter CFR Value
@@ -377,7 +378,8 @@ def check_new_asset_exists(self, vesselNumber):
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_name("ircs").get_attribute("value"))
     # Check that the Name value is correct
-    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_name("name").get_attribute("value"))
+    # self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_name("name").get_attribute("value")) ---- seems not to work anymore
+    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("input[name=\"name\"]").get_attribute("value"))
     # Check that External Marking Value is correct
     self.assertEqual("EXT3", self.driver.find_element_by_name("externalMarking").get_attribute("value"))
     # Check that the CFR value is correct
@@ -1585,6 +1587,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Change and check speed unit type for Global Settings
         for x in [0,1,2]:
             change_and_check_speed_format(self,x)
+
 
     def test_32_Check_view_help_text(self):
         # Startup browser and login
