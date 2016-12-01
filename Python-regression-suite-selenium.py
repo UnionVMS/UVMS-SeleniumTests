@@ -305,10 +305,6 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
     # Click on new terminal button
-
-    #self.driver.find_element_by_xpath(
-    #    "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[2]/div/div/div/div/div[2]/button"). \
-    #    click()
     self.driver.find_element_by_id("mob-term-add-terminal").click()
     time.sleep(3)
     # Select Transponder system
@@ -328,11 +324,15 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Enter Satellite Number
     self.driver.find_element_by_id("mob-term-form-details-satelite-number").send_keys(satelliteNumber[mobileTerminalNumber])
     # Enter DNID Number
-    self.driver.find_element_by_id("mob-term-form-details-dnid-0").send_keys(dnidNumber[mobileTerminalNumber])
+    #self.driver.find_element_by_id("mob-term-form-details-dnid-0").send_keys(dnidNumber[mobileTerminalNumber]) --- seems not to work anymore
+    self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
-    self.driver.find_element_by_id("mob-term-form-details-member-number-0").send_keys(memberIdnumber)
+    # self.driver.find_element_by_id("mob-term-form-details-member-number-0").send_keys(memberIdnumber) --- seems not to work anymore
+    self.driver.find_element_by_name("memberId").send_keys(memberIdnumber)
     # Enter Installed by
-    self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName)
+    # self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName) --- seems not to work anymore
+    self.driver.find_element_by_xpath("(//input[@type='text'])[36]").send_keys(installedByName)
+
     # Expected frequency
     self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
     # Grace period
@@ -340,8 +340,8 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # In port
     self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
-    #self.driver.find_element_by_id("mob-term-form-details-active").click()
-    self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[1]/div[4]/div[2]/div/form/fieldset/div[1]/div[1]/div[5]/div/label[2]/div").click()
+    #self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[1]/div[4]/div[2]/div/form/fieldset/div[1]/div[1]/div[5]/div/label[2]/div").click()
+    self.driver.find_element_by_id("mob-term-form-details-slider").click()
     time.sleep(2)
     # Click on save button
     self.driver.find_element_by_id("menu-bar-save").click()
