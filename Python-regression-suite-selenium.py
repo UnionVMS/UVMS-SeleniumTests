@@ -332,7 +332,6 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Enter Installed by
     # self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName) --- seems not to work anymore
     self.driver.find_element_by_xpath("(//input[@type='text'])[36]").send_keys(installedByName)
-
     # Expected frequency
     self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
     # Grace period
@@ -451,11 +450,11 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Check Antenna Version
     self.assertEqual(antennaVersion, self.driver.find_element_by_id("mob-term-form-details-antenna").get_attribute("value"))
     # Check DNID Number
-    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_id("mob-term-form-details-dnid-0").get_attribute("value"))
+    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_name("dnid").get_attribute("value"))
     # Check Member Number
-    self.assertEqual(memberIdnumber, self.driver.find_element_by_id("mob-term-form-details-member-number-0").get_attribute("value"))
+    self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
     # Check Installed by Name
-    self.assertEqual(installedByName, self.driver.find_element_by_id("mob-term-form-details-installed-by-0").get_attribute("value"))
+    self.assertEqual(installedByName, self.driver.find_element_by_xpath("(//input[@type='text'])[36]").get_attribute("value"))
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
