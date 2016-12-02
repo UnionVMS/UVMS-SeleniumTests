@@ -1164,6 +1164,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     def test_22_delete_second_group_and_check(self):
+        # Continue...
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
