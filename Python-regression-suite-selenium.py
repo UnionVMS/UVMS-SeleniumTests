@@ -639,7 +639,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
-        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text)
+        #self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text) --- seems not to work anymore
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
         self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
         self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
         self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
@@ -710,7 +711,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
-        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text)
+        #self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text) --- seems not to work anymore
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
         self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
         self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
         self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
