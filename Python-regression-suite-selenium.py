@@ -926,10 +926,10 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check that Grupp 1 has been created
         self.driver.find_element_by_xpath("(//button[@type='button'])[12]").click()
         time.sleep(1)
-        self.assertEqual(groupName[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").text)
+        self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
+        self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(5)
         # Check Assets in Group
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
@@ -992,7 +992,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
+        self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(5)
         # Check Assets in Group
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
@@ -1040,11 +1040,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on saved groups
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[12]").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
+        self.driver.find_element_by_link_text(groupName[0]).click()
+        #self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
         time.sleep(3)
 
         # Get asset name values in the group list
@@ -1064,7 +1065,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         time.sleep(1)
         # Click on action button
-        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
+        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
         time.sleep(1)
         # Remove selected assets from Grupp 1
         self.driver.find_element_by_link_text("Remove from Group").click()
@@ -1073,11 +1074,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.refresh()
         time.sleep(10)
         # Click on saved groups
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[12]").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
+        self.driver.find_element_by_link_text(groupName[0]).click()
+        #self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[2]/a/span").click()
         time.sleep(5)
         # Check Assets in Group
         self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
@@ -1109,7 +1111,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Search for "fartyg"
         self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
         self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='button'])[14]").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(5)
         # Get asset name values in the list
         assetList = []
@@ -1126,15 +1128,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         # Select Action "Save as Group"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
+        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
         self.driver.find_element_by_link_text("Save as Group").click()
         time.sleep(1)
         # Enter Group name and click on save button
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(8)
-        # Check that Grupp 1 has been created
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        # Check that Grupp 2 has been created
+        self.driver.find_element_by_xpath("(//button[@type='button'])[12]").click()
         self.assertEqual(groupName[1], self.driver.find_element_by_link_text(groupName[1]).text)
         time.sleep(2)
         # Click on Grupp 2
