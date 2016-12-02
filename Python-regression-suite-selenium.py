@@ -961,7 +961,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Search for "fartyg"
         self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
         self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='button'])[14]").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(5)
         # Get asset name values in the list
         assetList = []
@@ -978,7 +978,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[7]").click()
         # Select Action "Add to Group"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[22]").click()
+        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
         self.driver.find_element_by_link_text("Add to Group").click()
         time.sleep(1)
         # Select "Grupp 1" and click on save button
@@ -988,7 +988,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(10)
         # Check that Grupp 1 has been created
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_xpath("(//button[@type='button'])[12]").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
