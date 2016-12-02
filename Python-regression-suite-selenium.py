@@ -755,13 +755,11 @@ class UnionVMSTestCase(unittest.TestCase):
             "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
         time.sleep(2)
         # Click on unlinking button
-        self.driver.find_element_by_css_selector("button.btn.btn-primary").click()
-
+        self.driver.find_element_by_id("menu-bar-unlink").click()
         time.sleep(1)
         # Enter comment and click on unlinking button
         self.driver.find_element_by_name("comment").send_keys("Unlink Asset and MT.")
-        self.driver.find_element_by_css_selector("div.col-md-12 > button.btn.btn-primary").click()
-        #self.driver.find_element_by_xpath("(//button[@type='button'])[65]").click()
+        self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
         # Shutdown browser
         shutdown_browser(self)
