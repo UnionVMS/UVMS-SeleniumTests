@@ -873,7 +873,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
         # Close page
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div/div/div[2]/div/div[2]/i").click()
+        self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
         # Shutdown browser
         shutdown_browser(self)
