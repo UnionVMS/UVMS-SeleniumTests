@@ -546,7 +546,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_05_check_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (first in the list)
-        # Continue...
         check_new_mobile_terminal_exists(self, 0)
 
 
