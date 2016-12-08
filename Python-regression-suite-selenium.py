@@ -1330,6 +1330,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_26_export_mobile_terminals_to_excel_file(self):
         # Startup browser and login
+        # Continue ...
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(7)
         # Select Mobile Terminal tab
