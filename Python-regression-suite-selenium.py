@@ -1197,15 +1197,15 @@ class UnionVMSTestCase(unittest.TestCase):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(8)
+        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(8)
+        time.sleep(5)
         # Click on advanced search
         self.driver.find_element_by_css_selector("div.col-md-10.searchFooter > a > span").click()
         time.sleep(1)
-        # Search for all External Marking called EXT
-        self.driver.find_element_by_id("searchextno").send_keys("EXT")
-        self.driver.find_element_by_xpath("(//button[@type='button'])[20]").click()
+        # Search for all External Marking called "EXT3"(externalMarkingValue)
+        self.driver.find_element_by_id("searchextno").send_keys(externalMarkingValue)
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(8)
 
         # Get asset name values in the list
@@ -1247,8 +1247,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.refresh()
         time.sleep(10)
         # Check that Grupp 3 exists in the list
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
-        self.assertEqual(groupName[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div/form/div/div/div/div/div/div/div/div[2]/div/div/div/div/ul/li[3]/a/span").text)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[12]").click()
+        self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
