@@ -1610,6 +1610,36 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    def test_32_Check_Alerts_view(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(3)
+        # Check List Headlines for Holding Table
+        self.assertEqual("Date triggered (UTC)", self.driver.find_element_by_css_selector("span > span").text)
+        self.assertEqual("Object affected", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
+        self.assertEqual("Rule", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]").text)
+        # Select Alerts tab (Notifications)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[2]/a").click()
+        time.sleep(2)
+        # Check List Headlines for Notifications
+        self.assertEqual("Date triggered (UTC)", self.driver.find_element_by_css_selector("span > span").text)
+        self.assertEqual("Object affected", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
+        self.assertEqual("Rule", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]").text)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Check List Headlines for Rules List
+        self.assertEqual("Rule name", self.driver.find_element_by_css_selector("span > span").text)
+        self.assertEqual("Last triggered", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
+        self.assertEqual("Date updated", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").text)
+        time.sleep(5)
+
+        # Shutdown browser
+        shutdown_browser(self)
+
 
     def test_special(self):
         a = datetime.datetime.utcnow()
