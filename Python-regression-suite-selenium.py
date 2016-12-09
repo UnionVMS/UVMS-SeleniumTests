@@ -76,6 +76,7 @@ sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
 speedUnitTypesShort = ("kts", "km/h", "mph")
+reportedSpeedDefault = 8
 
 
 def externalError(process):
@@ -1593,7 +1594,7 @@ class UnionVMSTestCase(unittest.TestCase):
             change_and_check_speed_format(self,x)
 
 
-    def test_32_Check_view_help_text(self):
+    def test_32_check_view_help_text(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -1610,7 +1611,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_32_Check_Alerts_view(self):
+    def test_33_check_alerts_view(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -1639,6 +1640,59 @@ class UnionVMSTestCase(unittest.TestCase):
 
         # Shutdown browser
         shutdown_browser(self)
+
+
+    def test_34_create_one_rule(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(1)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on create button
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        time.sleep(2)
+        # Enter Rule name
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault))
+        # Enter Description
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault))
+        # Enter Rule Speed > 8
+        self.driver.find_element_by_css_selector("div[name=\"startOperator\"] > button[name=\"name\"]").click()
+        self.driver.find_element_by_link_text("(").click()
+        self.driver.find_element_by_css_selector("div[name=\"criteria\"] > button[name=\"name\"]").click()
+        self.driver.find_element_by_link_text("Position").click()
+        self.driver.find_element_by_css_selector("div[name=\"subCriteria\"] > button[name=\"name\"]").click()
+        self.driver.find_element_by_css_selector("div[name=\"conditionTypes\"] > button[name=\"name\"]").click()
+        self.driver.find_element_by_name("value").click()
+        self.driver.find_element_by_name("value").clear()
+        self.driver.find_element_by_name("value").send_keys(reportedSpeedDefault)
+        self.driver.find_element_by_css_selector("div[name=\"endOperator\"] > button[name=\"name\"]").click()
+        self.driver.find_element_by_css_selector("div[name=\"endOperator\"] > button[name=\"name\"]").click()
+        time.sleep(2)
+        self.driver.find_element_by_css_selector("span.link").click()
+        time.sleep(1)
+        # Check validation of Rule
+        self.assertEqual("Rule definition is valid.", self.driver.find_element_by_css_selector("span.success").text)
+        time.sleep(2)
+        # Submit the new Rule
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+
+
+
+
+
+        time.sleep(5)
+
+        # Shutdown browser
+        shutdown_browser(self)
+
 
 
     def test_special(self):
