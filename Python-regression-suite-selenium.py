@@ -77,7 +77,7 @@ groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
 speedUnitTypesShort = ("kts", "km/h", "mph")
 reportedSpeedDefault = [8, 10, 12]
-
+rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by", "Notification", "Notify by email", "Status", "Actions"]
 
 
 def externalError(process):
@@ -1643,7 +1643,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_34_create_rule_one(self):
+    def test_34_create_speed_rule_one(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -1708,17 +1708,29 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-    def test_35_verify_created_rule_one(self):
+    def test_35_verify_created_speed_rule_one(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
+        time.sleep(7)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(1)
+        time.sleep(2)
         # Select Alerts tab (Rules)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
         time.sleep(2)
-
+        # Check Headline Names
+        self.assertEqual(rulesHeadlineNames[0], self.driver.find_element_by_css_selector("span > span").text)
+        self.assertEqual(rulesHeadlineNames[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
+        self.assertEqual(rulesHeadlineNames[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").text)
+        self.assertEqual(rulesHeadlineNames[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[5]/a/span/span").text)
+        self.assertEqual(rulesHeadlineNames[4], self.driver.find_element_by_css_selector("th.notifyByTicket").text)
+        self.assertEqual(rulesHeadlineNames[5], self.driver.find_element_by_css_selector("th.notifyByEmail").text)
+        self.assertEqual(rulesHeadlineNames[6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[8]/a/span/span").text)
+        # Check speed rule parameters
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td.statusColored.truncate-text").text)
+        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@name='name'])[2]").text)
+        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@name='name'])[3]").text)
+        self.assertEqual("ACTIVE", self.driver.find_element_by_css_selector("span.label.label-success").text)
 
 
         time.sleep(5)
