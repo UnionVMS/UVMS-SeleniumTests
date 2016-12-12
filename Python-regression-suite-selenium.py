@@ -1663,16 +1663,30 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault))
         # Enter Rule Speed > 8
         self.driver.find_element_by_css_selector("div[name=\"startOperator\"] > button[name=\"name\"]").click()
+        time.sleep(1)
         self.driver.find_element_by_link_text("(").click()
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div[name=\"criteria\"] > button[name=\"name\"]").click()
+        time.sleep(1)
         self.driver.find_element_by_link_text("Position").click()
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div[name=\"subCriteria\"] > button[name=\"name\"]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Reported speed").click()
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div[name=\"conditionTypes\"] > button[name=\"name\"]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text(">").click()
+        time.sleep(1)
         self.driver.find_element_by_name("value").click()
+        time.sleep(1)
         self.driver.find_element_by_name("value").clear()
+        time.sleep(1)
         self.driver.find_element_by_name("value").send_keys(reportedSpeedDefault)
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div[name=\"endOperator\"] > button[name=\"name\"]").click()
-        self.driver.find_element_by_css_selector("div[name=\"endOperator\"] > button[name=\"name\"]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text(")").click()
         time.sleep(2)
         self.driver.find_element_by_css_selector("span.link").click()
         time.sleep(1)
@@ -1683,13 +1697,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-
-
-
-
-
         time.sleep(5)
-
         # Shutdown browser
         shutdown_browser(self)
 
