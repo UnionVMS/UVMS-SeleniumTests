@@ -76,7 +76,8 @@ sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
 speedUnitTypesShort = ("kts", "km/h", "mph")
-reportedSpeedDefault = 8
+reportedSpeedDefault = [8, 10, 12]
+
 
 
 def externalError(process):
@@ -1642,7 +1643,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_34_create_one_rule(self):
+    def test_34_create_rule_one(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -1657,10 +1658,10 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         # Enter Rule name
         self.driver.find_element_by_name("name").clear()
-        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault))
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]))
         # Enter Description
         self.driver.find_element_by_name("description").clear()
-        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault))
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]))
         # Enter Rule Speed > 8
         self.driver.find_element_by_css_selector("div[name=\"startOperator\"] > button[name=\"name\"]").click()
         time.sleep(1)
@@ -1682,7 +1683,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_name("value").clear()
         time.sleep(1)
-        self.driver.find_element_by_name("value").send_keys(reportedSpeedDefault)
+        self.driver.find_element_by_name("value").send_keys(reportedSpeedDefault[0])
         time.sleep(1)
         self.driver.find_element_by_css_selector("div[name=\"endOperator\"] > button[name=\"name\"]").click()
         time.sleep(1)
@@ -1698,9 +1699,31 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
+        # Change "Notify by email" to Yes
+        self.driver.find_element_by_xpath("(//button[@name='name'])[3]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Yes").click()
+        #self.driver.find_element_by_xpath("(//a[contains(text(),'Yes')])[3]").click()
+        time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
 
+    def test_35_verify_created_rule_one(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(1)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+
+
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
     def test_special(self):
@@ -1762,6 +1785,13 @@ class UnionVMSTestCase(unittest.TestCase):
             allrowsbackup.append(currentrow)
         print(allrowsbackup)
 
+
+        print ("-------------------------------LISTA-------------------------------------")
+
+
+        kalle = [8, 10, 12]
+
+        print(kalle[0])
 
 
         """
