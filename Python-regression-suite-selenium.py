@@ -500,8 +500,6 @@ def change_and_check_speed_format(self,unitNumber):
 
 def generate_and_verify_manual_position(self,speedValue,courseValue):
     # Startup browser and login
-
-    # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
     time.sleep(5)
     # Select Positions tab
@@ -555,6 +553,87 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     time.sleep(5)
     # Shutdown browser
     shutdown_browser(self)
+
+
+def generate_NAF_and_verify_position(self,speedValue,courseValue):
+    # Get Current Date and time in UTC
+    currentUTCValue = datetime.datetime.utcnow()
+    earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+    earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+    earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+    earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+    # Generate NAF string to send
+    nafSource = '//SR//FR/'
+    nafSource = nafSource + countryValue
+    nafSource = nafSource + "//AD/UVM//TM/POS//RC/"
+    nafSource = nafSource + ircsValue[0]
+    nafSource = nafSource + "//IR/"
+    nafSource = nafSource + cfrValue[0]
+    nafSource = nafSource + "//XR/"
+    nafSource = nafSource + externalMarkingValue
+    nafSource = nafSource + "//LT/"
+    nafSource = nafSource + lolaPositionValues[0][0][0]
+    nafSource = nafSource + "//LG/"
+    nafSource = nafSource + lolaPositionValues[0][0][1]
+    nafSource = nafSource + "//SP/"
+    nafSource = nafSource + str(speedValue * 10)
+    nafSource = nafSource + "//CO/"
+    nafSource = nafSource + str(courseValue)
+    nafSource = nafSource + "//DA/"
+    nafSource = nafSource + earlierPositionDateValueString
+    nafSource = nafSource + "//TI/"
+    nafSource = nafSource + earlierPositionTimeValueString
+    nafSource = nafSource + "//NA/"
+    nafSource = nafSource + vesselName[0]
+    nafSource = nafSource + "//FS/"
+    nafSource = nafSource + countryValue
+    nafSource = nafSource + "//ER//"
+    nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+    totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+    # Generate request
+    r = requests.get(totalNAFrequest)
+    # Check if request is OK (200)
+    if r.ok:
+        print("200 OK")
+    else:
+        print("Request NOT OK!")
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Select Positions tab
+    self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
+    time.sleep(7)
+    # Enter IRCS for newly created position
+    self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+    self.driver.find_element_by_link_text("Custom").click()
+    self.driver.find_element_by_xpath("//input[@type='text']").clear()
+    self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
+    # Click on search button
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+    time.sleep(5)
+    # Enter Vessel to verify position data
+    self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
+    self.assertEqual(externalMarkingValue,
+                     self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
+    self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
+    self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+    # Bug UVMS-3249 self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
+    self.assertEqual(lolaPositionValues[0][0][0],
+                     self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
+    self.assertEqual(lolaPositionValues[0][0][1],
+                     self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
+    self.assertEqual("%.2f" % speedValue + " kts", self.driver.find_element_by_css_selector(
+        "td[title=\"" + "%.2f" % speedValue + " kts" + "\"]").text)
+    self.assertEqual(str(courseValue) + "°", self.driver.find_element_by_css_selector(
+        "td[title=\"" + str(courseValue) + "°" + "\"]").text)
+    self.assertEqual(sourceValue[1],
+                     self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
+    time.sleep(5)
+
+    # Shutdown browser
+    shutdown_browser(self)
+
+
 
 
 
@@ -660,6 +739,11 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     def test_08_generate_NAF_and_verify_position(self):
+        # Create a NAF position and verify the position
+        generate_NAF_and_verify_position(self,reportedSpeedValue,reportedCourseValue)
+
+
+        '''
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
@@ -730,6 +814,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
+        '''
 
     def test_09_create_second_new_asset(self):
         # Create new asset (second in the list)
