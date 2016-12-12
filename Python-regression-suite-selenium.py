@@ -551,8 +551,7 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.assertEqual(str(courseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(courseValue) + "°" + "\"]").text)
     self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
     time.sleep(5)
-    # Shutdown browser
-    shutdown_browser(self)
+    return earlierPositionDateTimeValueString
 
 
 def generate_NAF_and_verify_position(self,speedValue,courseValue):
@@ -629,9 +628,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.assertEqual(sourceValue[1],
                      self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
     time.sleep(5)
-
-    # Shutdown browser
-    shutdown_browser(self)
+    return earlierPositionDateTimeValueString
 
 
 
@@ -736,85 +733,16 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_07_generate_and_verify_manual_position(self):
         # Create a manual position and verify the position
         generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
     def test_08_generate_NAF_and_verify_position(self):
         # Create a NAF position and verify the position
         generate_NAF_and_verify_position(self,reportedSpeedValue,reportedCourseValue)
-
-
-        '''
-        # Get Current Date and time in UTC
-        currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
-        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
-        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
-        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-        # Generate NAF string to send
-        nafSource = '//SR//FR/'
-        nafSource = nafSource + countryValue
-        nafSource = nafSource + "//AD/UVM//TM/POS//RC/"
-        nafSource = nafSource + ircsValue[0]
-        nafSource = nafSource + "//IR/"
-        nafSource = nafSource + cfrValue[0]
-        nafSource = nafSource + "//XR/"
-        nafSource = nafSource + externalMarkingValue
-        nafSource = nafSource + "//LT/"
-        nafSource = nafSource + lolaPositionValues[0][0][0]
-        nafSource = nafSource + "//LG/"
-        nafSource = nafSource + lolaPositionValues[0][0][1]
-        nafSource = nafSource + "//SP/"
-        nafSource = nafSource + str(reportedSpeedValue * 10)
-        nafSource = nafSource + "//CO/"
-        nafSource = nafSource + str(reportedCourseValue)
-        nafSource = nafSource + "//DA/"
-        nafSource = nafSource + earlierPositionDateValueString
-        nafSource = nafSource + "//TI/"
-        nafSource = nafSource + earlierPositionTimeValueString
-        nafSource = nafSource + "//NA/"
-        nafSource = nafSource + vesselName[0]
-        nafSource = nafSource + "//FS/"
-        nafSource = nafSource + countryValue
-        nafSource = nafSource + "//ER//"
-        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-        # Generate request
-        r = requests.get(totalNAFrequest)
-        # Check if request is OK (200)
-        if r.ok:
-            print("200 OK")
-        else:
-            print("Request NOT OK!")
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        # Select Positions tab
-        self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-        time.sleep(7)
-        # Enter IRCS for newly created position
-        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
-        self.driver.find_element_by_link_text("Custom").click()
-        self.driver.find_element_by_xpath("//input[@type='text']").clear()
-        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
-        # Click on search button
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-        time.sleep(5)
-        # Enter Vessel to verify position data
-        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
-        self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
-        self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
-        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
-        #self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text) --- seems not to work anymore
-        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
-        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
-        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
-        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
-        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(reportedCourseValue) + "°" + "\"]").text)
-        self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
-        time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-        '''
+
 
     def test_09_create_second_new_asset(self):
         # Create new asset (second in the list)
@@ -1829,6 +1757,48 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+    def test_36_create_manual_position_with_speed_that_triggs_rule_one(self):
+        # Create a manual position and verify the position
+        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(2)
+        self.driver.find_element_by_link_text("Notifications").click()
+
+
+        print(earlierPositionDateTimeValueString)
+        self.assertEqual("2016-12-12 14:26:14", self.driver.find_element_by_css_selector("td[title=\"2016-12-12 14:26:14\"]").text)
+        self.assertEqual("Fartyg1001", self.driver.find_element_by_link_text("Fartyg1001").text)
+        self.assertEqual("Speed > 8", self.driver.find_element_by_css_selector("td[title=\"Speed > 8\"]").text)
+
+
+
+
+
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+
+    def test_37_create_NAF_position_with_speed_that_triggs_rule_one(self):
+        # Create a NAF position and verify the position
+        generate_NAF_and_verify_position(self, 9, reportedCourseValue)
+
+
+
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(7)
+
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
 
