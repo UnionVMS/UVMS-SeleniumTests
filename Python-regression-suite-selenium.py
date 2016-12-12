@@ -497,6 +497,67 @@ def change_and_check_speed_format(self,unitNumber):
     shutdown_browser(self)
 
 
+
+def generate_and_verify_manual_position(self,speedValue,courseValue):
+    # Startup browser and login
+
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Select Positions tab
+    self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
+    time.sleep(2)
+    # Click on New manual report
+    self. driver.find_element_by_xpath("//button[@type='submit']").click()
+    # Enter IRCS value
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
+    time.sleep(3)
+    self.driver.find_element_by_css_selector("strong").click()
+    time.sleep(2)
+    # Get Current Date and time in UTC
+    currentUTCValue = datetime.datetime.utcnow()
+    earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+    earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
+    self.driver.find_element_by_id("manual-movement-date-picker").clear()
+    self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionDateTimeValueString)
+    # Enter Position, Speed and Course
+    self.driver.find_element_by_name("latitude").clear()
+    self.driver.find_element_by_name("latitude").send_keys(lolaPositionValues[0][0][0])
+    self.driver.find_element_by_name("longitude").clear()
+    self.driver.find_element_by_name("longitude").send_keys(lolaPositionValues[0][0][1])
+    self.driver.find_element_by_name("measuredSpeed").send_keys(str(speedValue))
+    self.driver.find_element_by_name("course").send_keys(str(courseValue))
+    # Click on Save Button
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+    time.sleep(5)
+    # Click on Confirm button
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+    time.sleep(5)
+    # Enter IRCS for newly created position
+    self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+    self.driver.find_element_by_link_text("Custom").click()
+    self.driver.find_element_by_xpath("//input[@type='text']").clear()
+    self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
+    # Click on search button
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+    time.sleep(5)
+    # Verifies position data
+    self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
+    self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
+    self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
+    self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+    # Bug UVMS-3249 self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
+    self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
+    self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
+    self.assertEqual("%.2f" % speedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % speedValue + " kts" + "\"]").text)
+    self.assertEqual(str(courseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(courseValue) + "°" + "\"]").text)
+    self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
+    time.sleep(5)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -594,61 +655,9 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
     def test_07_generate_and_verify_manual_position(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        # Select Positions tab
-        self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-        time.sleep(2)
-        # Click on New manual report
-        self. driver.find_element_by_xpath("//button[@type='submit']").click()
-        # Enter IRCS value
-        self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
-        time.sleep(3)
-        self.driver.find_element_by_css_selector("strong").click()
-        time.sleep(2)
-        # Get Current Date and time in UTC
-        currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
-        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:%S')
-        self.driver.find_element_by_id("manual-movement-date-picker").clear()
-        self.driver.find_element_by_id("manual-movement-date-picker").send_keys(earlierPositionDateTimeValueString)
-        # Enter Position, Speed and Course
-        self.driver.find_element_by_name("latitude").clear()
-        self.driver.find_element_by_name("latitude").send_keys(lolaPositionValues[0][0][0])
-        self.driver.find_element_by_name("longitude").clear()
-        self.driver.find_element_by_name("longitude").send_keys(lolaPositionValues[0][0][1])
-        self.driver.find_element_by_name("measuredSpeed").send_keys("5")
-        self.driver.find_element_by_name("course").send_keys("180")
-        # Click on Save Button
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(5)
-        # Click on Confirm button
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(5)
-        # Enter IRCS for newly created position
-        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
-        self.driver.find_element_by_link_text("Custom").click()
-        self.driver.find_element_by_xpath("//input[@type='text']").clear()
-        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
-        # Click on search button
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-        time.sleep(5)
-        # Verifies position data
-        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("td[title=\"" + countryValue + "\"]").text)
-        self.assertEqual(externalMarkingValue, self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue + "\"]").text)
-        self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
-        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
-        #self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("td[title=\"" + earlierPositionDateTimeValueString + "\"]").text) --- seems not to work anymore
-        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
-        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
-        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
-        self.assertEqual("%.2f" % reportedSpeedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % reportedSpeedValue + " kts" + "\"]").text)
-        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(reportedCourseValue) + "°" + "\"]").text)
-        self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
-        time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
+        # Create a manual position and verify the position
+        generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
+
 
     def test_08_generate_NAF_and_verify_position(self):
         # Get Current Date and time in UTC
@@ -1731,11 +1740,32 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@name='name'])[2]").text)
         self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@name='name'])[3]").text)
         self.assertEqual("ACTIVE", self.driver.find_element_by_css_selector("span.label.label-success").text)
-
-
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     def test_special(self):
