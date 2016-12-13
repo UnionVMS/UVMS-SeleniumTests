@@ -1760,6 +1760,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_36_create_manual_position_with_speed_that_triggs_rule_one(self):
         # Create a manual position and verify the position
         earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+
         # Click on Alert tab
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(5)
@@ -1790,29 +1791,42 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-
     def test_37_create_NAF_position_with_speed_that_triggs_rule_one(self):
         # Create a NAF position and verify the position
-        generate_NAF_and_verify_position(self, 9, reportedCourseValue)
+        earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Check Asset and Rule names
+        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text)
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        time.sleep(2)
+        # Check Position parameters
+        self.assertEqual(countryValue, self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        # Bug UVMS-3249 self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[0] + 1) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(2)
 
 
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
