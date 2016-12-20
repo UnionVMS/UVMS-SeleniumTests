@@ -1826,6 +1826,29 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+    def test_39_create_manual_position_with_speed_that_not_triggs_speed_rule_one(self):
+        # Create a manual position and verify the position
+        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Get Asset and Rule names
+        tempAsset = self.driver.find_element_by_link_text(vesselName[0]).text
+        tempRuleName = self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        time.sleep(2)
+        # Check that time is not correct
+        self.assertNotEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        print(earlierPositionDateTimeValueString)
+        print(self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        time.sleep(2)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
     def test_special(self):
@@ -1841,7 +1864,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
         for x in range(6):
             print(x)
-
 
         a = 13.9412
         b = "%.2f" % a
@@ -1859,13 +1881,11 @@ class UnionVMSTestCase(unittest.TestCase):
         print(lolaPositionValues[5][1][0])
         print(lolaPositionValues[5][1][1])
 
-
         for x in range(2, 6):
             print ("We're on time %d" % (x))
 
         for x in [2,3, 6]:
             print ("We're on time %d" % (x))
-
 
         print("td[title=\"SWE\"]")
         print("td[title=\"" + countryValue + "\"]")
@@ -1877,7 +1897,6 @@ class UnionVMSTestCase(unittest.TestCase):
         print(os.getcwd())
         print ("--------------------------------------------------------------------")
 
-
         allrowsbackup = ['']
         for x in [0,1,2]:
             currentrow = []
@@ -1888,14 +1907,9 @@ class UnionVMSTestCase(unittest.TestCase):
             allrowsbackup.append(currentrow)
         print(allrowsbackup)
 
-
         print ("-------------------------------LISTA-------------------------------------")
-
-
         kalle = [8, 10, 12]
-
         print(kalle[0])
-
 
         """
         ifile  = open('assets.csv', "rt", encoding="utf8")
