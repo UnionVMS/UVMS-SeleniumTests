@@ -1456,35 +1456,6 @@ class UnionVMSTestCase(unittest.TestCase):
                 for z in range(8):
                     self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
 
-
-        '''
-        # Check that the elements in csv file is correct
-        for y in range(len(allrows)):
-            if y==0:
-                # Check Headlines
-                for x in range(len(mobileTerminalHeadline)):
-                    if not (x == 0):
-                        self.assertEqual(mobileTerminalHeadline[x], allrows[y][x])
-            elif y == 1:
-                print("Test row: " + str(y))
-                self.assertEqual(vesselName[0], allrows[y][0])
-                self.assertEqual(serialNoValue[1], allrows[y][1])
-                self.assertEqual(memberIdnumber, allrows[y][2])
-                self.assertEqual(dnidNumber[1], allrows[y][3])
-                self.assertEqual(transponderType[1], allrows[y][4])
-                self.assertEqual(satelliteNumber[1], allrows[y][5])
-                self.assertEqual(mmsiValue[0], allrows[y][6])
-                self.assertEqual("Active", allrows[y][7])
-            else:
-                print("Test row: " + str(y) + " ELSE")
-                self.assertEqual("Not linked", allrows[y][0])
-                self.assertEqual(serialNoValue[y], allrows[y][1])
-                self.assertEqual(memberIdnumber, allrows[y][2])
-                self.assertEqual(dnidNumber[y], allrows[y][3])
-                self.assertEqual(transponderType[1], allrows[y][4])
-                self.assertEqual(satelliteNumber[y], allrows[y][5])
-                self.assertEqual("Active", allrows[y][7])
-        '''
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -1616,7 +1587,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_31_change_global_settings_change_speed_format(self):
         # Change and check speed unit type for Global Settings
-        for x in [0,1,2]:
+        for x in [2,1,0]:
             change_and_check_speed_format(self,x)
 
 
@@ -1823,19 +1794,10 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(2)
-
-
 
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
-
-
-
-
-
 
 
 
