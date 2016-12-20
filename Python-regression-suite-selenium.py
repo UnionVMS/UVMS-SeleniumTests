@@ -19,6 +19,7 @@ import urllib.request
 from os.path import expanduser
 import csv
 import codecs
+import xmlrunner
 
 # Globals
 # Assets
@@ -650,13 +651,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
 # -------------------------------------------------------------------------------------------------------------------
 
 class UnionVMSTestCase(unittest.TestCase):
-#    @classmethod
-#    def setUpClass(cls):
-        #startup_browser_and_login_to_unionVMS(cls)
 
-#    @classmethod
-#    def tearDownClass(cls):
-        #shutdown_browser(cls)
 
     def test_01_reset_database_union_vms(self):
         # Save current default dir path
@@ -1800,6 +1795,36 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    def test_38_inactivate_speed_rule_one_and_check(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(2)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on edit rule icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[7]").click()
+        time.sleep(2)
+        # Click on selection drop down button
+        self.driver.find_element_by_css_selector("div[name=\"active\"] > button[name=\"name\"]").click()
+        time.sleep(2)
+        # Select "Inactive" state
+        self.driver.find_element_by_link_text("Inactive").click()
+        time.sleep(2)
+        # Click on update button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        time.sleep(2)
+        # Click on confirmation button
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(4)
+        # Check that rule one is in inactive state
+        self.assertEqual("INACTIVE", self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/span").text)
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
 
 
 
@@ -1904,6 +1929,14 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_special_3(self):
         populateSanityRuleData()
 
+#if __name__ == '__main__':
+#    unittest.main()
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(
+        testRunner=xmlrunner.XMLTestRunner(output='test-reports'),
+        # these make sure that some options that are not applicable
+        # remain hidden from the help menu.
+        failfast=False, buffer=False, catchbreak=False)
+
 #unittest.main()
