@@ -935,6 +935,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         # Select Action "Save as Group"
         self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
+        time.sleep(1)
         self.driver.find_element_by_link_text("Save as Group").click()
         time.sleep(1)
         # Enter Group name and click on save button
