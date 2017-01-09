@@ -28,29 +28,19 @@ ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006"]
 vesselName = ["Fartyg1001", "Fartyg1002", "Fartyg1003", "Fartyg1004", "Fartyg1005", "Fartyg1006"]
 cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE0000F1005", "SWE0000F1006"]
 externalMarkingValue = "EXT3"
-#imoValue = str(random.randint(0, 9999999))
-#imoValue = imoValue.zfill(7)
 imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
-#mmsiValue = str(random.randint(0, 999999999))
-#mmsiValue = mmsiValue.zfill(9)
 mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
 homeportValue = "GOT"
 assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
 producercodeValue = "1"
 # Mobile Terminals
-serialNoValue = ["M1001", "M1002", "M1003", "M1004", "M1005", "M1006"]
-#transceiverType = str(random.randint(1, 100))
-transceiverType = "Type A"
-#softwareVersionList = ['A', 'B', 'C']
-#softwareVersion = random.choice(softwareVersionList)
+serialNoValue = ["M1001", "M1002", "M1003", "M1004", "M1005", "M1006", "4TT097 4E6 84B"]
+transceiverType = ["Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Sailor 6140M MiniC"]
 softwareVersion = "A"
 antennaVersion = "A"
-#satelliteNumber = str(random.randint(1, 999999999))
-satelliteNumber = ["S1001", "S1002", "S1003", "S1004", "S1005", "S1006"]
-#dnidNumber = str(random.randint(1, 99999))
-dnidNumber = ["1001", "1002", "1003", "1004", "1005", "1006"]
-#memberIdnumber = str(random.randint(100, 499))
-memberIdnumber = "100"
+satelliteNumber = ["S1001", "S1002", "S1003", "S1004", "S1005", "S1006", "4 265 097 12"]
+dnidNumber = ["1001", "1002", "1003", "1004", "1005", "1006", "10745"]
+memberIdnumber = ["100", "100", "100", "100", "100", "100", "255"]
 installedByName = "Mike Great"
 expectedFrequencyHours = "2"
 expectedFrequencyMinutes = "0"
@@ -319,7 +309,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Enter serial number
     self.driver.find_element_by_id("mob-term-form-details-serial-number").send_keys(serialNoValue[mobileTerminalNumber])
     # Enter Transceiver type
-    self.driver.find_element_by_id("mob-term-form-details-transceiver-type").send_keys(transceiverType)
+    self.driver.find_element_by_id("mob-term-form-details-transceiver-type").send_keys(transceiverType[mobileTerminalNumber])
     # Enter Software Version
     self.driver.find_element_by_id("mob-term-form-details-software-version").send_keys(softwareVersion)
     # Enter Antenna
@@ -327,13 +317,10 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Enter Satellite Number
     self.driver.find_element_by_id("mob-term-form-details-satelite-number").send_keys(satelliteNumber[mobileTerminalNumber])
     # Enter DNID Number
-    #self.driver.find_element_by_id("mob-term-form-details-dnid-0").send_keys(dnidNumber[mobileTerminalNumber]) --- seems not to work anymore
     self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
-    # self.driver.find_element_by_id("mob-term-form-details-member-number-0").send_keys(memberIdnumber) --- seems not to work anymore
-    self.driver.find_element_by_name("memberId").send_keys(memberIdnumber)
+    self.driver.find_element_by_name("memberId").send_keys(memberIdnumber[mobileTerminalNumber])
     # Enter Installed by
-    # self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName) --- seems not to work anymore
     self.driver.find_element_by_xpath("(//input[@type='text'])[36]").send_keys(installedByName)
     # Expected frequency
     self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
@@ -342,7 +329,6 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # In port
     self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
-    #self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div[1]/div[4]/div[2]/div/form/fieldset/div[1]/div[1]/div[5]/div/label[2]/div").click()
     self.driver.find_element_by_id("mob-term-form-details-slider").click()
     time.sleep(2)
     # Click on save button
@@ -437,7 +423,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Check Serial Number in the list
     self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]").text)
     # Check Member Number in the list
-    self.assertEqual(memberIdnumber, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+    self.assertEqual(memberIdnumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
     # Check DNID Number in the list
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
     # Click on details button
@@ -445,7 +431,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
         "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     time.sleep(2)
     # Check Transceiver Type
-    self.assertEqual(transceiverType, self.driver.find_element_by_id("mob-term-form-details-transceiver-type").get_attribute("value"))
+    self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_id("mob-term-form-details-transceiver-type").get_attribute("value"))
     # Check Software Version
     self.assertEqual(softwareVersion, self.driver.find_element_by_id("mob-term-form-details-software-version").get_attribute("value"))
     # Check Satellite Number
@@ -455,10 +441,50 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Check DNID Number
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_name("dnid").get_attribute("value"))
     # Check Member Number
-    self.assertEqual(memberIdnumber, self.driver.find_element_by_name("memberId").get_attribute("value"))
+    self.assertEqual(memberIdnumber[mobileTerminalNumber], self.driver.find_element_by_name("memberId").get_attribute("value"))
     # Check Installed by Name
     self.assertEqual(installedByName, self.driver.find_element_by_xpath("(//input[@type='text'])[36]").get_attribute("value"))
     # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+    # Shutdown browser
+    shutdown_browser(self)
+
+def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Select Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Enter Serial Number in field
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
+    # Click in search button
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_xpath(
+        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    time.sleep(3)
+    # Click on Link Asset
+    self.driver.find_element_by_id("assignVesselLink").click()
+    time.sleep(2)
+    # Enter Asset Name and clicks on the search button
+    self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[mobileTerminalNumber])
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(2)
+    # Click on connect button
+    self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
+    # Click on Link button
+    time.sleep(2)
+    self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
+    # Enter Reason comment
+    self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
+    time.sleep(2)
+    # Click on Link button 2
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    time.sleep(2)
+    # Close page
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
     # Shutdown browser
@@ -678,53 +704,14 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create new Mobile Terminal (first in the list)
         create_one_new_mobile_terminal_from_gui(self, 0)
 
-
     def test_05_check_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (first in the list)
         check_new_mobile_terminal_exists(self, 0)
 
-
     def test_06_link_asset_and_mobile_terminal(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-        # Select Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
-        # Enter Serial Number in field
-        self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[0])
-        # Click in search button
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(5)
-        # Click on details button
-        self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
-        time.sleep(3)
-        # Click on Link Asset
-        self.driver.find_element_by_id("assignVesselLink").click()
-        time.sleep(2)
-        # Enter Asset Name and clicks on the search button
-        self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[0])
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(2)
-        # Click on connect button
-        self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
-        # Click on Link button
-        time.sleep(2)
-        self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
-        #self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
-        # Enter Reason comment
-        self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
-        time.sleep(2)
-        # Click on Link button 2
-        #self.driver.find_element_by_xpath("(//button[@type='button'])[66]").click()
-        self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-        time.sleep(2)
-        # Close page
-        self.driver.find_element_by_id("menu-bar-cancel").click()
-        time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
+
+        link_asset_and_mobile_terminal(self,0)
+
 
     def test_07_generate_and_verify_manual_position(self):
         # Create a manual position and verify the position
@@ -1358,7 +1345,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(5)
         # Search on MemberID 100
-        self.driver.find_element_by_xpath("(//input[@type='text'])[9]").send_keys(memberIdnumber)
+        self.driver.find_element_by_xpath("(//input[@type='text'])[9]").send_keys(memberIdnumber[0])
         time.sleep(1)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
@@ -1883,8 +1870,17 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    def test_41_create_one_new_mobile_terminal(self):
+        # Create new Mobile Terminal (7th in the list) The special MT with internal parameters
+        create_one_new_mobile_terminal_from_gui(self, 6)
 
-    def test_41_generate_manual_poll_and_check(self):
+    def test_42_check_new_mobile_terminal_exists(self):
+        # Check new Mobile Terminal (7th in the list) The special MT with internal parameters
+        check_new_mobile_terminal_exists(self, 6)
+
+
+
+    def test_43_generate_manual_poll_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
