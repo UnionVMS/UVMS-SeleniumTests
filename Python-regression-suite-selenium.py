@@ -645,16 +645,11 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
     self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
     # Bug UVMS-3249 self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
-    self.assertEqual(lolaPositionValues[0][0][0],
-                     self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
-    self.assertEqual(lolaPositionValues[0][0][1],
-                     self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
-    self.assertEqual("%.2f" % speedValue + " kts", self.driver.find_element_by_css_selector(
-        "td[title=\"" + "%.2f" % speedValue + " kts" + "\"]").text)
-    self.assertEqual(str(courseValue) + "°", self.driver.find_element_by_css_selector(
-        "td[title=\"" + str(courseValue) + "°" + "\"]").text)
-    self.assertEqual(sourceValue[1],
-                     self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
+    self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
+    self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
+    self.assertEqual("%.2f" % speedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % speedValue + " kts" + "\"]").text)
+    self.assertEqual(str(courseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(courseValue) + "°" + "\"]").text)
+    self.assertEqual(sourceValue[0], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[0] + "\"]").text)
     time.sleep(5)
     return earlierPositionDateTimeValueString
 
