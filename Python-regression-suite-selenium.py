@@ -25,7 +25,7 @@ import xmlrunner
 # Assets
 countryValue = 'SWE'
 ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006"]
-vesselName = ["Fartyg1001", "Fartyg1002", "Fartyg1003", "Fartyg1004", "Fartyg1005", "Fartyg1006"]
+vesselName = ["Fartyg1001", "Fartyg1002", "Fartyg1003", "Fartyg1004", "Fartyg1005", "Fartyg1006", "INGARÖ"]
 cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE0000F1005", "SWE0000F1006"]
 externalMarkingValue = "EXT3"
 imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
@@ -1867,9 +1867,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check new Mobile Terminal (7th in the list) The special MT with internal parameters
         check_new_mobile_terminal_exists(self, 6)
 
+    def test_43_link_asset_and_mobile_terminal(self):
+        # Link asset 1 with mobile terminal 1 (first in the list)
+        link_asset_and_mobile_terminal(self,6)
 
-
-    def test_43_generate_manual_poll_and_check(self):
+    def test_44_generate_manual_poll_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
