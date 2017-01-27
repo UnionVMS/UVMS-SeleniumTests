@@ -24,7 +24,7 @@ import xmlrunner
 # Globals
 # Assets
 countryValue = 'SWE'
-ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006"]
+ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006", "SFB-7784"]
 vesselName = ["Fartyg1001", "Fartyg1002", "Fartyg1003", "Fartyg1004", "Fartyg1005", "Fartyg1006", "INGARÖ"]
 cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE0000F1005", "SWE0000F1006"]
 externalMarkingValue = "EXT3"
@@ -1882,19 +1882,19 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/div/ul/li[2]/a").click()
         #self.driver.find_element_by_link_text("New poll").click()
         time.sleep(2)
-        # Search IRCS SFB-7784
-        self.driver.find_element_by_xpath("(//input[@type='text'])[2]").send_keys("SFB-7784")
+        # Search for IRCS
+        self.driver.find_element_by_xpath("(//input[@type='text'])[2]").send_keys(ircsValue[6])
         time.sleep(1)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(5)
-        # Select IRCS SFB-7784 in the list
+        # Select IRCS in the list
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div/span/div/table/tbody/tr/td[6]/button").click()
         time.sleep(1)
         # Click on next button
         self.driver.find_element_by_css_selector("div.col-md-12.textAlignRight > button.btn.btn-primary").click()
         time.sleep(1)
         # Enter comment in comment field
-        self.driver.find_element_by_name("comment").send_keys("Comment 1")
+        self.driver.find_element_by_name("comment").send_keys("The best comment to IRCS " + ircsValue[6])
         time.sleep(1)
         # Submit poll
         self.driver.find_element_by_css_selector("div.col-md-8.textAlignRight > button.btn.btn-primary").click()
