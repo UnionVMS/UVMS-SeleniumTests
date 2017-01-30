@@ -1492,7 +1492,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("li.audittab").click()
         time.sleep(1)
         # Click on all sub tabs under Configuration Tab
-        for x in [2, 3, 4, 5, 6, 7]:
+        for x in [2, 3, 4, 5, 6]:
             self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[" + str(x) + "]").click()
             time.sleep(2)
         time.sleep(5)
@@ -1500,10 +1500,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("SYSTEM MONITOR", self.driver.find_element_by_css_selector("li.audittab").text)
         self.assertEqual("GLOBAL SETTINGS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").text)
         self.assertEqual("REPORTING", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[3]").text)
-        self.assertEqual("MDR", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]").text)
-        self.assertEqual("ASSETS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]").text)
-        self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]").text)
-        self.assertEqual("EXCHANGE", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[7]").text)
+        self.assertEqual("ASSETS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[4]").text)
+        self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[5]").text)
+        self.assertEqual("EXCHANGE", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[6]").text)
 
         # Shutdown browser
         shutdown_browser(self)
