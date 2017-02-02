@@ -62,7 +62,8 @@ lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
 # Mixed parameters
 reportedSpeedValue = 5
 reportedCourseValue = 180
-httpNAFRequestString = "http://livm73t:28080/naf/rest/message/"
+httpNAFRequestString = "http://livm73u:28080/naf/rest/message/"
+httpUnionVMSurlString = "http://livm73u:28080/unionvms/"
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
@@ -194,7 +195,7 @@ def startup_browser_and_login_to_unionVMS(cls):
     cls.driver.maximize_window()
     # Login to test user admin
     #cls.driver.get("https://unionvmstest.havochvatten.se/unionvms/")
-    cls.driver.get("http://livm73t:28080/unionvms/")
+    cls.driver.get(httpUnionVMSurlString)
     time.sleep(2)
 
     # if Hav och vatten proxy page is presented, then autologin
@@ -769,6 +770,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         # Click on New manual report
         self. driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(3)
         # Enter IRCS value
         self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
         time.sleep(5)
