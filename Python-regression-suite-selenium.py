@@ -64,6 +64,8 @@ reportedSpeedValue = 5
 reportedCourseValue = 180
 httpNAFRequestString = "http://livm73u:28080/naf/rest/message/"
 httpUnionVMSurlString = "http://livm73u:28080/unionvms/"
+connectToDatabaseString = "dbname='db71u' user='postgres' host='livmdb71u' password='postgres'"
+
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
@@ -97,7 +99,7 @@ def resetModuleDatabase():
 
 def populateIridiumImarsatCData():
     try:
-        conn = psycopg2.connect("dbname='db71t' user='postgres' host='livmdb71t' password='postgres'")
+        conn = psycopg2.connect(connectToDatabaseString)
         print("Yeeahh I am in!!!")
         cur = conn.cursor()
 
@@ -1860,19 +1862,61 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    def test_41_create_one_new_mobile_terminal(self):
+    def test_41_remove_speed_rule_one(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(1)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on delete button icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        time.sleep(1)
+        # Click on Yes button to comfirm
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+    def test_42_check_speed_rule_one_removed(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(1)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Try to find speed rule element)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td.statusColored.truncate-text").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(5)
+        # Shutdown browser
+        shutdown_browser(self)
+
+
+
+
+    def test_43_create_one_new_mobile_terminal(self):
         # Create new Mobile Terminal (7th in the list) The special MT with internal parameters
         create_one_new_mobile_terminal_from_gui(self, 6)
 
-    def test_42_check_new_mobile_terminal_exists(self):
+    def test_44_check_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (7th in the list) The special MT with internal parameters
         check_new_mobile_terminal_exists(self, 6)
 
-    def test_43_link_asset_and_mobile_terminal(self):
+    def test_45_link_asset_and_mobile_terminal(self):
         # Link asset 1 with mobile terminal 1 (first in the list)
         link_asset_and_mobile_terminal(self,6)
 
-    def test_44_generate_manual_poll_and_check(self):
+    def test_46_generate_manual_poll_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
@@ -1965,7 +2009,6 @@ class UnionVMSTestCase(unittest.TestCase):
         print ("-------------------------------LISTA-------------------------------------")
         kalle = [8, 10, 12]
         print(kalle[0])
-
         """
         ifile  = open('assets.csv', "rt", encoding="utf8")
         #ifile = open('assets.csv', "rt")
