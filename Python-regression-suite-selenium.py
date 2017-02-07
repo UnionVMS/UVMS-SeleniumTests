@@ -62,9 +62,13 @@ lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
 # Mixed parameters
 reportedSpeedValue = 5
 reportedCourseValue = 180
-httpNAFRequestString = "http://livm73u:28080/naf/rest/message/"
-httpUnionVMSurlString = "http://livm73u:28080/unionvms/"
-connectToDatabaseString = "dbname='db71u' user='postgres' host='livmdb71u' password='postgres'"
+appServerName = "livm73u"
+dbServerName = "db71u"
+hostdbServerName = "livmdb71u"
+httpNAFRequestString = "http://" + appServerName + ":28080/naf/rest/message/"
+httpUnionVMSurlString = "http://" + appServerName + ":28080/unionvms/"
+connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'"
+dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":5432/" + dbServerName
 
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
@@ -93,8 +97,8 @@ def resetModuleDatabase():
         os.chdir("C:\\git-modules\\UVMS-" + moduleNames[i] + "Module-DB\\LIQUIBASE")
         print(os.getcwd())
         # Reset current Module database
-        runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres',
-                       '-Ddb.url=jdbc:postgresql://livmdb71t.havochvatten.se:5432/db71t'], True)
+        # runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres', '-Ddb.url=jdbc:postgresql://livm73u:5432/db71u'], True)
+        runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres', dbURLjdbcString], True)
         time.sleep(1)
 
 def populateIridiumImarsatCData():
@@ -106,7 +110,7 @@ def populateIridiumImarsatCData():
         # Add rows to mobterm.plugin table
         cur.execute("""SELECT * from mobterm.plugin""")
         rows = cur.fetchall()
-        print("\nPrint out of Database db71t (Before):\n")
+        print("\nPrint out of Database " + dbServerName + " (Before):\n")
         for row in rows:
             print(row[0:])
         cur.execute("""INSERT INTO mobterm.plugin VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
@@ -117,7 +121,7 @@ def populateIridiumImarsatCData():
                      'twostage', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin""")
         rows = cur.fetchall()
-        print("\nPrint out of Database db71t (After):\n")
+        print("\nPrint out of Database " + dbServerName + " (After):\n")
         for row in rows:
             print(row[0:])
         conn.commit()
@@ -125,32 +129,32 @@ def populateIridiumImarsatCData():
         # Add rows to mobterm.plugin_capability
         cur.execute("""SELECT * from mobterm.plugin_capability""")
         rows = cur.fetchall()
-        print("\nPrint out of Database db71t (Before 2):\n")
+        print("\nPrint out of Database " + dbServerName + " (Before 2):\n")
         for row in rows:
             print(row[0:])
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1051, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1051, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1052, 1050, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1052, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1053, 1050, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1053, 1050, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1054, 1050, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1054, 1050, 'MULTIPLE_OCEAN', 'FALSE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
                     (1055, 1050, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1057, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1057, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1058, 1056, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1058, 1056, 'POLLABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
-                    (1059, 1056, 'ONLY_SINGLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
+                    (1059, 1056, 'CONFIGURABLE', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
                     (1060, 1056, 'SAMPLING', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin_capability VALUES (%s, %s, %s, %s, %s, %s);""",
                     (1061, 1056, 'MULTIPLE_OCEAN', 'TRUE', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin_capability""")
         rows = cur.fetchall()
-        print("\nPrint out of Database db71t (After 2):\n")
+        print("\nPrint out of Database " + dbServerName + " (After 2):\n")
         for row in rows:
             print(row[0:])
         conn.commit()
@@ -163,19 +167,19 @@ def populateIridiumImarsatCData():
 
 def populateSanityRuleData():
     try:
-        conn = psycopg2.connect("dbname='db71t' user='postgres' host='livmdb71t' password='postgres'")
+        conn = psycopg2.connect(connectToDatabaseString)
         print("Yeeahh I am in!!!")
         cur = conn.cursor()
         cur.execute("""SELECT * from rules.sanityrule""")
         rows = cur.fetchall()
-        print("\nPrint out of Database db71t (Before):\n")
+        print("\nPrint out of Database " + dbServerName + " (Before):\n")
         for row in rows:
             print(row[0:])
 
         cur.execute("""UPDATE rules.sanityrule SET sanityrule_expression = 'mobileTerminalConnectId == null && pluginType != "NAF"' WHERE sanityrule_expression = 'mobileTerminalConnectId == null';""")
 
         cur.execute("""SELECT * from rules.sanityrule""")
-        print("\nPrint out of Database db71t (After):\n")
+        print("\nPrint out of Database " + dbServerName + " (After):\n")
         rows = cur.fetchall()
         for row in rows:
             print(row[0:])
@@ -563,6 +567,7 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.driver.find_element_by_link_text("Custom").click()
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
+    time.sleep(5)
     # Click on search button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
     time.sleep(5)
@@ -634,6 +639,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.driver.find_element_by_link_text("Custom").click()
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
+    time.sleep(5)
     # Click on search button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
     time.sleep(5)
@@ -1951,6 +1957,8 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     def test_special(self):
+        print('-Ddb.url=jdbc:postgresql://livmdb71u:5432/db71u')
+        print(dbURLjdbcString)
         a = datetime.datetime.utcnow()
         b = a - datetime.timedelta(hours=3)
         print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
