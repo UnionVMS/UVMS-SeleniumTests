@@ -245,50 +245,48 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(1)
     # Click on new Asset button
-    self.driver.find_element_by_xpath(
-        "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[3]/div/div[2]/div[1]/div[2]/button").click()
+    self.driver.find_element_by_id("asset-btn-create").click()
     time.sleep(2)
     # Select F.S value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
-    self.driver.find_element_by_link_text(countryValue).click()
+    self.driver.find_element_by_id("asset-input-countryCode").click()
+    self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
     # Enter IRCS value
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[vesselNumber])
     # Enter Name value
-    # self.driver.find_element_by_name("name").send_keys(vesselName[vesselNumber]) --- seems not to work anymore
-    self.driver.find_element_by_css_selector("input[name=\"name\"]").send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_id("asset-input-name").send_keys(vesselName[vesselNumber])
     # Enter External Marking Value
-    self.driver.find_element_by_name("externalMarking").send_keys(externalMarkingValue)
+    self.driver.find_element_by_id("asset-input-externalMarking").send_keys(externalMarkingValue)
     # Enter CFR Value
-    self.driver.find_element_by_name("cfr").send_keys(cfrValue[vesselNumber])
+    self.driver.find_element_by_id("asset-input-cfr").send_keys(cfrValue[vesselNumber])
     # Enter IMO Value
-    self.driver.find_element_by_name("imo").send_keys(imoValue[vesselNumber])
+    self.driver.find_element_by_id("asset-input-imo").send_keys(imoValue[vesselNumber])
     # Enter HomePort Value
-    self.driver.find_element_by_name("homeport").send_keys(homeportValue)
+    self.driver.find_element_by_id("asset-input-homeport").send_keys(homeportValue)
     # Select Gear Type value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
-    self.driver.find_element_by_link_text("Dermersal").click()
+    self.driver.find_element_by_id("asset-input-gearType").click()
+    self.driver.find_element_by_id("asset-input-gearType-item-0").click()
     # Enter MMSI Value
-    self.driver.find_element_by_name("mmsi").send_keys(mmsiValue[vesselNumber])
+    self.driver.find_element_by_id("asset-input-mmsi").send_keys(mmsiValue[vesselNumber])
     # Select License Type value
-    self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+    self.driver.find_element_by_id("asset-input-licenseType").click()
     time.sleep(1)
-    self.driver.find_element_by_link_text("MOCK-license-DB").click()
+    self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
     # Length Value
-    self.driver.find_element_by_name("lengthValue").send_keys("14")
+    self.driver.find_element_by_id("asset-input-lengthValue").send_keys("14")
     # Gross Tonnage Value
-    self.driver.find_element_by_name("grossTonnage").send_keys("3")
+    self.driver.find_element_by_id("asset-input-grossTonnage").send_keys("3")
     # Main Power Value
-    self.driver.find_element_by_name("power").send_keys("1300")
+    self.driver.find_element_by_id("asset-input-power").send_keys("1300")
     # Main Producer Name Value
-    self.driver.find_element_by_name("producername").send_keys("Mikael")
+    self.driver.find_element_by_id("asset-input-producername").send_keys("Mikael")
     # Main Producer Code Value
-    self.driver.find_element_by_name("producercode").send_keys(producercodeValue)
+    self.driver.find_element_by_id("asset-input-producercode").send_keys(producercodeValue)
     # Main Contact Name Value
-    self.driver.find_element_by_id("contact-name").send_keys("Mikael Great")
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys("Mikael Great")
     # Main E-mail Value
-    self.driver.find_element_by_id("contact-email").send_keys("mikael.glemne@havochvatten.se")
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys("mikael.glemne@havochvatten.se")
     # Main Contact Number Value
-    self.driver.find_element_by_id("contact-number").send_keys("+46720456789")
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys("+46720456789")
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
     time.sleep(3)
