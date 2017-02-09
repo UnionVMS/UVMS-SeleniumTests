@@ -915,7 +915,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_id("asset-input-simple-search").send_keys("Fartyg")
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
@@ -976,9 +976,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
-        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
         assetList = []
@@ -995,7 +994,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[7]").click()
         # Select Action "Add to Group"
-        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
         time.sleep(2)
         self.driver.find_element_by_link_text("Add to Group").click()
         time.sleep(2)
@@ -1007,7 +1006,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
         # Check that Grupp 1 has been created
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
