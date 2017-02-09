@@ -354,8 +354,10 @@ def check_new_asset_exists(self, vesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for the new created asset in the asset list
-    self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys(vesselName[vesselNumber])
-    self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+    #self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys(vesselName[vesselNumber])
+    #self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
     # Check that the new asset exists in the list.
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[vesselNumber] + "\"]").text)
