@@ -31,8 +31,17 @@ externalMarkingValue = "EXT3"
 imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
 mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
 homeportValue = "GOT"
-assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
+gearTypeValue = "Dermersal"
+lengthValue = "14"
+grossTonnageValue = "3"
+powerValue = "1300"
+producernameValue ="Mikael"
 producercodeValue = ""
+contactNameValue = "Mikael Great"
+contactEmailValue = "mikael.glemne@havochvatten.se"
+contactPhoneNumberValue = "+46720456789"
+assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
+
 # Mobile Terminals
 serialNoValue = ["M1001", "M1002", "M1003", "M1004", "M1005", "M1006", "4TT097 4E6 84B"]
 transceiverType = ["Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Sailor 6140M MiniC"]
@@ -272,21 +281,21 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
     # Length Value
-    self.driver.find_element_by_id("asset-input-lengthValue").send_keys("14")
+    self.driver.find_element_by_id("asset-input-lengthValue").send_keys(lengthValue)
     # Gross Tonnage Value
-    self.driver.find_element_by_id("asset-input-grossTonnage").send_keys("3")
+    self.driver.find_element_by_id("asset-input-grossTonnage").send_keys(grossTonnageValue)
     # Main Power Value
-    self.driver.find_element_by_id("asset-input-power").send_keys("1300")
+    self.driver.find_element_by_id("asset-input-power").send_keys(powerValue)
     # Main Producer Name Value
-    self.driver.find_element_by_id("asset-input-producername").send_keys("Mikael")
+    self.driver.find_element_by_id("asset-input-producername").send_keys(producernameValue)
     # Main Producer Code Value
     self.driver.find_element_by_id("asset-input-producercode").send_keys(producercodeValue)
     # Main Contact Name Value
-    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys("Mikael Great")
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue)
     # Main E-mail Value
-    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys("mikael.glemne@havochvatten.se")
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue)
     # Main Contact Number Value
-    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys("+46720456789")
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue)
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
     time.sleep(3)
@@ -354,8 +363,6 @@ def check_new_asset_exists(self, vesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for the new created asset in the asset list
-    #self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys(vesselName[vesselNumber])
-    #self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
@@ -363,48 +370,48 @@ def check_new_asset_exists(self, vesselNumber):
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[vesselNumber] + "\"]").text)
     time.sleep(1)
     # Click on details button for new asset
-    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr/td[10]/button/i").click()
+    self.driver.find_element_by_id("asset-toggle-form").click()
     time.sleep(5)
     # Check that the F.S value is correct.
-    self.assertEqual(countryValue, self.driver.find_element_by_xpath("(//button[@type='button'])[4]").text)
+    self.assertEqual(countryValue, self.driver.find_element_by_id("asset-input-countryCode").text)
     # Check that the IRCS value is correct
-    self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_name("ircs").get_attribute("value"))
+    self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_id("asset-input-ircs").get_attribute("value"))
     # Check that the Name value is correct
-    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("input[name=\"name\"]").get_attribute("value"))
+    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_id("asset-input-name").get_attribute("value"))
     # Check that External Marking Value is correct
-    self.assertEqual("EXT3", self.driver.find_element_by_name("externalMarking").get_attribute("value"))
+    self.assertEqual(externalMarkingValue, self.driver.find_element_by_id("asset-input-externalMarking").get_attribute("value"))
     # Check that the CFR value is correct
-    self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_name("cfr").get_attribute("value"))
+    self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_id("asset-input-cfr").get_attribute("value"))
     # Check that the IMO value is correct
-    self.assertEqual(imoValue[vesselNumber], self.driver.find_element_by_name("imo").get_attribute("value"))
+    self.assertEqual(imoValue[vesselNumber], self.driver.find_element_by_id("asset-input-imo").get_attribute("value"))
     # Check that the HomePort value is correct
-    self.assertEqual("GOT", self.driver.find_element_by_name("homeport").get_attribute("value"))
+    self.assertEqual(homeportValue, self.driver.find_element_by_id("asset-input-homeport").get_attribute("value"))
     # Check that the Gear Type value is correct.
-    self.assertEqual("Dermersal", self.driver.find_element_by_xpath("(//button[@type='button'])[5]").text)
+    self.assertEqual(gearTypeValue, self.driver.find_element_by_id("asset-input-gearType").text)
     # Check that the MMSI value is correct
-    self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_name("mmsi").get_attribute("value"))
+    self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_id("asset-input-mmsi").get_attribute("value"))
     # Check that the License Type value is correct.
-    self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("(//button[@type='button'])[6]").text)
+    self.assertEqual("MOCK-license-DB", self.driver.find_element_by_id("asset-input-licenseType").text)
     # Check that the Length Type value is correct.
-    self.assertEqual("14", self.driver.find_element_by_name("lengthValue").get_attribute("value"))
+    self.assertEqual(lengthValue, self.driver.find_element_by_id("asset-input-lengthValue").get_attribute("value"))
     # Check that the Gross Tonnage value is correct.
-    self.assertEqual("3", self.driver.find_element_by_name("grossTonnage").get_attribute("value"))
+    self.assertEqual(grossTonnageValue, self.driver.find_element_by_id("asset-input-grossTonnage").get_attribute("value"))
     # Check that the Power value is correct.
-    self.assertEqual("1300", self.driver.find_element_by_name("power").get_attribute("value"))
+    self.assertEqual(powerValue, self.driver.find_element_by_id("asset-input-power").get_attribute("value"))
     # Check that the Producer Name value is correct.
     #
     # Needs to be updated according to asset database
     #
     #
-    # self.assertEqual("Mikael", self.driver.find_element_by_name("producername").get_attribute("value"))
+    # self.assertEqual("Mikael", self.driver.find_element_by_id("asset-input-producername").get_attribute("value"))
     # Check that the Producer Code value is correct.
-    self.assertEqual(producercodeValue, self.driver.find_element_by_name("producercode").get_attribute("value"))
+    self.assertEqual(producercodeValue, self.driver.find_element_by_id("asset-input-producercode").get_attribute("value"))
     # Check that the Contact Name value is correct.
-    self.assertEqual("Mikael Great", self.driver.find_element_by_name("contactName").get_attribute("value"))
+    self.assertEqual(contactNameValue, self.driver.find_element_by_id("asset-input-contact-name-0").get_attribute("value"))
     # Check that the E-mail value is correct.
-    self.assertEqual("mikael.glemne@havochvatten.se", self.driver.find_element_by_id("contact-email").get_attribute("value"))
+    self.assertEqual(contactEmailValue, self.driver.find_element_by_id("asset-input-contact-email-0").get_attribute("value"))
     # Check that the E-mail value is correct.
-    self.assertEqual("+46720456789", self.driver.find_element_by_id("contact-number").get_attribute("value"))
+    self.assertEqual(contactPhoneNumberValue, self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
     time.sleep(5)
     # Shutdown browser
     shutdown_browser(self)
