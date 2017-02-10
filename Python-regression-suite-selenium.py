@@ -30,6 +30,7 @@ cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE
 externalMarkingValue = "EXT3"
 imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
 mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
+licenseTypeValue = "MOCK-license-DB"
 homeportValue = "GOT"
 gearTypeValue = "Dermersal"
 lengthValue = "14"
@@ -391,7 +392,7 @@ def check_new_asset_exists(self, vesselNumber):
     # Check that the MMSI value is correct
     self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_id("asset-input-mmsi").get_attribute("value"))
     # Check that the License Type value is correct.
-    self.assertEqual("MOCK-license-DB", self.driver.find_element_by_id("asset-input-licenseType").text)
+    self.assertEqual(licenseTypeValue, self.driver.find_element_by_id("asset-input-licenseType").text)
     # Check that the Length Type value is correct.
     self.assertEqual(lengthValue, self.driver.find_element_by_id("asset-input-lengthValue").get_attribute("value"))
     # Check that the Gross Tonnage value is correct.
@@ -818,7 +819,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on search button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         time.sleep(5)
-        # Verifies that time stamp for the generated position does not exist
+        # Verifies that time stamp for the generated position that does not exist
         self.assertNotEqual(earlierPositionTimeValueString, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr/td[6]").text)
         time.sleep(2)
         # Select Alarms tab (Holding Table)
@@ -837,13 +838,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//button[@type='button'])[10]").click()
         time.sleep(2)
         # Check Position report fields
-        #self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[2]/div[3]/div[2]/div/div[2]").text)
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("/html/body/div[7]/div/div/div[2]/div[3]/div[2]/div[1]/div").text)
-        #self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[3]/div[2]/div[2]/div").text)
-        #self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[3]/div[2]/div[3]/div[2]").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[3]/div[2]/div[3]/div").text)
-        #self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[2]/div[4]/div[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[3]/div[2]/div[4]/div").text)
         # Bug UVMS-3249 self.assertEqual(earlierPositionTimeValueString, self.driver.find_element_by_xpath("//div[7]/div/div[2]/div").text)
         self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[7]/div[2]/div/div").text)
@@ -955,15 +952,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + gearTypeValue + "\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[3]").text)
         self.assertEqual(vesselName[1], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[1] + "\"]").text)
         self.assertEqual(ircsValue[1], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[1] + "\"]").text)
         self.assertEqual(cfrValue[1], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[1] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -1019,32 +1016,32 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + gearTypeValue + "\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
 
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[3]").text)
         self.assertEqual(vesselName[1], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[1] + "\"]").text)
         self.assertEqual(ircsValue[1], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[1] + "\"]").text)
         self.assertEqual(cfrValue[1], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[1] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
 
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[3]/td[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[3]/td[3]").text)
         self.assertEqual(vesselName[4], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[4] + "\"]").text)
         self.assertEqual(ircsValue[4], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[4] + "\"]").text)
         self.assertEqual(cfrValue[4], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[4] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[3]/td[7]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[3]/td[8]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[3]/td[7]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[3]/td[8]").text)
 
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[3]").text)
         self.assertEqual(vesselName[5], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[5] + "\"]").text)
         self.assertEqual(ircsValue[5], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[5] + "\"]").text)
         self.assertEqual(cfrValue[5], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[5] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[7]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[8]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[7]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[8]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -1059,7 +1056,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on saved groups
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
@@ -1083,7 +1080,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         time.sleep(1)
         # Click on action button
-        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
         time.sleep(1)
         # Remove selected assets from Grupp 1
         self.driver.find_element_by_link_text("Remove from Group").click()
@@ -1092,7 +1089,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.refresh()
         time.sleep(10)
         # Click on saved groups
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
         # Click on Grupp 1
@@ -1104,15 +1101,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + gearTypeValue + "\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[3]").text)
         self.assertEqual(vesselName[5], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[5] + "\"]").text)
         self.assertEqual(ircsValue[5], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[5] + "\"]").text)
         self.assertEqual(cfrValue[5], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[5] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -1126,9 +1123,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
-        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
         assetList = []
@@ -1145,7 +1141,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         # Select Action "Save as Group"
-        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
+        time.sleep(1)
         self.driver.find_element_by_link_text("Save as Group").click()
         time.sleep(1)
         # Enter Group name and click on save button
@@ -1153,7 +1150,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(8)
         # Check that Grupp 2 has been created
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        time.sleep(1)
         self.assertEqual(groupName[1], self.driver.find_element_by_link_text(groupName[1]).text)
         time.sleep(2)
         # Click on Grupp 2
@@ -1165,15 +1163,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
         self.assertEqual(ircsValue[2], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[2] + "\"]").text)
         self.assertEqual(cfrValue[2], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[2] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + gearTypeValue + "\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
         self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[2]").text)
         self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[3]").text)
         self.assertEqual(vesselName[4], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[4] + "\"]").text)
         self.assertEqual(ircsValue[4], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[4] + "\"]").text)
         self.assertEqual(cfrValue[4], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[4] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
@@ -1245,16 +1243,20 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
-        self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
-        self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        #self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
+        self.assertEqual(gearTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + gearTypeValue + "\"]").text)
+        #self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
         for x in [1,2,3,4,5]:
             self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]").text)
             self.assertEqual(externalMarkingValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
             self.assertEqual(vesselName[x], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[x] + "\"]").text)
             self.assertEqual(ircsValue[x], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[x] + "\"]").text)
             self.assertEqual(cfrValue[x], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[x] + "\"]").text)
-            self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
-            self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
+            #self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            #self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
         time.sleep(3)
         # Click on save group button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div/form/div/div/div/div[3]/a[2]/span").click()
@@ -1333,8 +1335,8 @@ class UnionVMSTestCase(unittest.TestCase):
                 self.assertEqual(vesselName[y-1], allrows[y][2])
                 self.assertEqual(ircsValue[y-1], allrows[y][3])
                 self.assertEqual(cfrValue[y-1], allrows[y][4])
-                self.assertEqual("Dermersal", allrows[y][5])
-                self.assertEqual("MOCK-license-DB", allrows[y][6])
+                self.assertEqual(gearTypeValue, allrows[y][5])
+                self.assertEqual(licenseTypeValue, allrows[y][6])
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
