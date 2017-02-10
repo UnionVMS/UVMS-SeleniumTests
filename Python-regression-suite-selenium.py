@@ -1278,9 +1278,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
-        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
-        self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        #self.driver.find_element_by_xpath("(//input[@type='text'])[18]").clear()
+        #self.driver.find_element_by_xpath("(//input[@type='text'])[18]").send_keys("fartyg")
+        #self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
         assetList = []
@@ -1298,7 +1300,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         time.sleep(2)
         # Select Action "Export selection"
-        self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
+        #self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection").click()
         time.sleep(3)
