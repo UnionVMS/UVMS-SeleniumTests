@@ -1218,12 +1218,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("div.col-md-10.searchFooter > a > span").click()
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
         time.sleep(1)
         # Search for all External Marking called "EXT3"(externalMarkingValue)
-        self.driver.find_element_by_id("searchextno").send_keys(externalMarkingValue)
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(8)
+        self.driver.find_element_by_id("asset-input-search-externalMarking").send_keys(externalMarkingValue)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(7)
 
         # Get asset name values in the list
         assetList = []
@@ -1243,9 +1243,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[0] + "\"]").text)
-        #self.assertEqual("Dermersal", self.driver.find_element_by_css_selector("td[title=\"Dermersal\"]").text)
         self.assertEqual(gearTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + gearTypeValue + "\"]").text)
-        #self.assertEqual("MOCK-license-DB", self.driver.find_element_by_css_selector("td[title=\"MOCK-license-DB\"]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
         for x in [1,2,3,4,5]:
             self.assertEqual(countryValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]").text)
@@ -1253,14 +1251,11 @@ class UnionVMSTestCase(unittest.TestCase):
             self.assertEqual(vesselName[x], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[x] + "\"]").text)
             self.assertEqual(ircsValue[x], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[x] + "\"]").text)
             self.assertEqual(cfrValue[x], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[x] + "\"]").text)
-            #self.assertEqual("Dermersal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
             self.assertEqual(gearTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
-            #self.assertEqual("MOCK-license-DB", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
             self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
         time.sleep(3)
         # Click on save group button
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[3]/div/div/form/div/div/div/div[3]/a[2]/span").click()
-        # Enter Grupp name "Grupp 3" and click on save button
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[2])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
@@ -1268,7 +1263,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.refresh()
         time.sleep(10)
         # Check that Grupp 3 exists in the list
-        self.driver.find_element_by_xpath("(//button[@type='button'])[13]").click()
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
         time.sleep(5)
         # Shutdown browser
