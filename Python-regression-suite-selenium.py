@@ -509,10 +509,11 @@ def change_and_check_speed_format(self,unitNumber):
     time.sleep(5)
     self.driver.find_element_by_link_text("CONFIGURATION").click()
     time.sleep(1)
-    self.driver.find_element_by_css_selector("li.audittab").click()
-    time.sleep(1)
+    #self.driver.find_element_by_css_selector("li.audittab").click()
+    #time.sleep(1)
     # Click on Global setting subtab under Configuration Tab
-    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").click()
+    #self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").click()
+    self.driver.find_element_by_css_selector("#globalSettings > span").click()
     time.sleep(1)
     # Set Speed format to knots
     self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
@@ -1535,8 +1536,6 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("ASSETS", self.driver.find_element_by_css_selector("#asset > span").text)
         self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_css_selector("#mobileTerminal > span").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_css_selector("#exchange > span").text)
-
-
         # Shutdown browser
         shutdown_browser(self)
 
@@ -1550,19 +1549,17 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element_by_link_text("CONFIGURATION").click()
         time.sleep(1)
-        self.driver.find_element_by_css_selector("li.audittab").click()
-        time.sleep(1)
         # Click on Global setting subtab under Configuration Tab
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/ul/li[2]").click()
+        self.driver.find_element_by_css_selector("#globalSettings > span").click()
         time.sleep(1)
         # Check that Date format is correct
         try:
-            radiobuttonDate1 = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/ng-include/div/div/div[1]/div[2]/div[1]/ul/li[1]/label/input").is_selected()
+            radiobuttonDate1 = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div[2]/div/ng-include/div/div/div[1]/div[2]/div[1]/ul/li[1]/label/input").is_selected()
         except:
             print("Did NOT find selected radio button")
             radiobuttonDate1 = False
         try:
-            radiobuttonDate2 = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/ng-include/div/div/div[1]/div[2]/div[1]/ul/li[2]/label/input").is_selected()
+            radiobuttonDate2 = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div[2]/div/ng-include/div/div/div[1]/div[2]/div[1]/ul/li[2]/label/input").is_selected()
         except:
             print("Did NOT find selected radio button")
             radiobuttonDate2 = False
