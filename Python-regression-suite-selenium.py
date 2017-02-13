@@ -1725,8 +1725,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(rulesHeadlineNames[6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[8]/a/span/span").text)
         # Check speed rule parameters
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td.statusColored.truncate-text").text)
-        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@name='name'])[2]").text)
-        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@name='name'])[3]").text)
+        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[2]").text)
+        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[3]").text)
         self.assertEqual("ACTIVE", self.driver.find_element_by_css_selector("span.label.label-success").text)
         time.sleep(5)
         # Shutdown browser
