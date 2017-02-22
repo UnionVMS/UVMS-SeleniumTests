@@ -20,72 +20,8 @@ from os.path import expanduser
 import csv
 import codecs
 import xmlrunner
-
-# Globals
-# Assets
-countryValue = 'SWE'
-ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006", "SFB-7784"]
-vesselName = ["Fartyg1001", "Fartyg1002", "Fartyg1003", "Fartyg1004", "Fartyg1005", "Fartyg1006", "INGARÖ"]
-cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE0000F1005", "SWE0000F1006"]
-externalMarkingValue = "EXT3"
-imoValue = ["0261917", "0261918", "0233917", "0233918", "0761901", "0761902"]
-mmsiValue = ["302331238", "302331239", "302331240", "302331241", "302331242", "302331243"]
-licenseTypeValue = "MOCK-license-DB"
-homeportValue = "GOT"
-gearTypeValue = "Dermersal"
-lengthValue = "14"
-grossTonnageValue = "3"
-powerValue = "1300"
-producernameValue ="Mikael"
-producercodeValue = ""
-contactNameValue = "Mikael Great"
-contactEmailValue = "mikael.glemne@havochvatten.se"
-contactPhoneNumberValue = "+46720456789"
-assetHeadline = ("F. S.", "Ext. marking", "Name", "IRCS", "CFR", "Gear Type", "License type", "Last report")
-
-# Mobile Terminals
-serialNoValue = ["M1001", "M1002", "M1003", "M1004", "M1005", "M1006", "4TT097 4E6 84B"]
-transceiverType = ["Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Sailor 6140M MiniC"]
-softwareVersion = "A"
-antennaVersion = "A"
-satelliteNumber = ["S1001", "S1002", "S1003", "S1004", "S1005", "S1006", "4 265 097 12"]
-dnidNumber = ["1001", "1002", "1003", "1004", "1005", "1006", "10745"]
-memberIdnumber = ["100", "100", "100", "100", "100", "100", "255"]
-installedByName = "Mike Great"
-expectedFrequencyHours = "2"
-expectedFrequencyMinutes = "0"
-gracePeriodFrequencyHours = "15"
-gracePeriodFrequencyMinutes = "0"
-inPortFrequencyHours = "3"
-inPortFrequencyMinutes = "0"
-deltaTimeValue = 4
-transponderType = ("Iridium", "Inmarsat-C")
-mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
-# lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
-lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
-                      [["57.934", "11.592"], ["57.935", "11.593"]],
-                      [["56.647", "12.840"], ["56.646", "12.834"]],
-                      [["56.659", "16.378"], ["56.659", "16.381"]],
-                      [["57.266", "16.480"], ["57.267", "16.487"]],
-                      [["58.662", "17.129"], ["58.661", "17.137"]]]
-
-# Mixed parameters
-reportedSpeedValue = 5
-reportedCourseValue = 180
-appServerName = "livm73u"
-dbServerName = "db71u"
-hostdbServerName = "livmdb71u"
-httpNAFRequestString = "http://" + appServerName + ":28080/naf/rest/message/"
-httpUnionVMSurlString = "http://" + appServerName + ":28080/unionvms/"
-connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'"
-dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":5432/" + dbServerName
-
-sourceValue= ('NAF', 'MANUAL')
-groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
-speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
-speedUnitTypesShort = ("kts", "km/h", "mph")
-reportedSpeedDefault = [8, 10, 12]
-rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by", "Notification", "Notify by email", "Status", "Actions"]
+# Import parameters from parameter file
+from UnionVMSparameters import *
 
 
 def externalError(process):
@@ -250,8 +186,8 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
     self.driver.implicitly_wait(10)
-    # Click on asset tab
     time.sleep(5)
+    # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(1)
     # Click on new Asset button
@@ -317,9 +253,8 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("mob-term-add-terminal").click()
     time.sleep(3)
     # Select Transponder system
-    element = WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'])[18]")))  # Waits until element exists
-    element.click()
+    self.driver.find_element_by_id("mob-term-form-details-transponder").click()
+    time.sleep(1)
     self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     time.sleep(1)
     # Enter serial number
@@ -337,13 +272,13 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Enter Member Number
     self.driver.find_element_by_name("memberId").send_keys(memberIdnumber[mobileTerminalNumber])
     # Enter Installed by
-    self.driver.find_element_by_xpath("(//input[@type='text'])[36]").send_keys(installedByName)
+    self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName)
     # Expected frequency
-    self.driver.find_element_by_xpath("(//input[@type='number'])[2]").send_keys(expectedFrequencyHours)
+    self.driver.find_element_by_id("mob-term-form-details-frequency-expected-0").send_keys(expectedFrequencyHours)
     # Grace period
-    self.driver.find_element_by_xpath("(//input[@type='number'])[4]").send_keys(gracePeriodFrequencyHours)
+    self.driver.find_element_by_id("mob-term-form-details-frequency-grace-period-0").send_keys(gracePeriodFrequencyHours)
     # In port
-    self.driver.find_element_by_xpath("(//input[@type='number'])[6]").send_keys(inPortFrequencyHours)
+    self.driver.find_element_by_id("mob-term-form-details-frequency-in-port-0").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
     self.driver.find_element_by_id("mob-term-form-details-slider").click()
     time.sleep(2)
@@ -355,6 +290,68 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
+
+def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, vesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Click on asset tab
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(1)
+
+    # Search for created asset
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(1)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(1)
+    # Click on add new terminal button
+    self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
+    time.sleep(1)
+    # Select Transponder system
+    self.driver.find_element_by_id("mob-term-form-details-transponder").click()
+    time.sleep(1)
+    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
+    time.sleep(1)
+
+    # Enter serial number
+    self.driver.find_element_by_id("mob-term-form-details-serial-number").send_keys(serialNoValue[mobileTerminalNumber])
+    # Enter Transceiver type
+    self.driver.find_element_by_id("mob-term-form-details-transceiver-type").send_keys(transceiverType[mobileTerminalNumber])
+    # Enter Software Version
+    self.driver.find_element_by_id("mob-term-form-details-software-version").send_keys(softwareVersion)
+    # Enter Antenna
+    self.driver.find_element_by_id("mob-term-form-details-antenna").send_keys(antennaVersion)
+    # Enter Satellite Number
+    self.driver.find_element_by_id("mob-term-form-details-satelite-number").send_keys(satelliteNumber[mobileTerminalNumber])
+    # Enter DNID Number
+    self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
+    # Enter Member Number
+    self.driver.find_element_by_name("memberId").send_keys(memberIdnumber[mobileTerminalNumber])
+    # Enter Installed by
+    self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName)
+    # Expected frequency
+    self.driver.find_element_by_id("mob-term-form-details-frequency-expected-0").send_keys(expectedFrequencyHours)
+    # Grace period
+    self.driver.find_element_by_id("mob-term-form-details-frequency-grace-period-0").send_keys(gracePeriodFrequencyHours)
+    # In port
+    self.driver.find_element_by_id("mob-term-form-details-frequency-in-port-0").send_keys(inPortFrequencyHours)
+    # Activate Mobile Terminal button
+    self.driver.find_element_by_id("mob-term-form-details-slider").click()
+    time.sleep(2)
+    # Click on save button
+    self.driver.find_element_by_xpath("(//button[@id='menu-bar-save'])[2]").click()
+    time.sleep(5)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
 
 
 def check_new_asset_exists(self, vesselNumber):
@@ -1928,9 +1925,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
-
-
     def test_43_create_one_new_mobile_terminal(self):
         # Create new Mobile Terminal (7th in the list) The special MT with internal parameters
         create_one_new_mobile_terminal_from_gui(self, 6)
@@ -1974,6 +1968,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+
+    def test_47_create_one_new_asset_and_mobile_terminal(self):
+        # Create new asset (first in the list)
+        create_one_new_asset_from_gui(self, 7)
+        create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
 
