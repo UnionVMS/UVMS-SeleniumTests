@@ -256,35 +256,36 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("mob-term-add-terminal").click()
     time.sleep(3)
     # Select Transponder system
-    self.driver.find_element_by_id("mob-term-form-details-transponder").click()
+    self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
     self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     time.sleep(1)
     # Enter serial number
-    self.driver.find_element_by_id("mob-term-form-details-serial-number").send_keys(serialNoValue[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
     # Enter Transceiver type
-    self.driver.find_element_by_id("mob-term-form-details-transceiver-type").send_keys(transceiverType[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(transceiverType[mobileTerminalNumber])
     # Enter Software Version
-    self.driver.find_element_by_id("mob-term-form-details-software-version").send_keys(softwareVersion)
+    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(softwareVersion)
     # Enter Antenna
-    self.driver.find_element_by_id("mob-term-form-details-antenna").send_keys(antennaVersion)
+    self.driver.find_element_by_id("mt-0-antenna").send_keys(antennaVersion)
     # Enter Satellite Number
-    self.driver.find_element_by_id("mob-term-form-details-satelite-number").send_keys(satelliteNumber[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(satelliteNumber[mobileTerminalNumber])
     # Enter DNID Number
     self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
     self.driver.find_element_by_name("memberId").send_keys(memberIdnumber[mobileTerminalNumber])
     # Enter Installed by
-    self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName)
+    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(installedByName)
     # Expected frequency
-    self.driver.find_element_by_id("mob-term-form-details-frequency-expected-0").send_keys(expectedFrequencyHours)
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(expectedFrequencyHours)
     # Grace period
-    self.driver.find_element_by_id("mob-term-form-details-frequency-grace-period-0").send_keys(gracePeriodFrequencyHours)
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(gracePeriodFrequencyHours)
     # In port
-    self.driver.find_element_by_id("mob-term-form-details-frequency-in-port-0").send_keys(inPortFrequencyHours)
-    # Activate Mobile Terminal button
-    self.driver.find_element_by_id("mob-term-form-details-slider").click()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(inPortFrequencyHours)
     time.sleep(2)
+    # Activate Mobile Terminal button
+    self.driver.find_element_by_id("mt-0-activation").click()
+    time.sleep(5)
     # Click on save button
     self.driver.find_element_by_id("menu-bar-save").click()
     time.sleep(5)
@@ -344,9 +345,9 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("mob-term-form-details-frequency-in-port-0").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
     self.driver.find_element_by_id("mob-term-form-details-slider").click()
-    time.sleep(2)
+    time.sleep(3)
     # Click on save button
-    self.driver.find_element_by_xpath("(//button[@id='menu-bar-save'])[2]").click()
+    self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
     time.sleep(5)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
@@ -437,23 +438,24 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Check DNID Number in the list
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
     # Click on details button
-    self.driver.find_element_by_xpath(
-        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     time.sleep(2)
+    # Check Serial Number
+    self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
     # Check Transceiver Type
-    self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_id("mob-term-form-details-transceiver-type").get_attribute("value"))
+    self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
     # Check Software Version
-    self.assertEqual(softwareVersion, self.driver.find_element_by_id("mob-term-form-details-software-version").get_attribute("value"))
+    self.assertEqual(softwareVersion, self.driver.find_element_by_id("mt-0-softwareVersion").get_attribute("value"))
     # Check Satellite Number
-    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_id("mob-term-form-details-satelite-number").get_attribute("value"))
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_id("mt-0-satelliteNumber").get_attribute("value"))
     # Check Antenna Version
-    self.assertEqual(antennaVersion, self.driver.find_element_by_id("mob-term-form-details-antenna").get_attribute("value"))
+    self.assertEqual(antennaVersion, self.driver.find_element_by_id("mt-0-antenna").get_attribute("value"))
     # Check DNID Number
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_name("dnid").get_attribute("value"))
     # Check Member Number
     self.assertEqual(memberIdnumber[mobileTerminalNumber], self.driver.find_element_by_name("memberId").get_attribute("value"))
     # Check Installed by Name
-    self.assertEqual(installedByName, self.driver.find_element_by_xpath("(//input[@type='text'])[36]").get_attribute("value"))
+    self.assertEqual(installedByName, self.driver.find_element_by_id("mt-0-channel-0-installedBy").get_attribute("value"))
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
@@ -473,8 +475,7 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(5)
     # Click on details button
-    self.driver.find_element_by_xpath(
-        "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     time.sleep(3)
     # Click on Link Asset
     self.driver.find_element_by_id("mob-term-form-assign-vessel-2").click()
@@ -1958,7 +1959,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_47_create_one_new_asset_and_mobile_terminal(self):
         # Create new asset (first in the list)
-        create_one_new_asset_from_gui(self, 7)
+        #create_one_new_asset_from_gui(self, 7)
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
