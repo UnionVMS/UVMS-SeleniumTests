@@ -238,7 +238,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue)
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
-    time.sleep(3)
+    time.sleep(5)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -253,7 +253,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
     # Click on new terminal button
-    self.driver.find_element_by_id("mob-term-add-terminal").click()
+    self.driver.find_element_by_id("mt-btn-create").click()
     time.sleep(3)
     # Select Transponder system
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
@@ -470,18 +470,18 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
     # Enter Serial Number in field
-    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
-    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    self.driver.find_element_by_id("mt-btn-advanced-search").click()
     time.sleep(5)
     # Click on details button
-    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    self.driver.find_element_by_id("mt-toggle-form").click()
     time.sleep(3)
     # Click on Link Asset
-    self.driver.find_element_by_id("mob-term-form-assign-vessel-2").click()
+    self.driver.find_element_by_id("mt-btn-assign-asset").click()
     time.sleep(2)
     # Enter Asset Name and clicks on the search button
-    self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[mobileTerminalNumber])
+    self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(ircsValue[mobileTerminalNumber])
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(2)
     # Click on connect button
@@ -759,13 +759,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
         # Enter Serial Number in field
-        self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[0])
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[0])
         # Click in search button
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(5)
         # Click on details button
-        self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+        self.driver.find_element_by_id("mt-toggle-form").click()
         time.sleep(2)
         # Click on unlinking button
         self.driver.find_element_by_id("menu-bar-unlink").click()
@@ -863,16 +862,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
         # Enter Serial Number in field
-        self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[1])
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[1])
         # Click in search button
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(5)
         # Click on details button
-        self.driver.find_element_by_xpath(
-            "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+        self.driver.find_element_by_id("mt-toggle-form").click()
         time.sleep(2)
         # Click on Link Asset
-        self.driver.find_element_by_id("mob-term-form-assign-vessel-2").click()
+        self.driver.find_element_by_id("mt-btn-assign-asset").click()
         time.sleep(2)
         # Enter Asset Name and clicks on the search button
         self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[0])
@@ -1998,6 +1996,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
         for x in range(2, 6):
             print ("We're on time %d" % (x))
+            print(x)
 
         for x in [2,3, 6]:
             print ("We're on time %d" % (x))
