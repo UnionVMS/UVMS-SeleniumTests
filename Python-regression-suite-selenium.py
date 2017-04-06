@@ -142,7 +142,6 @@ def startup_browser_and_login_to_unionVMS(cls):
     # Start Chrome browser
     cls.driver = webdriver.Chrome()
     #cls.driver = webdriver.Firefox()
-
     # Maximize browser window
     cls.driver.maximize_window()
     # Login to test user admin
@@ -1961,6 +1960,14 @@ class UnionVMSTestCase(unittest.TestCase):
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
+    def test_51_create_assets_8_17(self):
+        # Create assets 8-17 in the list
+        for x in range(8, 18):
+            create_one_new_asset_from_gui(self, x)
+            time.sleep(1)
+
+
+
 
     def test_special(self):
         print('-Ddb.url=jdbc:postgresql://livmdb71u:5432/db71u')
@@ -1994,9 +2001,10 @@ class UnionVMSTestCase(unittest.TestCase):
         print(lolaPositionValues[5][1][0])
         print(lolaPositionValues[5][1][1])
 
-        for x in range(2, 6):
+        for x in range(8, 18):
             print ("We're on time %d" % (x))
             print(x)
+            print(vesselName[x])
 
         for x in [2,3, 6]:
             print ("We're on time %d" % (x))
