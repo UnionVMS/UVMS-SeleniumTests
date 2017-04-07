@@ -301,13 +301,12 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(1)
-
     # Search for created asset
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(1)
+    time.sleep(3)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
     time.sleep(1)
@@ -315,35 +314,34 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(1)
     # Select Transponder system
-    self.driver.find_element_by_id("mob-term-form-details-transponder").click()
+    self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
     self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     time.sleep(1)
-
     # Enter serial number
-    self.driver.find_element_by_id("mob-term-form-details-serial-number").send_keys(serialNoValue[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
     # Enter Transceiver type
-    self.driver.find_element_by_id("mob-term-form-details-transceiver-type").send_keys(transceiverType[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(transceiverType[mobileTerminalNumber])
     # Enter Software Version
-    self.driver.find_element_by_id("mob-term-form-details-software-version").send_keys(softwareVersion)
+    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(softwareVersion)
     # Enter Antenna
-    self.driver.find_element_by_id("mob-term-form-details-antenna").send_keys(antennaVersion)
+    self.driver.find_element_by_id("mt-0-antenna").send_keys(antennaVersion)
     # Enter Satellite Number
-    self.driver.find_element_by_id("mob-term-form-details-satelite-number").send_keys(satelliteNumber[mobileTerminalNumber])
+    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(satelliteNumber[mobileTerminalNumber])
     # Enter DNID Number
     self.driver.find_element_by_name("dnid").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
     self.driver.find_element_by_name("memberId").send_keys(memberIdnumber[mobileTerminalNumber])
     # Enter Installed by
-    self.driver.find_element_by_id("mob-term-form-details-installed-by-0").send_keys(installedByName)
+    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(installedByName)
     # Expected frequency
-    self.driver.find_element_by_id("mob-term-form-details-frequency-expected-0").send_keys(expectedFrequencyHours)
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(expectedFrequencyHours)
     # Grace period
-    self.driver.find_element_by_id("mob-term-form-details-frequency-grace-period-0").send_keys(gracePeriodFrequencyHours)
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(gracePeriodFrequencyHours)
     # In port
-    self.driver.find_element_by_id("mob-term-form-details-frequency-in-port-0").send_keys(inPortFrequencyHours)
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
-    self.driver.find_element_by_id("mob-term-form-details-slider").click()
+    self.driver.find_element_by_id("mt-0-activation").click()
     time.sleep(3)
     # Click on save button
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
@@ -1044,8 +1042,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
-
     def test_20_remove_one_asset_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1173,7 +1169,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
 
 
     def test_22_delete_second_group_and_check(self):
@@ -1333,7 +1328,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
 
 
     def test_25_create_new_mobile_terminal_3_6(self):
@@ -1956,7 +1950,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     def test_47_create_one_new_asset_and_mobile_terminal(self):
         # Create new asset (first in the list)
-        #create_one_new_asset_from_gui(self, 7)
+        create_one_new_asset_from_gui(self, 7)
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
@@ -1964,6 +1958,18 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create assets 8-17 in the list
         for x in range(8, 18):
             create_one_new_asset_from_gui(self, x)
+            time.sleep(1)
+
+    def test_52_create_mobile_terminals_8_17(self):
+        # Create Mobile Terminals 8-17 in the list
+        for x in range(8, 18):
+            create_one_new_mobile_terminal_from_gui(self, x)
+            time.sleep(1)
+
+    def test_53_link_asset_and_mobile_terminals_8_17(self):
+        # Link assets 8-17 with mobile terminals 8-17
+        for x in range(8, 18):
+            link_asset_and_mobile_terminal(self, x)
             time.sleep(1)
 
 
