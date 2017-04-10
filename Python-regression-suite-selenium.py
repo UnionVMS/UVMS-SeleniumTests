@@ -2001,15 +2001,13 @@ class UnionVMSTestCase(unittest.TestCase):
             link_asset_and_mobile_terminal(self, x)
             time.sleep(1)
 
-    def test_54_link_asset_and_mobile_terminals_8_17(self):
+    def test_54_link_asset_and_mobile_terminal_7(self):
         # Create many NAF positions for assets 8-17
         speedValue = 8
         courseValue = 215
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
-        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
-        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         latStrValue = lolaPositionValues[7][0][0]
         longStrValue = lolaPositionValues[7][0][1]
         latValue = float(latStrValue)
@@ -2032,19 +2030,40 @@ class UnionVMSTestCase(unittest.TestCase):
             else:
                 print("Request NOT OK!")
 
-        '''
-        # Generate NAF string
-        nafSource = generate_NAF_string(self,countryValue,ircsValue[7],cfrValue[7],externalMarkingValue,str("%.3f" % latValue),str("%.3f" % longValue),speedValue,courseValue,earlierPositionDateValueString,earlierPositionTimeValueString,vesselName[7])
-        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-        # Generate request
-        r = requests.get(totalNAFrequest)
-        # Check if request is OK (200)
-        if r.ok:
-            print("200 OK")
-        else:
-            print("Request NOT OK!")
-        '''
+
+    def test_55_link_asset_and_mobile_terminals_8_17(self):
+        # Create many NAF positions for assets 8-17
+        speedValue = 8
+        courseValue = 215
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+
+        # Generate NAF positions for assets 8-17
+        for x in range(8, 18):
+            print(x)
+            earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
+            latStrValue = lolaPositionValues[x][0][0]
+            longStrValue = lolaPositionValues[x][0][1]
+            latValue = float(latStrValue)
+            longValue = float(longStrValue)
+            # Send y number if NAF positions
+            for y in range(50):
+                earlierPositionTimeValue = earlierPositionTimeValue + datetime.timedelta(minutes=1)
+                earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+                earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+                latValue = latValue - 0.001
+                longValue = longValue - 0.001
+                nafSource = generate_NAF_string(self, countryValue, ircsValue[x], cfrValue[x], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[x])
+                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+                # Generate request
+                r = requests.get(totalNAFrequest)
+                # Check if request is OK (200)
+                if r.ok:
+                    print("200 OK")
+                else:
+                    print("Request NOT OK!")
+
 
 
     def test_special(self):
