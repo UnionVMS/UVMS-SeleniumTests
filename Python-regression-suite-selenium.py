@@ -837,6 +837,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Enter IRCS for newly created position
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
         self.driver.find_element_by_link_text("Custom").click()
         self.driver.find_element_by_xpath("//input[@type='text']").clear()
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
@@ -2003,16 +2004,35 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_54_link_asset_and_mobile_terminals_8_17(self):
         # Create many NAF positions for assets 8-17
         speedValue = 8
-        courseValue = 135
+        courseValue = 215
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=20)
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         latStrValue = lolaPositionValues[7][0][0]
         longStrValue = lolaPositionValues[7][0][1]
         latValue = float(latStrValue)
         longValue = float(longStrValue)
+        # Send x number if NAF positions
+        for x in range(500):
+            earlierPositionTimeValue = earlierPositionTimeValue + datetime.timedelta(minutes=1)
+            earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+            earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+            latValue = latValue - 0.001
+            longValue = longValue - 0.001
+            nafSource = generate_NAF_string(self, countryValue, ircsValue[7], cfrValue[7], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[7])
+            nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+            totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+            # Generate request
+            r = requests.get(totalNAFrequest)
+            # Check if request is OK (200)
+            if r.ok:
+                print("200 OK")
+            else:
+                print("Request NOT OK!")
+
+        '''
         # Generate NAF string
         nafSource = generate_NAF_string(self,countryValue,ircsValue[7],cfrValue[7],externalMarkingValue,str("%.3f" % latValue),str("%.3f" % longValue),speedValue,courseValue,earlierPositionDateValueString,earlierPositionTimeValueString,vesselName[7])
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
@@ -2024,7 +2044,7 @@ class UnionVMSTestCase(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
+        '''
 
 
     def test_special(self):
@@ -2034,14 +2054,19 @@ class UnionVMSTestCase(unittest.TestCase):
         b = a - datetime.timedelta(hours=3)
         print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
         print(datetime.datetime.strftime(b, '%Y-%m-%d %H:%M:%S'))
-
         s1 = []
         s1.append('test1')
         s1.append('test2')
         print(s1)
 
-        for x in range(6):
-            print(x)
+        print("------------------------------ Delta time test START")
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=20)
+        for x in range(100):
+            earlierPositionTimeValue = earlierPositionTimeValue + datetime.timedelta(minutes=1)
+            earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+            print(earlierPositionTimeValueString)
+        print("------------------------------ Delta time test END")
 
         a = 13.9412
         b = "%.2f" % a
