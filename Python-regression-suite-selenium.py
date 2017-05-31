@@ -1983,28 +1983,17 @@ class UnionVMSTestCase(unittest.TestCase):
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
-    def test_51_create_assets_8_17(self):
+    def test_51_create_assets_and_mobile_terminals_8_17(self):
         # Create assets 8-17 in the list
         for x in range(8, 18):
             create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
-    def test_52_create_mobile_terminals_8_17(self):
-        # Create Mobile Terminals 8-17 in the list
-        for x in range(8, 18):
-            create_one_new_mobile_terminal_from_gui(self, x)
-            time.sleep(1)
-
-    def test_53_link_asset_and_mobile_terminals_8_17(self):
-        # Link assets 8-17 with mobile terminals 8-17
-        for x in range(8, 18):
-            link_asset_and_mobile_terminal(self, x)
-            time.sleep(1)
-
-    def test_54_link_asset_and_mobile_terminal_7(self):
-        # Create many NAF positions for assets 8-17
+    def test_54_generate_multiple_NAF_positions_7(self):
+        # Create many NAF positions for asset 7
         speedValue = 8
-        courseValue = 215
+        courseValue = 35
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
@@ -2014,7 +2003,7 @@ class UnionVMSTestCase(unittest.TestCase):
         longValue = float(longStrValue)
         # Send x number if NAF positions
         for x in range(500):
-            earlierPositionTimeValue = earlierPositionTimeValue + datetime.timedelta(minutes=1)
+            earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
             earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
             earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
             latValue = latValue - 0.001
@@ -2031,10 +2020,10 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Request NOT OK!")
 
 
-    def test_55_link_asset_and_mobile_terminals_8_17(self):
+    def test_55_generate_multiple_NAF_positions_8_17(self):
         # Create many NAF positions for assets 8-17
         speedValue = 8
-        courseValue = 215
+        courseValue = 35
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
 
@@ -2048,7 +2037,7 @@ class UnionVMSTestCase(unittest.TestCase):
             longValue = float(longStrValue)
             # Send y number if NAF positions
             for y in range(50):
-                earlierPositionTimeValue = earlierPositionTimeValue + datetime.timedelta(minutes=1)
+                earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
                 earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
                 earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
                 latValue = latValue - 0.001
