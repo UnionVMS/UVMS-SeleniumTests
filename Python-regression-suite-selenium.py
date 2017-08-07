@@ -1570,14 +1570,14 @@ class UnionVMSTestCase(unittest.TestCase):
         if radiobuttonDate1:
             self.assertEqual("-", currentDate[4])
         if radiobuttonDate2:
-            self.assertEqual("/", currentDate[4])
+            self.assertEqual("/", currentDate[2])
         time.sleep(1)
         # Change Date format and check that change is made
         if radiobuttonDate1:
             self.driver.find_element_by_xpath("(//input[@name='dateFormat'])[2]").click()
             time.sleep(2)
             currentDate = self.driver.find_element_by_css_selector("current-time.currentTime").text
-            self.assertEqual("/", currentDate[4])
+            self.assertEqual("/", currentDate[2])
         if radiobuttonDate2:
             self.driver.find_element_by_name("dateFormat").click()
             time.sleep(2)
