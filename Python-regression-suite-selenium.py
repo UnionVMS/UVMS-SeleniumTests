@@ -38,7 +38,7 @@ def runSubProcess(command, shell, stdout=None):
    return process
 
 def resetModuleDatabase():
-    moduleNames = ['Asset', 'MobileTerminal', 'Movement', 'Rules']
+    moduleNames = ['Asset', 'MobileTerminal', 'Movement', 'Rules', 'Audit']
     for i in range(len(moduleNames)):
         os.chdir("C:\\git-modules\\UVMS-" + moduleNames[i] + "Module-DB\\LIQUIBASE")
         print(os.getcwd())
@@ -1935,6 +1935,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+
+    def test_42b_create_one_new_asset(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 6)
+
     def test_43_create_one_new_mobile_terminal(self):
         # Create new Mobile Terminal (7th in the list) The special MT with internal parameters
         create_one_new_mobile_terminal_from_gui(self, 6)
@@ -1944,7 +1949,7 @@ class UnionVMSTestCase(unittest.TestCase):
         check_new_mobile_terminal_exists(self, 6)
 
     def test_45_link_asset_and_mobile_terminal(self):
-        # Link asset 1 with mobile terminal 1 (first in the list)
+        # Link asset 7 with mobile terminal 7 (7th in the list)
         link_asset_and_mobile_terminal(self,6)
 
     def test_46_generate_manual_poll_and_check(self):
