@@ -561,10 +561,10 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.driver.find_element_by_name("measuredSpeed").send_keys(str(speedValue))
     self.driver.find_element_by_name("course").send_keys(str(courseValue))
     # Click on Save Button
-    self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
     time.sleep(5)
     # Click on Confirm button
-    self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
     time.sleep(5)
     # Enter IRCS for newly created position
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
@@ -830,10 +830,10 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_name("measuredSpeed").send_keys("5")
         self.driver.find_element_by_name("course").send_keys("180")
         # Click on Save Button
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(5)
         # Click on Confirm button
-        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
         time.sleep(5)
         # Enter IRCS for newly created position
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
@@ -1322,7 +1322,7 @@ class UnionVMSTestCase(unittest.TestCase):
         #self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         time.sleep(1)
-        self.driver.find_element_by_link_text("Export selection").click()
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Change to Download folder for current user
         home = expanduser("~")
@@ -1424,7 +1424,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Select Action "Export selection"
         self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
         time.sleep(1)
-        self.driver.find_element_by_link_text("Export selection").click()
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Change to Download folder for current user
         home = expanduser("~")
@@ -1706,7 +1706,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
         # Change "Notify by email" to Yes
-        self.driver.find_element_by_xpath("(//button[@id=''])[3]").click()
+        self.driver.find_element_by_xpath("(//button[@id=''])[2]").click()
         time.sleep(1)
         self.driver.find_element_by_link_text("Yes").click()
         time.sleep(5)
@@ -1733,8 +1733,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(rulesHeadlineNames[6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[8]/a/span/span").text)
         # Check speed rule parameters
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td.statusColored.truncate-text").text)
+        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[1]").text)
         self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[2]").text)
-        self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[3]").text)
         self.assertEqual("ACTIVE", self.driver.find_element_by_css_selector("span.label.label-success").text)
         time.sleep(5)
         # Shutdown browser
