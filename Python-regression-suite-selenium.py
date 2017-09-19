@@ -949,7 +949,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath("//*[@id='asset-sort-name']/span/span").click()
+            self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1001 and Fartyg1002 by click
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
@@ -1010,7 +1010,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath("//*[@id='asset-sort-name']/span/span").click()
+            self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(2)
         # Select Fartyg1005 and Fartyg1006 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
@@ -1085,7 +1085,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Grupp 1
         self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(3)
-
         # Get asset name values in the group list
         assetList = []
         for x in range(4):
@@ -1095,9 +1094,8 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath("//*[@id='asset-sort-name']/span/span").click()
+            self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
-
         # Select Fartyg1002 and Fartyg1005
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
@@ -1158,7 +1156,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath("//*[@id='asset-sort-name']/span/span").click()
+            self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1003 and Fartyg1005 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
@@ -1256,7 +1254,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath("//*[@id='asset-sort-name']/span/span").click()
+            self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
 
         # Check Assets in List
@@ -1312,7 +1310,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
             # Sort on "Name" by click on "Name" once
-            self.driver.find_element_by_xpath("//*[@id='asset-sort-name']/span/span").click()
+            self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1001 and Fartyg1002 by click
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
