@@ -1376,8 +1376,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
         # Sort on "Serial no"
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").click()
-        time.sleep(2)
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        time.sleep(3)
         # Select Not linked row number 2-4 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[2]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
@@ -1604,9 +1604,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(3)
         # Check User guide page
         self.assertEqual("Union VMS - User Manual", self.driver.find_element_by_id("title-text").text)
-        time.sleep(1)
-        self.driver.switch_to.frame(0)
-        time.sleep(1)
+        time.sleep(3)
         self.assertEqual("Welcome to Union VMS!", self.driver.find_element_by_xpath("//*[@id='main-content']/div[3]/ul/li[1]/span/a").text)
         time.sleep(5)
 
@@ -1622,23 +1620,23 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(3)
         # Check List Headlines for Holding Table
-        self.assertEqual("Date triggered (UTC)", self.driver.find_element_by_css_selector("a.pointer > span > span").text)
-        self.assertEqual("Object affected", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
+        self.assertEqual("Date triggered (UTC)", self.driver.find_element_by_css_selector("th.st-sort.st-sort-descent").text)
+        self.assertEqual("Object affected", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]").text)
         self.assertEqual("Rule", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]").text)
         # Select Alerts tab (Notifications)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[2]/a").click()
         time.sleep(2)
         # Check List Headlines for Notifications
-        self.assertEqual("Date triggered (UTC)", self.driver.find_element_by_css_selector("a.pointer > span > span").text)
-        self.assertEqual("Object affected", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
+        self.assertEqual("Date triggered (UTC)", self.driver.find_element_by_css_selector("th.st-sort.st-sort-descent").text)
+        self.assertEqual("Object affected", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]").text)
         self.assertEqual("Rule", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]").text)
         # Select Alerts tab (Rules)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
         time.sleep(2)
         # Check List Headlines for Rules List
-        self.assertEqual("Rule name", self.driver.find_element_by_css_selector("a.pointer > span > span").text)
-        self.assertEqual("Last triggered", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]/a/span/span").text)
-        self.assertEqual("Date updated", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[4]/a/span/span").text)
+        self.assertEqual("Rule name", self.driver.find_element_by_css_selector("th.st-sort").text)
+        self.assertEqual("Last triggered", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]").text)
+        self.assertEqual("Date updated", self.driver.find_element_by_css_selector("th.st-sort.st-sort-descent").text)
         time.sleep(5)
 
         # Shutdown browser
