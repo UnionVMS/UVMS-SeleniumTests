@@ -20,6 +20,11 @@ from os.path import expanduser
 import csv
 import codecs
 import xmlrunner
+import distutils.dir_util
+from io import BytesIO
+from zipfile import ZipFile
+import urllib.request
+
 # Import parameters from parameter file
 from UnionVMSparameters import *
 
@@ -38,14 +43,56 @@ def runSubProcess(command, shell, stdout=None):
    return process
 
 def resetModuleDatabase():
-    moduleNames = ['Asset', 'MobileTerminal', 'Movement', 'Rules', 'Audit']
-    for i in range(len(moduleNames)):
-        os.chdir("C:\\git-modules\\UVMS-" + moduleNames[i] + "Module-DB\\LIQUIBASE")
-        print(os.getcwd())
-        # Reset current Module database
-        # runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres', '-Ddb.url=jdbc:postgresql://livm73u:5432/db71u'], True)
-        runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres', dbURLjdbcString], True)
-        time.sleep(1)
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.0',
+                          'UVMS-ConfigModule-APP': '4.0.0',
+                          'UVMS-AuditModule-APP': '4.0.0',
+                          'UVMS-ExchangeModule-APP': '4.0.0',
+                          'UVMS-MovementModule-APP': '4.0.0',
+                          'UVMS-MobileTerminalModule-APP': '4.0.0',
+                          'UVMS-RulesModule-DB': '3.0.7',
+                          'UVMS-SpatialModule-DB': 'f296d9afced50e6c3090bb727264572704942946',
+                          'UVMS-ReportingModule-DB': '1.0.3',
+                          'USM': 'b7f78a5fb9411b1f55be6f4f3a1929072ea7c93c',
+                          'UVMS-ActivityModule-APP': '0.5.14',
+                          'UVMS-MDRCacheModule-DB': '0.5.2'}
+
+    modulePrefixDownloadMap = {'UVMS-AssetModule-APP': 'asset-',
+                              'UVMS-ConfigModule-APP': 'config-',
+                              'UVMS-AuditModule-APP': 'audit-',
+                              'UVMS-ExchangeModule-APP': 'exchange-',
+                              'UVMS-MovementModule-APP': 'movement-',
+                              'UVMS-MobileTerminalModule-APP': 'mobileterminal-',
+                              'UVMS-RulesModule-DB': 'rules-dbaccess-',
+                              'UVMS-SpatialModule-DB': '',
+                              'UVMS-ReportingModule-DB': 'reporting-db-',
+                              'USM': '',
+                              'UVMS-ActivityModule-APP': 'activity-',
+                              'UVMS-MDRCacheModule-DB': 'mdr-db-'}
+    
+    uvmsGitHubPath = 'https://github.com/UnionVMS/'
+    print("Will checkout uvms modules to uvmsCheckoutPath:" + uvmsCheckoutPath )
+    distutils.dir_util.mkpath(uvmsCheckoutPath)
+    
+    for m,v in moduleDbVersionMap.items():
+        print( 'Checkout:' + m + " version:" + v)
+        distutils.dir_util.mkpath(uvmsCheckoutPath+ "/" + m )
+        moduleBasePath = uvmsCheckoutPath+ "/" + m + "/" +m + "-" + modulePrefixDownloadMap.get(m)  +  v 
+        print("check dir already exist:" + moduleBasePath)
+        if not os.path.isdir(moduleBasePath ):
+            print(uvmsGitHubPath +m +  "/archive/"  + modulePrefixDownloadMap.get(m)  +  v  + ".zip")
+            url = urllib.request.urlopen(uvmsGitHubPath +m +  "/archive/"  + modulePrefixDownloadMap.get(m)   + v  + ".zip")
+            zipfile = ZipFile(BytesIO(url.read()))
+            zipfile.extractall(uvmsCheckoutPath+ "/" + m + "/" )
+            print("check dir already exist:" + moduleBasePath)
+        if os.path.isdir(moduleBasePath ):
+            print("execute liquidbase:" + m)
+            if os.path.isdir(moduleBasePath + "/LIQUIBASE"):
+                os.chdir(moduleBasePath + "/LIQUIBASE")
+            if os.path.isdir(moduleBasePath + "/liquibase"):
+                os.chdir(moduleBasePath + "/liquibase")         
+            print(os.getcwd())
+            runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres', dbURLjdbcString], True)
+            time.sleep(1)
 
 def populateIridiumImarsatCData():
     try:
