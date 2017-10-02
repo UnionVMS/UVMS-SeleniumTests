@@ -47,11 +47,12 @@ def resetModuleDatabase():
                           #'UVMS-ConfigModule-APP': '4.0.0',
                           'UVMS-AuditModule-APP': '4.0.0',
                           #'UVMS-ExchangeModule-APP': '4.0.0',
-                          'UVMS-MovementModule-APP': '4.0.0',
+                          'UVMS-MovementModule-APP': '4.0.1',
                           'UVMS-MobileTerminalModule-APP': '4.0.0',
                           'UVMS-RulesModule-DB': '3.0.7',
                           #'UVMS-SpatialModule-DB': 'f296d9afced50e6c3090bb727264572704942946',
-                          #'UVMS-ReportingModule-DB': '1.0.3',
+                          'UVMS-SpatialModule-DB': '1.0.4',
+                          'UVMS-ReportingModule-DB': '1.0.3',
                           #'USM': 'b7f78a5fb9411b1f55be6f4f3a1929072ea7c93c',
                           #'UVMS-ActivityModule-APP': '0.5.14',
                           #'UVMS-MDRCacheModule-DB': '0.5.2'
@@ -64,7 +65,7 @@ def resetModuleDatabase():
                               'UVMS-MovementModule-APP': 'movement-',
                               'UVMS-MobileTerminalModule-APP': 'mobileterminal-',
                               'UVMS-RulesModule-DB': 'rules-dbaccess-',
-                              'UVMS-SpatialModule-DB': '',
+                              'UVMS-SpatialModule-DB': 'spatial-db-',
                               'UVMS-ReportingModule-DB': 'reporting-db-',
                               'USM': '',
                               'UVMS-ActivityModule-APP': 'activity-',
@@ -92,7 +93,7 @@ def resetModuleDatabase():
             if os.path.isdir(moduleBasePath + "/liquibase"):
                 os.chdir(moduleBasePath + "/liquibase")         
             print(os.getcwd())
-            runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres', dbURLjdbcString], True)
+            runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres,exec', dbURLjdbcString], True)
             time.sleep(1)
 
 def populateIridiumImarsatCData():
