@@ -227,7 +227,9 @@ def startup_browser_and_login_to_unionVMS(cls):
 
 
 def shutdown_browser(cls):
-    cls.driver.quit()
+    if (cls.driver != null):
+        cls.driver.quit()
+        cls.driver = null;
 
 
 def create_one_new_asset_from_gui(self, vesselNumber):
@@ -760,6 +762,8 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
 
 class UnionVMSTestCase(unittest.TestCase):
 
+    def tearDown(self):
+        shutdown_browser(self)
 
     def test_01_reset_database_union_vms(self):
         # Save current default dir path
