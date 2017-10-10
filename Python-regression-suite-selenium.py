@@ -44,12 +44,12 @@ def runSubProcess(command, shell, stdout=None):
 
 def resetModuleDatabase():
     moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.0',
-                          #'UVMS-ConfigModule-APP': '4.0.0',
+                          'UVMS-ConfigModule-APP': '4.0.0',
                           'UVMS-AuditModule-APP': '4.0.0',
-                          #'UVMS-ExchangeModule-APP': '4.0.0',
+                          'UVMS-ExchangeModule-APP': '4.0.1',
                           'UVMS-MovementModule-APP': '4.0.1',
                           'UVMS-MobileTerminalModule-APP': '4.0.0',
-                          'UVMS-RulesModule-DB': '3.0.7',
+                          'UVMS-RulesModule-APP': '3.0.9',
                           #'UVMS-SpatialModule-DB': 'f296d9afced50e6c3090bb727264572704942946',
                           'UVMS-SpatialModule-DB': '1.0.4',
                           'UVMS-ReportingModule-DB': '1.0.3',
@@ -64,7 +64,7 @@ def resetModuleDatabase():
                               'UVMS-ExchangeModule-APP': 'exchange-',
                               'UVMS-MovementModule-APP': 'movement-',
                               'UVMS-MobileTerminalModule-APP': 'mobileterminal-',
-                              'UVMS-RulesModule-DB': 'rules-dbaccess-',
+                              'UVMS-RulesModule-APP': 'rules-',
                               'UVMS-SpatialModule-DB': 'spatial-db-',
                               'UVMS-ReportingModule-DB': 'reporting-db-',
                               'USM': '',
@@ -2225,7 +2225,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(
-        testRunner=xmlrunner.XMLTestRunner(output='test-reports'),
+        testRunner=xmlrunner.XMLTestRunner(output='test-reports', verbosity=2),
         # these make sure that some options that are not applicable
         # remain hidden from the help menu.
         failfast=False, buffer=False, catchbreak=False)
