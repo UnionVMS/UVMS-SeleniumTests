@@ -46,7 +46,7 @@ def resetModuleDatabase():
     moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.0',
                           #'UVMS-ConfigModule-APP': '4.0.0',
                           'UVMS-AuditModule-APP': '4.0.0',
-                          #'UVMS-ExchangeModule-APP': '4.0.1',
+                          'UVMS-ExchangeModule-APP': '4.0.1',
                           'UVMS-MovementModule-APP': '4.0.1',
                           'UVMS-MobileTerminalModule-APP': '4.0.0',
                           'UVMS-RulesModule-APP': '3.0.9',
@@ -2116,117 +2116,6 @@ class UnionVMSTestCase(unittest.TestCase):
                 else:
                     print("Request NOT OK!")
 
-
-
-    def test_special(self):
-        print('-Ddb.url=jdbc:postgresql://livmdb71u:5432/db71u')
-        print(dbURLjdbcString)
-        a = datetime.datetime.utcnow()
-        b = a - datetime.timedelta(hours=3)
-        print(datetime.datetime.strftime(a, '%Y-%m-%d %H:%M:%S'))
-        print(datetime.datetime.strftime(b, '%Y-%m-%d %H:%M:%S'))
-        s1 = []
-        s1.append('test1')
-        s1.append('test2')
-        print(s1)
-
-        print("------------------------------ Delta time test START")
-        currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=20)
-        for x in range(100):
-            earlierPositionTimeValue = earlierPositionTimeValue + datetime.timedelta(minutes=1)
-            earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
-            print(earlierPositionTimeValueString)
-        print("------------------------------ Delta time test END")
-
-        a = 13.9412
-        b = "%.2f" % a
-        print(b)
-        print("%.2f" % reportedSpeedValue + " kts")
-        print("%.0f" % reportedSpeedValue + " kts")
-        print("%f" % reportedSpeedValue + " kts")
-        print(u"180°")
-        print(str(reportedCourseValue) + u"°")
-        if (str(reportedCourseValue) + u"°" == "180°"):
-            print("YES!!!!")
-        else:
-            print("NO!")
-
-        print(lolaPositionValues[5][1][0])
-        print(lolaPositionValues[5][1][1])
-
-        for x in range(8, 18):
-            print ("We're on time %d" % (x))
-            print(x)
-            print(vesselName[x])
-
-        for x in [2,3, 6]:
-            print ("We're on time %d" % (x))
-
-        print("td[title=\"SWE\"]")
-        print("td[title=\"" + countryValue + "\"]")
-
-        home = expanduser("~")
-        print(home)
-        os.chdir(home)
-        os.chdir(".\Downloads")
-        print(os.getcwd())
-        print ("--------------------------------------------------------------------")
-
-        allrowsbackup = ['']
-        for x in [0,1,2]:
-            currentrow = []
-            currentrow.append("Ett")
-            currentrow.append("Två")
-            currentrow.append("Tre")
-            currentrow.append("Fyra")
-            allrowsbackup.append(currentrow)
-        print(allrowsbackup)
-
-        print ("-------------------------------LISTA-------------------------------------")
-        kalle = [8, 10, 12]
-        print(kalle[0])
-        """
-        ifile  = open('assets.csv', "rt", encoding="utf8")
-        #ifile = open('assets.csv', "rt")
-        reader = csv.reader(ifile, delimiter=';')
-        count = 0
-        allrows =['']
-        for row in reader:
-            print(row)
-            allrows.append(row)
-        ifile.close()
-        print ("--------------------------------------------------------------------")
-        print (allrows)
-        print ("--------------------------------------------------------------------")
-        del allrows[0]
-        print (allrows)
-        for x in range(len(allrows)):
-            print(allrows[x])
-        print ("--------------------------------------------------------------------")
-        print ("--------------------------------------------------------------------")
-        print ("--------------------------------------------------------------------")
-        for y in range(len(allrows)):
-            #if not (y == 0):
-                for x in range(len(allrows[y])):
-                    print(allrows[y][x])
-        """
-
-    def test_special_2(self):
-        populateIridiumImarsatCData()
-
-    def test_special_3(self):
-        populateSanityRuleData()
-
-    def test_special_4(self):
-        print(lolaPositionValues[0][1][0])
-        print(lolaPositionValues[0][1][1])
-        print(lolaPositionValues[1][1][0])
-        print(lolaPositionValues[1][1][1])
-        print(lolaPositionValues[2][1][0])
-        print(lolaPositionValues[2][1][1])
-        print(lolaPositionValues[3][1][0])
-        print(lolaPositionValues[3][1][1])
 
 
 
