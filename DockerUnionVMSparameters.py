@@ -78,3 +78,5 @@ reportedSpeedDefault = [8, 10, 12]
 rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by", "Notification", "Notify by email", "Status", "Actions"]
 
 uvmsCheckoutPath = "/tmp/git-uvms-database-scripts"
+
+testResultPath = "target/failsafe-reports"
