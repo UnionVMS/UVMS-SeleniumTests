@@ -1,5 +1,7 @@
 import unittest
 import time
+import timeout_decorator
+import os
 import datetime
 import random
 import sys
@@ -744,7 +746,14 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
     return nafSource
 
 
-
+if os.name == 'nt':
+    # We redefine timeout_decorator on windows
+    class timeout_decorator:
+        @staticmethod
+        def timeout(*args, **kwargs):
+            return lambda f: f # return a no-op decorator
+else:
+    import timeout_decorator
 
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -1595,6 +1604,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_30_change_global_settings_change_date_format(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1640,12 +1650,15 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+
+    @timeout_decorator.timeout(seconds=120)
     def test_31_change_global_settings_change_speed_format(self):
         # Change and check speed unit type for Global Settings
         for x in [2,1,0]:
             change_and_check_speed_format(self,x)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_32_check_view_help_text(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1666,7 +1679,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+    @timeout_decorator.timeout(seconds=120)
     def test_33_check_alerts_view(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1697,7 +1710,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+    @timeout_decorator.timeout(seconds=120)
     def test_34_create_speed_rule_one(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1764,6 +1777,8 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+
+    @timeout_decorator.timeout(seconds=120)
     def test_35_verify_created_speed_rule_one(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1792,6 +1807,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+    @timeout_decorator.timeout(seconds=120)
     def test_36_create_manual_position_with_speed_that_triggs_rule_one(self):
         # Create a manual position and verify the position
         earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
@@ -1826,6 +1842,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_37_create_NAF_position_with_speed_that_triggs_rule_one(self):
         # Create a NAF position and verify the position
         earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
@@ -1861,6 +1878,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_38_inactivate_speed_rule_one_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1892,6 +1910,8 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+
+    @timeout_decorator.timeout(seconds=120)
     def test_39_create_manual_position_with_speed_that_not_triggs_speed_rule_one(self):
         # Create a manual position and verify the position
         earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
@@ -1916,6 +1936,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_40_activate_speed_rule_one_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1947,7 +1968,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+    @timeout_decorator.timeout(seconds=120)
     def test_41_remove_speed_rule_one(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1967,7 +1988,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+    @timeout_decorator.timeout(seconds=120)
     def test_42_check_speed_rule_one_removed(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1987,23 +2008,27 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+    @timeout_decorator.timeout(seconds=120)
     def test_42b_create_one_new_asset(self):
         # Create new asset (7th in the list)
         create_one_new_asset_from_gui(self, 6)
 
+    @timeout_decorator.timeout(seconds=120)
     def test_43_create_one_new_mobile_terminal(self):
         # Create new Mobile Terminal (7th in the list) The special MT with internal parameters
         create_one_new_mobile_terminal_from_gui(self, 6)
 
+    @timeout_decorator.timeout(seconds=120)
     def test_44_check_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (7th in the list) The special MT with internal parameters
         check_new_mobile_terminal_exists(self, 6)
-
+    
+    @timeout_decorator.timeout(seconds=120)
     def test_45_link_asset_and_mobile_terminal(self):
         # Link asset 7 with mobile terminal 7 (7th in the list)
         link_asset_and_mobile_terminal(self,6)
 
+    @timeout_decorator.timeout(seconds=120)
     def test_46_generate_manual_poll_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -2036,12 +2061,14 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_47_create_one_new_asset_and_mobile_terminal(self):
         # Create new asset (first in the list)
         create_one_new_asset_from_gui(self, 7)
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_51_create_assets_and_mobile_terminals_8_17(self):
         # Create assets 8-17 in the list
         for x in range(8, 18):
@@ -2049,6 +2076,7 @@ class UnionVMSTestCase(unittest.TestCase):
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
+    @timeout_decorator.timeout(seconds=120)
     def test_54_generate_multiple_NAF_positions_7(self):
         # Create Browser
         self.driver = webdriver.Chrome()
@@ -2081,6 +2109,7 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Request NOT OK!")
 
 
+    @timeout_decorator.timeout(seconds=120)
     def test_55_generate_multiple_NAF_positions_8_17(self):
         # Create Browser
         self.driver = webdriver.Chrome()
