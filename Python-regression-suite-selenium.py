@@ -44,18 +44,18 @@ def runSubProcess(command, shell, stdout=None):
 
 def resetModuleDatabase():
     moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.0',
-                          #'UVMS-ConfigModule-APP': '4.0.0',
+                          'UVMS-ConfigModule-APP': '4.0.0',
                           'UVMS-AuditModule-APP': '4.0.0',
-                          #'UVMS-ExchangeModule-APP': '4.0.1',
+                          'UVMS-ExchangeModule-APP': '4.0.2',
                           'UVMS-MovementModule-APP': '4.0.1',
                           'UVMS-MobileTerminalModule-APP': '4.0.0',
-                          'UVMS-RulesModule-APP': '3.0.9',
+                          'UVMS-RulesModule-APP': '3.0.10',
                           #'UVMS-SpatialModule-DB': 'f296d9afced50e6c3090bb727264572704942946',
-                          #'UVMS-SpatialModule-DB': '1.0.4',
-                          #'UVMS-ReportingModule-DB': '1.0.3',
+                          'UVMS-SpatialModule-DB': '1.0.4',
+                          'UVMS-ReportingModule-DB': '1.0.3',
                           #'USM': 'b7f78a5fb9411b1f55be6f4f3a1929072ea7c93c',
-                          #'UVMS-ActivityModule-APP': '0.5.14',
-                          #'UVMS-MDRCacheModule-DB': '0.5.2'
+                          'UVMS-ActivityModule-APP': '1.0.0',
+                          'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
 
     modulePrefixDownloadMap = {'UVMS-AssetModule-APP': 'asset-',
