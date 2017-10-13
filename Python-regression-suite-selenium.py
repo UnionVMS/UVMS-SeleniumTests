@@ -227,7 +227,7 @@ def startup_browser_and_login_to_unionVMS(cls):
 
 
 def shutdown_browser(cls):
-    if (cls.driver is not None):
+    if (hasattr(cls, 'driver') and cls.driver is not None):
         cls.driver.quit()
         cls.driver = None;
 
