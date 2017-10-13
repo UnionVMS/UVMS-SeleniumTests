@@ -81,4 +81,3 @@ rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by
 uvmsCheckoutPath = "/tmp/git-uvms-database-scripts"
 testResultPath = "failsafe-reports"
 TEST_OUTPUT_VERBOSE = 2
-TEST_OUTPUT_DIR = "."
