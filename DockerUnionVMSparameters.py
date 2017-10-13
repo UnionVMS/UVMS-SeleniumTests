@@ -78,5 +78,5 @@ reportedSpeedDefault = [8, 10, 12]
 rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by", "Notification", "Notify by email", "Status", "Actions"]
 
 #Jenkins job settings
-uvmsCheckoutPath = "/tmp/git-uvms-database-scripts"
+uvmsCheckoutPath = "/tmp/git-uvms-database"
 testResultPath = 'target/failsafe-reports'

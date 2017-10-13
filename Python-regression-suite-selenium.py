@@ -775,6 +775,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def tearDown(self):
         shutdown_browser(self)
 
+	@timeout_decorator.timeout(seconds=240)
     def test_01_reset_database_union_vms(self):
         # Create Browser
         self.driver = webdriver.Chrome()
@@ -790,57 +791,66 @@ class UnionVMSTestCase(unittest.TestCase):
         populateSanityRuleData()
         time.sleep(15)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_02_create_one_new_asset(self):
         # Create new asset (first in the list)
         create_one_new_asset_from_gui(self, 0)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_03_check_new_asset_exists(self):
         # Check new asset (first in the list)
         check_new_asset_exists(self, 0)
-
+	
+	@timeout_decorator.timeout(seconds=120)
     def test_04_create_one_new_mobile_terminal(self):
         # Create new Mobile Terminal (first in the list)
         create_one_new_mobile_terminal_from_gui(self, 0)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_05_check_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (first in the list)
         check_new_mobile_terminal_exists(self, 0)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_06_link_asset_and_mobile_terminal(self):
         # Link asset 1 with mobile terminal 1 (first in the list)
         link_asset_and_mobile_terminal(self,0)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_07_generate_and_verify_manual_position(self):
         # Create a manual position and verify the position
         generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_08_generate_NAF_and_verify_position(self):
         # Create a NAF position and verify the position
         generate_NAF_and_verify_position(self,reportedSpeedValue,reportedCourseValue)
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_09_create_second_new_asset(self):
         # Create new asset (second in the list)
         create_one_new_asset_from_gui(self, 1)
-
+	
+	@timeout_decorator.timeout(seconds=120)
     def test_10_check_new_asset_exists(self):
         # Check new asset (second in the list)
         check_new_asset_exists(self, 1)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_11_create_second_new_mobile_terminal(self):
         # Create new Mobile Terminal (second in the list)
         create_one_new_mobile_terminal_from_gui(self, 1)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_12_check_second_new_mobile_terminal_exists(self):
         # Check new Mobile Terminal (second in the list)
         check_new_mobile_terminal_exists(self, 1)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_13_unlink_asset_and_mobile_terminal(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -866,6 +876,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_14_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -945,6 +956,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_15_link_asset_to_another_mobile_terminal(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -984,16 +996,19 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_16_generate_and_verify_manual_position(self):
         # Startup browser and login
         UnionVMSTestCase.test_07_generate_and_verify_manual_position(self)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_17_create_assets_3_4_5_6(self):
         # Create assets 3-6 in the list
         for x in range(2, 6):
             create_one_new_asset_from_gui(self, x)
             time.sleep(1)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_18_create_two_assets_to_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1055,6 +1070,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
+	@timeout_decorator.timeout(seconds=120)
     def test_19_add_two_assets_to_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1135,7 +1151,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
+	
+	@timeout_decorator.timeout(seconds=120)
     def test_20_remove_one_asset_group_and_check_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1200,7 +1217,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_21_create_second_group_and_add_assets_to_group(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1262,7 +1279,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_22_delete_second_group_and_check(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1294,7 +1311,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_23_advanced_search_of_assets(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1354,7 +1371,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_24_export_assets_to_excel_file(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1421,13 +1438,13 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_25_create_new_mobile_terminal_3_6(self):
         # Create new Mobile Terminal (Number 3-6 in the list)
         for x in [2,3,4,5]:
             create_one_new_mobile_terminal_from_gui(self, x)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_26_export_mobile_terminals_to_excel_file(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1519,7 +1536,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Shutdown browser
         shutdown_browser(self)
-
+	
+	@timeout_decorator.timeout(seconds=120)
     def test_27_view_audit_log(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1554,7 +1572,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_28_view_audit_log_with_interval(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -1571,7 +1589,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Shutdown browser
         shutdown_browser(self)
 
-
+	@timeout_decorator.timeout(seconds=120)
     def test_29_view_configuration_pages(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
