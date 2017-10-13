@@ -44,6 +44,7 @@ def runSubProcess(command, shell, stdout=None):
        externalError(process)
    return process
 
+
 def resetModuleDatabase():
     moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.0',
                           'UVMS-ConfigModule-APP': '4.0.0',
