@@ -79,4 +79,4 @@ rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by
 
 #Jenkins job settings
 uvmsCheckoutPath = "/tmp/git-uvms-database"
-testResultPath = 'target/failsafe-reports'
+testResultPath = "failsafe-reports"
