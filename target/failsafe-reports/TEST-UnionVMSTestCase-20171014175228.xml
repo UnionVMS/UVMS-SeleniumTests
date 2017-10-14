@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<testsuite errors="0" failures="0" name="UnionVMSTestCase-20171014175228" tests="1" time="0.000">
-	<testcase classname="UnionVMSTestCase" name="test_01_reset_database_union_vms" time="0.000"/>
-	<system-out>
-<![CDATA[tearDown
-]]>	</system-out>
-	<system-err>
-<![CDATA[]]>	</system-err>
-</testsuite>

@@ -2204,16 +2204,5 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("Request NOT OK!")
 
 
-
-
-#if __name__ == '__main__':
-#    unittest.main()
-
 if __name__ == '__main__':
-    unittest.main(
-        testRunner=xmlrunner.XMLTestRunner(output=testResultPath, verbosity=2),
-        # these make sure that some options that are not applicable
-        # remain hidden from the help menu.
-        failfast=False, buffer=False, catchbreak=False)
-
-#unittest.main()
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output=testResultPath, verbosity=2),failfast=False, buffer=False, catchbreak=False)
