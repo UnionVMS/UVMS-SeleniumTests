@@ -198,6 +198,7 @@ def startup_browser_and_login_to_unionVMS(cls):
     cls.driver.maximize_window()
     # Login to test user admin
     #cls.driver.get("https://unionvmstest.havochvatten.se/unionvms/")
+    cls.driver.implicitly_wait(10)
     cls.driver.get(httpUnionVMSurlString)
     time.sleep(2)
 
@@ -238,7 +239,6 @@ def shutdown_browser(cls):
 def create_one_new_asset_from_gui(self, vesselNumber):
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
-    self.driver.implicitly_wait(10)
     time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -619,7 +619,7 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     time.sleep(5)
     # Click on Confirm button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
-    time.sleep(10)
+    time.sleep(20)
     # Enter IRCS for newly created position
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     time.sleep(2)
@@ -924,7 +924,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         # Click on Confirm button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
-        time.sleep(5)
+        time.sleep(15)
         # Enter IRCS for newly created position
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
         time.sleep(1)
