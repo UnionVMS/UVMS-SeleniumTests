@@ -1700,6 +1700,12 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_30b_change_global_settings_change_date_format(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_30_change_global_settings_change_date_format(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_31_change_global_settings_change_speed_format(self):
         # Change and check speed unit type for Global Settings
         for x in [2,1,0]:
