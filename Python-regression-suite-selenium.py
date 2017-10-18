@@ -1431,7 +1431,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
-        os.chdir(".\Downloads")
+        os.chdir(downloadPath)
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -1535,7 +1535,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
-        os.chdir(".\Downloads")
+        os.chdir(downloadPath)
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('mobileTerminals.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
