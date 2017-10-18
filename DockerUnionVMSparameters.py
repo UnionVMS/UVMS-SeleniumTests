@@ -79,4 +79,5 @@ rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by
 
 #Jenkins job settings
 uvmsCheckoutPath = "/tmp/git-uvms-database"
+downloadPath = "/tmp/"
 testResultPath = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
