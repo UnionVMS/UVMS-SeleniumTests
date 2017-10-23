@@ -2132,7 +2132,7 @@ class UnionVMSTestCase(unittest.TestCase):
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=360)
     def test_51_create_assets_and_mobile_terminals_8_17(self):
         # Create assets 8-17 in the list
         for x in range(8, 18):
