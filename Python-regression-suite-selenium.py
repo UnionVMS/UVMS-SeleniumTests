@@ -46,18 +46,18 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.0',
-                          'UVMS-ConfigModule-APP': '4.0.0',
-                          'UVMS-AuditModule-APP': '4.0.0',
-                          'UVMS-ExchangeModule-APP': '4.0.2',
-                          'UVMS-MovementModule-APP': '4.0.1',
-                          'UVMS-MobileTerminalModule-APP': '4.0.0',
-                          'UVMS-RulesModule-APP': '3.0.10',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.2',
+                          'UVMS-ConfigModule-APP': '4.0.2',
+                          'UVMS-AuditModule-APP': '4.0.2',
+                          'UVMS-ExchangeModule-APP': '4.0.6',
+                          'UVMS-MovementModule-APP': '4.0.4',
+                          'UVMS-MobileTerminalModule-APP': '4.0.2',
+                          'UVMS-RulesModule-APP': '3.0.15',
                           #'UVMS-SpatialModule-DB': 'f296d9afced50e6c3090bb727264572704942946',
-                          'UVMS-SpatialModule-DB': '1.0.4',
-                          'UVMS-ReportingModule-DB': '1.0.3',
+                          'UVMS-SpatialModule-DB': '1.0.5',
+                          'UVMS-ReportingModule-DB': '1.0.4',
                           #'USM': 'b7f78a5fb9411b1f55be6f4f3a1929072ea7c93c',
-                          'UVMS-ActivityModule-APP': '1.0.0',
+                          'UVMS-ActivityModule-APP': '1.0.4',
                           'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
 
@@ -789,7 +789,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Populate Iridium Imarsat-C Data
         populateIridiumImarsatCData()
         # Populate Sanity Rule Data
-        populateSanityRuleData()
+        #populateSanityRuleData()
         time.sleep(15)
 
 
@@ -2208,6 +2208,43 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("200 OK")
                 else:
                     print("Request NOT OK!")
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_61_generate_Trip_via_NAF(self):
+        # Create Browser
+        self.driver = webdriver.Chrome()
+        # Create NAF positions for asset
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        firstPositionTimeValue = currentUTCValue - datetime.timedelta(hours=24)
+        currentPositionTimeValue = firstPositionTimeValue
+        assetIndex = 18
+
+        # Send x number if NAF positions for asset y
+        for y in range(2):
+            for x in range(12):
+                currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(hours=1)
+                currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
+                currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
+                latValue = float(lolaSpeedCourseTripValues[x][y][0])
+                longValue = float(lolaSpeedCourseTripValues[x][y][1])
+                speedValue = float(lolaSpeedCourseTripValues[x][y][2])
+                courseValue =float(lolaSpeedCourseTripValues[x][y][3])
+                nafSource = generate_NAF_string(self, countryValue, ircsValue[assetIndex+y], cfrValue[assetIndex+y], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, currentPositionDateValueString, currentPositionTimeValueString, vesselName[assetIndex+y])
+                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+                print(nafSource)
+                '''
+                # Generate request
+                r = requests.get(totalNAFrequest)
+                # Check if request is OK (200)
+                if r.ok:
+                    print("200 OK")
+                else:
+                    print("Request NOT OK!")
+                '''
+
+
 
 
 if __name__ == '__main__':
