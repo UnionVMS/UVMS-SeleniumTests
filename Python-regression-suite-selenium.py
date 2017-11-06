@@ -53,10 +53,10 @@ def resetModuleDatabase():
                           'UVMS-MovementModule-APP': '4.0.4',
                           'UVMS-MobileTerminalModule-APP': '4.0.2',
                           'UVMS-RulesModule-APP': '3.0.15',
-                          #'UVMS-SpatialModule-DB': 'f296d9afced50e6c3090bb727264572704942946',
+                          'UVMS-SpatialModule-DB': '1.0.5',
                           'UVMS-SpatialModule-DB': '1.0.5',
                           'UVMS-ReportingModule-DB': '1.0.4',
-                          #'USM': 'b7f78a5fb9411b1f55be6f4f3a1929072ea7c93c',
+                          'UVMS-User-APP': '2.0.4',
                           'UVMS-ActivityModule-APP': '1.0.4',
                           'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
@@ -70,7 +70,7 @@ def resetModuleDatabase():
                               'UVMS-RulesModule-APP': 'rules-',
                               'UVMS-SpatialModule-DB': 'spatial-db-',
                               'UVMS-ReportingModule-DB': 'reporting-db-',
-                              'USM': '',
+                              'UVMS-User-APP': 'user-',
                               'UVMS-ActivityModule-APP': 'activity-',
                               'UVMS-MDRCacheModule-DB': 'mdr-db-'}
     
