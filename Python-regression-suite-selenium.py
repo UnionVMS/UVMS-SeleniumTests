@@ -54,7 +54,6 @@ def resetModuleDatabase():
                           'UVMS-MobileTerminalModule-APP': '4.0.2',
                           'UVMS-RulesModule-APP': '3.0.15',
                           'UVMS-SpatialModule-DB': '1.0.5',
-                          'UVMS-SpatialModule-DB': '1.0.5',
                           'UVMS-ReportingModule-DB': '1.0.4',
                           'UVMS-User-APP': '2.0.4',
                           'UVMS-ActivityModule-APP': '1.0.4',
