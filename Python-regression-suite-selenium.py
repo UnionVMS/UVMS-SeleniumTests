@@ -55,7 +55,7 @@ def resetModuleDatabase():
                           'UVMS-RulesModule-APP': '3.0.15',
                           'UVMS-SpatialModule-DB': '1.0.5',
                           'UVMS-ReportingModule-DB': '1.0.4',
-                          'UVMS-User-APP': '2.0.4',
+                          #'UVMS-User-APP': '2.0.4',
                           'UVMS-ActivityModule-APP': '1.0.4',
                           'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
@@ -95,7 +95,7 @@ def resetModuleDatabase():
             if os.path.isdir(moduleBasePath + "/liquibase"):
                 os.chdir(moduleBasePath + "/liquibase")         
             print(os.getcwd())
-            runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres,exec', dbURLjdbcString], True)
+            runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres,exec,testdata', dbURLjdbcString], True)
             time.sleep(1)
 
 def populateIridiumImarsatCData():
@@ -786,7 +786,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Return to default current dir
         os.chdir(default_current_dir)
         # Populate Iridium Imarsat-C Data
-        populateIridiumImarsatCData()
+        #populateIridiumImarsatCData()
         # Populate Sanity Rule Data
         #populateSanityRuleData()
         time.sleep(15)
@@ -1493,13 +1493,13 @@ class UnionVMSTestCase(unittest.TestCase):
         # Save row information for rows 2-4 in the list
         allrowsbackup = ['']
         currentrow = []
-        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[1]/td[2]/span[3]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[1]/td[2]/span[1]/a").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[6]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[7]").text)
-        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/span").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[9]/span").text)
         allrowsbackup.append(currentrow)
         currentrow = []
@@ -1513,13 +1513,13 @@ class UnionVMSTestCase(unittest.TestCase):
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[2]/td[9]/span").text)
         allrowsbackup.append(currentrow)
         currentrow = []
-        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[2]/span[3]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[2]/span[1]/a").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[3]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[4]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[5]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[6]").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[7]").text)
-        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[8]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[8]/span").text)
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[9]/span").text)
         allrowsbackup.append(currentrow)
         del allrowsbackup[0]
