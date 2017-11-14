@@ -46,13 +46,13 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.2',
-                          'UVMS-ConfigModule-APP': '4.0.2',
-                          'UVMS-AuditModule-APP': '4.0.2',
-                          'UVMS-ExchangeModule-APP': '4.0.6',
-                          'UVMS-MovementModule-APP': '4.0.4',
-                          'UVMS-MobileTerminalModule-APP': '4.0.2',
-                          'UVMS-RulesModule-APP': '3.0.15',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.4',
+                          'UVMS-ConfigModule-APP': '4.0.4',
+                          'UVMS-AuditModule-APP': '4.0.4',
+                          'UVMS-ExchangeModule-APP': '4.0.7',
+                          'UVMS-MovementModule-APP': '4.0.7',
+                          'UVMS-MobileTerminalModule-APP': '4.0.4',
+                          'UVMS-RulesModule-APP': '3.0.16',
                           'UVMS-SpatialModule-DB': '1.0.5',
                           'UVMS-ReportingModule-DB': '1.0.4',
                           #'UVMS-User-APP': '2.0.4',
@@ -1493,7 +1493,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Save row information for rows 2-4 in the list
         allrowsbackup = ['']
         currentrow = []
-        # Check if Element is empty (Probably not linked)
+        # Check if first Element is empty (Probably not linked)
         tempElement = self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[1]/td[2]/span[1]/a").text
         if tempElement == '':
             tempElement = self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[1]/td[2]/span[3]").text
@@ -1507,7 +1507,7 @@ class UnionVMSTestCase(unittest.TestCase):
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[9]/span").text)
         allrowsbackup.append(currentrow)
         currentrow = []
-        # Check if Element is empty (Probably not linked)
+        # Check if first Element is empty (Probably not linked)
         tempElement = self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[2]/td[2]/span[1]/a").text
         if tempElement == '':
             tempElement = self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[2]/td[2]/span[3]").text
@@ -1521,7 +1521,7 @@ class UnionVMSTestCase(unittest.TestCase):
         currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[2]/td[9]/span").text)
         allrowsbackup.append(currentrow)
         currentrow = []
-        # Check if Element is empty (Probably not linked)
+        # Check if first Element is empty (Probably not linked)
         tempElement = self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[2]/span[1]/a").text
         if tempElement == '':
             tempElement = self.driver.find_element_by_xpath("//div[@id='content']//div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[3]/td[2]/span[3]").text
@@ -1612,17 +1612,104 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_28_view_audit_log_with_interval(self):
+    def test_28_view_audit_and_export_log_to_file(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(7)
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-
         time.sleep(7)
-
-        # continue ...
-        # Bug UVMS-3051 needs to be fixed first
+        # Enter User Name in the Username field
+        self.driver.find_element_by_xpath("//input[@type='text']").clear()
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys(defaultUserName)
+        time.sleep(1)
+        # Filter on Create Operation
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div/div/ul/li[5]/a").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(5)
+        # Check that the 4 first items in the Audit list are Mobile Terminals logs
+        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[2]").text)
+        self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[3]").text)
+        self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[4]").text)
+        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[2]").text)
+        self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[3]").text)
+        self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[4]").text)
+        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[2]").text)
+        self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[3]").text)
+        self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[4]").text)
+        # Save row information for rows 1-4 in the list
+        allrowsbackup = ['']
+        currentrow = []
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[2]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[3]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[4]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[5]").text)
+        allrowsbackup.append(currentrow)
+        currentrow = []
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[5]").text)
+        allrowsbackup.append(currentrow)
+        currentrow = []
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[2]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[3]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[4]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[5]").text)
+        allrowsbackup.append(currentrow)
+        currentrow = []
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[2]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[3]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[4]").text)
+        currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[5]").text)
+        allrowsbackup.append(currentrow)
+        del allrowsbackup[0]
+        print("-------------------- SAVE START-----------------------")
+        print(allrowsbackup)
+        print("-------------------- SAVE END-----------------------")
+        # Select row number 1-4 by click
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[2]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[5]").click()
+        # Select Action "Export selection"
+        self.driver.find_element_by_id("admin-dropdown-actions").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
+        # Change to Download folder for current user
+        home = expanduser("~")
+        os.chdir(home)
+        os.chdir(downloadPath)
+        # Open saved csv file and read all elements to "allrows"
+        ifile  = open('auditLogs.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        allrows =['']
+        for row in reader:
+            allrows.append(row)
+        ifile.close()
+        del allrows[0]
+        print("-------------------- READ START-----------------------")
+        print(allrows)
+        print("-------------------- READ END-----------------------")
+        # Check that the elements in csv file is correct
+        for y in range(len(allrows)):
+            if y==0:
+                # Check Headlines
+                for x in range(len(auditLogsHeadline)):
+                    if not (x == 0):
+                        self.assertEqual(auditLogsHeadline[x], allrows[y][x])
+            else:
+                print("Test row: " + str(y))
+                for z in range(4):
+                    self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
 
         time.sleep(5)
         # Shutdown browser
