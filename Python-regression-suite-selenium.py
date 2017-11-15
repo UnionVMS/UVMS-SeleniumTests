@@ -219,8 +219,8 @@ def startup_browser_and_login_to_unionVMS(cls):
     except:
         pass
 
-    cls.driver.find_element_by_id("userId").send_keys("vms_admin_com")
-    cls.driver.find_element_by_id("password").send_keys("password")
+    cls.driver.find_element_by_id("userId").send_keys(defaultUserName)
+    cls.driver.find_element_by_id(defaultUserNamePassword).send_keys(defaultUserNamePassword)
     time.sleep(2)
     cls.driver.find_element_by_xpath(
         "//*[@id='content']/div[1]/div[3]/div/div[2]/div[3]/div[2]/form/div[3]/div/button"). \
@@ -1632,16 +1632,16 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(5)
         # Check that the 4 first items in the Audit list are Mobile Terminals logs
-        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[2]").text)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[2]").text)
         self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[3]").text)
         self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[4]").text)
-        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
         self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
         self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
-        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[2]").text)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[2]").text)
         self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[3]").text)
         self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[3]/td[4]").text)
-        self.assertEqual("vms_admin_com", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[2]").text)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[2]").text)
         self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[3]").text)
         self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[4]/td[4]").text)
         # Save row information for rows 1-4 in the list
@@ -2239,6 +2239,15 @@ class UnionVMSTestCase(unittest.TestCase):
             time.sleep(1)
 
     @timeout_decorator.timeout(seconds=180)
+    def test_52_create_assets_and_mobile_terminals_8_17(self):
+        # Create assets 8-17 in the list
+        for x in range(18, 20):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_54_generate_multiple_NAF_positions_7(self):
         # Create Browser
         self.driver = webdriver.Chrome()
@@ -2332,7 +2341,7 @@ class UnionVMSTestCase(unittest.TestCase):
                 nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
                 totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
                 print(nafSource)
-                '''
+
                 # Generate request
                 r = requests.get(totalNAFrequest)
                 # Check if request is OK (200)
@@ -2340,7 +2349,14 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("200 OK")
                 else:
                     print("Request NOT OK!")
-                '''
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_special(self):
+        # Create assets 8-17 in the list
+        for x in range(18, 20):
+            print(x)
+
 
 
 
