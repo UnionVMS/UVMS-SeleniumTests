@@ -362,7 +362,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     time.sleep(3)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(1)
+    time.sleep(3)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(1)
