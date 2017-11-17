@@ -81,3 +81,5 @@ rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by
 uvmsCheckoutPath = "/tmp/git-uvms-database"
 downloadPath = "/var/lib/jenkins/Downloads"
 testResultPath = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
+defaultUserName = "vms_admin_com"
+defaultUserNamePassWord = "password"
