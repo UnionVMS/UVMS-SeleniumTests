@@ -47,17 +47,17 @@ def runSubProcess(command, shell, stdout=None):
 
 def resetModuleDatabase():
     moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.4',
-                          'UVMS-ConfigModule-APP': '4.0.4',
+                          #'UVMS-ConfigModule-APP': '4.0.4',
                           'UVMS-AuditModule-APP': '4.0.4',
-                          'UVMS-ExchangeModule-APP': '4.0.7',
+                          #'UVMS-ExchangeModule-APP': '4.0.7',
                           'UVMS-MovementModule-APP': '4.0.7',
                           'UVMS-MobileTerminalModule-APP': '4.0.4',
                           'UVMS-RulesModule-APP': '3.0.16',
-                          'UVMS-SpatialModule-DB': '1.0.5',
-                          'UVMS-ReportingModule-DB': '1.0.4',
+                          #'UVMS-SpatialModule-DB': '1.0.5',
+                          #'UVMS-ReportingModule-DB': '1.0.4',
                           #'UVMS-User-APP': '2.0.4',
-                          'UVMS-ActivityModule-APP': '1.0.4',
-                          'UVMS-MDRCacheModule-DB': '0.5.2'
+                          #'UVMS-ActivityModule-APP': '1.0.4',
+                          #'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
 
     modulePrefixDownloadMap = {'UVMS-AssetModule-APP': 'asset-',
@@ -775,7 +775,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    @timeout_decorator.timeout(seconds=600)
+    @timeout_decorator.timeout(seconds=1000)
     def test_01_reset_database_union_vms(self):
         # Create Browser
         self.driver = webdriver.Chrome()
@@ -786,7 +786,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Return to default current dir
         os.chdir(default_current_dir)
         # Populate Iridium Imarsat-C Data
-        #populateIridiumImarsatCData()
+        populateIridiumImarsatCData()
         # Populate Sanity Rule Data
         #populateSanityRuleData()
         time.sleep(15)
@@ -2239,9 +2239,9 @@ class UnionVMSTestCase(unittest.TestCase):
             time.sleep(1)
 
     @timeout_decorator.timeout(seconds=180)
-    def test_52_create_assets_and_mobile_terminals_8_17(self):
-        # Create assets 8-17 in the list
-        for x in range(18, 20):
+    def test_52_create_assets_and_mobile_terminals_18_20(self):
+        # Create assets 18-20 in the list
+        for x in range(18, 21):
             create_one_new_asset_from_gui(self, x)
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
@@ -2328,7 +2328,7 @@ class UnionVMSTestCase(unittest.TestCase):
         assetIndex = 18
 
         # Send x number if NAF positions for asset y
-        for y in range(2):
+        for y in range(3):
             for x in range(12):
                 currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(hours=1)
                 currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
