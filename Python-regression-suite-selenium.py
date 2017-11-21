@@ -2323,7 +2323,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create NAF positions for asset
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
-        firstPositionTimeValue = currentUTCValue - datetime.timedelta(hours=24)
+        firstPositionTimeValue = currentUTCValue - datetime.timedelta(hours=48)
         currentPositionTimeValue = firstPositionTimeValue
         assetIndex = 18
 
