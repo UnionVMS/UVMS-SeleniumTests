@@ -2229,26 +2229,8 @@ class UnionVMSTestCase(unittest.TestCase):
         create_one_new_asset_from_gui(self, 7)
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
-
-    @timeout_decorator.timeout(seconds=360)
-    def test_51_create_assets_and_mobile_terminals_8_17(self):
-        # Create assets 8-17 in the list
-        for x in range(8, 18):
-            create_one_new_asset_from_gui(self, x)
-            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
-            time.sleep(1)
-
     @timeout_decorator.timeout(seconds=180)
-    def test_52_create_assets_and_mobile_terminals_18_20(self):
-        # Create assets 18-20 in the list
-        for x in range(18, 21):
-            create_one_new_asset_from_gui(self, x)
-            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
-            time.sleep(1)
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_54_generate_multiple_NAF_positions_7(self):
+    def test_47b_generate_multiple_NAF_positions_7(self):
         # Create Browser
         self.driver = webdriver.Chrome()
         # Create many NAF positions for asset 7
@@ -2280,8 +2262,16 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Request NOT OK!")
 
 
+    @timeout_decorator.timeout(seconds=360)
+    def test_51_create_assets_and_mobile_terminals_8_17(self):
+        # Create assets 8-17 in the list
+        for x in range(8, 18):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
     @timeout_decorator.timeout(seconds=180)
-    def test_55_generate_multiple_NAF_positions_8_17(self):
+    def test_51b_generate_multiple_NAF_positions_8_17(self):
         # Create Browser
         self.driver = webdriver.Chrome()
         # Create many NAF positions for assets 8-17
@@ -2316,8 +2306,19 @@ class UnionVMSTestCase(unittest.TestCase):
                 else:
                     print("Request NOT OK!")
 
+
     @timeout_decorator.timeout(seconds=180)
-    def test_61_generate_Trip_via_NAF(self):
+    def test_52_create_assets_and_mobile_terminals_18_20(self):
+        # Create assets 18-20 in the list
+        for x in range(18, 21):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_52b_generate_Trip_via_NAF(self):
         # Create Browser
         self.driver = webdriver.Chrome()
         # Create NAF positions for asset
