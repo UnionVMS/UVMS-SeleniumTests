@@ -46,17 +46,17 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.4',
-                          #'UVMS-ConfigModule-APP': '4.0.4',
-                          'UVMS-AuditModule-APP': '4.0.4',
-                          #'UVMS-ExchangeModule-APP': '4.0.7',
-                          'UVMS-MovementModule-APP': '4.0.7',
-                          'UVMS-MobileTerminalModule-APP': '4.0.4',
-                          'UVMS-RulesModule-APP': '3.0.16',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.5',
+                          #'UVMS-ConfigModule-APP': '4.0.5',
+                          'UVMS-AuditModule-APP': '4.0.5',
+                          #'UVMS-ExchangeModule-APP': '4.0.8',
+                          'UVMS-MovementModule-APP': '4.0.8',
+                          'UVMS-MobileTerminalModule-APP': '4.0.5',
+                          'UVMS-RulesModule-APP': '3.0.17',
                           #'UVMS-SpatialModule-DB': '1.0.5',
                           #'UVMS-ReportingModule-DB': '1.0.4',
-                          #'UVMS-User-APP': '2.0.4',
-                          #'UVMS-ActivityModule-APP': '1.0.4',
+                          #'UVMS-User-APP': '2.0.7',
+                          #'UVMS-ActivityModule-APP': '1.0.5',
                           #'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
 
@@ -2352,11 +2352,67 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("Request NOT OK!")
 
 
+    def test_52c_view_and_check_asset_in_reporting_view(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # Select Reporting tab
+        self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
+        time.sleep(5)
+        # Enter reporting name
+        reportName = "Test (only " + ircsValue[20] +")"
+        self.driver.find_element_by_id("reportName").send_keys(reportName)
+        # Enter Start and end Date Time
+        currentUTCValue = datetime.datetime.utcnow()
+        startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
+        endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
+        self.driver.find_element_by_id("report-start-date-picker").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+        time.sleep(1)
+        self.driver.find_element_by_id("report-end-date-picker").send_keys(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+        time.sleep(1)
+        # Select asset view
+        self.driver.find_element_by_link_text("Select assets").click()
+        time.sleep(2)
+        # Enter asset value
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(ircsValue[20])
+        time.sleep(2)
+        # Select Asset and save
+        self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[30]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+        time.sleep(10)
+        # Click on Tabular view icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        time.sleep(2)
+        # Click on Tracks tab
+        self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
+        time.sleep(2)
+        # Check that only one row exist with IRCS F5003
+        self.assertEqual(ircsValue[20], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
+        try:
+            self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(5)
+
+
+
+
     @timeout_decorator.timeout(seconds=180)
     def test_special(self):
         # Create assets 8-17 in the list
         for x in range(18, 20):
             print(x)
+
+        currentUTCValue = datetime.datetime.utcnow()
+        startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
+        endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
+        print(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+        print(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 
