@@ -46,13 +46,13 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.5',
-                          #'UVMS-ConfigModule-APP': '4.0.5',
-                          'UVMS-AuditModule-APP': '4.0.5',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.6',
+                          #'UVMS-ConfigModule-APP': '4.0.6',
+                          'UVMS-AuditModule-APP': '4.0.6',
                           #'UVMS-ExchangeModule-APP': '4.0.8',
-                          'UVMS-MovementModule-APP': '4.0.8',
-                          'UVMS-MobileTerminalModule-APP': '4.0.5',
-                          'UVMS-RulesModule-APP': '3.0.17',
+                          'UVMS-MovementModule-APP': '4.0.9',
+                          'UVMS-MobileTerminalModule-APP': '4.0.6',
+                          'UVMS-RulesModule-APP': '3.0.18',
                           #'UVMS-SpatialModule-DB': '1.0.5',
                           #'UVMS-ReportingModule-DB': '1.0.4',
                           #'UVMS-User-APP': '2.0.7',
@@ -310,7 +310,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Select Transponder system
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
-    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
+    self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
     time.sleep(1)
     # Enter serial number
     self.driver.find_element_by_id("mt-0-serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
@@ -369,7 +369,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     # Select Transponder system
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
-    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
+    self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
     time.sleep(1)
     # Enter serial number
     self.driver.find_element_by_id("mt-0-serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
@@ -2317,8 +2317,8 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
 
-    @timeout_decorator.timeout(seconds=180)
-    def test_52b_generate_Trip_via_NAF(self):
+    @timeout_decorator.timeout(seconds=1000)
+    def test_52b_generate_multiple_NAF_Trips_18_20(self):
         # Create Browser
         self.driver = webdriver.Chrome()
         # Create NAF positions for asset
@@ -2342,7 +2342,6 @@ class UnionVMSTestCase(unittest.TestCase):
                 nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
                 totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
                 print(nafSource)
-
                 # Generate request
                 r = requests.get(totalNAFrequest)
                 # Check if request is OK (200)
@@ -2350,6 +2349,7 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("200 OK")
                 else:
                     print("Request NOT OK!")
+                time.sleep(20)
 
 
     def test_52c_view_and_check_asset_in_reporting_view(self):
@@ -2360,7 +2360,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
         time.sleep(5)
         # Enter reporting name
-        reportName = "Test (only " + ircsValue[20] +")"
+        reportName = "Test (only " + ircsValue[18] +")"
         self.driver.find_element_by_id("reportName").send_keys(reportName)
         # Enter Start and end Date Time
         currentUTCValue = datetime.datetime.utcnow()
@@ -2374,7 +2374,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Select assets").click()
         time.sleep(2)
         # Enter asset value
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(ircsValue[20])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(ircsValue[18])
         time.sleep(2)
         # Select Asset and save
         self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
@@ -2392,7 +2392,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
         time.sleep(2)
         # Check that only one row exist with IRCS F5003
-        self.assertEqual(ircsValue[20], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
+        self.assertEqual(ircsValue[18], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
         try:
             self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
         except NoSuchElementException:
