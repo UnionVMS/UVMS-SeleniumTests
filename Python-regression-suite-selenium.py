@@ -49,14 +49,14 @@ def resetModuleDatabase():
     moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.6',
                           #'UVMS-ConfigModule-APP': '4.0.6',
                           'UVMS-AuditModule-APP': '4.0.6',
-                          #'UVMS-ExchangeModule-APP': '4.0.8',
+                          #'UVMS-ExchangeModule-APP': '4.0.9',
                           'UVMS-MovementModule-APP': '4.0.9',
                           'UVMS-MobileTerminalModule-APP': '4.0.6',
-                          'UVMS-RulesModule-APP': '3.0.18',
+                          'UVMS-RulesModule-APP': '3.0.19',
                           #'UVMS-SpatialModule-DB': '1.0.5',
                           #'UVMS-ReportingModule-DB': '1.0.4',
                           #'UVMS-User-APP': '2.0.7',
-                          #'UVMS-ActivityModule-APP': '1.0.5',
+                          #'UVMS-ActivityModule-APP': '1.0.6',
                           #'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
 
@@ -114,8 +114,8 @@ def populateIridiumImarsatCData():
                     (1050, 'siriusone', 'eu.europa.ec.fisheries.uvms.plugins.iridium.siriusone', 'IRIDIUM', False,
                      'siriusone', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""INSERT INTO mobterm.plugin VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
-                    (1056, 'twostage', 'eu.europa.ec.fisheries.uvms.plugins.inmarsat', 'INMARSAT_C', False,
-                     'twostage', datetime.datetime.utcnow(), 'UVMS'))
+                    (1056, 'Thrane&Thrane', 'eu.europa.ec.fisheries.uvms.plugins.inmarsat', 'INMARSAT_C', False,
+                     'Thrane&Thrane', datetime.datetime.utcnow(), 'UVMS'))
         cur.execute("""SELECT * from mobterm.plugin""")
         rows = cur.fetchall()
         print("\nPrint out of Database " + dbServerName + " (After):\n")
@@ -2225,7 +2225,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_47_create_one_new_asset_and_mobile_terminal(self):
-        # Create new asset (first in the list)
+        # Create new asset (7th in the list)
         create_one_new_asset_from_gui(self, 7)
         create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
 
@@ -2399,6 +2399,13 @@ class UnionVMSTestCase(unittest.TestCase):
             pass
         time.sleep(5)
 
+    @timeout_decorator.timeout(seconds=1000)
+    def test_53_create_assets_and_mobile_terminals_21_33(self):
+        # Create assets 18-20 in the list
+        for x in range(21, 34):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
 
 
 
