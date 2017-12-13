@@ -2382,9 +2382,10 @@ class UnionVMSTestCase(unittest.TestCase):
             pass
         time.sleep(5)
 
+
     @timeout_decorator.timeout(seconds=1000)
     def test_53_create_assets_and_mobile_terminals_21_33(self):
-        # Create assets 18-20 in the list
+        # Create assets 21-33 in the list
         for x in range(21, 34):
             create_one_new_asset_from_gui(self, x)
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
