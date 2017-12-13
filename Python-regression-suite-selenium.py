@@ -2167,27 +2167,10 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_42b_create_one_new_asset(self):
+    def test_43_create_one_new_asset_and_mobile_terminal(self):
         # Create new asset (7th in the list)
         create_one_new_asset_from_gui(self, 6)
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_43_create_one_new_mobile_terminal(self):
-        # Create new Mobile Terminal (7th in the list) The special MT with internal parameters
-        create_one_new_mobile_terminal_from_gui(self, 6)
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_44_check_new_mobile_terminal_exists(self):
-        # Check new Mobile Terminal (7th in the list) The special MT with internal parameters
-        check_new_mobile_terminal_exists(self, 6)
-
-    
-    @timeout_decorator.timeout(seconds=180)
-    def test_45_link_asset_and_mobile_terminal(self):
-        # Link asset 7 with mobile terminal 7 (7th in the list)
-        link_asset_and_mobile_terminal(self,6)
+        create_one_new_mobile_terminal_via_asset_tab(self, 6, 6)
 
 
     @timeout_decorator.timeout(seconds=180)
