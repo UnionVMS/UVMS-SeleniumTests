@@ -310,6 +310,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Select Transponder system
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
+#    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
     time.sleep(1)
     # Enter serial number
@@ -369,6 +370,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     # Select Transponder system
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
+#    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
     time.sleep(1)
     # Enter serial number
@@ -2332,7 +2334,7 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("200 OK")
                 else:
                     print("Request NOT OK!")
-                time.sleep(20)
+                time.sleep(2)
 
 
     def test_52c_view_and_check_asset_in_reporting_view(self):
