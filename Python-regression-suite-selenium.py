@@ -46,7 +46,7 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.6',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.7',
                           #'UVMS-ConfigModule-APP': '4.0.6',
                           'UVMS-AuditModule-APP': '4.0.6',
                           #'UVMS-ExchangeModule-APP': '4.0.9',
@@ -1424,7 +1424,6 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         time.sleep(2)
         # Select Action "Export selection"
-        #self.driver.find_element_by_xpath("(//button[@name='name'])[10]").click()
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
@@ -2336,7 +2335,7 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("Request NOT OK!")
                 time.sleep(2)
 
-
+    @timeout_decorator.timeout(seconds=180)
     def test_52c_view_and_check_asset_in_reporting_view(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -2392,6 +2391,50 @@ class UnionVMSTestCase(unittest.TestCase):
             create_one_new_asset_from_gui(self, x)
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
+
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_55_create_assets_trip_4(self):
+        # Create assets, Mobile for Trip 4
+
+        # Change to Download folder for current user
+        home = expanduser("~")
+        os.chdir(home)
+        os.chdir(downloadPath)
+
+        # Open saved csv file and read all asset elements
+        ifile  = open('asset4.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        assetAllrows =['']
+        for row in reader:
+            print(row)
+            assetAllrows.append(row)
+        ifile.close()
+        del assetAllrows[0]
+
+        # Open saved csv file and read all mobile terminal elements
+        ifile  = open('mobileterminal4.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        mobileTerminalAllrows =['']
+        for row in reader:
+            print(row)
+            mobileTerminalAllrows.append(row)
+        ifile.close()
+        del mobileTerminalAllrows[0]
+
+        # Open saved csv file and read all trip elements for asset
+        ifile  = open('trip4.csv', "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        assetTripAllrows =['']
+        for row in reader:
+            print(row)
+            assetTripAllrows.append(row)
+        ifile.close()
+        del assetTripAllrows[0]
+
+        # Continue with test case development
+
 
 
 
