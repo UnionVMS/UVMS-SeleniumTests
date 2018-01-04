@@ -46,13 +46,13 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.7',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.8',
                           #'UVMS-ConfigModule-APP': '4.0.6',
                           'UVMS-AuditModule-APP': '4.0.6',
                           #'UVMS-ExchangeModule-APP': '4.0.9',
                           'UVMS-MovementModule-APP': '4.0.9',
                           'UVMS-MobileTerminalModule-APP': '4.0.6',
-                          'UVMS-RulesModule-APP': '3.0.19',
+                          'UVMS-RulesModule-APP': '3.0.20',
                           #'UVMS-SpatialModule-DB': '1.0.5',
                           #'UVMS-ReportingModule-DB': '1.0.4',
                           #'UVMS-User-APP': '2.0.7',
@@ -298,6 +298,70 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     shutdown_browser(self)
 
 
+def create_one_new_asset_from_gui_with_parameters(self, parameterList):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Click on asset tab
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(1)
+    # Click on new Asset button
+    self.driver.find_element_by_id("asset-btn-create").click()
+    time.sleep(2)
+    # Select F.S value
+    self.driver.find_element_by_id("asset-input-countryCode").click()
+    self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
+    # Enter IRCS value
+    self.driver.find_element_by_id("asset-input-ircs").send_keys(parameterList[0])
+    # Enter Name value
+    self.driver.find_element_by_id("asset-input-name").send_keys(parameterList[1])
+    # Enter External Marking Value
+    self.driver.find_element_by_id("asset-input-externalMarking").send_keys(parameterList[3])
+    # Enter CFR Value
+    self.driver.find_element_by_id("asset-input-cfr").send_keys(parameterList[2])
+    # Enter IMO Value
+    self.driver.find_element_by_id("asset-input-imo").send_keys(parameterList[4])
+    # Enter HomePort Value
+    self.driver.find_element_by_id("asset-input-homeport").send_keys(parameterList[7])
+    # Select Gear Type value
+    self.driver.find_element_by_id("asset-input-gearType").click()
+    self.driver.find_element_by_id("asset-input-gearType-item-0").click()
+    # Enter MMSI Value
+    self.driver.find_element_by_id("asset-input-mmsi").send_keys(parameterList[5])
+    # Select License Type value
+    self.driver.find_element_by_id("asset-input-licenseType").click()
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
+    # Length Value
+    self.driver.find_element_by_id("asset-input-lengthValue").send_keys(parameterList[9])
+    # Gross Tonnage Value
+    self.driver.find_element_by_id("asset-input-grossTonnage").send_keys(parameterList[10])
+    # Main Power Value
+    self.driver.find_element_by_id("asset-input-power").send_keys(parameterList[11])
+    # Main Producer Name Value
+    self.driver.find_element_by_id("asset-input-producername").send_keys(parameterList[12])
+    # Main Producer Code Value
+    self.driver.find_element_by_id("asset-input-producercode").send_keys(parameterList[13])
+    # Click on the Contacts tab
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    time.sleep(1)
+    # Main Contact Name Value
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(parameterList[14])
+    # Main E-mail Value
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(parameterList[15])
+    # Main Contact Number Value
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(parameterList[16])
+    # Click on Save Asset button
+    self.driver.find_element_by_id("menu-bar-save").click()
+    time.sleep(5)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+
 def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
@@ -406,6 +470,67 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
+
+def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterList):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    # Click on asset tab
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(1)
+    # Search for created asset
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName)
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(3)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(3)
+    # Click on add new terminal button
+    self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
+    time.sleep(1)
+    # Select Transponder system
+    self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
+    time.sleep(1)
+#    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
+    self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
+    time.sleep(1)
+    # Enter serial number
+    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterList[0])
+    # Enter Transceiver type
+    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterList[1])
+    # Enter Software Version
+    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(parameterList[2])
+    # Enter Antenna
+    self.driver.find_element_by_id("mt-0-antenna").send_keys(parameterList[3])
+    # Enter Satellite Number
+    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(parameterList[4])
+    # Enter DNID Number
+    self.driver.find_element_by_name("dnid").send_keys(parameterList[5])
+    # Enter Member Number
+    self.driver.find_element_by_name("memberId").send_keys(parameterList[6])
+    # Enter Installed by
+    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterList[7])
+    # Expected frequency
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(parameterList[8])
+    # Grace period
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(parameterList[10])
+    # In port
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(parameterList[12])
+    # Activate Mobile Terminal button
+    self.driver.find_element_by_id("mt-0-activation").click()
+    time.sleep(3)
+    # Click on save button
+    self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
+    time.sleep(5)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
 
 
 def check_new_asset_exists(self, vesselNumber):
@@ -793,6 +918,39 @@ class UnionVMSTestCase(unittest.TestCase):
         #populateSanityRuleData()
         time.sleep(15)
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_01b_change_default_configuration_parameters(self):
+        # The test case changes Default home page to asset and Coordinates format to dd.mmm
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+        # if Reporting Query List is presented, then close it
+        try:
+            if self.driver.find_element_by_css_selector("h4.modal-title"):
+                self.driver.find_element_by_xpath("//div[@id='map']/div[5]/div/div/div/div/div/i").click()
+                time.sleep(2)
+        except:
+            pass
+        # Select Admin tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        self.driver.find_element_by_link_text("CONFIGURATION").click()
+        time.sleep(3)
+        # Click on Global setting subtab under Configuration Tab
+        self.driver.find_element_by_css_selector("#globalSettings > span").click()
+        time.sleep(1)
+        # Click to change Coordinates format to dd.mmm
+        self.driver.find_element_by_xpath("(//input[@name='coordinateFormat'])[2]").click()
+        time.sleep(7)
+        # Click to change Default home page to Asset page
+        self.driver.find_element_by_xpath("//button[@id='']").click()
+        time.sleep(5)
+        self.driver.find_element_by_id("-item-2").click()
+        time.sleep(5)
+
+        # Shutdown browser
+        shutdown_browser(self)
 
     @timeout_decorator.timeout(seconds=180)
     def test_02_create_one_new_asset(self):
@@ -2398,10 +2556,16 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_55_create_assets_trip_4(self):
         # Create assets, Mobile for Trip 4
 
+        # Set Current Date and time in UTC 24h back
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - datetime.timedelta(hours=72)
+        currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
+        currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
+
         # Change to Download folder for current user
-        home = expanduser("~")
-        os.chdir(home)
-        os.chdir(downloadPath)
+        #home = expanduser("~")
+        #os.chdir(home)
+        #os.chdir(downloadPath)
 
         # Open saved csv file and read all asset elements
         ifile  = open('asset4.csv', "rt", encoding="utf8")
@@ -2433,9 +2597,30 @@ class UnionVMSTestCase(unittest.TestCase):
         ifile.close()
         del assetTripAllrows[0]
 
-        # Continue with test case development
-
-
+        # create_one_new_asset and mobile terminal
+        for x in range(1,len(assetAllrows)):
+            create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
+            create_one_new_mobile_terminal_via_asset_tab_with_parameters(self,assetAllrows[x][1], mobileTerminalAllrows[x])
+            # create number of position reports for the newly created asset/mobile terminal
+            currentPositionTimeValue = currentUTCValue - datetime.timedelta(hours=24)
+            for y in range(1, len(assetTripAllrows)):
+                # Create one position report via NAF
+                currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(minutes=int(assetTripAllrows[y][5]))
+                currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
+                currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
+                nafSource = generate_NAF_string(self, countryValue, assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), int(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
+                print(nafSource)
+                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+                # Generate request
+                r = requests.get(totalNAFrequest)
+                # Check if request is OK (200)
+                if r.ok:
+                    print("200 OK")
+                else:
+                    print("Request NOT OK!")
+        for x in range(0, len(assetTripAllrows)):
+            print(assetTripAllrows[x])
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2449,6 +2634,8 @@ class UnionVMSTestCase(unittest.TestCase):
         endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
         print(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
         print(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+
+        print("%.3f" % 48.7)
 
 
 
