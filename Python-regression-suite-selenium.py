@@ -2637,7 +2637,6 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_mobileterminal_trip(self, datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'mobileterminal6.csv', 'trip6.csv')
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_special(self):
         # Create assets 8-17 in the list
