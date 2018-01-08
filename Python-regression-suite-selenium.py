@@ -921,7 +921,6 @@ def create_asset_mobileterminal_trip(self,deltaTimeValue, assetFileName, mobileT
         create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
         # create number of position reports for the newly created asset/mobile terminal
-        currentPositionTimeValue = currentUTCValue - datetime.timedelta(hours=24)
         for y in range(1, len(assetTripAllrows)):
             # Create one position report via NAF
             currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(
@@ -2635,6 +2634,7 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_mobileterminal_trip(self, datetime.timedelta(hours=72), 'asset5.csv', 'mobileterminal5.csv', 'trip5.csv')
         # Create assets, Mobile for Trip 6
         create_asset_mobileterminal_trip(self, datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'mobileterminal6.csv', 'trip6.csv')
+
 
 
     @timeout_decorator.timeout(seconds=180)
