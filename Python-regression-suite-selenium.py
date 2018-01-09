@@ -2630,10 +2630,16 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=1000)
     def test_56_create_assets_trip_5_and_6(self):
-        # Create assets, Mobile for Trip 5
+        # Create assets, Mobile Terminal for Trip 5
         create_asset_mobileterminal_trip(self, datetime.timedelta(hours=72), 'asset5.csv', 'mobileterminal5.csv', 'trip5.csv')
-        # Create assets, Mobile for Trip 6
+        # Create assets, Mobile Terminal for Trip 6
         create_asset_mobileterminal_trip(self, datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'mobileterminal6.csv', 'trip6.csv')
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_57_create_assets_trip_7(self):
+        # Create assets, Mobile for Trip 4
+        create_asset_mobileterminal_trip(self, datetime.timedelta(hours=72), 'asset7.csv', 'mobileterminal7.csv', 'trip7.csv')
 
 
 
