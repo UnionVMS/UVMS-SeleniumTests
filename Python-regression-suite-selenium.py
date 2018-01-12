@@ -60,6 +60,7 @@ def resetModuleDatabase():
                           #'UVMS-MDRCacheModule-DB': '0.5.2'
                           }
 
+
     modulePrefixDownloadMap = {'UVMS-AssetModule-APP': 'asset-',
                               'UVMS-ConfigModule-APP': 'config-',
                               'UVMS-AuditModule-APP': 'audit-',
