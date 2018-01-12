@@ -46,13 +46,13 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.8',
+    moduleDbVersionMap = {#'UVMS-AssetModule-APP': '4.0.8',
                           #'UVMS-ConfigModule-APP': '4.0.6',
-                          'UVMS-AuditModule-APP': '4.0.6',
+                          #'UVMS-AuditModule-APP': '4.0.6',
                           #'UVMS-ExchangeModule-APP': '4.0.9',
-                          'UVMS-MovementModule-APP': '4.0.9',
-                          'UVMS-MobileTerminalModule-APP': '4.0.6',
-                          'UVMS-RulesModule-APP': '3.0.20',
+                          #'UVMS-MovementModule-APP': '4.0.9',
+                          #'UVMS-MobileTerminalModule-APP': '4.0.6',
+                          #'UVMS-RulesModule-APP': '3.0.20',
                           #'UVMS-SpatialModule-DB': '1.0.5',
                           #'UVMS-ReportingModule-DB': '1.0.4',
                           #'UVMS-User-APP': '2.0.7',
@@ -958,70 +958,6 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
             else:
                 print("Request NOT OK!")
 
-'''
-def create_asset_mobileterminal_trip(self,deltaTimeValue, assetFileName, mobileTerminalFileName, tripFileName):
-    # Create assets, Mobile for Trip (assetFileName, mobileTerminalFileName, tripFileName)
-
-    # Set Current Date and time in UTC 24h back
-    currentUTCValue = datetime.datetime.utcnow()
-    currentPositionTimeValue = currentUTCValue - deltaTimeValue
-
-    # Change to Download folder for current user
-    # home = expanduser("~")
-    # os.chdir(home)
-    # os.chdir(downloadPath)
-
-    # Open saved csv file and read all asset elements
-    ifile = open(assetFileName, "rt", encoding="utf8")
-    reader = csv.reader(ifile, delimiter=';')
-    assetAllrows = ['']
-    for row in reader:
-        assetAllrows.append(row)
-    ifile.close()
-    del assetAllrows[0]
-
-    # Open saved csv file and read all mobile terminal elements
-    ifile = open(mobileTerminalFileName, "rt", encoding="utf8")
-    reader = csv.reader(ifile, delimiter=';')
-    mobileTerminalAllrows = ['']
-    for row in reader:
-        mobileTerminalAllrows.append(row)
-    ifile.close()
-    del mobileTerminalAllrows[0]
-
-    # Open saved csv file and read all trip elements for asset
-    ifile = open(tripFileName, "rt", encoding="utf8")
-    reader = csv.reader(ifile, delimiter=';')
-    assetTripAllrows = ['']
-    for row in reader:
-        assetTripAllrows.append(row)
-    ifile.close()
-    del assetTripAllrows[0]
-
-    # create_one_new_asset and mobile terminal
-    for x in range(1, len(assetAllrows)):
-        create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
-        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
-        # create number of position reports for the newly created asset/mobile terminal
-        for y in range(1, len(assetTripAllrows)):
-            # Create one position report via NAF
-            currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(
-                minutes=int(assetTripAllrows[y][5]))
-            currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
-            currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
-            nafSource = generate_NAF_string(self, countryValue, assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
-            print(nafSource)
-            nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-            totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-            # Generate request
-            r = requests.get(totalNAFrequest)
-            # Check if request is OK (200)
-            if r.ok:
-                print("200 OK")
-            else:
-                print("Request NOT OK!")
-
-'''
 
 
 if os.name == 'nt':
@@ -2599,51 +2535,6 @@ class UnionVMSTestCase(unittest.TestCase):
                 else:
                     print("Request NOT OK!")
 
-    '''
-    @timeout_decorator.timeout(seconds=180)
-    def test_52_create_assets_and_mobile_terminals_18_20(self):
-        # Create assets 18-20 in the list
-        for x in range(18, 21):
-            create_one_new_asset_from_gui(self, x)
-            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
-            time.sleep(1)
-
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_52b_generate_multiple_NAF_Trips_18_20(self):
-        # Create Browser
-        self.driver = webdriver.Chrome()
-        # Create NAF positions for asset
-        # Get Current Date and time in UTC
-        currentUTCValue = datetime.datetime.utcnow()
-        firstPositionTimeValue = currentUTCValue - datetime.timedelta(hours=48)
-        currentPositionTimeValue = firstPositionTimeValue
-        assetIndex = 18
-
-        # Send x number if NAF positions for asset y
-        for y in range(3):
-            for x in range(12):
-                currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(hours=1)
-                currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
-                currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
-                latValue = float(lolaSpeedCourseTripValues[x][y][0])
-                longValue = float(lolaSpeedCourseTripValues[x][y][1])
-                speedValue = float(lolaSpeedCourseTripValues[x][y][2])
-                courseValue =float(lolaSpeedCourseTripValues[x][y][3])
-                nafSource = generate_NAF_string(self, countryValue, ircsValue[assetIndex+y], cfrValue[assetIndex+y], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, currentPositionDateValueString, currentPositionTimeValueString, vesselName[assetIndex+y])
-                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-                print(nafSource)
-                # Generate request
-                r = requests.get(totalNAFrequest)
-                # Check if request is OK (200)
-                if r.ok:
-                    print("200 OK")
-                else:
-                    print("Request NOT OK!")
-                time.sleep(2)
-    '''
 
     @timeout_decorator.timeout(seconds=180)
     def test_52_create_assets_trip_1_2_3(self):
@@ -2692,7 +2583,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Select assets").click()
         time.sleep(2)
         # Enter asset value
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(ircsValue[18])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[1][0])
         time.sleep(2)
         # Select Asset and save
         self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()

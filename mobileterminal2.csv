@@ -1,2 +1,2 @@
 serialNoValue;transceiverType;softwareVersion;antennaVersion;satelliteNumber;dnidNumber;memberIdnumber;installedByName;expectedFrequencyHours;expectedFrequencyMinutes;gracePeriodFrequencyHours;gracePeriodFrequencyMinutes;inPortFrequencyHours;inPortFrequencyMinutes
-M5002;Type A;A;A;S5002;5002;100;Mike Great;2;0;15;0;3;0
+M9002;Type A;A;A;S9002;9002;100;Mike Great;2;0;15;0;3;0
