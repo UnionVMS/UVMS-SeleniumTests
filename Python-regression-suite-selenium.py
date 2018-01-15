@@ -2648,6 +2648,13 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(self, datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
 
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_58_create_assets_trip_8(self):
+        # Create assets, Mobile for Trip 7
+        create_asset_from_file(self, 'asset8.csv')
+        create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=120), 'asset8.csv', 'trip8.csv')
+
 
     @timeout_decorator.timeout(seconds=180)
     def test_special(self):
