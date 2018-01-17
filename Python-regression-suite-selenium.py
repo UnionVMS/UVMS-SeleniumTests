@@ -46,7 +46,7 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {#'UVMS-AssetModule-APP': '4.0.8',
+    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.8',
                           #'UVMS-ConfigModule-APP': '4.0.6',
                           #'UVMS-AuditModule-APP': '4.0.6',
                           #'UVMS-ExchangeModule-APP': '4.0.9',
@@ -2454,90 +2454,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_47_create_one_new_asset_and_mobile_terminal(self):
-        # Create new asset (7th in the list)
-        create_one_new_asset_from_gui(self, 7)
-        create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_47b_generate_multiple_NAF_positions_7(self):
-        # Create Browser
-        self.driver = webdriver.Chrome()
-        # Create many NAF positions for asset 7
-        speedValue = 8
-        courseValue = 35
-        # Get Current Date and time in UTC
-        currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
-        latStrValue = lolaPositionValues[7][0][0]
-        longStrValue = lolaPositionValues[7][0][1]
-        latValue = float(latStrValue)
-        longValue = float(longStrValue)
-        # Send x number if NAF positions
-        for x in range(500):
-            earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
-            earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
-            earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
-            latValue = latValue - 0.001
-            longValue = longValue - 0.001
-            nafSource = generate_NAF_string(self, countryValue, ircsValue[7], cfrValue[7], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[7])
-            nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-            totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-            # Generate request
-            r = requests.get(totalNAFrequest)
-            # Check if request is OK (200)
-            if r.ok:
-                print("200 OK")
-            else:
-                print("Request NOT OK!")
-
-
-    @timeout_decorator.timeout(seconds=360)
-    def test_51_create_assets_and_mobile_terminals_8_17(self):
-        # Create assets 8-17 in the list
-        for x in range(8, 18):
-            create_one_new_asset_from_gui(self, x)
-            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
-            time.sleep(1)
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_51b_generate_multiple_NAF_positions_8_17(self):
-        # Create Browser
-        self.driver = webdriver.Chrome()
-        # Create many NAF positions for assets 8-17
-        speedValue = 8
-        courseValue = 35
-        # Get Current Date and time in UTC
-        currentUTCValue = datetime.datetime.utcnow()
-
-        # Generate NAF positions for assets 8-17
-        for x in range(8, 18):
-            print(x)
-            earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
-            latStrValue = lolaPositionValues[x][0][0]
-            longStrValue = lolaPositionValues[x][0][1]
-            latValue = float(latStrValue)
-            longValue = float(longStrValue)
-            # Send y number if NAF positions
-            for y in range(50):
-                earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
-                earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
-                earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
-                latValue = latValue - 0.001
-                longValue = longValue - 0.001
-                nafSource = generate_NAF_string(self, countryValue, ircsValue[x], cfrValue[x], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[x])
-                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-                # Generate request
-                r = requests.get(totalNAFrequest)
-                # Check if request is OK (200)
-                if r.ok:
-                    print("200 OK")
-                else:
-                    print("Request NOT OK!")
-
-
-    @timeout_decorator.timeout(seconds=180)
     def test_52_create_assets_trip_1_2_3(self):
         # Create assets, Mobile for Trip 1
         create_asset_from_file(self, 'asset1.csv')
@@ -2552,7 +2468,6 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(self, datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
         create_trip_from_file(self, datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
         create_trip_from_file(self, datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
-
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2650,10 +2565,126 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_58_create_assets_trip_8(self):
-        # Create assets, Mobile for Trip 7
+        # Create assets, Mobile for Trip 8
         create_asset_from_file(self, 'asset8.csv')
         create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=120), 'asset8.csv', 'trip8.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_59_create_assets_trip_9(self):
+        # Create assets, Mobile for Trip 9
+        create_asset_from_file(self, 'asset9.csv')
+        create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_101_create_assets_real_trip_1(self):
+        # Create assets, Mobile for RealTrip 1
+        create_asset_from_file(self, 'assetreal1.csv')
+        create_mobileterminal_from_file(self, 'assetreal1.csv', 'mobileterminalreal1.csv')
+        # Create assets, Mobile for RealTrip 2
+        create_asset_from_file(self, 'assetreal2.csv')
+        create_mobileterminal_from_file(self, 'assetreal2.csv', 'mobileterminalreal2.csv')
+        # Create RealTrip 1-2
+        create_trip_from_file(self, datetime.timedelta(hours=256), 'assetreal1.csv', 'tripreal1.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=254, minutes=16), 'assetreal2.csv', 'tripreal2.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_102_create_assets_real_trip_2(self):
+        # Create assets, Mobile for RealTrip 3
+        create_asset_from_file(self, 'assetreal3.csv')
+        create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_501_create_one_new_asset_and_mobile_terminal(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 7)
+        create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_501b_generate_multiple_NAF_positions_7(self):
+        # Create Browser
+        self.driver = webdriver.Chrome()
+        # Create many NAF positions for asset 7
+        speedValue = 8
+        courseValue = 35
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
+        latStrValue = lolaPositionValues[7][0][0]
+        longStrValue = lolaPositionValues[7][0][1]
+        latValue = float(latStrValue)
+        longValue = float(longStrValue)
+        # Send x number if NAF positions
+        for x in range(500):
+            earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
+            earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+            earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+            latValue = latValue - 0.001
+            longValue = longValue - 0.001
+            nafSource = generate_NAF_string(self, countryValue, ircsValue[7], cfrValue[7], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[7])
+            nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+            totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+            # Generate request
+            r = requests.get(totalNAFrequest)
+            # Check if request is OK (200)
+            if r.ok:
+                print("200 OK")
+            else:
+                print("Request NOT OK!")
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_502_create_assets_and_mobile_terminals_8_17(self):
+        # Create assets 8-17 in the list
+        for x in range(8, 18):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_502b_generate_multiple_NAF_positions_8_17(self):
+        # Create Browser
+        self.driver = webdriver.Chrome()
+        # Create many NAF positions for assets 8-17
+        speedValue = 8
+        courseValue = 35
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+
+        # Generate NAF positions for assets 8-17
+        for x in range(8, 18):
+            print(x)
+            earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
+            latStrValue = lolaPositionValues[x][0][0]
+            longStrValue = lolaPositionValues[x][0][1]
+            latValue = float(latStrValue)
+            longValue = float(longStrValue)
+            # Send y number if NAF positions
+            for y in range(50):
+                earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
+                earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+                earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+                latValue = latValue - 0.001
+                longValue = longValue - 0.001
+                nafSource = generate_NAF_string(self, countryValue, ircsValue[x], cfrValue[x], externalMarkingValue, str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[x])
+                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+                # Generate request
+                r = requests.get(totalNAFrequest)
+                # Check if request is OK (200)
+                if r.ok:
+                    print("200 OK")
+                else:
+                    print("Request NOT OK!")
+
 
 
     @timeout_decorator.timeout(seconds=180)
