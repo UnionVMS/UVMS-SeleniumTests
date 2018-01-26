@@ -46,7 +46,7 @@ def runSubProcess(command, shell, stdout=None):
 
 
 def resetModuleDatabase():
-    moduleDbVersionMap = {'UVMS-AssetModule-APP': '4.0.8',
+    moduleDbVersionMap = {#'UVMS-AssetModule-APP': '4.0.8',
                           #'UVMS-ConfigModule-APP': '4.0.6',
                           #'UVMS-AuditModule-APP': '4.0.6',
                           #'UVMS-ExchangeModule-APP': '4.0.9',
@@ -1332,7 +1332,7 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0016_generate_and_verify_manual_position(self):
         # Startup browser and login
-        UnionVMSTestCase.test_07_generate_and_verify_manual_position(self)
+        UnionVMSTestCase.test_0007_generate_and_verify_manual_position(self)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -2117,7 +2117,7 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0030b_change_global_settings_change_date_format(self):
         # Startup browser and login
-        UnionVMSTestCase.test_30_change_global_settings_change_date_format(self)
+        UnionVMSTestCase.test_0030_change_global_settings_change_date_format(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2682,6 +2682,35 @@ class UnionVMSTestCase(unittest.TestCase):
         create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
         # Create RealTrip 3
         create_trip_from_file(self, datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0103_create_assets_real_trip_3(self):
+        # Create assets, Mobile for RealTrip 4a and 4b
+        create_asset_from_file(self, 'assetreal4.csv')
+        create_mobileterminal_from_file(self, 'assetreal4.csv', 'mobileterminalreal4.csv')
+        # Create RealTrip 4a-4b
+        create_trip_from_file(self, datetime.timedelta(hours=256), 'assetreal4.csv', 'tripreal4a.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=48), 'assetreal4.csv', 'tripreal4b.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0104_create_assets_real_trip_4(self):
+        # Create assets, Mobile for RealTrip 5
+        create_asset_from_file(self, 'assetreal5.csv')
+        create_mobileterminal_from_file(self, 'assetreal5.csv', 'mobileterminalreal5.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=48), 'assetreal5.csv', 'tripreal5.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0105_create_assets_real_trip_5(self):
+        # Create assets, Mobile for RealTrip 6
+        create_asset_from_file(self, 'assetreal6.csv')
+        create_mobileterminal_from_file(self, 'assetreal6.csv', 'mobileterminalreal6.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
+
 
 
     @timeout_decorator.timeout(seconds=180)
