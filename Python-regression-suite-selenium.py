@@ -874,6 +874,11 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
     return nafSource
 
 def get_elements_from_file(self, fileName):
+    print('----------------------------')
+    cwd = os.getcwd()
+    print('Current working dir: ' + cwd)
+    print('Open file: ' + fileName)
+    print('----------------------------')
     # Open csv file and return all elements in list
     ifile = open(fileName, "rt", encoding="utf8")
     reader = csv.reader(ifile, delimiter=';')
@@ -888,11 +893,6 @@ def get_elements_from_file(self, fileName):
 def create_asset_from_file(self, assetFileName):
     # Create asset (assetFileName)
 
-    # Change to Download folder for current user
-    # home = expanduser("~")
-    # os.chdir(home)
-    # os.chdir(downloadPath)
-
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
 
@@ -903,11 +903,6 @@ def create_asset_from_file(self, assetFileName):
 
 def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName):
     # Create Mobile Terminal for mentioned asset (assetFileName, mobileTerminalFileName)
-
-    # Change to Download folder for current user
-    # home = expanduser("~")
-    # os.chdir(home)
-    # os.chdir(downloadPath)
 
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
@@ -926,11 +921,6 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
     # Set Current Date and time in UTC 24h back
     currentUTCValue = datetime.datetime.utcnow()
     currentPositionTimeValue = currentUTCValue - deltaTimeValue
-
-    # Change to Download folder for current user
-    # home = expanduser("~")
-    # os.chdir(home)
-    # os.chdir(downloadPath)
 
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
@@ -1744,10 +1734,13 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
+        # Save path to current dir
+        cwd = os.getcwd()
         # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
         os.chdir(downloadPath)
+        print(os.getcwd())
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -1757,6 +1750,9 @@ class UnionVMSTestCase(unittest.TestCase):
             allrows.append(row)
         ifile.close()
         del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
         # Check that the elements in csv file is correct
         for y in range(len(allrows)):
             if y==0:
@@ -1860,10 +1856,13 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
+        # Save path to current dir
+        cwd = os.getcwd()
         # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
         os.chdir(downloadPath)
+        print(os.getcwd())
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('mobileTerminals.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -1872,9 +1871,9 @@ class UnionVMSTestCase(unittest.TestCase):
             allrows.append(row)
         ifile.close()
         del allrows[0]
-        print("-------------------- READ START-----------------------")
-        print(allrows)
-        print("-------------------- READ END-----------------------")
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
         # Check that the elements in csv file is correct
         for y in range(len(allrows)):
             if y==0:
@@ -2001,10 +2000,13 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
+        # Save path to current dir
+        cwd = os.getcwd()
         # Change to Download folder for current user
         home = expanduser("~")
         os.chdir(home)
         os.chdir(downloadPath)
+        print(os.getcwd())
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('auditLogs.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -2013,9 +2015,9 @@ class UnionVMSTestCase(unittest.TestCase):
             allrows.append(row)
         ifile.close()
         del allrows[0]
-        print("-------------------- READ START-----------------------")
-        print(allrows)
-        print("-------------------- READ END-----------------------")
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
         # Check that the elements in csv file is correct
         for y in range(len(allrows)):
             if y==0:
