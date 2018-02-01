@@ -859,7 +859,8 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
     nafSource = nafSource + "//LG/"
     nafSource = nafSource + longValue
     nafSource = nafSource + "//SP/"
-    nafSource = nafSource + str("%.0f" % (speedValue * 10))
+    nafSource = nafSource + str(speedValue * 10)
+    print('Inside generate_NAF_string 1: ' + str(speedValue))
     nafSource = nafSource + "//CO/"
     nafSource = nafSource + str(courseValue)
     nafSource = nafSource + "//DA/"
@@ -1013,7 +1014,9 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
         if float(assetTripAllrows[y][3]) == 0:
             self.assertEqual(assetTripAllrows[y][3] + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
         else:
-            self.assertEqual(str("%.5f" % float(assetTripAllrows[y][3])) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
+            #self.assertEqual(str("%.5f" % float(assetTripAllrows[y][3])) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
+            # Compare expected value with 5 decimals that only has 4 decimals resolution
+            self.assertEqual(str("%.5f" % float(str("%.4f" % float(assetTripAllrows[y][3])))) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
         self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[11]/div").text)
     time.sleep(5)
 
@@ -2678,12 +2681,25 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0101b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal1.csv', 'tripreal1.csv')
+        create_report_and_check_trip_position_reports(self, 'assetreal2.csv', 'tripreal2.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0102_create_assets_real_trip_2(self):
         # Create assets, Mobile for RealTrip 3
         create_asset_from_file(self, 'assetreal3.csv')
         create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
         # Create RealTrip 3
         create_trip_from_file(self, datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0102b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal3.csv', 'tripreal3.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2706,6 +2722,12 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0104b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal5.csv', 'tripreal5.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0105_create_assets_real_trip_5(self):
         # Create assets, Mobile for RealTrip 6
         create_asset_from_file(self, 'assetreal6.csv')
@@ -2713,6 +2735,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create RealTrip 3
         create_trip_from_file(self, datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0105b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal6.csv', 'tripreal6.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2822,6 +2849,21 @@ class UnionVMSTestCase(unittest.TestCase):
         print("%.3f" % 48.7)
 
         print(datetime.timedelta(hours=24, minutes=43))
+
+        speedValue = 11.1965442765546
+        str1 = str("%.0f" % (speedValue * 10))
+        print(str1)
+        str1 = str(speedValue * 10)
+        print(str1)
+        print('---------------------------------')
+        speedValueString = str(speedValue)
+        str2 = str("%.5f" % float(speedValueString))
+        print(str2)
+        str3 = str("%.4f" % float(speedValueString))
+        print(str3)
+        str4 = str("%.5f" % float(str3))
+        print(str4)
+        print(str("%.5f" % float(str("%.4f" % float(speedValueString)))))
 
 
 
