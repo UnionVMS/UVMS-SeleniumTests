@@ -242,7 +242,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(1)
+    time.sleep(10)
     # Click on new Asset button
     self.driver.find_element_by_id("asset-btn-create").click()
     time.sleep(2)
@@ -354,7 +354,7 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(parameterList[16])
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
-    time.sleep(5)
+    time.sleep(10)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -419,16 +419,16 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(1)
+    time.sleep(10)
     # Search for created asset
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(3)
+    time.sleep(10)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(3)
+    time.sleep(10)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(1)
@@ -956,19 +956,15 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
 def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
-
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
-
     # Open saved csv file and read all trip elements for asset
     assetTripAllrows = get_elements_from_file(self, tripFileName)
-
     time.sleep(5)
-
     # Create a new Report
     # Select Reporting tab
     self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
-    time.sleep(5)
+    time.sleep(15)
     # Click on New Report button
     self.driver.find_element_by_xpath("(//button[@type='button'])[18]").click()
     time.sleep(2)
@@ -988,14 +984,14 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     time.sleep(2)
     # Enter asset value
     self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[1][0])
-    time.sleep(2)
+    time.sleep(5)
     # Select Asset and save
     self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
-    time.sleep(2)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[31]").click()
-    time.sleep(2)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[35]").click()
-    time.sleep(2)
+    time.sleep(5)
     # Run the new report
     self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
     time.sleep(10)
