@@ -2750,6 +2750,16 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0107_create_assets_real_trip_7(self):
+        # Create assets, Mobile for RealTrip 7
+        create_asset_from_file(self, 'assetreal8.csv')
+        create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
+
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0501_create_one_new_asset_and_mobile_terminal(self):
         # Create new asset (7th in the list)
         create_one_new_asset_from_gui(self, 7)
