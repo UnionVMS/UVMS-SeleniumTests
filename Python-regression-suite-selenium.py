@@ -484,10 +484,10 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName)
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(3)
+    time.sleep(7)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(3)
+    time.sleep(7)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(1)
@@ -719,10 +719,10 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     time.sleep(5)
     # Select Positions tab
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-    time.sleep(2)
+    time.sleep(7)
     # Click on New manual report
     self. driver.find_element_by_xpath("//button[@type='submit']").click()
-    time.sleep(2)
+    time.sleep(7)
     # Enter IRCS value
     self.driver.find_element_by_name("ircs").send_keys(ircsValue[0])
     time.sleep(5)
@@ -960,7 +960,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     assetAllrows = get_elements_from_file(self, assetFileName)
     # Open saved csv file and read all trip elements for asset
     assetTripAllrows = get_elements_from_file(self, tripFileName)
-    time.sleep(5)
+    time.sleep(10)
     # Create a new Report
     # Select Reporting tab
     self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
