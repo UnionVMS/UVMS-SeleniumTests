@@ -598,25 +598,8 @@ def check_new_asset_exists(self, vesselNumber):
     shutdown_browser(self)
 
 
-def check_asset_history_start_values(self, vesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
-    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
-    # Search for selected asset in the asset list
-    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
-    self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
-    # Click on details button
-    self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
-    # Click on History tab
-    self.driver.find_element_by_css_selector("#HISTORY > span").click()
-    time.sleep(2)
-    # Click on 1st item in the History list
-    self.driver.find_element_by_css_selector("td").click()
-    time.sleep(2)
+
+def check_current_asset_pop_up_history_items(self, vesselNumber):
     # Check the values in the pop up window
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector("div.historyValues > div.col-md-6 > b").text)
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_xpath("//div[3]/b").text)
@@ -632,7 +615,46 @@ def check_asset_history_start_values(self, vesselNumber):
     self.assertEqual(gearTypeValue[vesselNumber], self.driver.find_element_by_xpath("//div[17]/b").text)
     self.assertEqual(powerValue[vesselNumber] + " kW", self.driver.find_element_by_xpath("//div[19]/b").text)
     self.assertEqual(lengthValue[vesselNumber] + " m LOA", self.driver.find_element_by_xpath("//div[20]/b").text)
+    time.sleep(1)
+    self.driver.find_element_by_css_selector("div.modal-footer > #asset-btn-close-history").click()
+    time.sleep(1)
+
+
+
+def click_on_selected_asset_history_event(self, numberEvent):
+    # Select if the numberEvent is zero (in other words, the 1st in the Asset History Event List
+    if numberEvent == 0:
+        self.driver.find_element_by_css_selector("td").click()
+    else:
+        self.driver.find_element_by_xpath("(//tr[@id='asset-btn-history-item']/td)[" + str((numberEvent*2)+1) + "]").click()
+
+
+
+def check_asset_history_values(self, vesselNumberList):
+    # Go through the history for one asset and compare the values towards the asset values controled by the vesselNumberList
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
     time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(5)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumberList[0]])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(7)
+    # Click on History tab
+    self.driver.find_element_by_css_selector("#HISTORY > span").click()
+    time.sleep(2)
+    # Click on and check the items in the History list
+    for y in range(len(vesselNumberList)):
+        # Click on y-th item in the History list
+        click_on_selected_asset_history_event(self, y)
+        time.sleep(2)
+        # Check the values in the pop up window
+        check_current_asset_pop_up_history_items(self, vesselNumberList[y])
+        time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
 
@@ -651,8 +673,6 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
     time.sleep(7)
-
-
     # Select F.S value
     self.driver.find_element_by_id("asset-input-countryCode").click()
     time.sleep(1)
@@ -2667,12 +2687,19 @@ class UnionVMSTestCase(unittest.TestCase):
         create_one_new_asset_from_gui(self, 34)
         # Check new asset (34th in the list)
         check_new_asset_exists(self, 34)
+        # Add the used vesselNumbers to a vesselNumberList
+        vesselNumberList =[]
+        vesselNumberList.append(34)
         # Check asset start values
-        check_asset_history_start_values(self, 34)
+        check_asset_history_values(self, vesselNumberList)
         # Modify asset parameters
         modify_one_new_asset_from_gui(self, 34, 35)
-        # Check asset values
-        check_asset_history_start_values(self, 35)
+        # Add the used vesselNumbers to a vesselNumberList
+        vesselNumberList =[]
+        vesselNumberList.append(35)
+        vesselNumberList.append(34)
+        # Check asset values in the history list and compare these values based on the values in the vesselNumberList
+        check_asset_history_values(self, vesselNumberList)
 
 
 
@@ -2997,6 +3024,53 @@ class UnionVMSTestCase(unittest.TestCase):
                     print("Request NOT OK!")
 
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_special(self):
+        # Create assets 8-17 in the list
+        for x in range(18, 20):
+            print(x)
+
+        print("------------bb----------------")
+
+        for y in range(2):
+            print(y)
+
+
+        currentUTCValue = datetime.datetime.utcnow()
+        startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
+        endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
+        print(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+        print(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+
+        print("%.3f" % 48.7)
+
+        print(datetime.timedelta(hours=24, minutes=43))
+
+        speedValue = 11.1965442765546
+        str1 = str("%.0f" % (speedValue * 10))
+        print(str1)
+        str1 = str(speedValue * 10)
+        print(str1)
+        print('---------------------------------')
+        speedValueString = str(speedValue)
+        str2 = str("%.5f" % float(speedValueString))
+        print(str2)
+        str3 = str("%.4f" % float(speedValueString))
+        print(str3)
+        str4 = str("%.5f" % float(str3))
+        print(str4)
+        print(str("%.5f" % float(str("%.4f" % float(speedValueString)))))
+
+        numberList = []
+        numberList.append(35)
+        print(numberList)
+        numberList.append(34)
+        print(numberList)
+        numberList.sort()
+        print(numberList)
+        numberList.sort()
+        print(numberList)
 
 
 
