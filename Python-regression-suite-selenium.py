@@ -3025,55 +3025,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
 
-    @timeout_decorator.timeout(seconds=180)
-    def test_special(self):
-        # Create assets 8-17 in the list
-        for x in range(18, 20):
-            print(x)
-
-        print("------------bb----------------")
-
-        for y in range(2):
-            print(y)
-
-
-        currentUTCValue = datetime.datetime.utcnow()
-        startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
-        endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
-        print(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-        print(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-
-        print("%.3f" % 48.7)
-
-        print(datetime.timedelta(hours=24, minutes=43))
-
-        speedValue = 11.1965442765546
-        str1 = str("%.0f" % (speedValue * 10))
-        print(str1)
-        str1 = str(speedValue * 10)
-        print(str1)
-        print('---------------------------------')
-        speedValueString = str(speedValue)
-        str2 = str("%.5f" % float(speedValueString))
-        print(str2)
-        str3 = str("%.4f" % float(speedValueString))
-        print(str3)
-        str4 = str("%.5f" % float(str3))
-        print(str4)
-        print(str("%.5f" % float(str("%.4f" % float(speedValueString)))))
-
-        numberList = []
-        numberList.append(35)
-        print(numberList)
-        numberList.append(34)
-        print(numberList)
-        numberList.sort()
-        print(numberList)
-        numberList.sort()
-        print(numberList)
-
-
-
 
 
 if __name__ == '__main__':
