@@ -1403,7 +1403,6 @@ class UnionVMSTestCase(unittest.TestCase):
         create_report_and_check_trip_position_reports(self, 'assetreal6.csv', 'tripreal6.csv')
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0106_create_assets_real_trip_6(self):
         # Create assets, Mobile for RealTrip 7
@@ -1413,7 +1412,6 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal7.csv', 'tripreal7.csv')
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0107_create_assets_real_trip_7(self):
         # Create assets, Mobile for RealTrip 7
@@ -1421,7 +1419,6 @@ class UnionVMSTestCase(unittest.TestCase):
         create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
         # Create RealTrip 3
         create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
-
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -1481,7 +1478,6 @@ class UnionVMSTestCase(unittest.TestCase):
         courseValue = 35
         # Get Current Date and time in UTC
         currentUTCValue = datetime.datetime.utcnow()
-
         # Generate NAF positions for assets 8-17
         for x in range(8, 18):
             print(x)
