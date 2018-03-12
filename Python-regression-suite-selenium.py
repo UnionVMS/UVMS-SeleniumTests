@@ -600,6 +600,7 @@ def check_new_asset_exists(self, vesselNumber):
 
 
 def check_current_asset_pop_up_history_items(self, vesselNumber):
+
     # Check the values in the pop up window
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector("div.historyValues > div.col-md-6 > b").text)
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_xpath("//div[3]/b").text)
@@ -616,7 +617,13 @@ def check_current_asset_pop_up_history_items(self, vesselNumber):
     self.assertEqual(powerValue[vesselNumber] + " kW", self.driver.find_element_by_xpath("//div[19]/b").text)
     self.assertEqual(lengthValue[vesselNumber] + " m LOA", self.driver.find_element_by_xpath("//div[20]/b").text)
     time.sleep(1)
-    self.driver.find_element_by_css_selector("div.modal-footer > #asset-btn-close-history").click()
+
+
+def check_second_contact_in_current_asset_pop_up_history_items(self, vesselNumber):
+    # Check the values in the pop up window
+    self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_xpath("//li[2]/div/b").text)
+    self.assertEqual(contactEmailValue[vesselNumber], self.driver.find_element_by_xpath("//li[2]/div[2]/b").text)
+    self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_xpath("//li[2]/div[3]/b").text)
     time.sleep(1)
 
 
@@ -630,7 +637,7 @@ def click_on_selected_asset_history_event(self, numberEvent):
 
 
 
-def check_asset_history_values(self, vesselNumberList):
+def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList):
     # Go through the history for one asset and compare the values towards the asset values controled by the vesselNumberList
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
@@ -654,6 +661,11 @@ def check_asset_history_values(self, vesselNumberList):
         time.sleep(2)
         # Check the values in the pop up window
         check_current_asset_pop_up_history_items(self, vesselNumberList[y])
+        # Check the second contact info if available
+        if secondContactVesselNumberList[y] != 0:
+            check_second_contact_in_current_asset_pop_up_history_items(self, secondContactVesselNumberList[y])
+        # Close History pop up window
+        self.driver.find_element_by_css_selector("div.modal-footer > #asset-btn-close-history").click()
         time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
@@ -748,6 +760,67 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     time.sleep(5)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(5)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(7)
+    # Click on the Contacts tab
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    time.sleep(1)
+    # Add a second contact contactNameValue, contactEmailValue and contactPhoneNumberValue
+    self.driver.find_element_by_id("asset-input-contact-name-1").click()
+    self.driver.find_element_by_id("asset-input-contact-name-1").clear()
+    self.driver.find_element_by_id("asset-input-contact-name-1").send_keys(contactNameValue[newVesselNumber])
+    self.driver.find_element_by_id("asset-input-contact-email-1").clear()
+    self.driver.find_element_by_id("asset-input-contact-email-1").send_keys(contactEmailValue[newVesselNumber])
+    self.driver.find_element_by_id("asset-input-contact-number-1").clear()
+    self.driver.find_element_by_id("asset-input-contact-number-1").send_keys(contactPhoneNumberValue[newVesselNumber])
+    time.sleep(1)
+    self.driver.find_element_by_id("menu-bar-update").click()
+    time.sleep(1)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(5)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(7)
+    # Click on the Contacts tab
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    time.sleep(1)
+    # Check contacts info
+    self.assertEqual(contactNameValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-name-0").get_attribute("value"))
+    self.assertEqual(contactEmailValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-0").get_attribute("value"))
+    self.assertEqual(contactPhoneNumberValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
+    self.assertEqual(contactNameValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-name-1").get_attribute("value"))
+    self.assertEqual(contactEmailValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-1").get_attribute("value"))
+    self.assertEqual(contactPhoneNumberValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-1").get_attribute("value"))
     time.sleep(3)
     # Shutdown browser
     shutdown_browser(self)
@@ -2690,18 +2763,42 @@ class UnionVMSTestCase(unittest.TestCase):
         # Add the used vesselNumbers to a vesselNumberList
         vesselNumberList =[]
         vesselNumberList.append(34)
+        # Add secondContactVesselNumberList (Not used here)
+        secondContactVesselNumberList = []
+        secondContactVesselNumberList.append(0)
         # Check asset start values
-        check_asset_history_values(self, vesselNumberList)
+        check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
         # Modify asset parameters
         modify_one_new_asset_from_gui(self, 34, 35)
         # Add the used vesselNumbers to a vesselNumberList
         vesselNumberList =[]
         vesselNumberList.append(35)
         vesselNumberList.append(34)
+        # Add secondContactVesselNumberList (Not used here)
+        secondContactVesselNumberList = []
+        secondContactVesselNumberList.append(0)
+        secondContactVesselNumberList.append(0)
         # Check asset values in the history list and compare these values based on the values in the vesselNumberList
-        check_asset_history_values(self, vesselNumberList)
+        check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
 
 
+    def test_0048_add_contact_and_check_asset_history(self):
+        # Create new asset (34th in the list)
+        add_contact_to_existing_asset(self, 35, 36)
+        # Add the used vesselNumbers to a vesselNumberList
+        vesselNumberList =[]
+        vesselNumberList.append(35)
+        vesselNumberList.append(35)
+        vesselNumberList.append(34)
+        # Add secondContactVesselNumberList (Only first number used)
+        secondContactVesselNumberList = []
+        secondContactVesselNumberList.append(36)
+        secondContactVesselNumberList.append(0)
+        secondContactVesselNumberList.append(0)
+        # Check all history items for asset against values in vesselNumberList
+        check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
+        # Check contacts in the contacts tab
+        check_contacts_to_existing_asset(self, 35, 36)
 
 
     @timeout_decorator.timeout(seconds=180)
