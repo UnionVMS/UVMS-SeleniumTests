@@ -765,6 +765,51 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     shutdown_browser(self)
 
 
+def archive_one_asset_from_gui(self, vesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(5)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(7)
+    # Click on delete button (Archive)
+    self.driver.find_element_by_id("menu-bar-archive").click()
+    time.sleep(5)
+    # Add some comment to the asset that shall be archived
+    self.driver.find_element_by_name("comment").send_keys("Archive this asset!")
+    # Click on Yes button
+    self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+    time.sleep(5)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+
+def check_asset_archived(self, vesselNumber):
+    # Startup browser and login
+    startup_browser_and_login_to_unionVMS(self)
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(5)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Check that vessel name is greyed out
+    color_value = self.driver.find_element_by_css_selector("td[title=\"" + vesselName[35] + "\"]").value_of_css_property("color")
+    self.assertEqual(greyColorRGBA, color_value)
+    time.sleep(4)
+    # Shutdown browser
+    shutdown_browser(self)
+
+
+
 def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
@@ -827,7 +872,6 @@ def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber)
 
 
 
-
 def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Startup browser and login
     startup_browser_and_login_to_unionVMS(self)
@@ -870,6 +914,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     time.sleep(2)
     # Shutdown browser
     shutdown_browser(self)
+
 
 def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     # Startup browser and login
@@ -2761,23 +2806,17 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check new asset (34th in the list)
         check_new_asset_exists(self, 34)
         # Add the used vesselNumbers to a vesselNumberList
-        vesselNumberList =[]
-        vesselNumberList.append(34)
+        vesselNumberList =[34]
         # Add secondContactVesselNumberList (Not used here)
-        secondContactVesselNumberList = []
-        secondContactVesselNumberList.append(0)
+        secondContactVesselNumberList = [0]
         # Check asset start values
         check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
         # Modify asset parameters
         modify_one_new_asset_from_gui(self, 34, 35)
         # Add the used vesselNumbers to a vesselNumberList
-        vesselNumberList =[]
-        vesselNumberList.append(35)
-        vesselNumberList.append(34)
+        vesselNumberList =[35, 34]
         # Add secondContactVesselNumberList (Not used here)
-        secondContactVesselNumberList = []
-        secondContactVesselNumberList.append(0)
-        secondContactVesselNumberList.append(0)
+        secondContactVesselNumberList = [0, 0]
         # Check asset values in the history list and compare these values based on the values in the vesselNumberList
         check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
 
@@ -2786,19 +2825,20 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create new asset (34th in the list)
         add_contact_to_existing_asset(self, 35, 36)
         # Add the used vesselNumbers to a vesselNumberList
-        vesselNumberList =[]
-        vesselNumberList.append(35)
-        vesselNumberList.append(35)
-        vesselNumberList.append(34)
+        vesselNumberList =[35, 35, 34]
         # Add secondContactVesselNumberList (Only first number used)
-        secondContactVesselNumberList = []
-        secondContactVesselNumberList.append(36)
-        secondContactVesselNumberList.append(0)
-        secondContactVesselNumberList.append(0)
+        secondContactVesselNumberList = [36, 0, 0]
         # Check all history items for asset against values in vesselNumberList
         check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
         # Check contacts in the contacts tab
         check_contacts_to_existing_asset(self, 35, 36)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0049_archive_and_check_asset(self):
+        # Archive asset
+        archive_one_asset_from_gui(self, 35)
+        check_asset_archived(self, 35)
 
 
     @timeout_decorator.timeout(seconds=180)

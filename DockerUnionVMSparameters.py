@@ -112,3 +112,6 @@ downloadPath = "/var/lib/jenkins/Downloads"
 
 defaultUserName = "vms_admin_com"
 defaultUserNamePassword = "password"
+
+blackColorRGBA = "rgba(51, 51, 51, 1)"
+greyColorRGBA = "rgba(153, 153, 153, 1)"
