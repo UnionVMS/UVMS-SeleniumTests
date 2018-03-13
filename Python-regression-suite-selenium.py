@@ -2874,20 +2874,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0055_create_assets_trip_4(self):
-        # Create assets, Mobile for Trip 4
-        create_asset_from_file(self, 'asset4.csv')
-        create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0055b_create_report_and_check_position_reports(self):
-        # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
-
-
-    @timeout_decorator.timeout(seconds=180)
     def test_0056_create_assets_trip_5_and_6(self):
         # Create assets, Mobile for Trip 5
         create_asset_from_file(self, 'asset5.csv')
@@ -2925,21 +2911,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal1.csv', 'tripreal1.csv')
         create_report_and_check_trip_position_reports(self, 'assetreal2.csv', 'tripreal2.csv')
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0102_create_assets_real_trip_2(self):
-        # Create assets, Mobile for RealTrip 3
-        create_asset_from_file(self, 'assetreal3.csv')
-        create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
-        # Create RealTrip 3
-        create_trip_from_file(self, datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0102b_create_report_and_check_position_reports(self):
-        # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'assetreal3.csv', 'tripreal3.csv')
 
 
 
