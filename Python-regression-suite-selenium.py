@@ -783,6 +783,7 @@ def archive_one_asset_from_gui(self, vesselNumber):
     time.sleep(5)
     # Add some comment to the asset that shall be archived
     self.driver.find_element_by_name("comment").send_keys("Archive this asset!")
+    time.sleep(3)
     # Click on Yes button
     self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
     time.sleep(5)
@@ -804,6 +805,15 @@ def check_asset_archived(self, vesselNumber):
     # Check that vessel name is greyed out
     color_value = self.driver.find_element_by_css_selector("td[title=\"" + vesselName[35] + "\"]").value_of_css_property("color")
     self.assertEqual(greyColorRGBA, color_value)
+    time.sleep(4)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(4)
+    # Try to click on delete (archive) button. Shall not exist.
+    try:
+        self.assertFalse(self.driver.find_element_by_id("menu-bar-archive").click())
+    except NoSuchElementException:
+        pass
     time.sleep(4)
     # Shutdown browser
     shutdown_browser(self)
