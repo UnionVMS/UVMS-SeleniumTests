@@ -32,17 +32,17 @@ from UnionVMSparameters import *
 
 
 def externalError(process):
-   print("Process '%s' returned code %s" % (process.args, process.returncode))
-   #print("Run time: %s " % (time.time() - startTime))
-   sys.exit(process.returncode)
+    print("Process '%s' returned code %s" % (process.args, process.returncode))
+    #print("Run time: %s " % (time.time() - startTime))
+    sys.exit(process.returncode)
 
 
 def runSubProcess(command, shell, stdout=None):
-   process = subprocess.Popen(command, shell=shell, stdout=stdout)
-   process.wait()
-   if process.returncode != 0:
-       externalError(process)
-   return process
+    process = subprocess.Popen(command, shell=shell, stdout=stdout)
+    process.wait()
+    if process.returncode != 0:
+        externalError(process)
+    return process
 
 
 def resetModuleDatabase():
@@ -237,9 +237,6 @@ def shutdown_browser(cls):
 
 
 def create_one_new_asset_from_gui(self, vesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(10)
@@ -295,14 +292,9 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 def create_one_new_asset_from_gui_with_parameters(self, parameterList):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(1)
@@ -358,15 +350,10 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 
 def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
     # Click on new terminal button
@@ -410,13 +397,8 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
-    # Shutdown browser
-    shutdown_browser(self)
 
 def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, vesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(10)
@@ -469,13 +451,8 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
-    # Shutdown browser
-    shutdown_browser(self)
 
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterList):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(1)
@@ -528,16 +505,11 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 
 
 def check_new_asset_exists(self, vesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for the new created asset in the asset list
@@ -594,8 +566,10 @@ def check_new_asset_exists(self, vesselNumber):
     # Check that the E-mail value is correct.
     self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
     time.sleep(5)
-    # Shutdown browser
-    shutdown_browser(self)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+
 
 
 
@@ -639,12 +613,10 @@ def click_on_selected_asset_history_event(self, numberEvent):
 
 def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList):
     # Go through the history for one asset and compare the values towards the asset values controled by the vesselNumberList
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumberList[0]])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
@@ -667,18 +639,18 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
         # Close History pop up window
         self.driver.find_element_by_css_selector("div.modal-footer > #asset-btn-close-history").click()
         time.sleep(2)
-    # Shutdown browser
-    shutdown_browser(self)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+
 
 
 
 def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[oldVesselNumber])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
@@ -761,14 +733,9 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 def archive_one_asset_from_gui(self, vesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for selected asset in the asset list
@@ -787,18 +754,14 @@ def archive_one_asset_from_gui(self, vesselNumber):
     # Click on Yes button
     self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
     time.sleep(5)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 
 def check_asset_archived(self, vesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
@@ -815,15 +778,10 @@ def check_asset_archived(self, vesselNumber):
     except NoSuchElementException:
         pass
     time.sleep(4)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 
 def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for selected asset in the asset list
@@ -849,17 +807,17 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     time.sleep(1)
     self.driver.find_element_by_id("menu-bar-update").click()
     time.sleep(1)
-    # Shutdown browser
-    shutdown_browser(self)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+
 
 
 def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
     # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
@@ -877,15 +835,10 @@ def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber)
     self.assertEqual(contactEmailValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-1").get_attribute("value"))
     self.assertEqual(contactPhoneNumberValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-1").get_attribute("value"))
     time.sleep(3)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 
 def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Select Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
@@ -922,14 +875,9 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Select Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
@@ -962,14 +910,9 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     # Close page
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 def change_and_check_speed_format(self,unitNumber):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Select Admin tab
     self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
     time.sleep(5)
@@ -994,15 +937,10 @@ def change_and_check_speed_format(self,unitNumber):
         foundCorrectUnit = True
     self.assertTrue(foundCorrectUnit)
     time.sleep(5)
-    # Shutdown browser
-    shutdown_browser(self)
 
 
 
 def generate_and_verify_manual_position(self,speedValue,courseValue):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Select Positions tab
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
     time.sleep(7)
@@ -1100,9 +1038,6 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
         print("200 OK")
     else:
         print("Request NOT OK!")
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
-    time.sleep(5)
     # Select Positions tab
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
     time.sleep(7)
@@ -1128,6 +1063,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.assertEqual(sourceValue[0], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[0] + "\"]").text)
     time.sleep(5)
     return earlierPositionDateTimeValueString
+
 
 def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue):
     # Generate NAF string to send
@@ -1178,10 +1114,8 @@ def get_elements_from_file(self, fileName):
 
 def create_asset_from_file(self, assetFileName):
     # Create asset (assetFileName)
-
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
-
     # create_one_new_asset
     for x in range(1, len(assetAllrows)):
         create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
@@ -1239,8 +1173,6 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
 
 
 def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
-    # Startup browser and login
-    startup_browser_and_login_to_unionVMS(self)
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
     # Open saved csv file and read all trip elements for asset
@@ -1286,7 +1218,6 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     # Click on Date column tab (To sort on Date)
     self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div").click()
     time.sleep(2)
-
     # Check the 5 first positions for mentioned asset
     for y in range(1, 6):
         self.assertEqual(str("%.3f" % float(assetTripAllrows[y][0])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[6]/div").text)
@@ -1301,8 +1232,10 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
         self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[11]/div").text)
     time.sleep(5)
 
-    shutdown_browser(self)
 
+def reload_page_and_goto_default(self):
+    # Reload page and goto default page
+    self.driver.get(httpUnionVMSurlString)
 
 
 if os.name == 'nt':
@@ -1328,16 +1261,13 @@ else:
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
 
-class UnionVMSTestCase(unittest.TestCase):
 
-    def tearDown(self):
-        shutdown_browser(self)
-
+class UnionVMSTestCaseInit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=1000)
     def test_0001_reset_database_union_vms(self):
         # Create Browser
-        self.driver = webdriver.Chrome()
+        #self.driver = webdriver.Chrome()
         # Save current default dir path
         default_current_dir = os.getcwd()
         # Reset Module Database
@@ -1351,12 +1281,23 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(15)
 
 
-    @timeout_decorator.timeout(seconds=180)
-    def test_0001b_change_default_configuration_parameters(self):
-        # The test case changes Default home page to asset and Coordinates format to dd.mmm
+
+class UnionVMSTestCase(unittest.TestCase):
+
+
+    def setUp(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # The test case changes Default home page to asset and Coordinates format to dd.mmm
         # if Reporting Query List is presented, then close it
         try:
             if self.driver.find_element_by_css_selector("h4.modal-title"):
@@ -1381,8 +1322,6 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("-item-2").click()
         time.sleep(5)
 
-        # Shutdown browser
-        shutdown_browser(self)
 
     @timeout_decorator.timeout(seconds=180)
     def test_0002_create_one_new_asset(self):
@@ -1418,16 +1357,12 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0007_generate_and_verify_manual_position(self):
         # Create a manual position and verify the position
         generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0008_generate_NAF_and_verify_position(self):
         # Create a NAF position and verify the position
         generate_NAF_and_verify_position(self,reportedSpeedValue,reportedCourseValue)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -1456,9 +1391,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0013_unlink_asset_and_mobile_terminal(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
@@ -1477,15 +1409,10 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_name("comment").send_keys("Unlink Asset and MT.")
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0014_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Positions tab
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
         time.sleep(2)
@@ -1558,15 +1485,10 @@ class UnionVMSTestCase(unittest.TestCase):
         # Close Report Window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0015_link_asset_to_another_mobile_terminal(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
@@ -1599,8 +1521,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Close page
         self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -1614,13 +1534,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create assets 3-6 in the list
         for x in range(2, 6):
             create_one_new_asset_from_gui(self, x)
-            time.sleep(1)
+            time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0018_create_two_assets_to_group_and_check_group(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
         time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -1676,16 +1594,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(gearTypeValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0019_add_two_assets_to_group_and_check_group(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
@@ -1759,16 +1672,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(gearTypeValue[5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[7]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[4]/td[8]").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 	
     @timeout_decorator.timeout(seconds=180)
     def test_0020_remove_one_asset_group_and_check_group(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on saved groups
@@ -1825,16 +1733,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(gearTypeValue[5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0021_create_second_group_and_add_assets_to_group(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
@@ -1888,16 +1791,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(gearTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0022_delete_second_group_and_check(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on "saved groups" drop box
@@ -1921,16 +1819,11 @@ class UnionVMSTestCase(unittest.TestCase):
         except NoSuchElementException:
             pass
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0023_advanced_search_of_assets(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Click on advanced search
@@ -1940,7 +1833,6 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("asset-input-search-externalMarking").send_keys(externalMarkingValue[0])
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(7)
-
         # Get asset name values in the list
         assetList = []
         for x in range(6):
@@ -1952,7 +1844,6 @@ class UnionVMSTestCase(unittest.TestCase):
             # Sort on "Name" by click on "Name" once
             self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
-
         # Check Assets in List
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
         self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
@@ -1982,16 +1873,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0024_export_assets_to_excel_file(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
         # Click on asset tab
-        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "fartyg"
@@ -2055,8 +1941,6 @@ class UnionVMSTestCase(unittest.TestCase):
                 self.assertEqual(gearTypeValue[y-1], allrows[y][5])
                 self.assertEqual(licenseTypeValue, allrows[y][6])
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -2068,9 +1952,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0026_export_mobile_terminals_to_excel_file(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(7)
         # Select Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(5)
@@ -2171,15 +2052,10 @@ class UnionVMSTestCase(unittest.TestCase):
                     self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
 
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0027_view_audit_log(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(7)
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         time.sleep(7)
@@ -2207,15 +2083,10 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("ALERTS", self.driver.find_element_by_css_selector("#ALARMS > span").text)
         self.assertEqual("ACCESS CONTROL", self.driver.find_element_by_css_selector("#ACCESS_CONTROL > span").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0028_view_audit_and_export_log_to_file(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(7)
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         time.sleep(7)
@@ -2313,17 +2184,11 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Test row: " + str(y))
                 for z in range(4):
                     self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
-
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0029_view_configuration_pages(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(7)
         # Select Admin tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         time.sleep(5)
@@ -2349,15 +2214,10 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("ASSETS", self.driver.find_element_by_css_selector("#asset > span").text)
         self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_css_selector("#mobileTerminal > span").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_css_selector("#exchange > span").text)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0030_change_global_settings_change_date_format(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Admin tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         time.sleep(5)
@@ -2396,8 +2256,6 @@ class UnionVMSTestCase(unittest.TestCase):
             currentDate = self.driver.find_element_by_css_selector("current-time.currentTime").text
             self.assertEqual("-", currentDate[4])
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2411,13 +2269,12 @@ class UnionVMSTestCase(unittest.TestCase):
         # Change and check speed unit type for Global Settings
         for x in [2,1,0]:
             change_and_check_speed_format(self,x)
+            reload_page_and_goto_default(self)
+            time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0032_check_view_help_text(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Click on User Guide icon (Question mark icon)
         # Note: User Guide page is opened in a new tab
         self.driver.find_element_by_xpath("//div[4]/a/i").click()
@@ -2431,15 +2288,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("Welcome to Union VMS!", self.driver.find_element_by_xpath("//*[@id='main-content']/div[3]/ul/li[1]/span/a").text)
         time.sleep(5)
 
-        # Shutdown browser
-        shutdown_browser(self)
-
 
     @timeout_decorator.timeout(seconds=180)
     def test_0033_check_alerts_view(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(3)
@@ -2463,15 +2314,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("Date updated", self.driver.find_element_by_css_selector("th.st-sort.st-sort-descent").text)
         time.sleep(5)
 
-        # Shutdown browser
-        shutdown_browser(self)
-
 
     @timeout_decorator.timeout(seconds=180)
     def test_0034_create_speed_rule_one(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(1)
@@ -2531,15 +2376,10 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Yes").click()
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0035_verify_created_speed_rule_one(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(7)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -2561,15 +2401,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[2]").text)
         self.assertEqual("ACTIVE", self.driver.find_element_by_css_selector("span.label.label-success").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0036_create_manual_position_with_speed_that_triggs_rule_one(self):
         # Create a manual position and verify the position
         earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
-
         # Click on Alert tab
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(5)
@@ -2604,7 +2441,6 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0037_create_NAF_position_with_speed_that_triggs_rule_one(self):
         # Create a NAF position and verify the position
         earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
-
         # Click on Alert tab
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(5)
@@ -2638,9 +2474,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0038_inactivate_speed_rule_one_and_check(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -2665,8 +2498,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check that rule one is in inactive state
         self.assertEqual("INACTIVE", self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/span").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2690,15 +2521,10 @@ class UnionVMSTestCase(unittest.TestCase):
         print(earlierPositionDateTimeValueString)
         print(self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
         time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0040_activate_speed_rule_one_and_check(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -2723,15 +2549,10 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check that rule one is in active state
         self.assertEqual("ACTIVE", self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/span").text)
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0041_remove_speed_rule_one(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(1)
@@ -2744,15 +2565,10 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on Yes button to comfirm
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0042_check_speed_rule_one_removed(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(1)
@@ -2765,8 +2581,6 @@ class UnionVMSTestCase(unittest.TestCase):
         except NoSuchElementException:
             pass
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2778,9 +2592,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0046_generate_manual_poll_and_check(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
         # Select Polling tab
         self.driver.find_element_by_id("uvms-header-menu-item-polling-logs").click()
         time.sleep(5)
@@ -2805,8 +2616,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Submit poll
         self.driver.find_element_by_css_selector("div.col-md-8.textAlignRight > button.btn.btn-primary").click()
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2831,6 +2640,7 @@ class UnionVMSTestCase(unittest.TestCase):
         check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
 
 
+    @timeout_decorator.timeout(seconds=180)
     def test_0048_add_contact_and_check_asset_history(self):
         # Create new asset (34th in the list)
         add_contact_to_existing_asset(self, 35, 36)
@@ -2870,14 +2680,9 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file(self, 'asset1.csv')
-
         print(assetAllrows[1][0])
-
         time.sleep(5)
         # Select Reporting tab
         self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
@@ -2940,6 +2745,8 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
+        reload_page_and_goto_default(self)
+        time.sleep(2)
         create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
 
 
@@ -2960,6 +2767,8 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0101b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal1.csv', 'tripreal1.csv')
+        reload_page_and_goto_default(self)
+        time.sleep(2)
         create_report_and_check_trip_position_reports(self, 'assetreal2.csv', 'tripreal2.csv')
 
 
