@@ -234,7 +234,7 @@ def startup_browser_and_login_to_unionVMS(cls):
 def shutdown_browser(cls):
     if (hasattr(cls, 'driver') and cls.driver is not None):
         cls.driver.quit()
-        cls.driver = None;
+        cls.driver = None
 
 
 def create_one_new_asset_from_gui(self, vesselNumber):
