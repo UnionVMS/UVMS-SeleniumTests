@@ -1095,6 +1095,7 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
     nafSource = nafSource + "//ER//"
     return nafSource
 
+
 def get_elements_from_file(self, fileName):
     print('----------------------------')
     cwd = os.getcwd()
@@ -1543,8 +1544,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
-        # Search for "fartyg"
-        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        # Search for "ship"
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
@@ -1601,8 +1602,8 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on asset tab
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
-        # Search for "fartyg"
-        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        # Search for "ship"
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
@@ -1740,8 +1741,8 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on asset tab
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
-        # Search for "fartyg"
-        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        # Search for "ship"
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
@@ -1880,8 +1881,8 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on asset tab
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
-        # Search for "fartyg"
-        self.driver.find_element_by_id("asset-input-simple-search").send_keys("fartyg")
+        # Search for "ship"
+        self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
