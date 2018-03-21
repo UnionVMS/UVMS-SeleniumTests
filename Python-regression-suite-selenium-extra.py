@@ -26,6 +26,7 @@ from io import BytesIO
 from zipfile import ZipFile
 import urllib.request
 import platform
+from pathlib import Path
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
@@ -1296,7 +1297,8 @@ def reload_page_and_goto_default(self):
 def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
-        home = expanduser("~")
+        #home = expanduser("~") Python 3.5+ use expression
+        home = str(Path.home())
         return home + downloadPathWindow
     else:
         return downloadPathLinux
