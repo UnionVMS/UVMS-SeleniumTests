@@ -6,7 +6,6 @@ import datetime
 import random
 import sys
 from unittest.case import _AssertRaisesContext
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
@@ -26,6 +25,7 @@ import distutils.dir_util
 from io import BytesIO
 from zipfile import ZipFile
 import urllib.request
+import platform
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
@@ -74,7 +74,6 @@ def resetModuleDatabase():
                               'UVMS-ActivityModule-APP': 'activity-',
                               'UVMS-MDRCacheModule-DB': 'mdr-db-'}
     
-    uvmsGitHubPath = 'https://github.com/UnionVMS/'
     print("Will checkout uvms modules to uvmsCheckoutPath:" + uvmsCheckoutPath )
     distutils.dir_util.mkpath(uvmsCheckoutPath)
     
@@ -95,7 +94,7 @@ def resetModuleDatabase():
                 os.chdir(moduleBasePath + "/LIQUIBASE")
             if os.path.isdir(moduleBasePath + "/liquibase"):
                 os.chdir(moduleBasePath + "/liquibase")         
-            print(os.getcwd())
+            print(os.path.abspath(os.path.dirname(__file__)))
             runSubProcess(['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres,exec,testdata', dbURLjdbcString], True)
             time.sleep(1)
 
@@ -193,7 +192,6 @@ def populateSanityRuleData():
 def startup_browser_and_login_to_unionVMS(cls):
     # Start Chrome browser
     cls.driver = webdriver.Chrome()
-    #cls.driver = webdriver.Firefox()
     # Maximize browser window
     cls.driver.maximize_window()
     # Login to test user admin
@@ -1098,8 +1096,13 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
 
 def get_elements_from_file(self, fileName):
     print('----------------------------')
-    cwd = os.getcwd()
-    print('Current working dir: ' + cwd)
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    # Change to target folder
+    targetPath = get_target_path()
+    os.chdir(targetPath)
+    print(os.path.abspath(os.path.dirname(__file__)))
+    print('Current working dir: ' + targetPath)
     print('Open file: ' + fileName)
     print('----------------------------')
     # Open csv file and return all elements in list
@@ -1110,6 +1113,9 @@ def get_elements_from_file(self, fileName):
         allRows.append(row)
     ifile.close()
     del allRows[0]
+    # Change back the path to current dir
+    os.chdir(cwd)
+    print(cwd)
     return allRows
 
 
@@ -1169,7 +1175,6 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
                 print("200 OK")
             else:
                 print("Request NOT OK!")
-
 
 
 
@@ -1239,6 +1244,32 @@ def reload_page_and_goto_default(self):
     self.driver.get(httpUnionVMSurlString)
 
 
+def get_download_path():
+    # Get correct download path
+    if platform.system() == "Windows":
+        home = expanduser("~")
+        return home + downloadPathWindow
+    else:
+        return downloadPathLinux
+
+
+def get_target_path():
+    # Get correct download path
+    if platform.system() == "Windows":
+        return targetPathWindows
+    else:
+        return targetPathLinux
+
+
+def get_test_report_path():
+    # Get correct download path
+    if platform.system() == "Windows":
+        return testResultPathWindows
+    else:
+        return testResultPathLinux
+
+
+
 if os.name == 'nt':
     # We redefine timeout_decorator on windows
     class timeout_decorator:
@@ -1270,7 +1301,7 @@ class UnionVMSTestCaseInit(unittest.TestCase):
         # Create Browser
         #self.driver = webdriver.Chrome()
         # Save current default dir path
-        default_current_dir = os.getcwd()
+        default_current_dir = os.path.abspath(os.path.dirname(__file__))
         # Reset Module Database
         resetModuleDatabase()
         # Return to default current dir
@@ -1906,12 +1937,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Save path to current dir
-        cwd = os.getcwd()
+        cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
-        home = expanduser("~")
-        os.chdir(home)
+        downloadPath = get_download_path()
         os.chdir(downloadPath)
-        print(os.getcwd())
+        print(os.path.abspath(os.path.dirname(__file__)))
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('assets.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -2023,12 +2053,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Save path to current dir
-        cwd = os.getcwd()
+        cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
-        home = expanduser("~")
-        os.chdir(home)
+        downloadPath = get_download_path()
         os.chdir(downloadPath)
-        print(os.getcwd())
+        print(os.path.abspath(os.path.dirname(__file__)))
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('mobileTerminals.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -2157,12 +2186,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Save path to current dir
-        cwd = os.getcwd()
+        cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
-        home = expanduser("~")
-        os.chdir(home)
+        downloadPath = get_download_path()
         os.chdir(downloadPath)
-        print(os.getcwd())
+        print(os.path.abspath(os.path.dirname(__file__)))
         # Open saved csv file and read all elements to "allrows"
         ifile  = open('auditLogs.csv', "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
@@ -2279,13 +2307,13 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on User Guide icon (Question mark icon)
         # Note: User Guide page is opened in a new tab
         self.driver.find_element_by_xpath("//div[4]/a/i").click()
-        time.sleep(10)
+        time.sleep(15)
         # Switch tab focus for Selenium to the new tab
         self.driver.switch_to.window(self.driver.window_handles[-1])
-        time.sleep(3)
+        time.sleep(5)
         # Check User guide page
         self.assertEqual("Union VMS - User Manual", self.driver.find_element_by_id("title-text").text)
-        time.sleep(3)
+        time.sleep(5)
         self.assertEqual("Welcome to Union VMS!", self.driver.find_element_by_xpath("//*[@id='main-content']/div[3]/ul/li[1]/span/a").text)
         time.sleep(5)
 
@@ -2775,6 +2803,5 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
 
-
 if __name__ == '__main__':
-    unittest.main(testRunner=xmlrunner.XMLTestRunner(output=testResultPath, verbosity=2),failfast=False, buffer=False, catchbreak=False)
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output=get_test_report_path(), verbosity=2),failfast=False, buffer=False, catchbreak=False)

@@ -104,11 +104,21 @@ speedUnitTypesShort = ("kts", "km/h", "mph")
 reportedSpeedDefault = [8, 10, 12]
 rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by", "Notification", "Notify by email", "Status", "Actions"]
 
+uvmsGitHubPath = 'https://github.com/UnionVMS/'
+
 uvmsCheckoutPath = "/tmp/git-uvms-database"
 
-testResultPath = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
+#testResultPath = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
 
-downloadPath = "/var/lib/jenkins/Downloads"
+testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
+testResultPathWindows = 'C:\\test-reports'
+
+targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target"
+targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\release-test\\target"
+
+#downloadPath = "/var/lib/jenkins/Downloads"
+downloadPathLinux = "/var/lib/jenkins/Downloads"
+downloadPathWindow = ".\Downloads"
 
 defaultUserName = "vms_admin_com"
 defaultUserNamePassword = "password"

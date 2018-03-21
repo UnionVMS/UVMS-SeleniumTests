@@ -6,7 +6,6 @@ import datetime
 import random
 import sys
 from unittest.case import _AssertRaisesContext
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
@@ -26,6 +25,7 @@ import distutils.dir_util
 from io import BytesIO
 from zipfile import ZipFile
 import urllib.request
+import platform
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
@@ -47,17 +47,17 @@ def runSubProcess(command, shell, stdout=None):
 
 def resetModuleDatabase():
     moduleDbVersionMap = {  # 'UVMS-AssetModule-APP': '4.0.8',
-                            # 'UVMS-ConfigModule-APP': '4.0.6',
-                            # 'UVMS-AuditModule-APP': '4.0.6',
-                            # 'UVMS-ExchangeModule-APP': '4.0.9',
-                            # 'UVMS-MovementModule-APP': '4.0.9',
-                            # 'UVMS-MobileTerminalModule-APP': '4.0.6',
-                            # 'UVMS-RulesModule-APP': '3.0.20',
-                            # 'UVMS-SpatialModule-DB': '1.0.5',
-                            # 'UVMS-ReportingModule-DB': '1.0.4',
-                            # 'UVMS-User-APP': '2.0.7',
-                            # 'UVMS-ActivityModule-APP': '1.0.6',
-                            # 'UVMS-MDRCacheModule-DB': '0.5.2'
+        # 'UVMS-ConfigModule-APP': '4.0.6',
+        # 'UVMS-AuditModule-APP': '4.0.6',
+        # 'UVMS-ExchangeModule-APP': '4.0.9',
+        # 'UVMS-MovementModule-APP': '4.0.9',
+        # 'UVMS-MobileTerminalModule-APP': '4.0.6',
+        # 'UVMS-RulesModule-APP': '3.0.20',
+        # 'UVMS-SpatialModule-DB': '1.0.5',
+        # 'UVMS-ReportingModule-DB': '1.0.4',
+        # 'UVMS-User-APP': '2.0.7',
+        # 'UVMS-ActivityModule-APP': '1.0.6',
+        # 'UVMS-MDRCacheModule-DB': '0.5.2'
     }
 
     modulePrefixDownloadMap = {'UVMS-AssetModule-APP': 'asset-',
@@ -73,7 +73,6 @@ def resetModuleDatabase():
                                'UVMS-ActivityModule-APP': 'activity-',
                                'UVMS-MDRCacheModule-DB': 'mdr-db-'}
 
-    uvmsGitHubPath = 'https://github.com/UnionVMS/'
     print("Will checkout uvms modules to uvmsCheckoutPath:" + uvmsCheckoutPath)
     distutils.dir_util.mkpath(uvmsCheckoutPath)
 
@@ -94,7 +93,7 @@ def resetModuleDatabase():
                 os.chdir(moduleBasePath + "/LIQUIBASE")
             if os.path.isdir(moduleBasePath + "/liquibase"):
                 os.chdir(moduleBasePath + "/liquibase")
-            print(os.getcwd())
+            print(os.path.abspath(os.path.dirname(__file__)))
             runSubProcess(
                 ['mvn', 'liquibase:dropAll', 'liquibase:update', '-P', 'postgres,exec,testdata', dbURLjdbcString], True)
             time.sleep(1)
@@ -195,7 +194,6 @@ def populateSanityRuleData():
 def startup_browser_and_login_to_unionVMS(cls):
     # Start Chrome browser
     cls.driver = webdriver.Chrome()
-    # cls.driver = webdriver.Firefox()
     # Maximize browser window
     cls.driver.maximize_window()
     # Login to test user admin
@@ -1134,8 +1132,13 @@ def generate_NAF_string(self, countryValue, ircsValue, cfrValue, externalMarking
 
 def get_elements_from_file(self, fileName):
     print('----------------------------')
-    cwd = os.getcwd()
-    print('Current working dir: ' + cwd)
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    # Change to target folder
+    targetPath = get_target_path()
+    os.chdir(targetPath)
+    print(os.path.abspath(os.path.dirname(__file__)))
+    print('Current working dir: ' + targetPath)
     print('Open file: ' + fileName)
     print('----------------------------')
     # Open csv file and return all elements in list
@@ -1146,6 +1149,9 @@ def get_elements_from_file(self, fileName):
         allRows.append(row)
     ifile.close()
     del allRows[0]
+    # Change back the path to current dir
+    os.chdir(cwd)
+    print(cwd)
     return allRows
 
 
@@ -1287,6 +1293,31 @@ def reload_page_and_goto_default(self):
     self.driver.get(httpUnionVMSurlString)
 
 
+def get_download_path():
+    # Get correct download path
+    if platform.system() == "Windows":
+        home = expanduser("~")
+        return home + downloadPathWindow
+    else:
+        return downloadPathLinux
+
+
+def get_target_path():
+    # Get correct download path
+    if platform.system() == "Windows":
+        return targetPathWindows
+    else:
+        return targetPathLinux
+
+
+def get_test_report_path():
+    # Get correct download path
+    if platform.system() == "Windows":
+        return testResultPathWindows
+    else:
+        return testResultPathLinux
+
+
 if os.name == 'nt':
     # We redefine timeout_decorator on windows
     class timeout_decorator:
@@ -1318,7 +1349,7 @@ class UnionVMSTestCaseInit(unittest.TestCase):
         # Create Browser
         #self.driver = webdriver.Chrome()
         # Save current default dir path
-        default_current_dir = os.getcwd()
+        default_current_dir = os.path.abspath(os.path.dirname(__file__))
         # Reset Module Database
         resetModuleDatabase()
         # Return to default current dir
@@ -1645,5 +1676,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
 
+
 if __name__ == '__main__':
-    unittest.main(testRunner=xmlrunner.XMLTestRunner(output=testResultPath, verbosity=2),failfast=False, buffer=False, catchbreak=False)
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output=get_test_report_path(), verbosity=2),failfast=False, buffer=False, catchbreak=False)
