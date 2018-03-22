@@ -1248,8 +1248,11 @@ def reload_page_and_goto_default(self):
 def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
-        # home = expanduser("~") Python 3.5+ use expression
-        home = str(Path.home())
+        home = expanduser("~")
+        #home = str(Path.home())
+        print("Print home variable: " + home)
+        print("Print all environment variables")
+        print(os.environ)
         return home + downloadPathWindow
     else:
         return downloadPathLinux
@@ -1355,6 +1358,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element_by_id("-item-2").click()
         time.sleep(5)
+        pth = get_download_path()
+        print(pth)
 
 
     @timeout_decorator.timeout(seconds=180)
