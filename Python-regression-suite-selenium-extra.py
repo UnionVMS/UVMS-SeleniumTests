@@ -1298,7 +1298,6 @@ def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
         home = expanduser("~")
-        #home = str(Path.home())
         print("Print home variable: " + home)
         print("Print all environment variables")
         print(os.environ)
@@ -1323,7 +1322,10 @@ def get_test_report_path():
         return testResultPathLinux
 
 
-if os.name == 'nt':
+if platform.system() == "Windows":
+    # Set environment variable HOME to the value of USERPROFILE
+    os.environ["HOME"] = os.environ["USERPROFILE"]
+    print("Set HOME to: " + os.environ["HOME"])
     # We redefine timeout_decorator on windows
     class timeout_decorator:
         @staticmethod
