@@ -1360,8 +1360,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element_by_id("-item-2").click()
         time.sleep(5)
-        pth = get_download_path()
-        print(pth)
 
 
     @timeout_decorator.timeout(seconds=180)

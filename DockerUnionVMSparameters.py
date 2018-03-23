@@ -108,17 +108,14 @@ uvmsGitHubPath = 'https://github.com/UnionVMS/'
 
 uvmsCheckoutPath = "/tmp/git-uvms-database"
 
-#testResultPath = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
-
 testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target/failsafe-reports"
 testResultPathWindows = 'C:\\test-reports'
 
 targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/release-test/target"
 targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\release-test\\target"
 
-#downloadPath = "/var/lib/jenkins/Downloads"
 downloadPathLinux = "/var/lib/jenkins/Downloads"
-downloadPathWindow = ".\Downloads"
+downloadPathWindow = "\Downloads"
 
 defaultUserName = "vms_admin_com"
 defaultUserNamePassword = "password"
