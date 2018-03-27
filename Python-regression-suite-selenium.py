@@ -1449,7 +1449,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
 
-
+    @unittest.skip  # Test Case disabled because of bug UVMS-3810
     @timeout_decorator.timeout(seconds=180)
     def test_0014_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
         # Select Positions tab
