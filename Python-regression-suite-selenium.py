@@ -34,7 +34,7 @@ from UnionVMSparameters import *
 
 def externalError(process):
     print("Process '%s' returned code %s" % (process.args, process.returncode))
-    #print("Run time: %s " % (time.time() - startTime))
+    # print("Run time: %s " % (time.time() - startTime))
     sys.exit(process.returncode)
 
 
@@ -1249,9 +1249,6 @@ def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
         home = expanduser("~")
-        print("Print home variable: " + home)
-        print("Print all environment variables")
-        print(os.environ)
         return home + downloadPathWindow
     else:
         return downloadPathLinux
@@ -1260,7 +1257,13 @@ def get_download_path():
 def get_target_path():
     # Get correct download path
     if platform.system() == "Windows":
-        return targetPathWindows
+        # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
+        if "MAVEN_PROJECTBASEDIR" in os.environ:
+            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target"
+        else:
+            localTargetPathWindows = targetPathWindows
+        print("targetPathWindows is: " + localTargetPathWindows)
+        return localTargetPathWindows
     else:
         return targetPathLinux
 
@@ -1268,7 +1271,13 @@ def get_target_path():
 def get_test_report_path():
     # Get correct download path
     if platform.system() == "Windows":
-        return testResultPathWindows
+        # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default testResultPathWindows
+        if "MAVEN_PROJECTBASEDIR" in os.environ:
+            localTestResultPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target\\failsafe-reports"
+        else:
+            localTestResultPathWindows = testResultPathWindows
+        print("testResultPathWindows is:" + localTestResultPathWindows)
+        return localTestResultPathWindows
     else:
         return testResultPathLinux
 
@@ -1449,8 +1458,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
 
-    @unittest.skip  # Test Case disabled because of bug UVMS-3810
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because of bug UVMS-3810")  # Test Case disabled because of bug UVMS-3810
     def test_0014_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
         # Select Positions tab
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()

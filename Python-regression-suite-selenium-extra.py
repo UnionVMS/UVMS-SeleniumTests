@@ -1298,9 +1298,6 @@ def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
         home = expanduser("~")
-        print("Print home variable: " + home)
-        print("Print all environment variables")
-        print(os.environ)
         return home + downloadPathWindow
     else:
         return downloadPathLinux
@@ -1309,7 +1306,13 @@ def get_download_path():
 def get_target_path():
     # Get correct download path
     if platform.system() == "Windows":
-        return targetPathWindows
+        # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
+        if "MAVEN_PROJECTBASEDIR" in os.environ:
+            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target"
+        else:
+            localTargetPathWindows = targetPathWindows
+        print("targetPathWindows is: " + localTargetPathWindows)
+        return localTargetPathWindows
     else:
         return targetPathLinux
 
@@ -1317,7 +1320,13 @@ def get_target_path():
 def get_test_report_path():
     # Get correct download path
     if platform.system() == "Windows":
-        return testResultPathWindows
+        # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default testResultPathWindows
+        if "MAVEN_PROJECTBASEDIR" in os.environ:
+            localTestResultPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target\\failsafe-reports"
+        else:
+            localTestResultPathWindows = testResultPathWindows
+        print("testResultPathWindows is:" + localTestResultPathWindows)
+        return localTestResultPathWindows
     else:
         return testResultPathLinux
 
