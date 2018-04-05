@@ -811,6 +811,91 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     time.sleep(3)
 
 
+def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    time.sleep(5)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(7)
+    # Click on the Notes tab
+    self.driver.find_element_by_css_selector("#NOTES > span").click()
+    time.sleep(1)
+    # Enter note parameters
+    # Enter date
+    currentUTCValue = datetime.datetime.utcnow()
+    startTimeValue = currentUTCValue - datetime.timedelta(hours=336)  # 2 weeks back
+    self.driver.find_element_by_id("asset-input-notesDate").click()
+    self.driver.find_element_by_id("asset-input-notesDate").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    time.sleep(1)
+    # Select activity EL1
+    self.driver.find_element_by_id("asset-dropdown-notesActivity").click()
+    self.driver.find_element_by_id("asset-dropdown-notesActivity-item-22").click()
+    time.sleep(1)
+    # Enter Note User
+    self.driver.find_element_by_id("asset-input-notesUser").click()
+    self.driver.find_element_by_id("asset-input-notesUser").send_keys(noteUser[currentVesselNumber])
+    time.sleep(1)
+    # Enter Ready date
+    currentUTCValue = datetime.datetime.utcnow()
+    readyTimeValue = currentUTCValue + datetime.timedelta(hours=336)  # 2 weeks ahead
+    self.driver.find_element_by_id("asset-input-notesReadyDate").click()
+    self.driver.find_element_by_id("asset-input-notesReadyDate").send_keys(readyTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    time.sleep(1)
+    # Enter License Holder
+    self.driver.find_element_by_id("asset-input-notesLicenseHolder").clear()
+    self.driver.find_element_by_id("asset-input-notesLicenseHolder").send_keys(notesLicenseHolder[currentVesselNumber])
+    time.sleep(1)
+    # Enter Note Contact
+    self.driver.find_element_by_id("asset-input-notesContact").clear()
+    self.driver.find_element_by_id("asset-input-notesContact").send_keys(notesContact[currentVesselNumber])
+    time.sleep(1)
+    # Enter notes comment
+    self.driver.find_element_by_id("asset-input-notesNotes").click()
+    self.driver.find_element_by_id("asset-input-notesNotes").send_keys(commentValue)
+    time.sleep(1)
+    # Enter Sheet number
+    self.driver.find_element_by_id("asset-input-notesSheetNumber").click()
+    self.driver.find_element_by_id("asset-input-notesSheetNumber").send_keys(notesSheetNumber[currentVesselNumber])
+    time.sleep(1)
+    # Click on save button
+    self.driver.find_element_by_id("menu-bar-update").click()
+    time.sleep(1)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+    # Search for selected asset in the asset list
+    self.driver.find_element_by_id("asset-input-simple-search").clear()
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-simple-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    time.sleep(7)
+    # Click on the Notes tab
+    self.driver.find_element_by_css_selector("#NOTES > span").click()
+    time.sleep(1)
+    # Click on registered note
+    self.driver.find_element_by_css_selector("td").click()
+    time.sleep(1)
+    # Check parameter values
+    self.assertEqual(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"), self.driver.find_element_by_css_selector("b").text)
+    self.assertEqual("EL1", self.driver.find_element_by_xpath("//div[4]/b").text)
+    self.assertEqual(noteUser[currentVesselNumber], self.driver.find_element_by_xpath("//div[5]/b").text)
+    self.assertEqual(notesLicenseHolder[currentVesselNumber], self.driver.find_element_by_xpath("//div[6]/b").text)
+    self.assertEqual(notesContact[currentVesselNumber], self.driver.find_element_by_xpath("//div[7]/b").text)
+    self.assertEqual(commentValue, self.driver.find_element_by_css_selector("span.lowercase > b").text)
+    self.assertEqual(readyTimeValue.strftime("%Y-%m-%d %H:%M:%S"), self.driver.find_element_by_xpath("//div[10]/b").text)
+    self.assertEqual(notesSheetNumber[currentVesselNumber], self.driver.find_element_by_xpath("//div[11]/b").text)
+    time.sleep(1)
+    # Click on close button to close popup window
+    self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+    time.sleep(1)
+
 
 def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -2687,7 +2772,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0048_add_contact_and_check_asset_history(self):
-        # Create new asset (34th in the list)
+        # Add new contact for selected asset (35th in the list)
         add_contact_to_existing_asset(self, 35, 36)
         # Add the used vesselNumbers to a vesselNumberList
         vesselNumberList =[35, 35, 34]
@@ -2700,7 +2785,13 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0049_archive_and_check_asset(self):
+    def test_0049_add_notes_and_check_asset_history(self):
+        # Add new notes for selected asset (35th in the list)
+        add_notes_to_existing_asset_and_check(self,35)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0051_archive_and_check_asset(self):
         # Archive asset
         archive_one_asset_from_gui(self, 35)
         check_asset_archived(self, 35)
