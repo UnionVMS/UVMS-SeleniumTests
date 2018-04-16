@@ -779,6 +779,52 @@ def check_asset_archived(self, vesselNumber):
     time.sleep(4)
 
 
+def archive_one_mobile_terminal_from_gui(self, mobileTerminalNumber):
+    # Select Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Enter Serial Number in serial search field
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").clear()
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
+    # Click in search button
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("mt-toggle-form").click()
+    time.sleep(2)
+    # Click on archive button
+    self.driver.find_element_by_id("menu-bar-archive").click()
+    time.sleep(2)
+    # Add some comment to the asset that shall be archived
+    self.driver.find_element_by_name("comment").send_keys("Archive this mobile terminal!")
+    time.sleep(3)
+    # Click on Archive button
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    time.sleep(5)
+
+
+
+def check_mobile_terminal_archived(self, mobileTerminalNumber):
+    # Select Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Enter Serial Number in serial search field
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").clear()
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
+    # Click in search button
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(5)
+    # Click on details button
+    time.sleep(2)
+    # Try to click on details button. Shall not exist.
+    try:
+        self.driver.find_element_by_id("mt-toggle-form").click()
+    except NoSuchElementException:
+        pass
+    time.sleep(2)
+
+
+
 
 def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -959,6 +1005,50 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
+    # Select Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Enter Serial Number in serial search field
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").clear()
+    self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
+    # Click in search button
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    time.sleep(2)
+    # Click on add Channel link
+    self.driver.find_element_by_id("mt-0-addChannel").click()
+    time.sleep(1)
+    # Enter 2:nd DNID Number
+    self.driver.find_element_by_id("mt-0-channel-1-dnid").send_keys(dnidNumber[newMobileTerminalNumber])
+    # Enter 2:nd Member Number
+    self.driver.find_element_by_id("mt-0-channel-1-memberId").send_keys(memberIdnumber[mobileTerminalNumber])
+    # Enter Installed by
+    self.driver.find_element_by_id("mt-0-channel-1-installedBy").send_keys(installedByName)
+    # Expected frequency
+    self.driver.find_element_by_id("mt-0-channel-1-frequencyExpected").send_keys(expectedFrequencyHours)
+    # Grace period
+    self.driver.find_element_by_id("mt-0-channel-1-frequencyGrace").send_keys(gracePeriodFrequencyHours)
+    # In port
+    self.driver.find_element_by_id("mt-0-channel-1-frequencyPort").send_keys(inPortFrequencyHours)
+    time.sleep(1)
+    # Click on save button
+    self.driver.find_element_by_id("menu-bar-update").click()
+    time.sleep(1)
+    # Enter comment in the comment field
+    self.driver.find_element_by_name("comment").send_keys("comment")
+    time.sleep(1)
+    # Click on update button
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    time.sleep(1)
+    # Click on cancel button
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+
 
 
 def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
@@ -2788,6 +2878,21 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0049_add_notes_and_check_asset_history(self):
         # Add new notes for selected asset (35th in the list)
         add_notes_to_existing_asset_and_check(self,35)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0050_create_one_new_mobile_terminal(self):
+        # Create new Mobile Terminal (first in the list)
+        create_one_new_mobile_terminal_from_gui(self, 35)
+        # Add channel to mobile terminal
+        add_second_channel_to_mobileterminal(self, 35, 36)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0050b_archive_and_check_mobile_terminal(self):
+        # Archive mobile terminal
+        archive_one_mobile_terminal_from_gui(self, 35)
+        check_mobile_terminal_archived(self, 35)
 
 
     @timeout_decorator.timeout(seconds=180)
