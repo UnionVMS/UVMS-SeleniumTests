@@ -3014,6 +3014,318 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
 
+class UnionVMSTestCaseExtra(unittest.TestCase):
+
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # The test case changes Default home page to asset and Coordinates format to dd.mmm
+        # if Reporting Query List is presented, then close it
+        try:
+            if self.driver.find_element_by_css_selector("h4.modal-title"):
+                self.driver.find_element_by_xpath("//div[@id='map']/div[5]/div/div/div/div/div/i").click()
+                time.sleep(2)
+        except:
+            pass
+        # Select Admin tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        self.driver.find_element_by_link_text("CONFIGURATION").click()
+        time.sleep(3)
+        # Click on Global setting subtab under Configuration Tab
+        self.driver.find_element_by_css_selector("#globalSettings > span").click()
+        time.sleep(1)
+        # Click to change Coordinates format to dd.mmm
+        self.driver.find_element_by_xpath("(//input[@name='coordinateFormat'])[2]").click()
+        time.sleep(7)
+        # Click to change Default home page to Asset page
+        self.driver.find_element_by_xpath("//button[@id='']").click()
+        time.sleep(5)
+        self.driver.find_element_by_id("-item-2").click()
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052_create_assets_trip_1_2_3(self):
+        # Create assets, Mobile for Trip 1
+        create_asset_from_file(self, 'asset1.csv')
+        create_mobileterminal_from_file(self, 'asset1.csv', 'mobileterminal1.csv')
+        # Create assets, Mobile for Trip 2
+        create_asset_from_file(self, 'asset2.csv')
+        create_mobileterminal_from_file(self, 'asset2.csv', 'mobileterminal2.csv')
+        # Create assets, Mobile for Trip 3
+        create_asset_from_file(self, 'asset3.csv')
+        create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
+        # Create Trip 1-3
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052b_create_report_and_check_asset_in_reporting_view(self):
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file(self, 'asset1.csv')
+        print(assetAllrows[1][0])
+        time.sleep(5)
+        # Select Reporting tab
+        self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
+        time.sleep(5)
+        # Enter reporting name (based on 1st ircs name from asset file)
+        reportName = "Test (only " + assetAllrows[1][0] +")"
+        self.driver.find_element_by_id("reportName").send_keys(reportName)
+        # Enter Start and end Date Time
+        currentUTCValue = datetime.datetime.utcnow()
+        startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
+        endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
+        self.driver.find_element_by_id("report-start-date-picker").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+        time.sleep(1)
+        self.driver.find_element_by_id("report-end-date-picker").send_keys(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+        time.sleep(1)
+        # Select asset view
+        self.driver.find_element_by_link_text("Select assets").click()
+        time.sleep(2)
+        # Enter asset value
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[1][0])
+        time.sleep(2)
+        # Select Asset and save
+        self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[30]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+        time.sleep(10)
+        # Click on Tabular view icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        time.sleep(2)
+        # Click on Tracks tab
+        self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
+        time.sleep(2)
+        # Check that only one row exist with 1st ircs name from asset file
+        self.assertEqual(assetAllrows[1][0], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
+        try:
+            self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0053_create_assets_and_mobile_terminals_21_33(self):
+        # Create assets 21-33 in the list
+        for x in range(21, 34):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0055_create_assets_trip_4(self):
+        # Create assets, Mobile for Trip 4
+        create_asset_from_file(self, 'asset4.csv')
+        create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0055b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0057_create_assets_trip_7(self):
+        # Create assets, Mobile for Trip 7
+        create_asset_from_file(self, 'asset7.csv')
+        create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0058_create_assets_trip_8(self):
+        # Create assets, Mobile for Trip 8
+        create_asset_from_file(self, 'asset8.csv')
+        create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0059_create_assets_trip_9(self):
+        # Create assets, Mobile for Trip 9
+        create_asset_from_file(self, 'asset9.csv')
+        create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0102_create_assets_real_trip_2(self):
+        # Create assets, Mobile for RealTrip 3
+        create_asset_from_file(self, 'assetreal3.csv')
+        create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0102b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal3.csv', 'tripreal3.csv')
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0103_create_assets_real_trip_3(self):
+        # Create assets, Mobile for RealTrip 4a and 4b
+        create_asset_from_file(self, 'assetreal4.csv')
+        create_mobileterminal_from_file(self, 'assetreal4.csv', 'mobileterminalreal4.csv')
+        # Create RealTrip 4a-4b
+        create_trip_from_file(self, datetime.timedelta(hours=256), 'assetreal4.csv', 'tripreal4a.csv')
+        create_trip_from_file(self, datetime.timedelta(hours=48), 'assetreal4.csv', 'tripreal4b.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0104_create_assets_real_trip_4(self):
+        # Create assets, Mobile for RealTrip 5
+        create_asset_from_file(self, 'assetreal5.csv')
+        create_mobileterminal_from_file(self, 'assetreal5.csv', 'mobileterminalreal5.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=48), 'assetreal5.csv', 'tripreal5.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0104b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal5.csv', 'tripreal5.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0105_create_assets_real_trip_5(self):
+        # Create assets, Mobile for RealTrip 6
+        create_asset_from_file(self, 'assetreal6.csv')
+        create_mobileterminal_from_file(self, 'assetreal6.csv', 'mobileterminalreal6.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0105b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'assetreal6.csv', 'tripreal6.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0106_create_assets_real_trip_6(self):
+        # Create assets, Mobile for RealTrip 7
+        create_asset_from_file(self, 'assetreal7.csv')
+        create_mobileterminal_from_file(self, 'assetreal7.csv', 'mobileterminalreal7.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal7.csv', 'tripreal7.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0107_create_assets_real_trip_7(self):
+        # Create assets, Mobile for RealTrip 7
+        create_asset_from_file(self, 'assetreal8.csv')
+        create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
+        # Create RealTrip 3
+        create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0501_create_one_new_asset_and_mobile_terminal(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 7)
+        create_one_new_mobile_terminal_via_asset_tab(self, 7, 7)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0501b_generate_multiple_NAF_positions_7(self):
+        # Create many NAF positions for asset 7
+        speedValue = 8
+        courseValue = 35
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
+        latStrValue = lolaPositionValues[7][0][0]
+        longStrValue = lolaPositionValues[7][0][1]
+        latValue = float(latStrValue)
+        longValue = float(longStrValue)
+        # Send x number if NAF positions
+        for x in range(500):
+            earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
+            earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+            earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+            latValue = latValue - 0.001
+            longValue = longValue - 0.001
+            nafSource = generate_NAF_string(self, countryValue[7], ircsValue[7], cfrValue[7], externalMarkingValue[7], str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[7])
+            nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+            totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+            # Generate request
+            r = requests.get(totalNAFrequest)
+            # Check if request is OK (200)
+            if r.ok:
+                print("200 OK")
+            else:
+                print("Request NOT OK!")
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_0502_create_assets_and_mobile_terminals_8_17(self):
+        # Create assets 8-17 in the list
+        for x in range(8, 18):
+            create_one_new_asset_from_gui(self, x)
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0502b_generate_multiple_NAF_positions_8_17(self):
+        # Create many NAF positions for assets 8-17
+        speedValue = 8
+        courseValue = 35
+        # Get Current Date and time in UTC
+        currentUTCValue = datetime.datetime.utcnow()
+        # Generate NAF positions for assets 8-17
+        for x in range(8, 18):
+            print(x)
+            earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=18)
+            latStrValue = lolaPositionValues[x][0][0]
+            longStrValue = lolaPositionValues[x][0][1]
+            latValue = float(latStrValue)
+            longValue = float(longStrValue)
+            # Send y number if NAF positions
+            for y in range(50):
+                earlierPositionTimeValue = earlierPositionTimeValue - datetime.timedelta(minutes=1)
+                earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+                earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+                latValue = latValue - 0.001
+                longValue = longValue - 0.001
+                nafSource = generate_NAF_string(self, countryValue[x], ircsValue[x], cfrValue[x], externalMarkingValue[x], str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[x])
+                nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+                totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+                # Generate request
+                r = requests.get(totalNAFrequest)
+                # Check if request is OK (200)
+                if r.ok:
+                    print("200 OK")
+                else:
+                    print("Request NOT OK!")
+
+
 
 if __name__ == '__main__':
     unittest.main(testRunner=xmlrunner.XMLTestRunner(output=get_test_report_path(), verbosity=2),failfast=False, buffer=False, catchbreak=False)
