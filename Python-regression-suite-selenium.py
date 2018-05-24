@@ -1542,7 +1542,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click to change Default home page to Asset page
         self.driver.find_element_by_xpath("//button[@id='']").click()
         time.sleep(5)
-        self.driver.find_element_by_id("-item-2").click()
+        self.driver.find_element_by_id("-item-4").click()
         time.sleep(5)
 
 
