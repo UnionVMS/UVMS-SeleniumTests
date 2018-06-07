@@ -1321,7 +1321,7 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
 def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
 
-    # Set Current Date and time in UTC 24h back
+    # Set Current Date and time in UTC x hours back
     currentUTCValue = datetime.datetime.utcnow()
     currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
@@ -1543,6 +1543,62 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[@id='']").click()
         time.sleep(5)
         self.driver.find_element_by_id("-item-4").click()
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
+        # Generate NAF position report with unknown Asset
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Select Alarms tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(4)
+        # Click on search button
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(2)
+        # Check Asset name
+        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]/span").text)
+
+        # Click on Details button
+        self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
+        time.sleep(2)
+        # Check Position report fields
+        self.assertEqual(countryValue[37], self.driver.find_element_by_xpath("/html/body/div[7]/div/div/div[2]/div[3]/div[2]/div[1]/div").text)
+        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[3]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[3]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[3]/div[2]/div[4]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//div[7]/div/div[2]/div").text)
+        self.assertEqual(latStrValue, self.driver.find_element_by_xpath("//div[7]/div[2]/div/div").text)
+        self.assertEqual(longStrValue, self.driver.find_element_by_xpath("//div[7]/div[2]/div[2]/div").text)
+        self.assertEqual("%.0f" % reportedSpeedValue + " kts", self.driver.find_element_by_xpath("//div[7]/div[2]/div[3]/div").text)
+        self.assertEqual(str(reportedCourseValue) + " °", self.driver.find_element_by_xpath("//div[7]/div[2]/div[4]/div").text)
+        time.sleep(2)
+        # Close Report Window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
         time.sleep(5)
 
 
