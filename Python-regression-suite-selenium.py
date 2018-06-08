@@ -2709,8 +2709,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Close position window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
         time.sleep(2)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2742,10 +2740,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-
         time.sleep(5)
-        # Shutdown browser
-        shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3088,6 +3083,251 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001d_create_one_new_asset_and_mobile_terminal(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 37)
+        create_one_new_mobile_terminal_via_asset_tab(self, 37, 37)
+
+    def test_0034_create_speed_rule_one(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0034_create_speed_rule_one(self)
+
+    def test_0034b_modify_speed_rule_one_and_add_cfr_condition(self):
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(2)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on edit rule icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        time.sleep(2)
+        # Change Rule name
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " CFR")
+        time.sleep(1)
+        # Change Description
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " CFR")
+        time.sleep(1)
+
+        # Click on composite and select AND statement
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("AND").click()
+        # Click on add a new row and enter a second Asset-->CFR statement
+        self.driver.find_element_by_css_selector("fieldset > div.row > div.col-md-12 > div.addMoreLink").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[9]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),'(')])[13]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[4]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("CFR").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[12]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),'equal to')])[3]").click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").click()
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[37])
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[13]").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),')')])[13]").click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("span.link").click()
+        time.sleep(1)
+        # Click on Update rule button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(2)
+        # Click on Yes button
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034c_generate_NAF_position_that_triggs_rule(self):
+        # Generate NAF position report that triggs the modified rule
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Check Asset and Rule names
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        time.sleep(2)
+        # Check Position parameters
+        self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[6][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[6][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034d_modify_speed_rule_one_and_change_cfr_condition(self):
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(2)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on edit rule icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        time.sleep(2)
+        # Change Rule name
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR")
+        time.sleep(1)
+        # Change Description
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").click()
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
+        time.sleep(1)
+        # Change the CFR value
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[0])
+        time.sleep(1)
+        # Click on Update rule button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(2)
+        # Click on Yes button
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034e_generate_NAF_position_that_not_triggs_rule(self):
+        # Generate NAF position report that not satisfies the CFR part of the modified rule
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR" + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034f_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(2)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on edit rule icon
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        time.sleep(2)
+        # Change Rule name
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
+        time.sleep(1)
+        # Change Description
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
+        time.sleep(1)
+        # Change condition state from AND to OR
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("OR").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        time.sleep(1)
+        # Click on Update rule button
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        time.sleep(2)
+        # Click on Yes button
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034g_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
+        # Generate NAF position report that triggs the modified rule on CFR part. That should now trigg the rule
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        #### CONTINUE
 
 
     @timeout_decorator.timeout(seconds=180)
