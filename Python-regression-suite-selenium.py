@@ -3086,97 +3086,19 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0001b_change_default_configuration_parameters(self):
-        # The test case changes Default home page to asset and Coordinates format to dd.mmm
-        # if Reporting Query List is presented, then close it
-        try:
-            if self.driver.find_element_by_css_selector("h4.modal-title"):
-                self.driver.find_element_by_xpath("//div[@id='map']/div[5]/div/div/div/div/div/i").click()
-                time.sleep(2)
-        except:
-            pass
-        # Select Admin tab
-        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
-        self.driver.find_element_by_link_text("CONFIGURATION").click()
-        time.sleep(3)
-        # Click on Global setting subtab under Configuration Tab
-        self.driver.find_element_by_css_selector("#globalSettings > span").click()
-        time.sleep(1)
-        # Click to change Coordinates format to dd.mmm
-        self.driver.find_element_by_xpath("(//input[@name='coordinateFormat'])[2]").click()
-        time.sleep(7)
-        # Click to change Default home page to Asset page
-        self.driver.find_element_by_xpath("//button[@id='']").click()
-        time.sleep(5)
-        self.driver.find_element_by_id("-item-2").click()
-        time.sleep(5)
+        # Startup browser and login
+        UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052_create_assets_trip_1_2_3(self):
-        # Create assets, Mobile for Trip 1
-        create_asset_from_file(self, 'asset1.csv')
-        create_mobileterminal_from_file(self, 'asset1.csv', 'mobileterminal1.csv')
-        # Create assets, Mobile for Trip 2
-        create_asset_from_file(self, 'asset2.csv')
-        create_mobileterminal_from_file(self, 'asset2.csv', 'mobileterminal2.csv')
-        # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, 'asset3.csv')
-        create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
-        # Create Trip 1-3
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
-
+        # Startup browser and login
+        UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
-        # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file(self, 'asset1.csv')
-        print(assetAllrows[1][0])
-        time.sleep(5)
-        # Select Reporting tab
-        self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
-        time.sleep(5)
-        # Enter reporting name (based on 1st ircs name from asset file)
-        reportName = "Test (only " + assetAllrows[1][0] +")"
-        self.driver.find_element_by_id("reportName").send_keys(reportName)
-        # Enter Start and end Date Time
-        currentUTCValue = datetime.datetime.utcnow()
-        startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
-        endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
-        self.driver.find_element_by_id("report-start-date-picker").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-        time.sleep(1)
-        self.driver.find_element_by_id("report-end-date-picker").send_keys(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-        time.sleep(1)
-        # Select asset view
-        self.driver.find_element_by_link_text("Select assets").click()
-        time.sleep(2)
-        # Enter asset value
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[1][0])
-        time.sleep(2)
-        # Select Asset and save
-        self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
-        time.sleep(2)
-        self.driver.find_element_by_xpath("(//button[@type='button'])[30]").click()
-        time.sleep(2)
-        self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
-        time.sleep(2)
-        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
-        time.sleep(10)
-        # Click on Tabular view icon
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
-        time.sleep(2)
-        # Click on Tracks tab
-        self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
-        time.sleep(2)
-        # Check that only one row exist with 1st ircs name from asset file
-        self.assertEqual(assetAllrows[1][0], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
-        try:
-            self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
-        except NoSuchElementException:
-            pass
-        time.sleep(5)
+        # Startup browser and login
+        UnionVMSTestCase.test_0052b_create_report_and_check_asset_in_reporting_view(self)
 
 
     @timeout_decorator.timeout(seconds=1000)
