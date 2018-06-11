@@ -3086,14 +3086,18 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0001d_create_one_new_asset_and_mobile_terminal(self):
+    def test_0001d_create_two_new_assets_and_mobile_terminals_37_38(self):
         # Create new asset (7th in the list)
         create_one_new_asset_from_gui(self, 37)
         create_one_new_mobile_terminal_via_asset_tab(self, 37, 37)
+        create_one_new_asset_from_gui(self, 38)
+        create_one_new_mobile_terminal_via_asset_tab(self, 38, 38)
+
 
     def test_0034_create_speed_rule_one(self):
         # Startup browser and login
         UnionVMSTestCase.test_0034_create_speed_rule_one(self)
+
 
     def test_0034b_modify_speed_rule_one_and_add_cfr_condition(self):
         # Select Alerts tab (Holding Table)
@@ -3153,11 +3157,97 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         time.sleep(2)
         # Click on Yes button
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(2)
+        time.sleep(5)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034c_generate_NAF_position_that_triggs_rule(self):
+    def test_0034c_generate_NAF_position_that_not_triggs_rule(self):
+        # Generate NAF position report that satisfies the speed part but not the CFR part of the modified rule
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[7][0][0]
+        longStrValue = lolaPositionValues[7][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034d_generate_NAF_position_that_not_triggs_rule(self):
+        # Generate NAF position report that not satisfies the speed part but the CFR part of the modified rule
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034e_generate_NAF_position_that_triggs_rule(self):
         # Generate NAF position report that triggs the modified rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -3213,13 +3303,13 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034d_modify_speed_rule_one_and_change_cfr_condition(self):
+    def test_0034f_modify_speed_rule_one_and_change_cfr_condition(self):
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
         # Select Alerts tab (Rules)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
-        time.sleep(2)
+        time.sleep(4)
         # Click on edit rule icon
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         time.sleep(2)
@@ -3235,7 +3325,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
         time.sleep(1)
         # Change the CFR value
-        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[0])
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[38])
         time.sleep(1)
         # Click on Update rule button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
@@ -3246,7 +3336,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034e_generate_NAF_position_that_not_triggs_rule(self):
+    def test_0034g_generate_NAF_position_that_not_triggs_rule(self):
         # Generate NAF position report that not satisfies the CFR part of the modified rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -3288,7 +3378,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034f_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
+    def test_0034h_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -3311,8 +3401,6 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("OR").click()
         time.sleep(1)
-        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
-        time.sleep(1)
         # Click on Update rule button
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
         time.sleep(2)
@@ -3322,12 +3410,118 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034g_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
-        # Generate NAF position report that triggs the modified rule on CFR part. That should now trigg the rule
+    def test_0034i_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
+        # Generate NAF position report that triggs the CFR part of modified rule. That should now trigg the rule
 
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
-        #### CONTINUE
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[7][0][0]
+        longStrValue = lolaPositionValues[7][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Check Asset and Rule names
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        time.sleep(2)
+        # Check Position parameters
+        self.assertEqual(countryValue[38], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[38], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[7][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[7][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedValue) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(5)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0034j_generate_NAF_position_that_triggs_rule_on_speed_part(self):
+        # Generate NAF position report that triggs the speed part of modified rule. That should now trigg the rule
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Check Asset and Rule names
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        time.sleep(2)
+        # Check Position parameters
+        self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[6][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[6][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(5)
+
+
 
 
     @timeout_decorator.timeout(seconds=180)
