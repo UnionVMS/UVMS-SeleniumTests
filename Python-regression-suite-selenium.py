@@ -1434,7 +1434,7 @@ def get_target_path():
     if platform.system() == "Windows":
         # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
         if "MAVEN_PROJECTBASEDIR" in os.environ:
-            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target"
+            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\release-test\\target"
         else:
             localTargetPathWindows = targetPathWindows
         print("targetPathWindows is: " + localTargetPathWindows)
@@ -3117,7 +3117,6 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         self.driver.find_element_by_name("description").clear()
         self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " CFR")
         time.sleep(1)
-
         # Click on composite and select AND statement
         self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
         time.sleep(1)
