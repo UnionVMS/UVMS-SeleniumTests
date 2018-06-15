@@ -3521,6 +3521,9 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         time.sleep(5)
 
 
+    def test_0041_remove_speed_rule_one(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0041_remove_speed_rule_one(self)
 
 
     @timeout_decorator.timeout(seconds=180)
