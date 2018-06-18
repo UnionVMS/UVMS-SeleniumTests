@@ -3105,7 +3105,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         time.sleep(2)
         # Select Alerts tab (Rules)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
-        time.sleep(2)
+        time.sleep(4)
         # Click on edit rule icon
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         time.sleep(2)
