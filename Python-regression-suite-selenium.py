@@ -454,11 +454,11 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterList):
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(1)
+    time.sleep(2)
     # Search for created asset
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName)
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(7)
     # Click on details button
