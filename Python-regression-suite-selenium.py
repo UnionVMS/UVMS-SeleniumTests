@@ -463,7 +463,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(7)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
+    time.sleep(10)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(1)
@@ -3284,7 +3284,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        time.sleep(2)
+        time.sleep(5)
         # Check Position parameters
         self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
