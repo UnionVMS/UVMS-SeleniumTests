@@ -1255,7 +1255,6 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
     nafSource = nafSource + longValue
     nafSource = nafSource + "//SP/"
     nafSource = nafSource + str(speedValue * 10)
-    print('Inside generate_NAF_string 1: ' + str(speedValue))
     nafSource = nafSource + "//CO/"
     nafSource = nafSource + str(courseValue)
     nafSource = nafSource + "//DA/"
@@ -1336,10 +1335,10 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
         # create number of position reports for the newly created asset/mobile terminal
         for y in range(1, len(assetTripAllrows)):
             # Create one position report via NAF
-            currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(
-                minutes=int(assetTripAllrows[y][5]))
+            currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(minutes=int(assetTripAllrows[y][5]))
             currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
             currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
+            # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
             nafSource = generate_NAF_string(self, countryValue[0], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
             print(nafSource)
             nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
