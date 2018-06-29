@@ -1,2 +1,2 @@
-ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue;lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue
-F9002;Fartyg9002;SWE0000F9002;EXT3;4329002;502069002;MOCK-license-DB;GOT;Dermersal;14;3;1300;Mikael;;Mikael Great;mikael.great@great.com;+4672112112
+ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue;lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue;FlagState(DNK=0,NOR=1,SWE=2)
+F9002;Fartyg9002;SWE0000F9002;EXT3;4329002;502069002;MOCK-license-DB;GOT;Dermersal;14;3;1300;Mikael;;Mikael Great;mikael.great@great.com;+4672112112;2
