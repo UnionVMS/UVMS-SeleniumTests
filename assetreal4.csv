@@ -1,2 +1,2 @@
-ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue;lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue;FlagState(DNK=0,NOR=1,SWE=2)
-RS0004;Delta;SWE000RS0004;EXT3;5550004;505550004;MOCK-license-DB;GOT;Dermersal;14;3;1300;Mikael;;Mikael Great;mikael.great@great.com;+4672112112;2
+ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue(Dermersal=0,Dermersal and pelagic=1,Pelagic=2,Unknown=3);lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue;FlagState(DNK=0,NOR=1,SWE=2)
+RS0004;Delta;SWE000RS0004;EXT3;5550004;505550004;MOCK-license-DB;GOT;0;14;3;1300;Mikael;;Mikael Great;mikael.great@great.com;+4672112112;2

@@ -317,7 +317,7 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-homeport").send_keys(parameterList[7])
     # Select Gear Type value
     self.driver.find_element_by_id("asset-input-gearType").click()
-    self.driver.find_element_by_id("asset-input-gearType-item-0").click()
+    self.driver.find_element_by_id("asset-input-gearType-item-"+parameterList[8]).click()
     # Enter MMSI Value
     self.driver.find_element_by_id("asset-input-mmsi").send_keys(parameterList[5])
     # Select License Type value
