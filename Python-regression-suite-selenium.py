@@ -1414,6 +1414,18 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     time.sleep(5)
 
 
+def get_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
+    # Get a new asset List based in selected selction value
+    assetList = []
+    for x in range(1, len(assetAllrows)):
+        if assetAllrows[x][assetListIndexNumber] == selectionValue :
+            assetList.append(assetAllrows[x])
+    return assetList
+
+
+
+
+
 def reload_page_and_goto_default(self):
     # Reload page and goto default page
     self.driver.get(httpUnionVMSurlString)
@@ -3778,11 +3790,73 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=1800)
+    @timeout_decorator.timeout(seconds=180)
     def test_0201_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
         create_asset_from_file(self, 'assets2xxxx.csv')
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0202_advanced_search_of_assets(self):
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
+        # Click on asset tab
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+        # Click on advanced search
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(1)
+        # Click on sort IRCS
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        time.sleep(1)
+        # Search for all assets with Flag State (F.S.) called "NOR"
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates-item-1").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+        # Get all assets with Flag State (F.S.) in the asset list.
+        filteredAssetList = get_selected_assets_from_assetList(self, assetAllrows, 17, str(1))
+        # Sort the asset list
+        filteredAssetList.sort(key=lambda x: x[1])
+        # Check Assets on the presented Asset List view
+        self.assertEqual(flagStateIndex[int(filteredAssetList[0][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[0][17])] + "\"]").text)
+        self.assertEqual(filteredAssetList[0][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][3] + "\"]").text)
+        self.assertEqual(filteredAssetList[0][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][1] + "\"]").text)
+        self.assertEqual(filteredAssetList[0][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][0] + "\"]").text)
+        self.assertEqual(filteredAssetList[0][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][2] + "\"]").text)
+        self.assertEqual(gearTypeIndex[int(filteredAssetList[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[0][8])] + "\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        for x in [1, 2, 3]:
+            self.assertEqual(flagStateIndex[int(filteredAssetList[1][17])], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]").text)
+            self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
+
+        time.sleep(3)
+
+        # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
+        self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-gearType-item-2").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+        # Get all assets with geartype Pelagic(2) in the filteredAsset list.
+        filteredAssetList2 = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        print(filteredAssetList2)
 
 
 
