@@ -3805,7 +3805,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0202_advanced_search_of_assets(self):
+    def test_0202_advanced_search_of_assets_fs_geartypes(self):
+        # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
         # Click on asset tab
@@ -3862,12 +3863,21 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(3)
+
+        # Save current advanced filter to group
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").send_keys(groupName[3])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(1)
+
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
         filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
         filteredAssetListNonSelected = get_non_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
-        print(filteredAssetListSelected)
-        print(filteredAssetListNonSelected)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
         self.assertEqual(flagStateIndex[int(filteredAssetListSelected[0][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]").text)
@@ -3887,6 +3897,54 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         except NoSuchElementException:
             pass
         time.sleep(4)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0203_advanced_search_of_assets_length_power(self):
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
+        # Click on asset tab
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+        # Click on advanced search
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(1)
+        # Click on sort IRCS
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        time.sleep(1)
+
+
+        # Search for all assets with Length inteval (0-11,99) and Power interval "0-99"
+        self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-lengthValue-item-1").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-power").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-power-item-0").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-power").click()
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+
+        # Save current advanced filter to group
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").send_keys(groupName[4])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(1)
+
+
+        time.sleep(5)
 
 
 if __name__ == '__main__':

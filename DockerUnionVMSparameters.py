@@ -105,10 +105,11 @@ dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":25432/" +
 
 
 sourceValue= ('NAF', 'MANUAL')
-groupName = ("Grupp 1", "Grupp 2", "Grupp 3")
+groupName = ("Group 1", "Group 2", "Group 3", "Group 4", "Group 5")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
 speedUnitTypesShort = ("kts", "km/h", "mph")
 reportedSpeedDefault = [8, 10, 12]
+lengthInterval = ("0-11,99", "12-14,99", "15-17,99", "18-23,99", "24+")
 rulesHeadlineNames = ["Rule name", "Last triggered", "Date updated", "Updated by", "Notification", "Notify by email", "Status", "Actions"]
 
 uvmsGitHubPath = 'https://github.com/UnionVMS/'
