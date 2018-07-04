@@ -1415,13 +1415,21 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
 
 
 def get_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
-    # Get a new asset List based in selected selction value
+    # Get a new asset List based on selected selection value
     assetList = []
     for x in range(1, len(assetAllrows)):
         if assetAllrows[x][assetListIndexNumber] == selectionValue :
             assetList.append(assetAllrows[x])
     return assetList
 
+
+def get_non_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
+    # Get a new asset List based on non-selected selection value
+    assetList = []
+    for x in range(1, len(assetAllrows)):
+        if assetAllrows[x][assetListIndexNumber] != selectionValue :
+            assetList.append(assetAllrows[x])
+    return assetList
 
 
 
@@ -3854,9 +3862,35 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(3)
-        # Get all assets with geartype Pelagic(2) in the filteredAsset list.
-        filteredAssetList2 = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
-        print(filteredAssetList2)
+        # Get all assets with geartype Pelagic(2) in the filteredAssetList.
+        filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
+        filteredAssetListNonSelected = get_non_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        print(filteredAssetList)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        self.assertEqual(flagStateIndex[int(filteredAssetListSelected[0][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]").text)
+        self.assertEqual(filteredAssetListSelected[0][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[0][3] + "\"]").text)
+        self.assertEqual(filteredAssetListSelected[0][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[0][1] + "\"]").text)
+        self.assertEqual(filteredAssetListSelected[0][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[0][0] + "\"]").text)
+        self.assertEqual(filteredAssetListSelected[0][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[0][2] + "\"]").text)
+        self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[0][8])] + "\"]").text)
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+
+        # Check that assets in filteredAssetListNonSelected is NOT presented in the Asset List view
+        self.assertNotEqual(filteredAssetListNonSelected[0][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[0][1] + "\"]").text)
+        self.assertNotEqual(filteredAssetListNonSelected[0][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[0][0] + "\"]").text)
+        self.assertNotEqual(filteredAssetListNonSelected[0][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][2] + "\"]").text)
+        self.assertNotEqual(gearTypeIndex[int(filteredAssetListNonSelected[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListNonSelected[0][8])] + "\"]").text)
+        self.assertNotEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        for x in [1, 2]:
+            self.assertNotEqual(filteredAssetListNonSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+            self.assertNotEqual(filteredAssetListNonSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+            self.assertNotEqual(filteredAssetListNonSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            self.assertNotEqual(gearTypeIndex[int(filteredAssetListNonSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListNonSelected[x][8])] + "\"]").text)
+            self.assertNotEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
 
 
 
