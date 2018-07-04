@@ -3878,8 +3878,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[0][8])] + "\"]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
 
-
-
         # Asset from non selected asset list shall not exist in the asset list view.
         try:
             for x in [0, 1, 2]:
