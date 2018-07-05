@@ -3914,7 +3914,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
         filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
-        # Change to the get_remaining_assets_from_asset_lists method HERE instead
+        # Change to the get_remaining_assets_from_asset_lists method HERE instead CONTINUE
         filteredAssetListNonSelected = get_non_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
@@ -3928,7 +3928,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
         # Asset from non-selected asset list shall not exist in the asset list view.
         try:
-            for x in [0, 1, 2]: # Check loop
+            for x in [0, 1, 2]: # Check loop CONTINUE
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
