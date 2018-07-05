@@ -26,6 +26,7 @@ from io import BytesIO
 from zipfile import ZipFile
 import urllib.request
 import platform
+import collections
 from pathlib import Path
 
 # Import parameters from parameter file
@@ -1288,6 +1289,7 @@ def get_elements_from_file(self, fileName):
         allRows.append(row)
     ifile.close()
     del allRows[0]
+    del allRows[0]
     # Change back the path to current dir
     os.chdir(cwd)
     print(cwd)
@@ -1299,7 +1301,7 @@ def create_asset_from_file(self, assetFileName):
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(self, assetFileName)
     # create_one_new_asset
-    for x in range(1, len(assetAllrows)):
+    for x in range(0, len(assetAllrows)):
         create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
 
 
@@ -1417,7 +1419,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
 def get_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
     # Get a new asset List based on selected selection value
     assetList = []
-    for x in range(1, len(assetAllrows)):
+    for x in range(0, len(assetAllrows)):
         if assetAllrows[x][assetListIndexNumber] == selectionValue :
             assetList.append(assetAllrows[x])
     return assetList
@@ -1426,11 +1428,46 @@ def get_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber,
 def get_non_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
     # Get a new asset List based on non-selected selection value
     assetList = []
-    for x in range(1, len(assetAllrows)):
+    for x in range(0, len(assetAllrows)):
         if assetAllrows[x][assetListIndexNumber] != selectionValue :
             assetList.append(assetAllrows[x])
     return assetList
 
+
+def get_selected_assets_from_assetList_interval(self, assetAllrows, assetListIndexNumber, intervalValueLow, intervalValueHigh):
+    # Get a new asset List based on selected selection value
+    assetList = []
+    for x in range(0, len(assetAllrows)):
+        if (float(assetAllrows[x][assetListIndexNumber]) >= intervalValueLow) and (float(assetAllrows[x][assetListIndexNumber]) < intervalValueHigh) :
+                assetList.append(assetAllrows[x])
+    return assetList
+
+
+def get_selected_assets_from_assetList_outside_interval(self, assetAllrows, assetListIndexNumber, intervalValueLow, intervalValueHigh):
+    # Get a new asset List based on selected selection value
+    assetList = []
+    for x in range(0, len(assetAllrows)):
+        if (float(assetAllrows[x][assetListIndexNumber]) < intervalValueLow) or (float(assetAllrows[x][assetListIndexNumber]) >= intervalValueHigh) :
+                assetList.append(assetAllrows[x])
+    return assetList
+
+
+def get_remaining_assets_from_asset_lists(self, assetListAll, assetListSmall):
+    # Get a new remaining asset List based on asset list assetListAll and assetListSmall
+    print ("Inside get_remaining_assets_from_asset_lists")
+    print(assetListAll)
+    print(assetListSmall)
+    # Define compare rule
+    compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+
+    remainAssetList = []
+    for x in range(0, len(assetListAll)):
+        print("X: ", x)
+        for y in range(0, len(assetListSmall)):
+            print("Y: ", y)
+            if not compare(assetListAll[x], assetListSmall[y]) :
+                remainAssetList.append(assetListAll[x])
+    return remainAssetList
 
 
 
@@ -3877,6 +3914,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
         filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
+        # Change to the get_remaining_assets_from_asset_lists method HERE instead
         filteredAssetListNonSelected = get_non_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
@@ -3888,9 +3926,9 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[0][8])] + "\"]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
 
-        # Asset from non selected asset list shall not exist in the asset list view.
+        # Asset from non-selected asset list shall not exist in the asset list view.
         try:
-            for x in [0, 1, 2]:
+            for x in [0, 1, 2]: # Check loop
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
@@ -3916,19 +3954,15 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_id("asset-sort-ircs").click()
         time.sleep(1)
 
-
-        # Search for all assets with Length inteval (0-11,99) and Power interval "0-99"
+        # Search for all assets with Length inteval (12-14,99) and Power interval "0-99"
         self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-lengthValue-item-1").click()
-        time.sleep(1)
-        self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-power").click()
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-power-item-0").click()
         time.sleep(1)
-        self.driver.find_element_by_id("asset-dropdown-search-power").click()
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(3)
@@ -3943,8 +3977,27 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(1)
 
-
         time.sleep(5)
+
+        # Get all assets with Length interval 12-14.99 in the assetAllrows.
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(self, assetAllrows, 9, 12, 15)
+
+        # Get all assets with Power interval 0-99 in the filteredAssetListSelected.
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(self, filteredAssetListSelected, 9, 12, 15)
+
+        # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
+
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
+
+
+        print("assetAllrows:")
+        print(assetAllrows)
+        print("filteredAssetListSelected:")
+        print(filteredAssetListSelected)
+        print("filteredAssetListNonSelected:")
+        print(filteredAssetListNonSelected)
+
+
 
 
 if __name__ == '__main__':
