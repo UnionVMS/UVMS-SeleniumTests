@@ -1315,7 +1315,7 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
     mobileTerminalAllrows = get_elements_from_file(self, mobileTerminalFileName)
 
     # create_one new mobile terminal for mentioned asset
-    for x in range(1, len(assetAllrows)):
+    for x in range(0, len(assetAllrows)):
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
 
 
@@ -1333,15 +1333,15 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
     assetTripAllrows = get_elements_from_file(self, tripFileName)
 
     # create trip for mentioned asset and mobile terminal
-    for x in range(1, len(assetAllrows)):
+    for x in range(0, len(assetAllrows)):
         # create number of position reports for the newly created asset/mobile terminal
-        for y in range(1, len(assetTripAllrows)):
+        for y in range(0, len(assetTripAllrows)):
             # Create one position report via NAF
             currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(minutes=int(assetTripAllrows[y][5]))
             currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
             currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
             # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-            nafSource = generate_NAF_string(self, countryValue[0], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
+            nafSource = generate_NAF_string(self, flagStateIndex[int(assetAllrows[x][17])], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
             print(nafSource)
             nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
             totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -1369,7 +1369,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_xpath("(//button[@type='button'])[18]").click()
     time.sleep(2)
     # Enter reporting name (based on 1st ircs name from asset file)
-    reportName = "Test (only " + assetAllrows[1][0] +")"
+    reportName = "Test (only " + assetAllrows[0][0] +")"
     self.driver.find_element_by_id("reportName").send_keys(reportName)
     # Enter Start and end Date Time
     currentUTCValue = datetime.datetime.utcnow()
@@ -1383,7 +1383,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_link_text("Select assets").click()
     time.sleep(2)
     # Enter asset value
-    self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[1][0])
+    self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
     time.sleep(5)
     # Select Asset and save
     self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
@@ -1402,17 +1402,17 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div").click()
     time.sleep(2)
     # Check the 5 first positions for mentioned asset
-    for y in range(1, 6):
-        self.assertEqual(str("%.3f" % float(assetTripAllrows[y][0])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[6]/div").text)
-        self.assertEqual(str("%.3f" % float(assetTripAllrows[y][1])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[7]/div").text)
+    for y in range(0, 5):
+        self.assertEqual(str("%.3f" % float(assetTripAllrows[y][0])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[6]/div").text)
+        self.assertEqual(str("%.3f" % float(assetTripAllrows[y][1])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[7]/div").text)
         # Special case if speed is zero (No decimals then)
         if float(assetTripAllrows[y][3]) == 0:
-            self.assertEqual(assetTripAllrows[y][3] + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
+            self.assertEqual(assetTripAllrows[y][3] + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[9]/div").text)
         else:
             #self.assertEqual(str("%.5f" % float(assetTripAllrows[y][3])) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
             # Compare expected value with 5 decimals that only has 4 decimals resolution
-            self.assertEqual(str("%.5f" % float(str("%.4f" % float(assetTripAllrows[y][3])))) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
-        self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[11]/div").text)
+            self.assertEqual(str("%.5f" % float(str("%.4f" % float(assetTripAllrows[y][3])))) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[9]/div").text)
+        self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[11]/div").text)
     time.sleep(5)
 
 
@@ -3030,13 +3030,12 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file(self, 'asset1.csv')
-        print(assetAllrows[1][0])
         time.sleep(5)
         # Select Reporting tab
         self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
         time.sleep(5)
         # Enter reporting name (based on 1st ircs name from asset file)
-        reportName = "Test (only " + assetAllrows[1][0] +")"
+        reportName = "Test (only " + assetAllrows[0][0] +")"
         self.driver.find_element_by_id("reportName").send_keys(reportName)
         # Enter Start and end Date Time
         currentUTCValue = datetime.datetime.utcnow()
@@ -3050,7 +3049,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Select assets").click()
         time.sleep(2)
         # Enter asset value
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[1][0])
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
         time.sleep(2)
         # Select Asset and save
         self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
@@ -3068,7 +3067,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
         time.sleep(2)
         # Check that only one row exist with 1st ircs name from asset file
-        self.assertEqual(assetAllrows[1][0], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
+        self.assertEqual(assetAllrows[0][0], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
         try:
             self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
         except NoSuchElementException:
