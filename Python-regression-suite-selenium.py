@@ -1454,19 +1454,16 @@ def get_selected_assets_from_assetList_outside_interval(self, assetAllrows, asse
 
 def get_remaining_assets_from_asset_lists(self, assetListAll, assetListSmall):
     # Get a new remaining asset List based on asset list assetListAll and assetListSmall
-    print ("Inside get_remaining_assets_from_asset_lists")
-    print(assetListAll)
-    print(assetListSmall)
     # Define compare rule
     compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
-
-    remainAssetList = []
-    for x in range(0, len(assetListAll)):
-        print("X: ", x)
-        for y in range(0, len(assetListSmall)):
-            print("Y: ", y)
-            if not compare(assetListAll[x], assetListSmall[y]) :
-                remainAssetList.append(assetListAll[x])
+    remainAssetList = assetListAll.copy()
+    for y in range(0, len(assetListSmall)):
+        for x in range(0, len(assetListAll)):
+            if not compare(assetListAll[x], assetListSmall[y]):
+                try:
+                    remainAssetList.remove(assetListSmall[y])
+                except:
+                    pass
     return remainAssetList
 
 
@@ -3979,8 +3976,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_name("name").send_keys(groupName[4])
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(1)
-
         time.sleep(5)
 
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
@@ -3990,10 +3985,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListSelected = get_selected_assets_from_assetList_interval(self, filteredAssetListSelected, 9, 12, 15)
 
         # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
-
         filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
-
-
         print("assetAllrows:")
         print(assetAllrows)
         print("filteredAssetListSelected:")
