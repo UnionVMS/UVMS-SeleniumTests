@@ -3867,7 +3867,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(3)
-        # Get all assets with Flag State (F.S.) in the asset list.
+        # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
         filteredAssetList = get_selected_assets_from_assetList(self, assetAllrows, 17, str(1))
         # Sort the asset list
         filteredAssetList.sort(key=lambda x: x[1])
@@ -3914,7 +3914,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
         # Change to the get_remaining_assets_from_asset_lists method HERE instead CONTINUE
-        filteredAssetListNonSelected = get_non_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
         self.assertEqual(flagStateIndex[int(filteredAssetListSelected[0][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]").text)
@@ -3925,14 +3925,19 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[0][8])] + "\"]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
 
-        # Asset from non-selected asset list shall not exist in the asset list view.
-        try:
-            for x in [0, 1, 2]: # Check loop CONTINUE
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                print("filteredAssetListNonSelected <Number>:")
+                print(x)
+                print(filteredAssetListNonSelected[x][0])
+                print(filteredAssetListNonSelected[x][1])
+                print(filteredAssetListNonSelected[x][2])
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
-        except NoSuchElementException:
-            pass
+            except NoSuchElementException:
+                pass
         time.sleep(4)
 
 
