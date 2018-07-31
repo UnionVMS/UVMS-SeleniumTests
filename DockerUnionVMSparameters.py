@@ -28,7 +28,8 @@ notesContact = ["Mr Master", "Mr Master", "Mr Master", "Mr Master", "Mr Master",
 notesSheetNumber = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
 commentValue = "some note comment."
 flagStateIndex = ["DNK", "NOR", "SWE"]
-gearTypeIndex= ["Dermersal", "Dermersal and pelagic", "Pelagic", "Unknown"]
+gearTypeIndex = ["Dermersal", "Dermersal and pelagic", "Pelagic", "Unknown"]
+assetFileName = 'assets.csv'
 
 # Mobile Terminals
 serialNoValue = ["M0101", "2M010", "13M00", "0M014", "1050M", "6M010", "T6EBT4490478", "030M1", "4M100", "2M400", "0403M", "4M004", "M0540", "0604M", "0047M", "8M004", "400M9", "04M01", "5100M", "2050M", "003M5", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "M1991", "M2991", "M3991", "M5000", "M6000"]
@@ -48,6 +49,8 @@ inPortFrequencyMinutes = "0"
 deltaTimeValue = 4
 transponderType = ("Iridium", "Inmarsat-C")
 mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
+mobileTerminalFileName = 'mobileTerminals.csv'
+
 # lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
                       [["57.934", "11.592"], ["57.935", "11.593"]],
@@ -87,7 +90,7 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
 
 # Audit Parameters
 auditLogsHeadline = ("Username", "Operation", "Object type", "Date")
-
+auditLogsFileName = 'auditLogs.csv'
 
 
 # Mixed parameters

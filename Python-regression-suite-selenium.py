@@ -18,6 +18,7 @@ import psycopg2
 import requests
 import urllib.request
 from os.path import expanduser
+import os.path
 import csv
 import codecs
 import xmlrunner
@@ -1742,6 +1743,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
 
+
     @timeout_decorator.timeout(seconds=180)
     @unittest.skip("Test Case disabled because of bug UVMS-3810")  # Test Case disabled because of bug UVMS-3810
     def test_0014_generate_manual_position_with_no_connected_transponder_and_verify_holding_table(self):
@@ -1902,12 +1904,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[0])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(8)
-        # Check that Grupp 1 has been created
+        # Check that Group 1 has been created
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
-        # Click on Grupp 1
+        # Click on Group 1
         self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(5)
         # Check Assets in Group
@@ -1956,19 +1958,19 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         self.driver.find_element_by_link_text("Add to Group").click()
         time.sleep(2)
-        # Select "Grupp 1" and click on save button
+        # Select "Group 1" and click on save button
         self.driver.find_element_by_id("saveGroupDropdown").click()
         time.sleep(2)
-        self.driver.find_element_by_xpath("//a[contains(text(),'Grupp 1')]").click()
+        self.driver.find_element_by_xpath("//a[contains(text(),'" + groupName[0] + "')]").click()
         time.sleep(2)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(5)
-        # Check that Grupp 1 has been created
+        # Check that Group 1 has been created
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
-        # Click on Grupp 1
+        # Click on Group 1
         self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(5)
         # Check Assets in Group
@@ -2015,7 +2017,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
-        # Click on Grupp 1
+        # Click on Group 1
         self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(3)
         # Get asset name values in the group list
@@ -2036,7 +2038,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on action button
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         time.sleep(1)
-        # Remove selected assets from Grupp 1
+        # Remove selected assets from Group 1
         self.driver.find_element_by_link_text("Remove from Group").click()
         time.sleep(5)
         # Reload page
@@ -2046,7 +2048,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         time.sleep(2)
-        # Click on Grupp 1
+        # Click on Group 1
         self.driver.find_element_by_link_text(groupName[0]).click()
         time.sleep(5)
         # Check Assets in Group
@@ -2099,12 +2101,12 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(8)
-        # Check that Grupp 2 has been created
+        # Check that Group 2 has been created
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         time.sleep(1)
         self.assertEqual(groupName[1], self.driver.find_element_by_link_text(groupName[1]).text)
         time.sleep(2)
-        # Click on Grupp 2
+        # Click on Group 2
         self.driver.find_element_by_link_text(groupName[1]).click()
         time.sleep(5)
         # Check Assets in Group
@@ -2133,7 +2135,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Click on "saved groups" drop box
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         time.sleep(2)
-        # Click on delete button for Grupp 2
+        # Click on delete button for Group 2
         self.driver.find_element_by_id("asset-dropdown-saved-search-delete-item-1").click()
         time.sleep(2)
         # Click on confirmation button
@@ -2142,7 +2144,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Reload page
         self.driver.refresh()
         time.sleep(10)
-        # Check that Grupp 1 exists and Grupp 2 does not exist
+        # Check that Group 1 exists and Group 2 does not exist
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
@@ -2201,7 +2203,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Reload page
         self.driver.refresh()
         time.sleep(10)
-        # Check that Grupp 3 exists in the list
+        # Check that Group 3 exists in the list
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
         time.sleep(5)
@@ -2231,19 +2233,22 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         time.sleep(2)
-        # Select Action "Export selection"
-        self.driver.find_element_by_id("asset-dropdown-actions").click()
-        time.sleep(1)
-        self.driver.find_element_by_link_text("Export selection to CSV").click()
-        time.sleep(3)
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
         downloadPath = get_download_path()
         os.chdir(downloadPath)
         print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(assetFileName):
+            os.remove(assetFileName)
+        # Select Action "Export selection"
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
         # Open saved csv file and read all elements to "allrows"
-        ifile  = open('assets.csv', "rt", encoding="utf8")
+        ifile  = open(assetFileName, "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
         allrows =['']
         for row in reader:
@@ -2347,19 +2352,22 @@ class UnionVMSTestCase(unittest.TestCase):
         print("-------------------- SAVE START-----------------------")
         print(allrowsbackup)
         print("-------------------- SAVE END-----------------------")
-        # Select Action "Export selection"
-        self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
-        time.sleep(1)
-        self.driver.find_element_by_link_text("Export selection to CSV").click()
-        time.sleep(3)
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
         downloadPath = get_download_path()
         os.chdir(downloadPath)
         print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(mobileTerminalFileName):
+            os.remove(mobileTerminalFileName)
+        # Select Action "Export selection"
+        self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
         # Open saved csv file and read all elements to "allrows"
-        ifile  = open('mobileTerminals.csv', "rt", encoding="utf8")
+        ifile  = open(mobileTerminalFileName, "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
         allrows =['']
         for row in reader:
@@ -2380,7 +2388,6 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Test row: " + str(y))
                 for z in range(8):
                     self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
-
         time.sleep(5)
 
 
@@ -2475,6 +2482,15 @@ class UnionVMSTestCase(unittest.TestCase):
         print("-------------------- SAVE START-----------------------")
         print(allrowsbackup)
         print("-------------------- SAVE END-----------------------")
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(auditLogsFileName):
+            os.remove(auditLogsFileName)
         # Select row number 1-4 by click
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[2]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
@@ -2485,14 +2501,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
-        # Save path to current dir
-        cwd = os.path.abspath(os.path.dirname(__file__))
-        # Change to Download folder for current user
-        downloadPath = get_download_path()
-        os.chdir(downloadPath)
-        print(os.path.abspath(os.path.dirname(__file__)))
         # Open saved csv file and read all elements to "allrows"
-        ifile  = open('auditLogs.csv', "rt", encoding="utf8")
+        ifile  = open(auditLogsFileName, "rt", encoding="utf8")
         reader = csv.reader(ifile, delimiter=';')
         allrows =['']
         for row in reader:
@@ -3925,11 +3935,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
         for x in range(0, len(filteredAssetListNonSelected)):
             try:
-                print("filteredAssetListNonSelected <Number>:")
-                print(x)
-                print(filteredAssetListNonSelected[x][0])
-                print(filteredAssetListNonSelected[x][1])
-                print(filteredAssetListNonSelected[x][2])
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
@@ -3986,6 +3991,9 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
         # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
         filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
+
+
+
         print("assetAllrows:")
         print(assetAllrows)
         print("filteredAssetListSelected:")
