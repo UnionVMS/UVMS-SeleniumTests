@@ -1289,12 +1289,36 @@ def get_elements_from_file(self, fileName):
     for row in reader:
         allRows.append(row)
     ifile.close()
+    # Deleting empty row
     del allRows[0]
+    # Deleting header row
     del allRows[0]
     # Change back the path to current dir
     os.chdir(cwd)
     print(cwd)
     return allRows
+
+
+def get_elements_from_file_without_deleting_paths_and_raws(self, fileName):
+    # Open csv file and return all elements in list
+    ifile = open(fileName, "rt", encoding="utf8")
+    reader = csv.reader(ifile, delimiter=';')
+    allRows = ['']
+    for row in reader:
+        allRows.append(row)
+    ifile.close()
+    # Deleting empty row
+    del allRows[0]
+    # Change back the path to current dir
+    return allRows
+
+
+def checkAllTrue(booleanList):
+    # Return True if All values in list are True, else False.
+    for x in range(0, len(booleanList)):
+        if not booleanList[x]:
+            return False
+    return True
 
 
 def create_asset_from_file(self, assetFileName):
@@ -3860,7 +3884,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(1)
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(1)
+        time.sleep(3)
         # Click on sort IRCS
         self.driver.find_element_by_id("asset-sort-ircs").click()
         time.sleep(1)
@@ -3873,7 +3897,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(1)
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
+        time.sleep(5)
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
         filteredAssetList = get_selected_assets_from_assetList(self, assetAllrows, 17, str(1))
         # Sort the asset list
@@ -3920,7 +3944,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
         filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
-        # Change to the get_remaining_assets_from_asset_lists method HERE instead CONTINUE
         filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
@@ -3943,6 +3966,92 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 pass
         time.sleep(4)
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0202b_check_group_exported_to_file(self):
+        # Test case checks that group from test_0202 is exported to file correctly.
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
+        # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
+        filteredAssetList = get_selected_assets_from_assetList(self, assetAllrows, 17, str(1))
+        # Get all assets with geartype Pelagic(2) in the filteredAssetList.
+        filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
+        # Click on asset tab
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+        # Click on sort IRCS
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        time.sleep(1)
+        # Select Group 4 filter search
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search-item-0").click()
+        time.sleep(5)
+
+        # Select all assets in the list
+        self.driver.find_element_by_id("asset-checkbox-select-all").click()
+        time.sleep(2)
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(assetFileName):
+            os.remove(assetFileName)
+        # Select Action "Export selection"
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
+
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_raws(self, assetFileName)
+        # Deleting header row
+        del allrows[0]
+
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+
+        # Sort the allrows list (3rd Column)
+        allrows.sort(key=lambda x: x[3])
+
+        # Check that the elements in csv file is correct
+
+
+        # Adapt filteredAssetListSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredAssetListSelectedCSVformat
+        filteredAssetListSelectedCSVformat = []
+        for y in range(len(filteredAssetListSelected)):
+            raw = [flagStateIndex[int(filteredAssetListSelected[y][17])], filteredAssetListSelected[y][3], filteredAssetListSelected[y][1], filteredAssetListSelected[y][0], filteredAssetListSelected[y][2], gearTypeIndex[int(filteredAssetListSelected[y][8])], licenseTypeValue , '']
+            filteredAssetListSelectedCSVformat.append(raw)
+
+        # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
+        filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
+
+        # Check filteredAssetListSelectedCSVformat in allrows raw by raw
+        compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+        resultExists = []
+        for y in range(0, len(filteredAssetListSelectedCSVformat)):
+            foundRaw = False;
+            for x in range(0, len(allrows)):
+                if compare(allrows[x], filteredAssetListSelectedCSVformat[y]):
+                    foundRaw = True;
+            resultExists.append(foundRaw)
+
+        # Check if resultExists list includes just True states
+        print(resultExists)
+        self.assertTrue(checkAllTrue(resultExists))
+
+
+        time.sleep(5)
+
+
+
+
 
     @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
@@ -3956,7 +4065,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(1)
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(1)
+        time.sleep(3)
         # Click on sort IRCS
         self.driver.find_element_by_id("asset-sort-ircs").click()
         time.sleep(1)
@@ -4024,6 +4133,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             except NoSuchElementException:
                 pass
         time.sleep(4)
+
 
 
 
