@@ -1237,7 +1237,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     return earlierPositionDateTimeValueString
 
 
-def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue):
+def generate_NAF_string(countryValue, ircsValue, cfrValue, externalMarkingValue, latValue, longValue, speedValue, courseValue, dateValue, timeValue, vesselNameValue):
     # Generate NAF string to send
     nafSource = '//SR//FR/'
     nafSource = nafSource + countryValue
@@ -1267,7 +1267,7 @@ def generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValu
     return nafSource
 
 
-def get_elements_from_file(self, fileName):
+def get_elements_from_file(fileName):
     print('----------------------------')
     # Save path to current dir
     cwd = os.path.abspath(os.path.dirname(__file__))
@@ -1295,7 +1295,7 @@ def get_elements_from_file(self, fileName):
     return allRows
 
 
-def get_elements_from_file_without_deleting_paths_and_raws(self, fileName):
+def get_elements_from_file_without_deleting_paths_and_raws(fileName):
     # Open csv file and return all elements in list
     ifile = open(fileName, "rt", encoding="utf8")
     reader = csv.reader(ifile, delimiter=';')
@@ -1343,7 +1343,7 @@ def checkAllTrue(booleanList):
 def create_asset_from_file(self, assetFileName):
     # Create asset (assetFileName)
     # Open saved csv file and read all asset elements
-    assetAllrows = get_elements_from_file(self, assetFileName)
+    assetAllrows = get_elements_from_file(assetFileName)
     # create_one_new_asset
     for x in range(0, len(assetAllrows)):
         create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
@@ -1353,17 +1353,17 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
     # Create Mobile Terminal for mentioned asset (assetFileName, mobileTerminalFileName)
 
     # Open saved csv file and read all asset elements
-    assetAllrows = get_elements_from_file(self, assetFileName)
+    assetAllrows = get_elements_from_file(assetFileName)
 
     # Open saved csv file and read all mobile terminal elements
-    mobileTerminalAllrows = get_elements_from_file(self, mobileTerminalFileName)
+    mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
 
     # create_one new mobile terminal for mentioned asset
     for x in range(0, len(assetAllrows)):
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
 
 
-def create_trip_from_file(self, deltaTimeValue, assetFileName, tripFileName):
+def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
 
     # Set Current Date and time in UTC x hours back
@@ -1371,10 +1371,10 @@ def create_trip_from_file(self, deltaTimeValue, assetFileName, tripFileName):
     currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
     # Open saved csv file and read all asset elements
-    assetAllrows = get_elements_from_file(self, assetFileName)
+    assetAllrows = get_elements_from_file(assetFileName)
 
     # Open saved csv file and read all trip elements for asset
-    assetTripAllrows = get_elements_from_file(self, tripFileName)
+    assetTripAllrows = get_elements_from_file(tripFileName)
 
     # create trip for mentioned asset and mobile terminal
     for x in range(0, len(assetAllrows)):
@@ -1385,7 +1385,7 @@ def create_trip_from_file(self, deltaTimeValue, assetFileName, tripFileName):
             currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
             currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
             # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-            nafSource = generate_NAF_string(self, flagStateIndex[int(assetAllrows[x][17])], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
+            nafSource = generate_NAF_string(flagStateIndex[int(assetAllrows[x][17])], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
             print(nafSource)
             nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
             totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -1400,9 +1400,9 @@ def create_trip_from_file(self, deltaTimeValue, assetFileName, tripFileName):
 
 def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
     # Open saved csv file and read all asset elements
-    assetAllrows = get_elements_from_file(self, assetFileName)
+    assetAllrows = get_elements_from_file(assetFileName)
     # Open saved csv file and read all trip elements for asset
-    assetTripAllrows = get_elements_from_file(self, tripFileName)
+    assetTripAllrows = get_elements_from_file(tripFileName)
     time.sleep(10)
     # Create a new Report
     # Select Reporting tab
@@ -1459,7 +1459,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     time.sleep(5)
 
 
-def get_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
+def get_selected_assets_from_assetList(assetAllrows, assetListIndexNumber, selectionValue):
     # Get a new asset List based on selected selection value
     assetList = []
     for x in range(0, len(assetAllrows)):
@@ -1468,16 +1468,7 @@ def get_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber,
     return assetList
 
 
-def get_non_selected_assets_from_assetList(self, assetAllrows, assetListIndexNumber, selectionValue):
-    # Get a new asset List based on non-selected selection value
-    assetList = []
-    for x in range(0, len(assetAllrows)):
-        if assetAllrows[x][assetListIndexNumber] != selectionValue :
-            assetList.append(assetAllrows[x])
-    return assetList
-
-
-def get_selected_assets_from_assetList_interval(self, assetAllrows, assetListIndexNumber, intervalValueLow, intervalValueHigh):
+def get_selected_assets_from_assetList_interval(assetAllrows, assetListIndexNumber, intervalValueLow, intervalValueHigh):
     # Get a new asset List based on selected selection value
     assetList = []
     for x in range(0, len(assetAllrows)):
@@ -1486,16 +1477,7 @@ def get_selected_assets_from_assetList_interval(self, assetAllrows, assetListInd
     return assetList
 
 
-def get_selected_assets_from_assetList_outside_interval(self, assetAllrows, assetListIndexNumber, intervalValueLow, intervalValueHigh):
-    # Get a new asset List based on selected selection value
-    assetList = []
-    for x in range(0, len(assetAllrows)):
-        if (float(assetAllrows[x][assetListIndexNumber]) < intervalValueLow) or (float(assetAllrows[x][assetListIndexNumber]) >= intervalValueHigh) :
-                assetList.append(assetAllrows[x])
-    return assetList
-
-
-def get_remaining_assets_from_asset_lists(self, assetListAll, assetListSmall):
+def get_remaining_assets_from_asset_lists(assetListAll, assetListSmall):
     # Get a new remaining asset List based on asset list assetListAll and assetListSmall
     # Define compare rule
     compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
@@ -1657,7 +1639,7 @@ class UnionVMSTestCase(unittest.TestCase):
         longStrValue = lolaPositionValues[6][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3069,15 +3051,15 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_from_file(self, 'asset3.csv')
         create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
         # Create Trip 1-3
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file(self, 'asset1.csv')
+        assetAllrows = get_elements_from_file('asset1.csv')
         time.sleep(5)
         # Select Reporting tab
         self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
@@ -3132,8 +3114,8 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_from_file(self, 'asset6.csv')
         create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
         # Create Trip 5-6
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
+        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3154,8 +3136,8 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_from_file(self, 'assetreal2.csv')
         create_mobileterminal_from_file(self, 'assetreal2.csv', 'mobileterminalreal2.csv')
         # Create RealTrip 1-2
-        create_trip_from_file(self, datetime.timedelta(hours=256), 'assetreal1.csv', 'tripreal1.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=254, minutes=16), 'assetreal2.csv', 'tripreal2.csv')
+        create_trip_from_file(datetime.timedelta(hours=256), 'assetreal1.csv', 'tripreal1.csv')
+        create_trip_from_file(datetime.timedelta(hours=254, minutes=16), 'assetreal2.csv', 'tripreal2.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3212,7 +3194,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         # Create assets, Mobile for Trip 4
         create_asset_from_file(self, 'asset4.csv')
         create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3227,7 +3209,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         # Create assets, Mobile for Trip 7
         create_asset_from_file(self, 'asset7.csv')
         create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3235,7 +3217,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         # Create assets, Mobile for Trip 8
         create_asset_from_file(self, 'asset8.csv')
         create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+        create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3243,7 +3225,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         # Create assets, Mobile for Trip 9
         create_asset_from_file(self, 'asset9.csv')
         create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+        create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3252,7 +3234,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_asset_from_file(self, 'assetreal3.csv')
         create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
         # Create RealTrip 3
-        create_trip_from_file(self, datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
+        create_trip_from_file(datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3268,8 +3250,8 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_asset_from_file(self, 'assetreal4.csv')
         create_mobileterminal_from_file(self, 'assetreal4.csv', 'mobileterminalreal4.csv')
         # Create RealTrip 4a-4b
-        create_trip_from_file(self, datetime.timedelta(hours=256), 'assetreal4.csv', 'tripreal4a.csv')
-        create_trip_from_file(self, datetime.timedelta(hours=48), 'assetreal4.csv', 'tripreal4b.csv')
+        create_trip_from_file(datetime.timedelta(hours=256), 'assetreal4.csv', 'tripreal4a.csv')
+        create_trip_from_file(datetime.timedelta(hours=48), 'assetreal4.csv', 'tripreal4b.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3278,7 +3260,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_asset_from_file(self, 'assetreal5.csv')
         create_mobileterminal_from_file(self, 'assetreal5.csv', 'mobileterminalreal5.csv')
         # Create RealTrip 3
-        create_trip_from_file(self, datetime.timedelta(hours=48), 'assetreal5.csv', 'tripreal5.csv')
+        create_trip_from_file(datetime.timedelta(hours=48), 'assetreal5.csv', 'tripreal5.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3293,7 +3275,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_asset_from_file(self, 'assetreal6.csv')
         create_mobileterminal_from_file(self, 'assetreal6.csv', 'mobileterminalreal6.csv')
         # Create RealTrip 3
-        create_trip_from_file(self, datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3308,7 +3290,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_asset_from_file(self, 'assetreal7.csv')
         create_mobileterminal_from_file(self, 'assetreal7.csv', 'mobileterminalreal7.csv')
         # Create RealTrip 3
-        create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal7.csv', 'tripreal7.csv')
+        create_trip_from_file(datetime.timedelta(hours=270), 'assetreal7.csv', 'tripreal7.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3317,7 +3299,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_asset_from_file(self, 'assetreal8.csv')
         create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
         # Create RealTrip 3
-        create_trip_from_file(self, datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
+        create_trip_from_file(datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3346,7 +3328,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
             earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
             latValue = latValue - 0.001
             longValue = longValue - 0.001
-            nafSource = generate_NAF_string(self, countryValue[7], ircsValue[7], cfrValue[7], externalMarkingValue[7], str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[7])
+            nafSource = generate_NAF_string(countryValue[7], ircsValue[7], cfrValue[7], externalMarkingValue[7], str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[7])
             nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
             totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
             # Generate request
@@ -3389,7 +3371,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
                 earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
                 latValue = latValue - 0.001
                 longValue = longValue - 0.001
-                nafSource = generate_NAF_string(self, countryValue[x], ircsValue[x], cfrValue[x], externalMarkingValue[x], str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[x])
+                nafSource = generate_NAF_string(countryValue[x], ircsValue[x], cfrValue[x], externalMarkingValue[x], str("%.3f" % latValue), str("%.3f" % longValue), speedValue, courseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[x])
                 nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
                 totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
                 # Generate request
@@ -3511,7 +3493,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionValues[7][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
+        nafSource = generate_NAF_string(countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3554,7 +3536,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionValues[6][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3597,7 +3579,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionValues[6][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3686,7 +3668,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionValues[6][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3760,7 +3742,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionValues[7][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
+        nafSource = generate_NAF_string(countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3817,7 +3799,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionValues[6][0][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(self, countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -3892,7 +3874,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     def test_0202_advanced_search_of_assets_fs_geartypes(self):
         # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
@@ -3916,7 +3898,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(5)
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
-        filteredAssetList = get_selected_assets_from_assetList(self, assetAllrows, 17, str(1))
+        filteredAssetList = get_selected_assets_from_assetList(assetAllrows, 17, str(1))
         # Sort the asset list
         filteredAssetList.sort(key=lambda x: x[1])
         # Check Assets on the presented Asset List view
@@ -3959,9 +3941,9 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(1)
 
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
-        filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        filteredAssetListSelected = get_selected_assets_from_assetList(filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
-        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetListSelected)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
         for x in range(0, len(filteredAssetListSelected)):
@@ -3988,13 +3970,13 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     def test_0202b_check_group_exported_to_file(self):
         # Test case checks that group from test_0202 is exported to file correctly.
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
-        filteredAssetList = get_selected_assets_from_assetList(self, assetAllrows, 17, str(1))
+        filteredAssetList = get_selected_assets_from_assetList(assetAllrows, 17, str(1))
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
-        filteredAssetListSelected = get_selected_assets_from_assetList(self, filteredAssetList, 8, str(2))
+        filteredAssetListSelected = get_selected_assets_from_assetList(filteredAssetList, 8, str(2))
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
-        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
@@ -4025,7 +4007,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Open saved csv file and read all elements to "allrows"
-        allrows = get_elements_from_file_without_deleting_paths_and_raws(self, assetFileName)
+        allrows = get_elements_from_file_without_deleting_paths_and_raws(assetFileName)
         # Deleting header row
         del allrows[0]
         # Change back the path to current dir
@@ -4051,7 +4033,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file(self, 'assets2xxxx.csv')
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
@@ -4089,13 +4071,13 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(5)
 
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
-        filteredAssetListSelected = get_selected_assets_from_assetList_interval(self, assetAllrows, 9, 12, 15)
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
 
         # Get all assets with Power interval 0-99 in the filteredAssetListSelected.
-        filteredAssetListSelected = get_selected_assets_from_assetList_interval(self, filteredAssetListSelected, 9, 12, 15)
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 9, 12, 15)
 
         # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
-        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(self, assetAllrows, filteredAssetListSelected)
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetListSelected)
 
         # Reload page
         self.driver.refresh()
