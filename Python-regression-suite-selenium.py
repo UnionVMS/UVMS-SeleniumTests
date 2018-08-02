@@ -212,7 +212,6 @@ def startup_browser_and_login_to_unionVMS(cls):
     except:
         pass
 
-
     # if Pop-up windows exists then click cancel
     try:
         if cls.driver.find_element_by_xpath("/html/body/div[5]/div/div/div/form"):
@@ -572,8 +571,6 @@ def check_new_asset_exists(self, vesselNumber):
     time.sleep(3)
 
 
-
-
 def check_current_asset_pop_up_history_items(self, vesselNumber):
 
     # Check the values in the pop up window
@@ -755,7 +752,6 @@ def archive_one_asset_from_gui(self, vesselNumber):
     # Click on Yes button
     self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
     time.sleep(5)
-
 
 
 def check_asset_archived(self, vesselNumber):
@@ -1313,6 +1309,29 @@ def get_elements_from_file_without_deleting_paths_and_raws(self, fileName):
     return allRows
 
 
+def adapt_asset_list_to_exported_CSV_file_standard(originAssetList):
+    # Adapt originAssetList list to the "format" as for exported CSV files
+    # The result is saved in newAssetListCSVformat
+    newAssetListCSVformat = []
+    for y in range(len(originAssetList)):
+        raw = [flagStateIndex[int(originAssetList[y][17])], originAssetList[y][3], originAssetList[y][1], originAssetList[y][0], originAssetList[y][2], gearTypeIndex[int(originAssetList[y][8])], licenseTypeValue, '']
+        newAssetListCSVformat.append(raw)
+    return newAssetListCSVformat
+
+
+def check_asset_list_raw_in_other_asset_list_if_it_exists(subAssetList, fullAssetList):
+    # Check subAssetList in fullAssetList raw by raw
+    # Returns a new list consists of booleans values
+    compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+    resultExists = []
+    for y in range(0, len(subAssetList)):
+        foundRaw = False;
+        for x in range(0, len(fullAssetList)):
+            if compare(fullAssetList[x], subAssetList[y]):
+                foundRaw = True;
+        resultExists.append(foundRaw)
+    return resultExists
+
 def checkAllTrue(booleanList):
     # Return True if All values in list are True, else False.
     for x in range(0, len(booleanList)):
@@ -1344,7 +1363,7 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
 
 
-def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
+def create_trip_from_file(self, deltaTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
 
     # Set Current Date and time in UTC x hours back
@@ -1377,7 +1396,6 @@ def create_trip_from_file(self,deltaTimeValue, assetFileName, tripFileName):
                 print("200 OK")
             else:
                 print("Request NOT OK!")
-
 
 
 def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
@@ -1490,7 +1508,6 @@ def get_remaining_assets_from_asset_lists(self, assetListAll, assetListSmall):
                 except:
                     pass
     return remainAssetList
-
 
 
 def reload_page_and_goto_default(self):
@@ -3966,6 +3983,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 pass
         time.sleep(4)
 
+
     @timeout_decorator.timeout(seconds=180)
     def test_0202b_check_group_exported_to_file(self):
         # Test case checks that group from test_0202 is exported to file correctly.
@@ -4006,50 +4024,27 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
-
         # Open saved csv file and read all elements to "allrows"
         allrows = get_elements_from_file_without_deleting_paths_and_raws(self, assetFileName)
         # Deleting header row
         del allrows[0]
-
         # Change back the path to current dir
         os.chdir(cwd)
         print(cwd)
-
         # Sort the allrows list (3rd Column)
         allrows.sort(key=lambda x: x[3])
-
         # Check that the elements in csv file is correct
-
-
         # Adapt filteredAssetListSelected list to the "format" as for exported CSV files
         # The result is saved in filteredAssetListSelectedCSVformat
-        filteredAssetListSelectedCSVformat = []
-        for y in range(len(filteredAssetListSelected)):
-            raw = [flagStateIndex[int(filteredAssetListSelected[y][17])], filteredAssetListSelected[y][3], filteredAssetListSelected[y][1], filteredAssetListSelected[y][0], filteredAssetListSelected[y][2], gearTypeIndex[int(filteredAssetListSelected[y][8])], licenseTypeValue , '']
-            filteredAssetListSelectedCSVformat.append(raw)
-
+        filteredAssetListSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListSelected)
         # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
         filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
-
         # Check filteredAssetListSelectedCSVformat in allrows raw by raw
-        compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
-        resultExists = []
-        for y in range(0, len(filteredAssetListSelectedCSVformat)):
-            foundRaw = False;
-            for x in range(0, len(allrows)):
-                if compare(allrows[x], filteredAssetListSelectedCSVformat[y]):
-                    foundRaw = True;
-            resultExists.append(foundRaw)
-
+        resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
         self.assertTrue(checkAllTrue(resultExists))
-
-
         time.sleep(5)
-
-
 
 
 
