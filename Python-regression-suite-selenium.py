@@ -1332,12 +1332,22 @@ def check_asset_list_raw_in_other_asset_list_if_it_exists(subAssetList, fullAsse
         resultExists.append(foundRaw)
     return resultExists
 
+
 def checkAllTrue(booleanList):
     # Return True if All values in list are True, else False.
     for x in range(0, len(booleanList)):
         if not booleanList[x]:
             return False
     return True
+
+
+def checkAnyTrue(booleanList):
+    # Return True if Any values in list are True, else False.
+    for x in range(0, len(booleanList)):
+        if booleanList[x]:
+            return True
+    return False
+
 
 
 def create_asset_from_file(self, assetFileName):
@@ -3988,7 +3998,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-0").click()
         time.sleep(5)
-
         # Select all assets in the list
         self.driver.find_element_by_id("asset-checkbox-select-all").click()
         time.sleep(2)
@@ -4025,7 +4034,18 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
+        # The test case shall pass if ALL boolean values in resultExists list are True
         self.assertTrue(checkAllTrue(resultExists))
+        # Adapt filteredAssetListNonSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredAssetListNonSelectedCSVformat
+        filteredAssetListNonSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListNonSelected)
+        # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
+        filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
+        # Check filteredAssetListNonSelectedCSVformat in allrows raw by raw
+        resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
+        print(resultExists)
+        # The test case shall pass if ALL of the boolean values in resultExists list are False
+        self.assertFalse(checkAnyTrue(resultExists))
         time.sleep(5)
 
 
