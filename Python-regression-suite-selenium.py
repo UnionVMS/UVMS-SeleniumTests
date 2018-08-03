@@ -1473,7 +1473,7 @@ def get_selected_assets_from_assetList(assetAllrows, assetListIndexNumber, selec
     # Get a new asset List based on selected selection value
     assetList = []
     for x in range(0, len(assetAllrows)):
-        if assetAllrows[x][assetListIndexNumber] == selectionValue :
+        if selectionValue in assetAllrows[x][assetListIndexNumber]:
             assetList.append(assetAllrows[x])
     return assetList
 
@@ -3909,27 +3909,35 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(5)
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
         filteredAssetList = get_selected_assets_from_assetList(assetAllrows, 17, str(1))
-        # Sort the asset list
-        filteredAssetList.sort(key=lambda x: x[1])
-        # Check Assets on the presented Asset List view
-        self.assertEqual(flagStateIndex[int(filteredAssetList[0][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[0][17])] + "\"]").text)
-        self.assertEqual(filteredAssetList[0][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][3] + "\"]").text)
-        self.assertEqual(filteredAssetList[0][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][1] + "\"]").text)
-        self.assertEqual(filteredAssetList[0][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][0] + "\"]").text)
-        self.assertEqual(filteredAssetList[0][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[0][2] + "\"]").text)
-        self.assertEqual(gearTypeIndex[int(filteredAssetList[0][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[0][8])] + "\"]").text)
-        self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+        # Get the remaining assets in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetList)
 
-        for x in [1, 2, 3]:
-            self.assertEqual(flagStateIndex[int(filteredAssetList[1][17])], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]").text)
+
+        print("filteredAssetList")
+        print(filteredAssetList)
+        print("filteredAssetListNonSelected")
+        print(filteredAssetListNonSelected)
+
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        for x in range(0, len(filteredAssetList)):
+            self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
             self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
             self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
             self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
             self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
-            self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
 
-        time.sleep(3)
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+
 
         # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
         self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
@@ -3974,6 +3982,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             except NoSuchElementException:
                 pass
         time.sleep(4)
+
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4202,6 +4211,116 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
         time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0204_advanced_search_of_assets_extmark_port(self):
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Click on asset tab
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        time.sleep(5)
+        # Click on advanced search
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+        # Click on sort IRCS
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        time.sleep(1)
+
+        # Search for all assets with Ext Mark value
+        self.driver.find_element_by_id("asset-input-search-externalMarking").clear()
+        self.driver.find_element_by_id("asset-input-search-externalMarking").send_keys(externalMarkingSearchValue[0])
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+
+        # Get all assets with the marked value in the External Marking field in the asset list.
+        filteredAssetList = get_selected_assets_from_assetList(assetAllrows, 3, externalMarkingSearchValue[0])
+        # Sort the asset list
+        filteredAssetList.sort(key=lambda x: x[3])
+
+        # Get the remaining assets in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetList)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        for x in range(0, len(filteredAssetList)):
+            self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+        time.sleep(1)
+
+        # Search for all assets with Ext Mark value and Home port value
+        self.driver.find_element_by_id("asset-input-search-homeport").clear()
+        self.driver.find_element_by_id("asset-input-search-homeport").send_keys(homeportSearchValue[0])
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+
+        # Save current advanced filter to group
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").send_keys(groupName[5])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+
+        # Get all assets with the marked value in the External Marking field in the asset list.
+        filteredAssetListSelected = get_selected_assets_from_assetList(filteredAssetList, 7, homeportSearchValue[0])
+        # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetListSelected)
+
+        # Reload page
+        self.driver.refresh()
+        time.sleep(7)
+        # Click on sort IRCS
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        time.sleep(1)
+        # Select Group 5 filter search
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search-item-2").click()
+        time.sleep(7)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        for x in range(0, len(filteredAssetListSelected)):
+            self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+        time.sleep(4)
+
 
 
 

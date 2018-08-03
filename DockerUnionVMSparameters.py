@@ -7,11 +7,13 @@ ircsValue = ["F1001", "F1002", "F1003", "F1004", "F1005", "F1006", "F1007", "F30
 vesselName = ["Ship1001", "Ship1002", "Ship1003", "Ship1004", "Ship1005", "Ship1006", "ShipHAV", "Ship3001", "Ship4001", "Ship4002", "Ship4003", "Ship4004", "Ship4005", "Ship4006", "Ship4007", "Ship4008", "Ship4009", "Ship4010", "Ship5001", "Ship5002", "Ship5003", "Ship6001", "Ship6002", "Ship6003", "Ship6004", "Ship6005", "Ship6006", "Ship6007", "Ship6008", "Ship6009", "Ship6010", "Ship6011", "Ship6012", "Ship6013", "Ship1991", "Ship2991", "Ship3991", "Ship5XXX", "Ship6YYY"]
 cfrValue = ["SWE0000F1001", "SWE0000F1002", "SWE0000F1003", "SWE0000F1004", "SWE0000F1005", "SWE0000F1006", "SWE0000F1007", "SWE0000F3001", "SWE0000F4001", "SWE0000F4002", "SWE0000F4003", "SWE0000F4004", "SWE0000F4005", "SWE0000F4006", "SWE0000F4007", "SWE0000F4008", "SWE0000F4009", "SWE0000F4010", "SWE0000F5001", "SWE0000F5002", "SWE0000F5003", "SWE0000F6001", "SWE0000F6002", "SWE0000F6003", "SWE0000F6004", "SWE0000F6005", "SWE0000F6006", "SWE0000F6007", "SWE0000F6008", "SWE0000F6009", "SWE0000F6010", "SWE0000F6011", "SWE0000F6012", "SWE0000F6013", "SWE0000F1991", "SWE0000F2991", "SWE0000F3991", "SWE0000F5XXX", "SWE0000F6YYY"]
 externalMarkingValue = ["EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT3", "EXT4", "EXT4", "EXT4", "EXT4"]
+externalMarkingSearchValue = ["GG"]
 imoValue = ["1916207", "9618120", "0973312", "3013298", "7061109", "9270601", "1036970", "3819442", "2443125", "4254223", "4233524", "4244235", "5324425", "4522436", "3452274", "2435824", "4945232", "0342552", "5215234", "5243225", "3542523", "0621430", "3262004", "3360024", "4206034", "6304025", "2043066", "2470360", "0324860", "6040239", "0620431", "4210136", "2243016", "2304631", "0261991", "0262991", "0263991", "0265000", "0266000"]
 mmsiValue = ["832233130", "333012932", "043312023", "413223310", "223031243", "302134323", "133243420", "343210352", "411202050", "105004222", "020140523", "124500024", "045500122", "650200214", "024701205", "540100282", "910202450", "201025005", "005512201", "010252052", "205510032", "150060102", "201065002", "136020500", "640200501", "602050510", "601520060", "601000527", "001060528", "901500026", "150012006", "012651100", "011025026", "320601510", "302331991", "302332991", "302333991", "302335000", "302336000"]
 licenseTypeValue = "MOCK-license-DB"
 licenseValue = "YES"
 homeportValue = ["GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GOT", "GBG", "GBG", "GOT", "GOT"]
+homeportSearchValue = ["SET"]
 gearTypeValue = ["Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Dermersal", "Pelagic", "Pelagic", "Pelagic", "Pelagic"]
 lengthValue = ["14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "14", "15", "15", "15", "15"]
 grossTonnageValue = ["3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "2", "2", "2", "2"]
@@ -108,7 +110,7 @@ dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":25432/" +
 
 
 sourceValue= ('NAF', 'MANUAL')
-groupName = ("Group 1", "Group 2", "Group 3", "Group 4", "Group 5")
+groupName = ("Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6")
 speedUnitTypesInText = ("knots", "kilometers per hour", "miles per hour")
 speedUnitTypesShort = ("kts", "km/h", "mph")
 reportedSpeedDefault = [8, 10, 12]
