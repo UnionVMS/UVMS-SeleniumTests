@@ -130,8 +130,18 @@ targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\release-test\\target"
 downloadPathLinux = "/var/lib/jenkins/Downloads"
 downloadPathWindow = "\Downloads"
 
-defaultUserName = "vms_admin_com"
+defaultUserName = "vms_admin_se"
 defaultUserNamePassword = "password"
+defaultContext = "AdminAllUVMS"
+
+# defaultUserName = "vms_admin_com"
+# defaultUserNamePassword = "password"
+# defaultContext = "AdminAll"
+
+# defaultUserName = "vms_admin_se"
+# defaultUserNamePassword = "password"
+# defaultContext = "AdminAllUVMS"
+
 
 blackColorRGBA = "rgba(51, 51, 51, 1)"
 greyColorRGBA = "rgba(153, 153, 153, 1)"

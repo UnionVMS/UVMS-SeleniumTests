@@ -227,7 +227,12 @@ def startup_browser_and_login_to_unionVMS(cls):
         "//*[@id='content']/div[1]/div[3]/div/div[2]/div[3]/div[2]/form/div[3]/div/button"). \
         click()
     time.sleep(2)
-    cls.driver.find_element_by_partial_link_text("AdminAll").click()
+    try:
+        cls.driver.find_element_by_partial_link_text(defaultContext).click()
+    except:
+        pass
+
+
 
 
 def shutdown_browser(cls):
