@@ -3917,13 +3917,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get the remaining assets in the filteredAssetList
         filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetList)
 
-
-        print("filteredAssetList")
-        print(filteredAssetList)
-        print("filteredAssetListNonSelected")
-        print(filteredAssetListNonSelected)
-
-
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
         for x in range(0, len(filteredAssetList)):
             self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
@@ -4063,7 +4056,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(5)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
         # Open saved csv file and read all asset elements
@@ -4142,7 +4134,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             except NoSuchElementException:
                 pass
         time.sleep(4)
-
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4326,6 +4317,109 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 pass
         time.sleep(4)
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0205_create_several_mobile_terminals_for_filtering(self):
+        # Create mobile terminals from file with several different values for filtering
+        create_mobileterminal_from_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv')
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0206_search_of_mobile_terminal_mmsi_serialnr(self):
+        # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+
+        # Click on Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(5)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+        # Click on sort IRCS
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        time.sleep(1)
+        # Search for all assets with Flag State (F.S.) called "NOR"
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates-item-1").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(5)
+        # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
+        filteredAssetList = get_selected_assets_from_assetList(assetAllrows, 17, str(1))
+        # Get the remaining assets in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetList)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        for x in range(0, len(filteredAssetList)):
+            self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+
+
+        # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
+        self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-gearType-item-2").click()
+        time.sleep(1)
+        # Click on search button
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        time.sleep(3)
+
+        # Save current advanced filter to group
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        time.sleep(1)
+        self.driver.find_element_by_name("name").send_keys(groupName[3])
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(1)
+
+        # Get all assets with geartype Pelagic(2) in the filteredAssetList.
+        filteredAssetListSelected = get_selected_assets_from_assetList(filteredAssetList, 8, str(2))
+        # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetListSelected)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        for x in range(0, len(filteredAssetListSelected)):
+            self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+        time.sleep(4)
 
 
 
