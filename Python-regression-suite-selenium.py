@@ -4332,10 +4332,14 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
-
         # Click on Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(5)
+        # Sort on linked asset column
+        self.driver.find_element_by_id("mt-sort-name").click()
+
+        # CONTINUE
+
         # Click on search button
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
         time.sleep(3)
