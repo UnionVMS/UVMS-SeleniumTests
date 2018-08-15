@@ -4403,7 +4403,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             except NoSuchElementException:
                 pass
 
-
         # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
         self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
         time.sleep(1)
