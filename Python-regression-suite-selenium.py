@@ -1507,6 +1507,27 @@ def get_remaining_assets_from_asset_lists(assetListAll, assetListSmall):
     return remainAssetList
 
 
+def get_asset_cfr_via_link_list(linkList, serialNumber):
+    # Returns corresponding cfr value based on selected SerialNumber and LinkList
+    for x in range(0, len(linkList)):
+        if serialNumber in linkList[x][0]:
+            return linkList[x][1]
+    return ""
+
+
+def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValue):
+    # Returns asset column value where cfrValue satisfies the asset cfr column list
+    for x in range(0, len(assetList)):
+        if cfrValue in assetList[x][2]:
+            return assetList[x][columnValue]
+    return ""
+
+
+def removeChar(stringValue, charValue):
+    # Return new string where the charValue is removed from stringValue
+    return stringValue.replace(charValue, "")
+
+
 def reload_page_and_goto_default(self):
     # Reload page and goto default page
     self.driver.get(httpUnionVMSurlString)
@@ -4321,6 +4342,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
         # Create mobile terminals from file with several different values for filtering
+        # OBS! Following creation of mobile terminals is not made in correct way. Should be made vi link file.
         create_mobileterminal_from_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv')
 
 
@@ -4332,45 +4354,46 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
+
         # Click on Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(5)
         # Sort on linked asset column
         self.driver.find_element_by_id("mt-sort-name").click()
+        time.sleep(1)
 
-        # CONTINUE
-
+        # Enter Serial Number search value
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValueSearchValue)
         # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
-        time.sleep(1)
-        # Search for all assets with Flag State (F.S.) called "NOR"
-        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
-        time.sleep(1)
-        self.driver.find_element_by_id("asset-dropdown-search-flagstates-item-1").click()
-        time.sleep(1)
-        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(5)
-        # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
-        filteredAssetList = get_selected_assets_from_assetList(assetAllrows, 17, str(1))
-        # Get the remaining assets in the filteredAssetList
-        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetList)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(2)
 
-        # Check that assets in filteredAssetListSelected is presented in the Asset List view
-        for x in range(0, len(filteredAssetList)):
-            self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
-            self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
-            self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
-            self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
-            self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
-            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
-            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+        # Get all mobile terminal with Serial Number (F.S.) called "AA" in the asset list.
+        filteredmobileTerminalList = get_selected_assets_from_assetList(mobileTerminalAllrows, 0, removeChar(serialNoValueSearchValue, "*"))
+        # Get the remaining mobile terminal in the filteredmobileTerminalList
+        filteredmobileTerminalListNonSelected = get_remaining_assets_from_asset_lists(mobileTerminalAllrows, filteredmobileTerminalList)
 
+        # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        for x in range(0, len(filteredmobileTerminalList)):
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalList[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
+
+            self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
+            self.assertEqual(filteredmobileTerminalList[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
+            self.assertEqual(filteredmobileTerminalList[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
+            self.assertEqual(filteredmobileTerminalList[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
+            self.assertEqual(filteredmobileTerminalList[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
+
+
+        '''
         # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
         for x in range(0, len(filteredAssetListNonSelected)):
             try:
@@ -4424,6 +4447,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             except NoSuchElementException:
                 pass
         time.sleep(4)
+        '''
 
 
 
