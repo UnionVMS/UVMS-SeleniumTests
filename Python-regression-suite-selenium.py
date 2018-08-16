@@ -4339,6 +4339,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(4)
 
 
+
+
     @timeout_decorator.timeout(seconds=180)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
         # Create mobile terminals from file with several different values for filtering
@@ -4392,61 +4394,25 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             self.assertEqual(filteredmobileTerminalList[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
             self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
 
+        # Check that Asset from non-selected mobile terminal list (filteredmobileTerminalListNonSelected) does not exist in the visual mobile terminal list view.
+        for x in range(0, len(filteredmobileTerminalListNonSelected)):
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalListNonSelected[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
 
-        '''
-        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
-        for x in range(0, len(filteredAssetListNonSelected)):
-            try:
-                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
-                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
-                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
-            except NoSuchElementException:
-                pass
+            # Loop around each possible row in the mobile terminal list view
+            for y in range(0, len(mobileTerminalAllrows)):
+                try:
+                    self.assertNotEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[2]/span[1]/a").text)
+                    self.assertNotEqual(filteredmobileTerminalListNonSelected[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[3]").text)
+                    self.assertNotEqual(filteredmobileTerminalListNonSelected[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[7]").text)
+                    self.assertNotEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[8]/span").text)
+                except NoSuchElementException:
+                    pass
 
-        # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
-        self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
-        time.sleep(1)
-        self.driver.find_element_by_id("asset-dropdown-search-gearType-item-2").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
-
-        # Save current advanced filter to group
-        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
-        time.sleep(1)
-        self.driver.find_element_by_name("name").clear()
-        time.sleep(1)
-        self.driver.find_element_by_name("name").send_keys(groupName[3])
-        time.sleep(1)
-        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(1)
-
-        # Get all assets with geartype Pelagic(2) in the filteredAssetList.
-        filteredAssetListSelected = get_selected_assets_from_assetList(filteredAssetList, 8, str(2))
-        # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
-        filteredAssetListNonSelected = get_remaining_assets_from_asset_lists(assetAllrows, filteredAssetListSelected)
-
-        # Check that assets in filteredAssetListSelected is presented in the Asset List view
-        for x in range(0, len(filteredAssetListSelected)):
-            self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
-            self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
-            self.assertEqual(filteredAssetListSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][1] + "\"]").text)
-            self.assertEqual(filteredAssetListSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][0] + "\"]").text)
-            self.assertEqual(filteredAssetListSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][2] + "\"]").text)
-            self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[x][8])] + "\"]").text)
-            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
-
-        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
-        for x in range(0, len(filteredAssetListNonSelected)):
-            try:
-                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
-                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
-                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
-            except NoSuchElementException:
-                pass
-        time.sleep(4)
-        '''
 
 
 
