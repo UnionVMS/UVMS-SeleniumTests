@@ -1319,12 +1319,31 @@ def adapt_asset_list_to_exported_CSV_file_standard(originAssetList):
     # The result is saved in newAssetListCSVformat
     newAssetListCSVformat = []
     for y in range(len(originAssetList)):
+        # Building up one raw in the list
         raw = [flagStateIndex[int(originAssetList[y][17])], originAssetList[y][3], originAssetList[y][1], originAssetList[y][0], originAssetList[y][2], gearTypeIndex[int(originAssetList[y][8])], licenseTypeValue, '']
         newAssetListCSVformat.append(raw)
     return newAssetListCSVformat
 
 
-def check_asset_list_raw_in_other_asset_list_if_it_exists(subAssetList, fullAssetList):
+def adapt_mobile_terminal_list_to_exported_CSV_file_standard(originMobileTerminalList, originAssetList, linkAssetMobileTerminalList):
+    # Adapt originMobileTerminalList list to the "format" as for exported CSV files
+    # The result is saved in newMobileTerminalListCSVformat
+    newMobileTerminalListCSVformat = []
+    for y in range(len(originMobileTerminalList)):
+        # Get CFR Value based on Link list between assets and mobile terminals
+        tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalList, originMobileTerminalList[y][0])
+        # Get asset name based on CFR value found in assetAllrows list
+        tempAssetName = get_selected_asset_column_value_based_on_cfr(originAssetList, tempCFRValue, 1)
+        # Get asset name based on CFR value found in assetAllrows list
+        tempMMSIValue = get_selected_asset_column_value_based_on_cfr(originAssetList, tempCFRValue, 5)
+        # Building up one raw in the list
+        raw = [tempAssetName, originMobileTerminalList[y][0], originMobileTerminalList[y][6], originMobileTerminalList[y][5], transponderType[1], originMobileTerminalList[y][4], tempMMSIValue, statusValue[1]]
+        newMobileTerminalListCSVformat.append(raw)
+    return newMobileTerminalListCSVformat
+
+
+
+def check_sublist_in_other_list_if_it_exists(subAssetList, fullAssetList):
     # Check subAssetList in fullAssetList raw by raw
     # Returns a new list consists of booleans values
     compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
@@ -4059,7 +4078,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
         filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
         # Check filteredAssetListSelectedCSVformat in allrows raw by raw
-        resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
         # The test case shall pass if ALL boolean values in resultExists list are True
@@ -4070,7 +4089,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
         filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
         # Check filteredAssetListNonSelectedCSVformat in allrows raw by raw
-        resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
@@ -4212,7 +4231,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
         filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
         # Check filteredAssetListSelectedCSVformat in allrows raw by raw
-        resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
         # The test case shall pass if ALL boolean values in resultExists list are True
@@ -4223,7 +4242,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
         filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
         # Check filteredAssetListNonSelectedCSVformat in allrows raw by raw
-        resultExists = check_asset_list_raw_in_other_asset_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
@@ -4349,8 +4368,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
 
 
-    @timeout_decorator.timeout(seconds=180)
-    def test_0206_search_of_mobile_terminal_mmsi_serialnr(self):
+    @timeout_decorator.timeout(seconds=360)
+    def test_0206_search_of_mobile_terminals_serialnr_and_export_to_file(self):
         # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
@@ -4371,6 +4390,26 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Click on search button
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(2)
+
+        # Select all mobile terminals in the list
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        time.sleep(2)
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(mobileTerminalFileName):
+            os.remove(mobileTerminalFileName)
+        # Select Action "Export selection"
+        self.driver.find_element_by_id("mt-dropdown-actions").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
+        # Change back the path to current dir
+        os.chdir(cwd)
 
         # Get all mobile terminal with Serial Number (F.S.) called "AA" in the asset list.
         filteredmobileTerminalList = get_selected_assets_from_assetList(mobileTerminalAllrows, 0, removeChar(serialNoValueSearchValue, "*"))
@@ -4396,6 +4435,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
         # Check that Asset from non-selected mobile terminal list (filteredmobileTerminalListNonSelected) does not exist in the visual mobile terminal list view.
         for x in range(0, len(filteredmobileTerminalListNonSelected)):
+            print("Checking that MT nr: " +str(x) + " shall NOT exist in the list view")
             # Get CFR Value based on Link list between assets and mobile terminals
             tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalListNonSelected[x][0])
             # Get asset name based on CFR value found in assetAllrows list
@@ -4413,6 +4453,81 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 except NoSuchElementException:
                     pass
 
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0206b_check_mobile_terminal_exported_to_file(self):
+        # Test case checks that mobile terminals from test_0206 is exported to file correctly.
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
+
+
+        # Click on Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(5)
+        # Sort on linked asset column
+        self.driver.find_element_by_id("mt-sort-name").click()
+        time.sleep(1)
+
+        # Enter Serial Number search value
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValueSearchValue)
+        # Click on search button
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(2)
+
+        # Get all mobile terminal with Serial Number (F.S.) called "AA" in the asset list.
+        filteredmobileTerminalListSelected = get_selected_assets_from_assetList(mobileTerminalAllrows, 0, removeChar(serialNoValueSearchValue, "*"))
+        # Get the remaining mobile terminal in the filteredmobileTerminalList
+        filteredmobileTerminalListNonSelected = get_remaining_assets_from_asset_lists(mobileTerminalAllrows, filteredmobileTerminalListSelected)
+
+
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_raws(mobileTerminalFileName)
+        # Deleting header row
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+
+        # Sort the allrows list (1st Column)
+        allrows.sort(key=lambda x: x[0])
+        print("----------allrows from file-----------------")
+        print(allrows)
+        # Check that the elements in csv file is correct
+        # Adapt filteredmobileTerminalListSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredmobileTerminalListSelectedCSVformat
+        filteredmobileTerminalListSelectedCSVformat = adapt_mobile_terminal_list_to_exported_CSV_file_standard(filteredmobileTerminalListSelected, assetAllrows, linkAssetMobileTerminalAllrows)
+        print(filteredmobileTerminalListSelectedCSVformat)
+        # Sort the filteredmobileTerminalListSelectedCSVformat list (1st Column)
+        filteredmobileTerminalListSelectedCSVformat.sort(key=lambda x: x[0])
+        # Check filteredmobileTerminalListSelectedCSVformat in allrows raw by raw
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListSelectedCSVformat, allrows)
+        # Check if resultExists list includes just True states
+        print(resultExists)
+        # The test case shall pass if ALL boolean values in resultExists list are True
+        self.assertTrue(checkAllTrue(resultExists))
+        # Adapt filteredmobileTerminalListNonSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredmobileTerminalListNonSelectedCSVformat
+        filteredmobileTerminalListNonSelectedCSVformat = adapt_mobile_terminal_list_to_exported_CSV_file_standard(filteredmobileTerminalListNonSelected, assetAllrows, linkAssetMobileTerminalAllrows)
+        print(filteredmobileTerminalListNonSelectedCSVformat)
+        # Sort the filteredmobileTerminalListNonSelectedCSVformat list (1st Column)
+        filteredmobileTerminalListNonSelectedCSVformat.sort(key=lambda x: x[0])
+        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows raw by raw
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListNonSelectedCSVformat, allrows)
+        print(resultExists)
+        # The test case shall pass if ALL of the boolean values in resultExists list are False
+        self.assertFalse(checkAnyTrue(resultExists))
+        time.sleep(5)
 
 
 
