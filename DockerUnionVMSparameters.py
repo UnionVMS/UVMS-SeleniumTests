@@ -52,7 +52,7 @@ deltaTimeValue = 4
 transponderType = ("Iridium", "Inmarsat-C")
 mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
 mobileTerminalFileName = 'mobileTerminals.csv'
-serialNoValueSearchValue = "*AA*"
+mobileTerminalSearchValue = ["*AA*","*5*","*1000*"]
 statusValue = ("Inactive", "Active")
 
 # lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
