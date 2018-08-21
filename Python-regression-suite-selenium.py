@@ -1397,6 +1397,29 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
 
 
+
+def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobileTerminalFileName, linkFileName):
+    # Create Mobile Terminal based on linkFile, assetFile and mobileTerminalFile (assetFileName, mobileTerminalFileName)
+
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+
+    # Open saved csv file and read all mobile terminal elements
+    mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
+
+    # Open saved csv file and read all linked elements between assets and mobile terminals
+    linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+
+
+    # create_one new mobile terminal for mentioned asset
+    for x in range(0, len(linkAssetMobileTerminalAllrows)):
+        assetVesselName = get_selected_asset_column_value_based_on_cfr(assetAllrows, linkAssetMobileTerminalAllrows[x][1], 1)
+        mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetVesselName, mobileTerminalRawValue)
+
+
+
+
 def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
 
@@ -1540,6 +1563,15 @@ def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValu
         if cfrValue in assetList[x][2]:
             return assetList[x][columnValue]
     return ""
+
+
+def get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTermianlList, serialNumberValue):
+    # Returns mobile terminal raw where serialNumber value satisfies the mobile terminal serialNumber column list
+    for x in range(0, len(mobileTermianlList)):
+        if serialNumberValue in mobileTermianlList[x][0]:
+            return mobileTermianlList[x]
+    return []
+    print()
 
 
 def removeChar(stringValue, charValue):
@@ -4360,8 +4392,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
         # Create mobile terminals from file with several different values for filtering
-        # OBS! Following creation of mobile terminals is not made in correct way. Should be made via link file. Need to be fixed
-        create_mobileterminal_from_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv')
+        create_mobileterminal_from_file_based_on_link_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv', 'linkassetmobileterminals2xxxx.csv')
 
 
 
