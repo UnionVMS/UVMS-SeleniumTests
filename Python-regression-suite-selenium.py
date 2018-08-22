@@ -357,7 +357,6 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(3)
 
 
-
 def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(2)
@@ -387,10 +386,13 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Enter Installed by
     self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(installedByName)
     # Expected frequency
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").clear()
     self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(expectedFrequencyHours)
     # Grace period
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").clear()
     self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(gracePeriodFrequencyHours)
     # In port
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").clear()
     self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(inPortFrequencyHours)
     time.sleep(2)
     # Activate Mobile Terminal button
@@ -402,6 +404,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
 
 def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, vesselNumber):
     # Click on asset tab
@@ -442,10 +445,13 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     # Enter Installed by
     self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(installedByName)
     # Expected frequency
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").clear()
     self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(expectedFrequencyHours)
     # Grace period
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").clear()
     self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(gracePeriodFrequencyHours)
     # In port
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").clear()
     self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
     self.driver.find_element_by_id("mt-0-activation").click()
@@ -457,7 +463,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
-def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterList):
+def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRaw):
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(2)
@@ -472,7 +478,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(10)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
-    time.sleep(1)
+    time.sleep(5)
     # Select Transponder system
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
     time.sleep(1)
@@ -480,29 +486,33 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
     time.sleep(1)
     # Enter serial number
-    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterList[0])
+    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterRaw[0])
     # Enter Transceiver type
-    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterList[1])
+    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterRaw[1])
     # Enter Software Version
-    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(parameterList[2])
+    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(parameterRaw[2])
     # Enter Antenna
-    self.driver.find_element_by_id("mt-0-antenna").send_keys(parameterList[3])
+    self.driver.find_element_by_id("mt-0-antenna").send_keys(parameterRaw[3])
     # Enter Satellite Number
-    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(parameterList[4])
+    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(parameterRaw[4])
     # Enter DNID Number
-    self.driver.find_element_by_name("dnid").send_keys(parameterList[5])
+    self.driver.find_element_by_name("dnid").send_keys(parameterRaw[5])
     # Enter Member Number
-    self.driver.find_element_by_name("memberId").send_keys(parameterList[6])
+    self.driver.find_element_by_name("memberId").send_keys(parameterRaw[6])
     # Enter Installed by
-    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterList[7])
+    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterRaw[7])
     # Expected frequency
-    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(parameterList[8])
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").clear()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(parameterRaw[8])
     # Grace period
-    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(parameterList[10])
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").clear()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(parameterRaw[10])
     # In port
-    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(parameterList[12])
-    # Activate Mobile Terminal button
-    self.driver.find_element_by_id("mt-0-activation").click()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").clear()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(parameterRaw[12])
+    # Activate Mobile Terminal button if parameter is Active=1
+    if parameterRaw[14] == "1":
+       self.driver.find_element_by_id("mt-0-activation").click()
     time.sleep(3)
     # Click on save button
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
@@ -1409,7 +1419,6 @@ def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobi
 
     # Open saved csv file and read all linked elements between assets and mobile terminals
     linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
-
 
     # create_one new mobile terminal for mentioned asset
     for x in range(0, len(linkAssetMobileTerminalAllrows)):
@@ -4731,7 +4740,88 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
 
 
+class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0301_create_several_assets_for_filtering(self):
+        # Create assets from file with several different values for filtering
+        create_asset_from_file(self, 'assets3xxxx.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0302_create_several_mobile_terminals_for_editing(self):
+        # Create mobile terminals from file with different values.
+        # NOTE: Several mobile terminals are added to the same asset.
+        create_mobileterminal_from_file_based_on_link_file(self, 'assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0302b_check_mobile_terminal_list(self):
+        # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets3xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals3xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals3xxxx.csv')
+
+
+        # Click on Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(5)
+        # Sort on linked asset column
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        time.sleep(1)
+
+        # Select all mobile terminals in the list
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        time.sleep(2)
+
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+
+        # Check if file exists. If so remove it
+        if os.path.exists(mobileTerminalFileName):
+            os.remove(mobileTerminalFileName)
+        # Select Action "Export selection"
+        self.driver.find_element_by_id("mt-dropdown-actions").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(4)
+
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_raws(mobileTerminalFileName)
+        # Deleting header row
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+
+        # Sort the allrows list (1st Column)
+        allrows.sort(key=lambda x: x[1])
+        print("----------allrows from file-----------------")
+        print(allrows)
 
 
 

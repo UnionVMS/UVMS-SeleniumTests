@@ -1,2 +1,2 @@
-serialNoValue;transceiverType;softwareVersion;antennaVersion;satelliteNumber;dnidNumber;memberIdnumber;installedByName;expectedFrequencyHours;expectedFrequencyMinutes;gracePeriodFrequencyHours;gracePeriodFrequencyMinutes;inPortFrequencyHours;inPortFrequencyMinutes
-M9005;Type A;A;A;S9005;9005;100;Mike Great;2;0;15;0;3;0
+serialNoValue;transceiverType;softwareVersion;antennaVersion;satelliteNumber;dnidNumber;memberIdnumber;installedByName;expectedFrequencyHours;expectedFrequencyMinutes;gracePeriodFrequencyHours;gracePeriodFrequencyMinutes;inPortFrequencyHours;inPortFrequencyMinutes;Status(Inactive=0,Active=1)
+M9005;Type A;A;A;S9005;9005;100;Mike Great;2;0;15;0;3;0;1
