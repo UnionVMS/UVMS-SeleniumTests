@@ -614,7 +614,6 @@ def check_second_contact_in_current_asset_pop_up_history_items(self, vesselNumbe
     time.sleep(1)
 
 
-
 def click_on_selected_asset_history_event(self, numberEvent):
     # Select if the numberEvent is zero (in other words, the 1st in the Asset History Event List
     if numberEvent == 0:
