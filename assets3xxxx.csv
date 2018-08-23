@@ -1,0 +1,4 @@
+ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue(Dermersal=0,Dermersal and pelagic=1,Pelagic=2,Unknown=3);lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue;FlagState(DNK=0,NOR=1,SWE=2)
+F30401;Fartyg30401;SWE000F30401;KK-03;4130401;536968941;MOCK-license-DB;SENOK;0;11;3;100;Kalle;;Kalle Little;kalle.little@gmail.com;+4672130401;2
+F30402;Fartyg30402;DNK000F30402;TT-02;2130402;880587552;MOCK-license-DB;SETRE;2;12;4;99;Kalle;;Kalle Big;kalle.big@gmail.com;+4672130401;0
+F30403;Fartyg30403;NOR000F30403;PA-01;2130403;720777313;MOCK-license-DB;SETRE;0;14.50;4;199;Kalle;;Kalle Middle;kalle.middle@gmail.com;+4672130401;1
