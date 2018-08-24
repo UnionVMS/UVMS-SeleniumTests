@@ -4781,7 +4781,8 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Open saved csv file and read all linked elements between assets and mobile terminals
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals3xxxx.csv')
 
-
+        # Sort mobileTerminalAllrows on 1st column (that is SerialNumber value)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
         # Click on Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(5)
@@ -4789,38 +4790,27 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
 
-        # Select all mobile terminals in the list
-        self.driver.find_element_by_id("mt-checkbox-select-all").click()
-        time.sleep(2)
+        # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        for x in range(0, len(mobileTerminalAllrows)):
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, mobileTerminalAllrows[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
 
-        # Save path to current dir
-        cwd = os.path.abspath(os.path.dirname(__file__))
-        # Change to Download folder for current user
-        downloadPath = get_download_path()
-        os.chdir(downloadPath)
-        print(os.path.abspath(os.path.dirname(__file__)))
+            self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
+            self.assertEqual(mobileTerminalAllrows[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
+            self.assertEqual(mobileTerminalAllrows[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
+            self.assertEqual(mobileTerminalAllrows[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
+            self.assertEqual(mobileTerminalAllrows[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
 
-        # Check if file exists. If so remove it
-        if os.path.exists(mobileTerminalFileName):
-            os.remove(mobileTerminalFileName)
-        # Select Action "Export selection"
-        self.driver.find_element_by_id("mt-dropdown-actions").click()
-        time.sleep(1)
-        self.driver.find_element_by_link_text("Export selection to CSV").click()
-        time.sleep(4)
-
-        # Open saved csv file and read all elements to "allrows"
-        allrows = get_elements_from_file_without_deleting_paths_and_raws(mobileTerminalFileName)
-        # Deleting header row
-        del allrows[0]
-        # Change back the path to current dir
-        os.chdir(cwd)
-        print(cwd)
-
-        # Sort the allrows list (1st Column)
-        allrows.sort(key=lambda x: x[1])
-        print("----------allrows from file-----------------")
-        print(allrows)
+            # Get Status Value (Active/Inactive) for current mobile terminal in UPPER case.
+            tempStatusValue = statusValue[int(mobileTerminalAllrows[x][14])]
+            tempStatusValue = tempStatusValue.upper()
+            self.assertEqual(tempStatusValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span").text)
 
 
 if __name__ == '__main__':
