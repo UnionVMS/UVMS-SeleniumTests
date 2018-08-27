@@ -1606,7 +1606,7 @@ def get_target_path():
     if platform.system() == "Windows":
         # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
         if "MAVEN_PROJECTBASEDIR" in os.environ:
-            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\release-test\\target"
+            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target"
         else:
             localTargetPathWindows = targetPathWindows
         print("targetPathWindows is: " + localTargetPathWindows)
