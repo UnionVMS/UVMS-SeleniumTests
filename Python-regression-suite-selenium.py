@@ -1513,15 +1513,11 @@ def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobi
 
 
 
-def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName):
+def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, referenceDateTime):
     # Create addtional channels for Mobile Terminals from file based on channelFile
-
-    # Set referenceDateTime to current UTC time
-    referenceDateTime = datetime.datetime.utcnow()
 
     # Open saved csv file and read all asset elements
     channelAllrows = get_elements_from_file(channelFileName)
-
 
     # create_one new channel for mentioned mobile terminal
     for x in range(0, len(channelAllrows)):
@@ -4920,8 +4916,10 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0303_create_several_additional_channels_for_mobile_terminals(self):
+        # Set referenceDateTime to current UTC time
+        referenceDateTime = datetime.datetime.utcnow()
         # Create assets from file with several different values for filtering
-        create_addtional_channels_for_mobileterminals_from_file(self, 'channelstomobileterminals3xxxx.csv')
+        create_addtional_channels_for_mobileterminals_from_file(self, 'channelstomobileterminals3xxxx.csv', referenceDateTime)
 
 
 
