@@ -517,7 +517,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(3)
     # Click on save button
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
-    time.sleep(5)
+    time.sleep(7)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
@@ -532,65 +532,65 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
     self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
     self.driver.find_element_by_id("mt-btn-advanced-search").click()
-    time.sleep(2)
+    time.sleep(7)
     # Click on detail button
     self.driver.find_element_by_id("mt-toggle-form").click()
-    time.sleep(1)
+    time.sleep(7)
     # Click on link "Add new channel"
-    self.driver.find_element_by_id("mt-0-addChannel").click()
-    time.sleep(1)
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
+    time.sleep(2)
     # Enter channel name
-    self.driver.find_element_by_id("mt-0-channel-1-communicationChannel").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-communicationChannel").send_keys(channelRow[1])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").send_keys(channelRow[1])
     # Activate Poll if value is "true"
     if channelRow[2] == "1":
-        self.driver.find_element_by_id("mt-0-channel-1-checkbox-polling").click()
+        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-polling").click()
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[2]/label").click()
     # Activate Config if value is "true"
     if channelRow[3] == "1":
-        self.driver.find_element_by_id("mt-0-channel-1-checkbox-config").click()
+        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-config").click()
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[3]/label").click()
     # Activate Default if value is "true"
     if channelRow[4] == "1":
-        self.driver.find_element_by_id("mt-0-channel-1-checkbox-default").click()
+        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-default").click()
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[4]/label").click()
     # Enter DNID value
-    self.driver.find_element_by_id("mt-0-channel-1-dnid").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-dnid").send_keys(channelRow[5])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").send_keys(channelRow[5])
     # Enter Member Number
-    self.driver.find_element_by_id("mt-0-channel-1-memberId").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-memberId").send_keys(channelRow[6])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").send_keys(channelRow[6])
     # Enter Land station
-    self.driver.find_element_by_id("mt-0-channel-1-lesDescription").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-lesDescription").send_keys(channelRow[7])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").send_keys(channelRow[7])
     # Enter Start Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
-    self.driver.find_element_by_id("mt-0-channel-1-started").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-started").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
     # Enter Stop Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
-    self.driver.find_element_by_id("mt-0-channel-1-stopped").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-stopped").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
     # Enter Installer from file
-    self.driver.find_element_by_id("mt-0-channel-1-installedBy").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-installedBy").send_keys(channelRow[10])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").send_keys(channelRow[10])
     # Enter Installed Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
-    self.driver.find_element_by_id("mt-0-channel-1-installedOn").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
     # Enter Uninstalled Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
-    self.driver.find_element_by_id("mt-0-channel-1-uninstalled").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
     # Enter Exp. frequency from file
-    self.driver.find_element_by_id("mt-0-channel-1-frequencyExpected").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-frequencyExpected").send_keys(channelRow[13])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").send_keys(channelRow[13])
     # Enter Grace period from file
-    self.driver.find_element_by_id("mt-0-channel-1-frequencyGrace").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-frequencyGrace").send_keys(channelRow[14])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").send_keys(channelRow[14])
     # Enter In port from file
-    self.driver.find_element_by_id("mt-0-channel-1-frequencyPort").clear()
-    self.driver.find_element_by_id("mt-0-channel-1-frequencyPort").send_keys(channelRow[15])
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").send_keys(channelRow[15])
 
     # Click on Save button
     self.driver.find_element_by_id("menu-bar-update").click()
