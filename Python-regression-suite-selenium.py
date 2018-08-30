@@ -1525,9 +1525,6 @@ def create_addtional_channels_for_mobileterminals_from_file(self, channelFileNam
 
 
 
-
-
-
 def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
 
