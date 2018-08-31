@@ -132,6 +132,8 @@ targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\release-test\\target"
 downloadPathLinux = "/var/lib/jenkins/Downloads"
 downloadPathWindow = "\Downloads"
 
+referenceDateTimeFileName = 'referenceDateTime.csv'
+
 defaultUserName = "vms_admin_se"
 defaultUserNamePassword = "password"
 defaultContext = "AdminAllUVMS"

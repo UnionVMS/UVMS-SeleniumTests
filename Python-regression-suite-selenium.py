@@ -1395,6 +1395,38 @@ def get_elements_from_file(fileName):
     return allRows
 
 
+def save_elements_to_file(fileName, dataElementToSave):
+    print('----------------------------')
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    # Change to target folder
+    targetPath = get_target_path()
+    os.chdir(targetPath)
+    print(os.path.abspath(os.path.dirname(__file__)))
+    print('Current working dir: ' + targetPath)
+    print('Open file: ' + fileName)
+    print('dataElementToSave')
+    print(dataElementToSave)
+    print('----------------------------')
+    # Open csv file and return all elements in list
+
+
+    # Assuming res is a list of lists
+    iofile = open(fileName, "w")
+    with iofile as output:
+        writer = csv.writer(output, lineterminator=';')
+        #writer = csv.writer(output, lineterminator='\n')
+        for val in dataElementToSave:
+            writer.writerow([val])
+
+
+    iofile.close()
+    # Change back the path to current dir
+    os.chdir(cwd)
+    print(cwd)
+
+
+
 def get_elements_from_file_without_deleting_paths_and_raws(fileName):
     # Open csv file and return all elements in list
     ifile = open(fileName, "rt", encoding="utf8")
@@ -4910,13 +4942,25 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
             self.assertEqual(tempStatusValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span").text)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0303_create_several_additional_channels_for_mobile_terminals(self):
         # Set referenceDateTime to current UTC time
         referenceDateTime = datetime.datetime.utcnow()
         # Create assets from file with several different values for filtering
         create_addtional_channels_for_mobileterminals_from_file(self, 'channelstomobileterminals3xxxx.csv', referenceDateTime)
+        # Save referenceDateTime to file
+        save_elements_to_file(referenceDateTimeFileName, referenceDateTime)
+
+
+    def test_0304_check_additional_channels_for_mobile_terminals(self):
+        # Set referenceDateTime to current UTC time
+        referenceDateTime = datetime.datetime.utcnow()
+
+        tmpValue = []
+        tmpValue.append("test1")
+        tmpValue.append("test2")
+
+        save_elements_to_file("savedInfo.csv", tmpValue)
 
 
 
