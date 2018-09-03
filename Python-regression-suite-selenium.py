@@ -284,16 +284,20 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("asset-input-producercode").send_keys(producercodeValue)
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
-    time.sleep(1)
+    time.sleep(2)
     # Main Contact Name Value
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
+    print(contactNameValue[vesselNumber])
+    time.sleep(2)
     # Main E-mail Value
     self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[vesselNumber])
+    time.sleep(2)
     # Main Contact Number Value
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
+    time.sleep(2)
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
-    time.sleep(5)
+    time.sleep(10)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -1395,7 +1399,7 @@ def get_elements_from_file(fileName):
     return allRows
 
 
-def save_elements_to_file(fileName, dataElementToSave):
+def save_elements_to_file(fileName, dataElementToSave, dateTimeState):
     print('----------------------------')
     # Save path to current dir
     cwd = os.path.abspath(os.path.dirname(__file__))
@@ -1404,26 +1408,39 @@ def save_elements_to_file(fileName, dataElementToSave):
     os.chdir(targetPath)
     print(os.path.abspath(os.path.dirname(__file__)))
     print('Current working dir: ' + targetPath)
+    # Check if file exists. If so remove it
+    if os.path.exists(fileName):
+        os.remove(fileName)
     print('Open file: ' + fileName)
-    print('dataElementToSave')
-    print(dataElementToSave)
     print('----------------------------')
-    # Open csv file and return all elements in list
-
-
-    # Assuming res is a list of lists
+    # Open csv file and save all elements in list
     iofile = open(fileName, "w")
     with iofile as output:
-        writer = csv.writer(output, lineterminator=';')
-        #writer = csv.writer(output, lineterminator='\n')
-        for val in dataElementToSave:
-            writer.writerow([val])
-
-
+        writer = csv.writer(output, lineterminator=';') #writer = csv.writer(output, lineterminator='\n')
+        # Check if dateTimeState is True or False
+        # If True then save the dataElementToSave in data and time format
+        if dateTimeState:
+            tmpdateTimeToString = datetime.datetime.strftime(dataElementToSave, '%Y')
+            writer.writerow([tmpdateTimeToString])
+            tmpdateTimeToString = datetime.datetime.strftime(dataElementToSave, '%m')
+            writer.writerow([tmpdateTimeToString])
+            tmpdateTimeToString = datetime.datetime.strftime(dataElementToSave, '%d')
+            writer.writerow([tmpdateTimeToString])
+            tmpdateTimeToString = datetime.datetime.strftime(dataElementToSave, '%H')
+            writer.writerow([tmpdateTimeToString])
+            tmpdateTimeToString = datetime.datetime.strftime(dataElementToSave, '%M')
+            writer.writerow([tmpdateTimeToString])
+            tmpdateTimeToString = datetime.datetime.strftime(dataElementToSave, '%S')
+            writer.writerow([tmpdateTimeToString])
+        else:
+            for val in dataElementToSave:
+                writer.writerow([val])
     iofile.close()
     # Change back the path to current dir
     os.chdir(cwd)
     print(cwd)
+
+
 
 
 
@@ -4949,18 +4966,59 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Create assets from file with several different values for filtering
         create_addtional_channels_for_mobileterminals_from_file(self, 'channelstomobileterminals3xxxx.csv', referenceDateTime)
         # Save referenceDateTime to file
-        save_elements_to_file(referenceDateTimeFileName, referenceDateTime)
+        save_elements_to_file(referenceDateTimeFileName, referenceDateTime, True)
 
 
     def test_0304_check_additional_channels_for_mobile_terminals(self):
-        # Set referenceDateTime to current UTC time
-        referenceDateTime = datetime.datetime.utcnow()
 
-        tmpValue = []
-        tmpValue.append("test1")
-        tmpValue.append("test2")
+        # Open saved csv file and read saved referenceDateTime elements
+        referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_raws(referenceDateTimeFileName)
 
-        save_elements_to_file("savedInfo.csv", tmpValue)
+        print(referenceDateTimeElementsFromFile)
+
+        print("------------------------------------------------")
+        print(referenceDateTimeElementsFromFile[0][0])
+        print("------------------------------------------------")
+        print(referenceDateTimeElementsFromFile[0][1])
+        print("------------------------------------------------")
+        print(referenceDateTimeElementsFromFile[0][2])
+
+        # CONTINUE Create a method for lines above that returns the object referenceDateTime based on referenceDateTimeFileName
+
+        # Set referenceDateTime to value based from referenceDateTimeElementsFromFile
+        # referenceDateTime = datetime.datetime(year=2018, month=1, day=3, hour=hourValue, minute=minuteValue, second=secondValue)
+
+
+
+        hourValue = 23
+        minuteValue = 30
+        secondValue = 51
+
+        t = datetime.time(hour=hourValue, minute=minuteValue)
+        print(t)
+
+        t2 = datetime.datetime(year=2018, month=1, day=3, hour=hourValue, minute=minuteValue, second=secondValue)
+
+        print(t2)
+
+        tmpdateTimeToString = datetime.datetime.strftime(t2, '%Y')
+        print([tmpdateTimeToString])
+        tmpdateTimeToString = datetime.datetime.strftime(t2, '%m')
+        print([tmpdateTimeToString])
+        tmpdateTimeToString = datetime.datetime.strftime(t2, '%d')
+        print([tmpdateTimeToString])
+        tmpdateTimeToString = datetime.datetime.strftime(t2, '%H')
+        print([tmpdateTimeToString])
+        tmpdateTimeToString = datetime.datetime.strftime(t2, '%M')
+        print([tmpdateTimeToString])
+        tmpdateTimeToString = datetime.datetime.strftime(t2, '%S')
+        print([tmpdateTimeToString])
+
+
+
+        #date = datetime.strptime('2017-05-04', "%Y-%m-%d")
+
+
 
 
 
