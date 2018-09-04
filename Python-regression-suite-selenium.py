@@ -612,8 +612,6 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
 
 
 
-
-
 def check_new_asset_exists(self, vesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(5)
@@ -1069,7 +1067,6 @@ def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber)
     time.sleep(3)
 
 
-
 def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Select Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
@@ -1107,6 +1104,17 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
+    # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
+    print()
+    # create_one new channel for mentioned mobile terminal
+    for x in range(0, len(channelAllrows)):
+        print()
+
+    #mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
+    #check_channel_and_mobile_terminal_data(self, channelAllrows[x], mobileTerminalRawValue, referenceDateTime)
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
@@ -1442,8 +1450,6 @@ def save_elements_to_file(fileName, dataElementToSave, dateTimeState):
 
 
 
-
-
 def get_elements_from_file_without_deleting_paths_and_raws(fileName):
     # Open csv file and return all elements in list
     ifile = open(fileName, "rt", encoding="utf8")
@@ -1456,6 +1462,40 @@ def get_elements_from_file_without_deleting_paths_and_raws(fileName):
     del allRows[0]
     # Change back the path to current dir
     return allRows
+
+
+def get_reference_date_time_from_file(referenceDateTimeFileName):
+    # Open saved csv file and read saved referenceDateTime elements
+    referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_raws(referenceDateTimeFileName)
+
+    print(referenceDateTimeElementsFromFile)
+
+    yearValue = int(referenceDateTimeElementsFromFile[0][0])
+    monthValue = int(referenceDateTimeElementsFromFile[0][1])
+    dayValue = int(referenceDateTimeElementsFromFile[0][2])
+    hourValue = int(referenceDateTimeElementsFromFile[0][3])
+    minuteValue = int(referenceDateTimeElementsFromFile[0][4])
+    secondValue = int(referenceDateTimeElementsFromFile[0][5])
+
+    print("------------------------------------------------")
+    print(yearValue)
+    print("------------------------------------------------")
+    print(monthValue)
+    print("------------------------------------------------")
+    print(dayValue)
+    print("------------------------------------------------")
+    print(hourValue)
+    print("------------------------------------------------")
+    print(minuteValue)
+    print("------------------------------------------------")
+    print(secondValue)
+
+    # Set referenceDateTime to value based from referenceDateTimeElementsFromFile
+    referenceDateTime = datetime.datetime(year=yearValue, month=monthValue, day=dayValue, hour=hourValue, minute=minuteValue, second=secondValue)
+
+    return referenceDateTime
+
+
 
 
 def adapt_asset_list_to_exported_CSV_file_standard(originAssetList):
@@ -1725,7 +1765,6 @@ def get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTermianlList, s
         if serialNumberValue in mobileTermianlList[x][0]:
             return mobileTermianlList[x]
     return []
-    print()
 
 
 def removeChar(stringValue, charValue):
@@ -4907,25 +4946,25 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0301_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
-        create_asset_from_file(self, 'assets3xxxx.csv')
+        create_asset_from_file(self, tests300FileName[0])
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0302_create_several_mobile_terminals_for_editing(self):
         # Create mobile terminals from file with different values.
         # NOTE: Several mobile terminals are added to the same asset.
-        create_mobileterminal_from_file_based_on_link_file(self, 'assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv')
+        create_mobileterminal_from_file_based_on_link_file(self, tests300FileName[0], tests300FileName[1], tests300FileName[2])
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0302b_check_mobile_terminal_list(self):
         # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file('assets3xxxx.csv')
+        assetAllrows = get_elements_from_file(tests300FileName[0])
         # Open saved csv file and read all mobile terminal elements
-        mobileTerminalAllrows = get_elements_from_file('mobileterminals3xxxx.csv')
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
         # Open saved csv file and read all linked elements between assets and mobile terminals
-        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals3xxxx.csv')
+        linkAssetMobileTerminalAllrows = get_elements_from_file(tests300FileName[2])
 
         # Sort mobileTerminalAllrows on 1st column (that is SerialNumber value)
         mobileTerminalAllrows.sort(key=lambda x: x[0])
@@ -4964,59 +5003,31 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Set referenceDateTime to current UTC time
         referenceDateTime = datetime.datetime.utcnow()
         # Create assets from file with several different values for filtering
-        create_addtional_channels_for_mobileterminals_from_file(self, 'channelstomobileterminals3xxxx.csv', referenceDateTime)
+        create_addtional_channels_for_mobileterminals_from_file(self, tests300FileName[3], referenceDateTime)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName, referenceDateTime, True)
 
 
     def test_0304_check_additional_channels_for_mobile_terminals(self):
 
-        # Open saved csv file and read saved referenceDateTime elements
-        referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_raws(referenceDateTimeFileName)
+        # Get referenceDateTime from file
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
 
-        print(referenceDateTimeElementsFromFile)
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
+        print(referenceDateTimeValueString)
 
-        print("------------------------------------------------")
-        print(referenceDateTimeElementsFromFile[0][0])
-        print("------------------------------------------------")
-        print(referenceDateTimeElementsFromFile[0][1])
-        print("------------------------------------------------")
-        print(referenceDateTimeElementsFromFile[0][2])
+        # Open saved csv file and read all asset elements
+        channelAllrows = get_elements_from_file(tests300FileName[3])
 
-        # CONTINUE Create a method for lines above that returns the object referenceDateTime based on referenceDateTimeFileName
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
 
-        # Set referenceDateTime to value based from referenceDateTimeElementsFromFile
-        # referenceDateTime = datetime.datetime(year=2018, month=1, day=3, hour=hourValue, minute=minuteValue, second=secondValue)
+        check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
 
 
 
-        hourValue = 23
-        minuteValue = 30
-        secondValue = 51
-
-        t = datetime.time(hour=hourValue, minute=minuteValue)
-        print(t)
-
-        t2 = datetime.datetime(year=2018, month=1, day=3, hour=hourValue, minute=minuteValue, second=secondValue)
-
-        print(t2)
-
-        tmpdateTimeToString = datetime.datetime.strftime(t2, '%Y')
-        print([tmpdateTimeToString])
-        tmpdateTimeToString = datetime.datetime.strftime(t2, '%m')
-        print([tmpdateTimeToString])
-        tmpdateTimeToString = datetime.datetime.strftime(t2, '%d')
-        print([tmpdateTimeToString])
-        tmpdateTimeToString = datetime.datetime.strftime(t2, '%H')
-        print([tmpdateTimeToString])
-        tmpdateTimeToString = datetime.datetime.strftime(t2, '%M')
-        print([tmpdateTimeToString])
-        tmpdateTimeToString = datetime.datetime.strftime(t2, '%S')
-        print([tmpdateTimeToString])
 
 
-
-        #date = datetime.strptime('2017-05-04', "%Y-%m-%d")
 
 
 
