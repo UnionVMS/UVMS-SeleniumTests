@@ -1109,9 +1109,11 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
 def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
     print()
-    # create_one new channel for mentioned mobile terminal
-    for x in range(0, len(channelAllrows)):
-        print()
+    # create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+    for x in range(0, len(mobileTerminalAllrows)):
+        # CONTINUE crete new method get_channel_part_for_one_mobile_terminal
+        mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
+
 
     #mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
     #check_channel_and_mobile_terminal_data(self, channelAllrows[x], mobileTerminalRawValue, referenceDateTime)
