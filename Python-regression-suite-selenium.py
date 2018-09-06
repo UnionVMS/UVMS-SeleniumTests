@@ -1111,8 +1111,9 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     print()
     # create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
     for x in range(0, len(mobileTerminalAllrows)):
-        # CONTINUE crete new method get_channel_part_for_one_mobile_terminal
-        mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
+        # CONTINUE create new method get_channel_part_for_one_mobile_terminal
+
+        mobileTerminalRawValue = get_channel_part_for_one_mobile_terminal(mobileTerminalAllrows[x])
 
 
     #mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
@@ -1761,12 +1762,24 @@ def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValu
     return ""
 
 
-def get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTermianlList, serialNumberValue):
+def get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalList, serialNumberValue):
     # Returns mobile terminal raw where serialNumber value satisfies the mobile terminal serialNumber column list
-    for x in range(0, len(mobileTermianlList)):
-        if serialNumberValue in mobileTermianlList[x][0]:
-            return mobileTermianlList[x]
+    for x in range(0, len(mobileTerminalList)):
+        if serialNumberValue in mobileTerminalList[x][0]:
+            return mobileTerminalList[x]
     return []
+
+
+def get_channel_part_for_one_mobile_terminal(mobileTerminalList):
+    # Returns the channel values where serialNumber value satisfies the mobile terminal serialNumber column list
+    for x in range(0, len(mobileTerminalList)):
+        # CONTINUE
+        print()
+        #if serialNumberValue in mobileTerminalList[x][0]:
+        #    return mobileTerminalList[x]
+    return []
+
+
 
 
 def removeChar(stringValue, charValue):
