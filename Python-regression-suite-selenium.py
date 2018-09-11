@@ -1108,15 +1108,54 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
 
 def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
-    print()
     # create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+    print("channelAllrows")
+    print(channelAllrows)
+    channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows)
+    print("channelListPartFromMobileTerminal")
+    print(channelListPartFromMobileTerminal)
+    channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+    # Sort the allrows list (1st Column)
+    channelTotalList.sort(key=lambda x: x[0])
+    print("channelTotalList 2")
+    print(channelTotalList)
+
+    # Click on Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(5)
+    # Sort on linked asset column
+    self.driver.find_element_by_id("mt-sort-serialNumber").click()
+    time.sleep(1)
+
     for x in range(0, len(mobileTerminalAllrows)):
-        # CONTINUE create new method get_channel_part_for_one_mobile_terminal
 
-        mobileTerminalRawValue = get_channel_part_for_one_mobile_terminal(mobileTerminalAllrows[x])
+        # Search for mobile terminal via serial number
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[x][0])
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(5)
+        # Click on detail button
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        time.sleep(5)
+        # Add elements values to notedMobileTerminal list row
+        notedMobileTerminal = []
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-softwareVersion").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-antenna").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-satelliteNumber").get_attribute("value"))
+
+        print(notedMobileTerminal)
+
+        # Click on cancel button
+        self.driver.find_element_by_id("menu-bar-cancel").click()
+        time.sleep(2)
 
 
-    #mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
+
+
+
+        #mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
     #check_channel_and_mobile_terminal_data(self, channelAllrows[x], mobileTerminalRawValue, referenceDateTime)
 
 
@@ -1770,15 +1809,22 @@ def get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalList, s
     return []
 
 
-def get_channel_part_for_one_mobile_terminal(mobileTerminalList):
-    # Returns the channel values where serialNumber value satisfies the mobile terminal serialNumber column list
+def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList):
+    # Returns the channel values from the mobile terminal list
+    channelListPart = []
     for x in range(0, len(mobileTerminalList)):
-        # CONTINUE
-        print()
-        #if serialNumberValue in mobileTerminalList[x][0]:
-        #    return mobileTerminalList[x]
-    return []
+        # Create one channel raw from the mobile terminal list
+        tempChannelPartRaw = [mobileTerminalList[x][0], channelDefaultName, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2], mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
+        channelListPart.append(tempChannelPartRaw)
+    return channelListPart
 
+
+def get_additional_list_result_from_from_two_channel_lists(list1, list2):
+    # Return the total sum of list1 and list2
+    channelTotalList = list1.copy()
+    for x in range(0, len(list2)):
+        channelTotalList.append(list2[x])
+    return channelTotalList
 
 
 
@@ -5024,6 +5070,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
 
     def test_0304_check_additional_channels_for_mobile_terminals(self):
+        # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
 
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
@@ -5037,6 +5084,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
 
+        # Check all channels and mobile terminal data (mobile terminal by mobile terminal)
         check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
 
 

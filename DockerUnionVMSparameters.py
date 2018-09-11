@@ -54,6 +54,7 @@ mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "T
 mobileTerminalFileName = 'mobileTerminals.csv'
 mobileTerminalSearchValue = ["*AA*","*5*","*1000*"]
 statusValue = ("Inactive", "Active")
+channelName = "VMS"
 
 # lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
