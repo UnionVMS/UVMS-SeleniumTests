@@ -1127,6 +1127,8 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     self.driver.find_element_by_id("mt-sort-serialNumber").click()
     time.sleep(1)
 
+    notedMobileTerminalList = []
+
     for x in range(0, len(mobileTerminalAllrows)):
 
         # Search for mobile terminal via serial number
@@ -1145,11 +1147,14 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
         notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-antenna").get_attribute("value"))
         notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-satelliteNumber").get_attribute("value"))
 
-        print(notedMobileTerminal)
+        # Add append notedMobileTerminal row to notedMobileTerminalList
+        notedMobileTerminalList.append(notedMobileTerminal)
 
         # Click on cancel button
         self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
+
+
 
 
 
