@@ -3648,6 +3648,38 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
 
 
+
+
+class UnionVMSTestCasePerformance(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052_create_assets_trip_1_2_3(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052b_create_report_and_check_asset_in_reporting_view(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0052b_create_report_and_check_asset_in_reporting_view(self)
+
+
     @timeout_decorator.timeout(seconds=180)
     def test_0501_create_one_new_asset_and_mobile_terminal(self):
         # Create new asset (7th in the list)
@@ -3727,6 +3759,8 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
                     print("200 OK")
                 else:
                     print("Request NOT OK!")
+
+
 
 
 
