@@ -468,7 +468,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
-def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRaw):
+def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     time.sleep(2)
@@ -491,32 +491,32 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
     time.sleep(1)
     # Enter serial number
-    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterRaw[0])
+    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterRow[0])
     # Enter Transceiver type
-    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterRaw[1])
+    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterRow[1])
     # Enter Software Version
-    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(parameterRaw[2])
+    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(parameterRow[2])
     # Enter Antenna
-    self.driver.find_element_by_id("mt-0-antenna").send_keys(parameterRaw[3])
+    self.driver.find_element_by_id("mt-0-antenna").send_keys(parameterRow[3])
     # Enter Satellite Number
-    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(parameterRaw[4])
+    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(parameterRow[4])
     # Enter DNID Number
-    self.driver.find_element_by_name("dnid").send_keys(parameterRaw[5])
+    self.driver.find_element_by_name("dnid").send_keys(parameterRow[5])
     # Enter Member Number
-    self.driver.find_element_by_name("memberId").send_keys(parameterRaw[6])
+    self.driver.find_element_by_name("memberId").send_keys(parameterRow[6])
     # Enter Installed by
-    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterRaw[7])
+    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterRow[7])
     # Expected frequency
     self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").clear()
-    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(parameterRaw[8])
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(parameterRow[8])
     # Grace period
     self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").clear()
-    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(parameterRaw[10])
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(parameterRow[10])
     # In port
     self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").clear()
-    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(parameterRaw[12])
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(parameterRow[12])
     # Activate Mobile Terminal button if parameter is Active=1
-    if parameterRaw[14] == "1":
+    if parameterRow[14] == "1":
        self.driver.find_element_by_id("mt-0-activation").click()
     time.sleep(3)
     # Click on save button
@@ -1108,7 +1108,8 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
 
 def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
-    # create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+    #
+    # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
     print("channelAllrows")
     print(channelAllrows)
     channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows)
@@ -1127,10 +1128,10 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     self.driver.find_element_by_id("mt-sort-serialNumber").click()
     time.sleep(1)
 
+    # Read all Mobile Terminal data presented on Mobile Terminal List Tab.
     notedMobileTerminalList = []
-
+    notedChannelsList = []
     for x in range(0, len(mobileTerminalAllrows)):
-
         # Search for mobile terminal via serial number
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[x][0])
@@ -1150,18 +1151,63 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
         # Add append notedMobileTerminal row to notedMobileTerminalList
         notedMobileTerminalList.append(notedMobileTerminal)
 
+        # Read all channels for current Mobile Terminal
+        currentChannel = 0
+        elementIsMissing = False
+        while True:
+            notedChannelRow = []
+            # Test if current channel row exist
+            try:
+                testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
+            except NoSuchElementException:
+                elementIsMissing = True
+            # Channel row exist then add channel row to notedChannelRow
+            if elementIsMissing:
+                break
+            else:
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
+
+            currentChannel = currentChannel + 1
+            notedChannelsList.append(notedChannelRow)
         # Click on cancel button
         self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
 
+    # Sort the notedMobileTerminalList list (1st Column)
+    notedMobileTerminalList.sort(key=lambda x: x[0])
+    mobileTerminalAllrows.sort(key=lambda x: x[0])
+    notedChannelsList.sort(key=lambda x: x[0])
+    print("notedMobileTerminalList")
+    print(notedMobileTerminalList)
+    print("mobileTerminalAllrows")
+    print(mobileTerminalAllrows)
+    print("notedChannelsList")
+    print(notedChannelsList)
+    print("channelTotalList 2")
+    print(channelTotalList)
+    # Continue compare Lists. NOTE: notedChannelsList and channelTotalList is not 100% sorted a like. Must be dig into...
 
 
 
 
 
-
-        #mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
-    #check_channel_and_mobile_terminal_data(self, channelAllrows[x], mobileTerminalRawValue, referenceDateTime)
+    #mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
+    #check_channel_and_mobile_terminal_data(self, channelAllrows[x], mobileTerminalRowValue, referenceDateTime)
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
@@ -1497,7 +1543,7 @@ def save_elements_to_file(fileName, dataElementToSave, dateTimeState):
 
 
 
-def get_elements_from_file_without_deleting_paths_and_raws(fileName):
+def get_elements_from_file_without_deleting_paths_and_rows(fileName):
     # Open csv file and return all elements in list
     ifile = open(fileName, "rt", encoding="utf8")
     reader = csv.reader(ifile, delimiter=';')
@@ -1513,7 +1559,7 @@ def get_elements_from_file_without_deleting_paths_and_raws(fileName):
 
 def get_reference_date_time_from_file(referenceDateTimeFileName):
     # Open saved csv file and read saved referenceDateTime elements
-    referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_raws(referenceDateTimeFileName)
+    referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_rows(referenceDateTimeFileName)
 
     print(referenceDateTimeElementsFromFile)
 
@@ -1550,9 +1596,9 @@ def adapt_asset_list_to_exported_CSV_file_standard(originAssetList):
     # The result is saved in newAssetListCSVformat
     newAssetListCSVformat = []
     for y in range(len(originAssetList)):
-        # Building up one raw in the list
-        raw = [flagStateIndex[int(originAssetList[y][17])], originAssetList[y][3], originAssetList[y][1], originAssetList[y][0], originAssetList[y][2], gearTypeIndex[int(originAssetList[y][8])], licenseTypeValue, '']
-        newAssetListCSVformat.append(raw)
+        # Building up one row in the list
+        row = [flagStateIndex[int(originAssetList[y][17])], originAssetList[y][3], originAssetList[y][1], originAssetList[y][0], originAssetList[y][2], gearTypeIndex[int(originAssetList[y][8])], licenseTypeValue, '']
+        newAssetListCSVformat.append(row)
     return newAssetListCSVformat
 
 
@@ -1567,24 +1613,24 @@ def adapt_mobile_terminal_list_to_exported_CSV_file_standard(originMobileTermina
         tempAssetName = get_selected_asset_column_value_based_on_cfr(originAssetList, tempCFRValue, 1)
         # Get asset name based on CFR value found in assetAllrows list
         tempMMSIValue = get_selected_asset_column_value_based_on_cfr(originAssetList, tempCFRValue, 5)
-        # Building up one raw in the list
-        raw = [tempAssetName, originMobileTerminalList[y][0], originMobileTerminalList[y][6], originMobileTerminalList[y][5], transponderType[1], originMobileTerminalList[y][4], tempMMSIValue, statusValue[1]]
-        newMobileTerminalListCSVformat.append(raw)
+        # Building up one row in the list
+        row = [tempAssetName, originMobileTerminalList[y][0], originMobileTerminalList[y][6], originMobileTerminalList[y][5], transponderType[1], originMobileTerminalList[y][4], tempMMSIValue, statusValue[1]]
+        newMobileTerminalListCSVformat.append(row)
     return newMobileTerminalListCSVformat
 
 
 
 def check_sublist_in_other_list_if_it_exists(subAssetList, fullAssetList):
-    # Check subAssetList in fullAssetList raw by raw
+    # Check subAssetList in fullAssetList row by row
     # Returns a new list consists of booleans values
     compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
     resultExists = []
     for y in range(0, len(subAssetList)):
-        foundRaw = False;
+        foundRow = False;
         for x in range(0, len(fullAssetList)):
             if compare(fullAssetList[x], subAssetList[y]):
-                foundRaw = True;
-        resultExists.append(foundRaw)
+                foundRow = True;
+        resultExists.append(foundRow)
     return resultExists
 
 
@@ -1644,8 +1690,8 @@ def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobi
     # create_one new mobile terminal for mentioned asset
     for x in range(0, len(linkAssetMobileTerminalAllrows)):
         assetVesselName = get_selected_asset_column_value_based_on_cfr(assetAllrows, linkAssetMobileTerminalAllrows[x][1], 1)
-        mobileTerminalRawValue = get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
-        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetVesselName, mobileTerminalRawValue)
+        mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetVesselName, mobileTerminalRowValue)
 
 
 
@@ -1806,8 +1852,8 @@ def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValu
     return ""
 
 
-def get_selected_Mobile_terminal_raw_based_on_serialNumber(mobileTerminalList, serialNumberValue):
-    # Returns mobile terminal raw where serialNumber value satisfies the mobile terminal serialNumber column list
+def get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalList, serialNumberValue):
+    # Returns mobile terminal row where serialNumber value satisfies the mobile terminal serialNumber column list
     for x in range(0, len(mobileTerminalList)):
         if serialNumberValue in mobileTerminalList[x][0]:
             return mobileTerminalList[x]
@@ -1818,9 +1864,9 @@ def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList):
     # Returns the channel values from the mobile terminal list
     channelListPart = []
     for x in range(0, len(mobileTerminalList)):
-        # Create one channel raw from the mobile terminal list
-        tempChannelPartRaw = [mobileTerminalList[x][0], channelDefaultName, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2], mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
-        channelListPart.append(tempChannelPartRaw)
+        # Create one channel row from the mobile terminal list
+        tempChannelPartRow = [mobileTerminalList[x][0], channelDefaultName, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2], mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
+        channelListPart.append(tempChannelPartRow)
     return channelListPart
 
 
@@ -4453,7 +4499,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Open saved csv file and read all elements to "allrows"
-        allrows = get_elements_from_file_without_deleting_paths_and_raws(assetFileName)
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(assetFileName)
         # Deleting header row
         del allrows[0]
         # Change back the path to current dir
@@ -4467,7 +4513,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListSelected)
         # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
         filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
-        # Check filteredAssetListSelectedCSVformat in allrows raw by raw
+        # Check filteredAssetListSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
@@ -4478,7 +4524,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListNonSelected)
         # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
         filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
-        # Check filteredAssetListNonSelectedCSVformat in allrows raw by raw
+        # Check filteredAssetListNonSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
@@ -4606,7 +4652,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
         # Open saved csv file and read all elements to "allrows"
-        allrows = get_elements_from_file_without_deleting_paths_and_raws(assetFileName)
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(assetFileName)
         # Deleting header row
         del allrows[0]
         # Change back the path to current dir
@@ -4620,7 +4666,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListSelected)
         # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
         filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
-        # Check filteredAssetListSelectedCSVformat in allrows raw by raw
+        # Check filteredAssetListSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
@@ -4631,7 +4677,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListNonSelected)
         # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
         filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
-        # Check filteredAssetListNonSelectedCSVformat in allrows raw by raw
+        # Check filteredAssetListNonSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
@@ -4878,7 +4924,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         os.chdir(downloadPath)
         print(os.path.abspath(os.path.dirname(__file__)))
         # Open saved csv file and read all elements to "allrows"
-        allrows = get_elements_from_file_without_deleting_paths_and_raws(mobileTerminalFileName)
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(mobileTerminalFileName)
         # Deleting header row
         del allrows[0]
         # Change back the path to current dir
@@ -4896,7 +4942,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(filteredmobileTerminalListSelectedCSVformat)
         # Sort the filteredmobileTerminalListSelectedCSVformat list (1st Column)
         filteredmobileTerminalListSelectedCSVformat.sort(key=lambda x: x[0])
-        # Check filteredmobileTerminalListSelectedCSVformat in allrows raw by raw
+        # Check filteredmobileTerminalListSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
@@ -4908,7 +4954,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(filteredmobileTerminalListNonSelectedCSVformat)
         # Sort the filteredmobileTerminalListNonSelectedCSVformat list (1st Column)
         filteredmobileTerminalListNonSelectedCSVformat.sort(key=lambda x: x[0])
-        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows raw by raw
+        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListNonSelectedCSVformat, allrows)
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
@@ -5051,7 +5097,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         os.chdir(downloadPath)
         print(os.path.abspath(os.path.dirname(__file__)))
         # Open saved csv file and read all elements to "allrows"
-        allrows = get_elements_from_file_without_deleting_paths_and_raws(mobileTerminalFileName)
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(mobileTerminalFileName)
         # Deleting header row
         del allrows[0]
         # Change back the path to current dir
@@ -5069,7 +5115,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(filteredmobileTerminalListSelectedCSVformat)
         # Sort the filteredmobileTerminalListSelectedCSVformat list (1st Column)
         filteredmobileTerminalListSelectedCSVformat.sort(key=lambda x: x[0])
-        # Check filteredmobileTerminalListSelectedCSVformat in allrows raw by raw
+        # Check filteredmobileTerminalListSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListSelectedCSVformat, allrows)
         # Check if resultExists list includes just True states
         print(resultExists)
@@ -5081,7 +5127,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(filteredmobileTerminalListNonSelectedCSVformat)
         # Sort the filteredmobileTerminalListNonSelectedCSVformat list (1st Column)
         filteredmobileTerminalListNonSelectedCSVformat.sort(key=lambda x: x[0])
-        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows raw by raw
+        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows row by row
         resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListNonSelectedCSVformat, allrows)
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
