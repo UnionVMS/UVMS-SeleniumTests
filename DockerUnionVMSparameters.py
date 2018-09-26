@@ -55,6 +55,7 @@ mobileTerminalFileName = 'mobileTerminals.csv'
 mobileTerminalSearchValue = ["*AA*","*5*","*1000*"]
 statusValue = ("Inactive", "Active")
 channelName = "VMS"
+pollConfigDefaultValue = ["1", "1", "1"]
 
 # lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],

@@ -192,6 +192,14 @@ def populateSanityRuleData():
     conn.close()
 
 
+
+def swapZeroOneValueString(stringValue):
+    if stringValue == "1":
+        return "0"
+    else:
+        return "1"
+
+
 def startup_browser_and_login_to_unionVMS(cls):
     # Start Chrome browser
     cls.driver = webdriver.Chrome()
@@ -1167,9 +1175,12 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
             else:
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value"))
+                # Get checkbox-polling Value and swap state
+                notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value")))
+                # Get checkbox-config Value and swap state
+                notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value")))
+                # Get checkbox-default Value and swap state
+                notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value")))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
@@ -1200,14 +1211,9 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     print(notedChannelsList)
     print("channelTotalList 2")
     print(channelTotalList)
-    # Continue compare Lists. NOTE: notedChannelsList and channelTotalList is not 100% sorted a like. Must be dig into...
 
-
-
-
-
-    #mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, channelAllrows[x][0])
-    #check_channel_and_mobile_terminal_data(self, channelAllrows[x], mobileTerminalRowValue, referenceDateTime)
+    # Continue compare Lists. NOTE: notedChannelsList and channelTotalList is not 100% sorted a like. Must be digged into...
+    notedChannelsList = replaceDateTimeFormatToSecondValue(notedChannelsList, referenceDateTime)
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
@@ -1882,6 +1888,18 @@ def get_additional_list_result_from_from_two_channel_lists(list1, list2):
 def removeChar(stringValue, charValue):
     # Return new string where the charValue is removed from stringValue
     return stringValue.replace(charValue, "")
+
+
+def replaceDateTimeFormatToSecondValue(channelList, referenceTime):
+    # Replace the time coloumn fields with second values as is the base in the read CSV files.
+    print("Test")
+    newChannelList = channelList.copy()
+    for x in range(0, len(newChannelList)):
+        if newChannelList[x][8] == "":
+            newChannelList[x][8] = "0"
+        else:
+            print()
+
 
 
 def reload_page_and_goto_default(self):
