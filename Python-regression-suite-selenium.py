@@ -29,6 +29,7 @@ import urllib.request
 import platform
 import collections
 from pathlib import Path
+import copy
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
@@ -1114,6 +1115,12 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     time.sleep(2)
 
 
+
+def compareChannelLists(notedList, fileList):
+    # CONTINUE with compare the lists
+    print("Test")
+
+
 def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
     #
@@ -1126,8 +1133,9 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
     # Sort the allrows list (1st Column)
     channelTotalList.sort(key=lambda x: x[0])
-    print("channelTotalList 2")
+    print("channelTotalList")
     print(channelTotalList)
+
 
     # Click on Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
@@ -1176,11 +1184,14 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
                 # Get checkbox-polling Value and swap state
-                notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value")))
+                #notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value")))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value"))
                 # Get checkbox-config Value and swap state
-                notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value")))
+                #notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value")))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value"))
                 # Get checkbox-default Value and swap state
-                notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value")))
+                #notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value")))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
@@ -1203,17 +1214,20 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     notedMobileTerminalList.sort(key=lambda x: x[0])
     mobileTerminalAllrows.sort(key=lambda x: x[0])
     notedChannelsList.sort(key=lambda x: x[0])
-    print("notedMobileTerminalList")
-    print(notedMobileTerminalList)
-    print("mobileTerminalAllrows")
-    print(mobileTerminalAllrows)
+
     print("notedChannelsList")
     print(notedChannelsList)
-    print("channelTotalList 2")
-    print(channelTotalList)
 
-    # Continue compare Lists. NOTE: notedChannelsList and channelTotalList is not 100% sorted a like. Must be digged into...
-    notedChannelsList = replaceDateTimeFormatToSecondValue(notedChannelsList, referenceDateTime)
+    # Convert hour value in channelTotalList to correct Datetime format and save it in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+    channelTotalListDateTimeFormat = convertHoursValueInListToDateTimeFormat(channelTotalList, referenceDateTime)
+    # Remove Mobile Terminal and Channel position data in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+    channelTotalListDateTimeFormatToCompare = removeLastNumberElementsInListRow(channelTotalListDateTimeFormat, 2)
+
+    print("channelTotalListDateTimeFormatToCompare")
+    print(channelTotalListDateTimeFormatToCompare)
+
+    # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file.
+    compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
@@ -1890,15 +1904,45 @@ def removeChar(stringValue, charValue):
     return stringValue.replace(charValue, "")
 
 
-def replaceDateTimeFormatToSecondValue(channelList, referenceTime):
-    # Replace the time coloumn fields with second values as is the base in the read CSV files.
-    print("Test")
-    newChannelList = channelList.copy()
+def convertHoursValueInListToDateTimeFormat(channelList, referenceDateTimeValue):
+    # Convert the time coloumn fields with Hour values as is the base in the read CSV files.
+    newChannelList = copy.deepcopy(channelList)
     for x in range(0, len(newChannelList)):
-        if newChannelList[x][8] == "":
-            newChannelList[x][8] = "0"
+        if newChannelList[x][8] == "0":
+            newChannelList[x][8] = ""
         else:
-            print()
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][8]))
+            newChannelList[x][8] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+
+        if newChannelList[x][9] == "0":
+            newChannelList[x][9] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][9]))
+            newChannelList[x][9] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+
+        if newChannelList[x][11] == "0":
+            newChannelList[x][11] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][11]))
+            newChannelList[x][11] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+
+        if newChannelList[x][12] == "0":
+            newChannelList[x][12] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][12]))
+            newChannelList[x][12] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+    return newChannelList
+
+
+def removeLastNumberElementsInListRow(channelList,numberValue):
+    # Delete numberValue of elements last in a list row.
+    newChannelList = copy.deepcopy(channelList)
+    for x in range(0, len(newChannelList)):
+        # Create a temp row of current newChannelList row
+        tmpRow = newChannelList[x]
+        # Remove the last element in the temp row
+        newChannelList[x] = tmpRow[:-numberValue]
+    return newChannelList
 
 
 
