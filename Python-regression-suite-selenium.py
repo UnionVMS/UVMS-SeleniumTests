@@ -260,6 +260,9 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Select F.S value
     self.driver.find_element_by_id("asset-input-countryCode").click()
     self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
+    #self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    #self.driver.find_element_by_id("asset-input-flagStateCode-item-2").click()
+
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[vesselNumber])
     # Enter Name value
@@ -322,6 +325,9 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     # Select F.S value
     self.driver.find_element_by_id("asset-input-countryCode").click()
     self.driver.find_element_by_id("asset-input-countryCode-item-"+parameterList[17]).click()
+    #self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    #self.driver.find_element_by_id("asset-input-flagStateCode-item-"+parameterList[17]).click()
+
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").send_keys(parameterList[0])
     # Enter Name value
@@ -636,6 +642,8 @@ def check_new_asset_exists(self, vesselNumber):
     time.sleep(5)
     # Check that the F.S value is correct.
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-countryCode").text)
+    #self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-flagStateCode").text)
+
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_id("asset-input-ircs").get_attribute("value"))
     # Check that the Name value is correct
@@ -768,8 +776,10 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     time.sleep(7)
     # Select F.S value
     self.driver.find_element_by_id("asset-input-countryCode").click()
+    #self.driver.find_element_by_id("asset-input-flagStateCode").click()
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-countryCode-item-1").click()
+    #self.driver.find_element_by_id("asset-input-flagStateCode-item-1").click()
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").clear()
     self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[newVesselNumber])
@@ -1114,11 +1124,57 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
+def getAllColumnValuesforSelectedColumn(stringList, columnValue):
+    tmpColumn = []
+    for x in range(0, len(stringList)):
+        tmpColumn.append(stringList[x][columnValue])
+    return tmpColumn
+
 
 
 def compareChannelLists(notedList, fileList):
-    # CONTINUE with compare the lists
-    print("Test")
+    print("---- Before sort -----")
+    print("notedList")
+    print(notedList)
+    print("fileList")
+    print(fileList)
+    # Sort both lists
+    notedList.sort(key=lambda x: x[0])
+    fileList.sort(key=lambda x: x[0])
+    print("---- After sort -----")
+    print("notedList")
+    print(notedList)
+    print("fileList")
+    print(fileList)
+
+    # Get all Serial number (1st column) of fileList
+    tmpColumn = getAllColumnValuesforSelectedColumn(fileList,0)
+    # Remove duplicated values in tmpColumn
+    tmpColumn = list(set(tmpColumn))
+    # Sort tmpColumn
+    tmpColumn.sort()
+    for x in range(0, len(tmpColumn)):
+        fileListWithOneSerialNumber = []
+        for y in range(0, len(fileList)):
+            if tmpColumn[x] == fileList[y][0]:
+                print("Found 1")
+                fileListWithOneSerialNumber.append(fileList[y])
+                print(fileListWithOneSerialNumber)
+        print("fileListWithOneSerialNumber")
+        print(fileListWithOneSerialNumber)
+        notedListWithOneSerialNumber = []
+        for y in range(0, len(notedList)):
+            if tmpColumn[x] == notedList[y][0]:
+                print("Found 2")
+                notedListWithOneSerialNumber.append(notedList[y])
+                print(notedListWithOneSerialNumber)
+        print("notedListWithOneSerialNumber")
+        print(notedListWithOneSerialNumber)
+        resultExists = check_sublist_in_other_list_if_it_exists(notedListWithOneSerialNumber, fileListWithOneSerialNumber)
+        print(resultExists)
+
+
+
 
 
 def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
@@ -5301,9 +5357,15 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
 
 
-
-
-
+    def test_special(self):
+        print("Test")
+        first = [["4", "5", "2"], ["4", "4", "3"], ["3", "1", "1"]]
+        b = first.copy()
+        print(b)
+        print("Test3")
+        print(b[0][0])
+        print(b[1][0])
+        print(b[2][0])
 
 
 
