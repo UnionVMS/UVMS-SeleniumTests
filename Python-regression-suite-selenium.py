@@ -193,12 +193,12 @@ def populateSanityRuleData():
     conn.close()
 
 
-
-def swapZeroOneValueString(stringValue):
-    if stringValue == "1":
-        return "0"
-    else:
+def convertBooleanToZeroOneString(booleanValue):
+    if booleanValue:
         return "1"
+    else:
+        return "0"
+
 
 
 def startup_browser_and_login_to_unionVMS(cls):
@@ -258,10 +258,10 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("asset-btn-create").click()
     time.sleep(2)
     # Select F.S value
-    self.driver.find_element_by_id("asset-input-countryCode").click()
-    self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
-    #self.driver.find_element_by_id("asset-input-flagStateCode").click()
-    #self.driver.find_element_by_id("asset-input-flagStateCode-item-2").click()
+    #self.driver.find_element_by_id("asset-input-countryCode").click()
+    #self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
+    self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    self.driver.find_element_by_id("asset-input-flagStateCode-item-2").click()
 
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[vesselNumber])
@@ -323,10 +323,10 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-btn-create").click()
     time.sleep(2)
     # Select F.S value
-    self.driver.find_element_by_id("asset-input-countryCode").click()
-    self.driver.find_element_by_id("asset-input-countryCode-item-"+parameterList[17]).click()
-    #self.driver.find_element_by_id("asset-input-flagStateCode").click()
-    #self.driver.find_element_by_id("asset-input-flagStateCode-item-"+parameterList[17]).click()
+    #self.driver.find_element_by_id("asset-input-countryCode").click()
+    #self.driver.find_element_by_id("asset-input-countryCode-item-"+parameterList[17]).click()
+    self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    self.driver.find_element_by_id("asset-input-flagStateCode-item-"+parameterList[17]).click()
 
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").send_keys(parameterList[0])
@@ -641,8 +641,8 @@ def check_new_asset_exists(self, vesselNumber):
     self.driver.find_element_by_id("asset-toggle-form").click()
     time.sleep(5)
     # Check that the F.S value is correct.
-    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-countryCode").text)
-    #self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-flagStateCode").text)
+    #self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-countryCode").text)
+    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-flagStateCode").text)
 
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_id("asset-input-ircs").get_attribute("value"))
@@ -775,11 +775,11 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("asset-toggle-form").click()
     time.sleep(7)
     # Select F.S value
-    self.driver.find_element_by_id("asset-input-countryCode").click()
-    #self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    #self.driver.find_element_by_id("asset-input-countryCode").click()
+    self.driver.find_element_by_id("asset-input-flagStateCode").click()
     time.sleep(1)
-    self.driver.find_element_by_id("asset-input-countryCode-item-1").click()
-    #self.driver.find_element_by_id("asset-input-flagStateCode-item-1").click()
+    #self.driver.find_element_by_id("asset-input-countryCode-item-1").click()
+    self.driver.find_element_by_id("asset-input-flagStateCode-item-1").click()
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").clear()
     self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[newVesselNumber])
@@ -1133,19 +1133,9 @@ def getAllColumnValuesforSelectedColumn(stringList, columnValue):
 
 
 def compareChannelLists(notedList, fileList):
-    print("---- Before sort -----")
-    print("notedList")
-    print(notedList)
-    print("fileList")
-    print(fileList)
     # Sort both lists
     notedList.sort(key=lambda x: x[0])
     fileList.sort(key=lambda x: x[0])
-    print("---- After sort -----")
-    print("notedList")
-    print(notedList)
-    print("fileList")
-    print(fileList)
 
     # Get all Serial number (1st column) of fileList
     tmpColumn = getAllColumnValuesforSelectedColumn(fileList,0)
@@ -1153,25 +1143,28 @@ def compareChannelLists(notedList, fileList):
     tmpColumn = list(set(tmpColumn))
     # Sort tmpColumn
     tmpColumn.sort()
+    # Loop through all Serial numbers in tmpColumn
+    totalResultExists = []
     for x in range(0, len(tmpColumn)):
+        # Loop through all rows in fileList
         fileListWithOneSerialNumber = []
         for y in range(0, len(fileList)):
+            # If current serial number tmpColumn satisfies serial number fileList the add current fileList row to fileListWithOneSerialNumber
             if tmpColumn[x] == fileList[y][0]:
-                print("Found 1")
                 fileListWithOneSerialNumber.append(fileList[y])
-                print(fileListWithOneSerialNumber)
-        print("fileListWithOneSerialNumber")
-        print(fileListWithOneSerialNumber)
+        # Loop through all rows in notedList
         notedListWithOneSerialNumber = []
         for y in range(0, len(notedList)):
+            # If current serial number tmpColumn satisfies serial number notedList the add current notedList row to notedListWithOneSerialNumber
             if tmpColumn[x] == notedList[y][0]:
-                print("Found 2")
                 notedListWithOneSerialNumber.append(notedList[y])
-                print(notedListWithOneSerialNumber)
-        print("notedListWithOneSerialNumber")
-        print(notedListWithOneSerialNumber)
+        # Compare the two list notedListWithOneSerialNumber and fileListWithOneSerialNumber. Return a result boolean list
         resultExists = check_sublist_in_other_list_if_it_exists(notedListWithOneSerialNumber, fileListWithOneSerialNumber)
-        print(resultExists)
+        # Add boolean result to totalResultExists.
+        totalResultExists.append(checkAllTrue(resultExists))
+    print("compareChannelLists totalResultExists")
+    print(totalResultExists)
+    return checkAllTrue(totalResultExists)
 
 
 
@@ -1239,15 +1232,16 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
             else:
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
-                # Get checkbox-polling Value and swap state
-                #notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value")))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").get_attribute("value"))
-                # Get checkbox-config Value and swap state
-                #notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value")))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").get_attribute("value"))
-                # Get checkbox-default Value and swap state
-                #notedChannelRow.append(swapZeroOneValueString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value")))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").get_attribute("value"))
+
+                # Get checkbox-polling Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+
+                # Get checkbox-config Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+
+                # Get checkbox-default Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
+
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
                 notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
@@ -1282,8 +1276,9 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     print("channelTotalListDateTimeFormatToCompare")
     print(channelTotalListDateTimeFormatToCompare)
 
-    # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file.
-    compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
+    # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file and return result.
+    resultExists = compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
+    return resultExists
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
@@ -1704,7 +1699,11 @@ def check_sublist_in_other_list_if_it_exists(subAssetList, fullAssetList):
     for y in range(0, len(subAssetList)):
         foundRow = False;
         for x in range(0, len(fullAssetList)):
+            print("Compare list row " + str(y) + "---" + str(x))
+            print(subAssetList[x])
+            print(fullAssetList[y])
             if compare(fullAssetList[x], subAssetList[y]):
+                print("Compared equal")
                 foundRow = True;
         resultExists.append(foundRow)
     return resultExists
@@ -5354,19 +5353,8 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
 
         # Check all channels and mobile terminal data (mobile terminal by mobile terminal)
-        check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
-
-
-    def test_special(self):
-        print("Test")
-        first = [["4", "5", "2"], ["4", "4", "3"], ["3", "1", "1"]]
-        b = first.copy()
-        print(b)
-        print("Test3")
-        print(b[0][0])
-        print(b[1][0])
-        print(b[2][0])
-
+        resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
+        self.assertTrue(resultExists)
 
 
 
