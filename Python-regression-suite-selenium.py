@@ -1185,7 +1185,6 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     print("channelTotalList")
     print(channelTotalList)
 
-
     # Click on Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(5)
@@ -5356,7 +5355,99 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
         self.assertTrue(resultExists)
 
+    def test_0305_change_default_channel_for_one_mobile_terminal(self):
+        # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
+        # Get referenceDateTime from file
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
+
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
+        print(referenceDateTimeValueString)
+
+        # Open saved csv file and read all asset elements
+        channelAllrows = get_elements_from_file(tests300FileName[3])
+
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+
+        # Click on Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(5)
+        # Sort on linked asset column
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        time.sleep(1)
+
+        # Sort the mobileTerminalAllrows list (1st Column)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
+
+        # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(5)
+
+        # Verifies that default DNID and Member Number is correct for the 2nd serial number in mobileTerminalAllrows list.
+        self.assertEqual(mobileTerminalAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(mobileTerminalAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        time.sleep(5)
+
+        # Read all channels for selected Mobile Terminal
+        notedChannelsList = []
+        currentChannel = 0
+        elementIsMissing = False
+        while True:
+            notedChannelRow = []
+            # Test if current channel row exist
+            try:
+                testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
+            except NoSuchElementException:
+                elementIsMissing = True
+            # Channel row exist then add channel row to notedChannelRow
+            if elementIsMissing:
+                break
+            else:
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+
+                # Get checkbox-polling Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+
+                # Get checkbox-config Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+
+                # Get checkbox-default Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
+
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
+
+            currentChannel = currentChannel + 1
+            notedChannelsList.append(notedChannelRow)
+
+        # Loop all channels in the list and disable default parameter if default parameter is selected
+        for x in range(0, len(notedChannelsList)):
+            print(notedChannelsList[x])
+            # Disable default parameter if default parameter is selected
+            if notedChannelsList[x][4] == "1":
+                print("mt-0-channel-" + str(x) + "-checkbox-default")
+                self.driver.find_element_by_id("mt-0-channel-" + str(x) + "-checkbox-default").click()
+                time.sleep(1)
+                self.driver.find_element_by_css_selector("label[title=\"Default\"]").click()
+                time.sleep(1)
+                ### Continue to set new default value
+        time.sleep(5)
 
 
 if __name__ == '__main__':
