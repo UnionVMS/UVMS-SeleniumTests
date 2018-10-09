@@ -5515,7 +5515,55 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file and return result.
         resultExists = compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
         print(resultExists)
+        self.assertTrue(resultExists)
 
+
+    def test_0306_delete_channel_for_one_mobile_terminal(self):
+        # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
+
+        # Get referenceDateTime from file
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
+
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
+        print(referenceDateTimeValueString)
+
+        # Open saved csv file and read all channel elements
+        channelAllrows = get_elements_from_file(tests300FileName[3])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        channelAllrows.sort(key=lambda x: x[0])
+
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
+
+        # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+        channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
+        channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+        # Sort the allrows list (1st Column)
+        channelTotalList.sort(key=lambda x: x[0])
+
+
+        # Click on Mobile Terminal tab
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        time.sleep(3)
+        # Sort on linked asset column
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        time.sleep(1)
+
+        # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[6][0])
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(5)
+
+        # Verifies that default DNID and Member Number is correct for the 2nd serial number in mobileTerminalAllrows list.
+        self.assertEqual(mobileTerminalAllrows[6][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(mobileTerminalAllrows[6][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        time.sleep(5)
 
 
 
