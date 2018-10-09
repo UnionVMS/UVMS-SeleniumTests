@@ -5551,13 +5551,13 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
 
-        # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        # Search for mobile terminal via serial number (The 7th serial number in mobileTerminalAllrows is used)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[6][0])
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(5)
 
-        # Verifies that default DNID and Member Number is correct for the 2nd serial number in mobileTerminalAllrows list.
+        # Verifies that default DNID and Member Number is correct for the 7th serial number in mobileTerminalAllrows list.
         self.assertEqual(mobileTerminalAllrows[6][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(mobileTerminalAllrows[6][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
 
