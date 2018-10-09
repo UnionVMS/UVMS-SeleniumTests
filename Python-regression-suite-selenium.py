@@ -5420,6 +5420,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Sort the allrows list (1st Column)
         channelTotalList.sort(key=lambda x: x[0])
 
+
         # Click on Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(3)
