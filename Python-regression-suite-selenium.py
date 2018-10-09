@@ -5367,8 +5367,15 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Open saved csv file and read all asset elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
 
+        # Sort the mobileTerminalAllrows list (1st Column)
+        channelAllrows.sort(key=lambda x: x[0])
+
+
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+
+        # Sort the mobileTerminalAllrows list (1st Column)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
 
         # Click on Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
@@ -5376,9 +5383,6 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Sort on linked asset column
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
-
-        # Sort the mobileTerminalAllrows list (1st Column)
-        mobileTerminalAllrows.sort(key=lambda x: x[0])
 
         # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
@@ -5441,13 +5445,42 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
             print(notedChannelsList[x])
             # Disable default parameter if default parameter is selected
             if notedChannelsList[x][4] == "1":
-                print("mt-0-channel-" + str(x) + "-checkbox-default")
-                self.driver.find_element_by_id("mt-0-channel-" + str(x) + "-checkbox-default").click()
+                # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
+                self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
+                time.sleep(2)
+
+        # Loop all channels in the list and set default parameter where the first default parameter is zero in the notedChannelsList
+        for x in range(0, len(notedChannelsList)):
+            print(notedChannelsList[x])
+            # Disable default parameter if default parameter is selected
+            if notedChannelsList[x][4] == "0":
+                # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
+                self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
                 time.sleep(1)
-                self.driver.find_element_by_css_selector("label[title=\"Default\"]").click()
-                time.sleep(1)
-                ### Continue to set new default value
+        # Click on Save button
+        self.driver.find_element_by_id("menu-bar-update").click()
+        # Enter Comment in comment field
+        self.driver.find_element_by_name("comment").clear()
+        self.driver.find_element_by_name("comment").send_keys(commentValue)
+        time.sleep(1)
+        # Click on Update button
+        self.driver.find_element_by_css_selector(
+            "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+        time.sleep(3)
+        # Click on Cancel
+        self.driver.find_element_by_id("menu-bar-cancel").click()
+        time.sleep(3)
+
+        # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(5)
+
+        # Verifies that new default DNID and Member Number is correct for the 2nd serial number in channelAllrows list.
+        self.assertEqual(channelAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(channelAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
 
 
 if __name__ == '__main__':
