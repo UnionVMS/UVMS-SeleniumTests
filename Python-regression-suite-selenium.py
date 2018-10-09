@@ -1174,16 +1174,10 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
     #
     # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
-    print("channelAllrows")
-    print(channelAllrows)
-    channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows)
-    print("channelListPartFromMobileTerminal")
-    print(channelListPartFromMobileTerminal)
+    channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2])
     channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
     # Sort the allrows list (1st Column)
     channelTotalList.sort(key=lambda x: x[0])
-    print("channelTotalList")
-    print(channelTotalList)
 
     # Click on Mobile Terminal tab
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
@@ -1441,6 +1435,51 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.assertEqual(sourceValue[1], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[1] + "\"]").text)
     time.sleep(5)
     return earlierPositionDateTimeValueString
+
+
+def read_all_channels_for_selected_Mobile_Terminal(self):
+
+    # Read all channels for selected Mobile Terminal
+    notedChannelsList = []
+    currentChannel = 0
+    elementIsMissing = False
+    while True:
+        notedChannelRow = []
+        # Test if current channel row exist
+        try:
+            testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
+        except NoSuchElementException:
+            elementIsMissing = True
+        # Channel row exist then add channel row to notedChannelRow
+        if elementIsMissing:
+            break
+        else:
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+
+            # Get checkbox-polling Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+
+            # Get checkbox-config Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+
+            # Get checkbox-default Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
+
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
+        currentChannel = currentChannel + 1
+        notedChannelsList.append(notedChannelRow)
+    return notedChannelsList
 
 
 def generate_NAF_and_verify_position(self,speedValue,courseValue):
@@ -1934,12 +1973,12 @@ def get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalList, s
     return []
 
 
-def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList):
+def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList, pollValue, configValue, defaultValue):
     # Returns the channel values from the mobile terminal list
     channelListPart = []
     for x in range(0, len(mobileTerminalList)):
         # Create one channel row from the mobile terminal list
-        tempChannelPartRow = [mobileTerminalList[x][0], channelDefaultName, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2], mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
+        tempChannelPartRow = [mobileTerminalList[x][0], channelDefaultName, pollValue, configValue, defaultValue, mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
         channelListPart.append(tempChannelPartRow)
     return channelListPart
 
@@ -5345,7 +5384,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
 
-        # Open saved csv file and read all asset elements
+        # Open saved csv file and read all channel elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
 
         # Open saved csv file and read all mobile terminal elements
@@ -5354,6 +5393,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Check all channels and mobile terminal data (mobile terminal by mobile terminal)
         resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
         self.assertTrue(resultExists)
+
 
     def test_0305_change_default_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
@@ -5364,22 +5404,25 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
 
-        # Open saved csv file and read all asset elements
+        # Open saved csv file and read all channel elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
-
         # Sort the mobileTerminalAllrows list (1st Column)
         channelAllrows.sort(key=lambda x: x[0])
 
-
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
-
         # Sort the mobileTerminalAllrows list (1st Column)
         mobileTerminalAllrows.sort(key=lambda x: x[0])
 
+        # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+        channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
+        channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+        # Sort the allrows list (1st Column)
+        channelTotalList.sort(key=lambda x: x[0])
+
         # Click on Mobile Terminal tab
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
+        time.sleep(3)
         # Sort on linked asset column
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
@@ -5396,49 +5439,10 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
         # Click on detail button
         self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(5)
+        time.sleep(3)
 
         # Read all channels for selected Mobile Terminal
-        notedChannelsList = []
-        currentChannel = 0
-        elementIsMissing = False
-        while True:
-            notedChannelRow = []
-            # Test if current channel row exist
-            try:
-                testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
-            except NoSuchElementException:
-                elementIsMissing = True
-            # Channel row exist then add channel row to notedChannelRow
-            if elementIsMissing:
-                break
-            else:
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
-
-                # Get checkbox-polling Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
-
-                # Get checkbox-config Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
-
-                # Get checkbox-default Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
-
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
-
-            currentChannel = currentChannel + 1
-            notedChannelsList.append(notedChannelRow)
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
 
         # Loop all channels in the list and disable default parameter if default parameter is selected
         for x in range(0, len(notedChannelsList)):
@@ -5457,6 +5461,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
                 # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
                 self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
                 time.sleep(1)
+
         # Click on Save button
         self.driver.find_element_by_id("menu-bar-update").click()
         # Enter Comment in comment field
@@ -5475,11 +5480,41 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(5)
+        time.sleep(3)
 
         # Verifies that new default DNID and Member Number is correct for the 2nd serial number in channelAllrows list.
         self.assertEqual(channelAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(channelAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        time.sleep(3)
+
+        # Read all channels for selected Mobile Terminal
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+
+        # Open saved csv file and read all channel elements (Note modified file)
+        channelAllrows = get_elements_from_file(tests300FileName[4])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        channelAllrows.sort(key=lambda x: x[0])
+
+        # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+        channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
+        channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+        # Sort the allrows list (1st Column)
+        channelTotalList.sort(key=lambda x: x[0])
+
+
+        # Convert hour value in channelTotalList to correct Datetime format and save it in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+        channelTotalListDateTimeFormat = convertHoursValueInListToDateTimeFormat(channelTotalList, referenceDateTime)
+        # Remove Mobile Terminal and Channel position data in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+        channelTotalListDateTimeFormatToCompare = removeLastNumberElementsInListRow(channelTotalListDateTimeFormat, 2)
+
+        # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file and return result.
+        resultExists = compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
+        print(resultExists)
+
 
 
 

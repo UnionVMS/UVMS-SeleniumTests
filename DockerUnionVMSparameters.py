@@ -136,7 +136,7 @@ downloadPathWindow = "\Downloads"
 
 referenceDateTimeFileName = 'referenceDateTime.csv'
 
-tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv']
+tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
 
 defaultUserName = "vms_admin_se"
 defaultUserNamePassword = "password"
