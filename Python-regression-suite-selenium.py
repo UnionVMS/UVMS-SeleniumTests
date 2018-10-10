@@ -5596,12 +5596,12 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Read all channels for selected Mobile Terminal
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
 
-        # Checks the number of channels read. If more than one channel then something is wrong
-        if len(notedChannelsList) > 1:
-            toManyChannels = True
+        # Checks the number of channels read. If the list does not consists of one channel then something is wrong
+        if len(notedChannelsList) == 1:
+            oneChannel = True
         else:
-            toManyChannels = False
-        self.assertFalse(toManyChannels)
+            oneChannel = False
+        self.assertTrue(oneChannel)
 
 
 
