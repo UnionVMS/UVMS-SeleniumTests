@@ -5562,7 +5562,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
         # Click on detail button
         self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(5)
+        time.sleep(3)
 
         # Read all channels for selected Mobile Terminal
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
@@ -5588,6 +5588,21 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         self.assertEqual(notedChannelsList[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(notedChannelsList[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
         time.sleep(3)
+
+        # Click on detail button
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        time.sleep(3)
+
+        # Read all channels for selected Mobile Terminal
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+        # Checks the number of channels read. If more than one channel then something is wrong
+        if len(notedChannelsList) > 1:
+            toManyChannels = True
+        else:
+            toManyChannels = False
+        self.assertFalse(toManyChannels)
+
 
 
 
