@@ -5470,8 +5470,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         self.driver.find_element_by_name("comment").send_keys(commentValue)
         time.sleep(1)
         # Click on Update button
-        self.driver.find_element_by_css_selector(
-            "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+        self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(3)
         # Click on Cancel
         self.driver.find_element_by_id("menu-bar-cancel").click()
@@ -5551,19 +5550,45 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
 
-        # Search for mobile terminal via serial number (The 7th serial number in mobileTerminalAllrows is used)
+        # Search for mobile terminal via serial number (The 9th serial number in mobileTerminalAllrows is used)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
-        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[6][0])
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[8][0])
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(5)
 
-        # Verifies that default DNID and Member Number is correct for the 7th serial number in mobileTerminalAllrows list.
-        self.assertEqual(mobileTerminalAllrows[6][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
-        self.assertEqual(mobileTerminalAllrows[6][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+        # Verifies that default DNID and Member Number is correct for the 9th serial number in mobileTerminalAllrows list.
+        self.assertEqual(mobileTerminalAllrows[8][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(mobileTerminalAllrows[8][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
 
         # Click on detail button
         self.driver.find_element_by_id("mt-toggle-form").click()
         time.sleep(5)
+
+        # Read all channels for selected Mobile Terminal
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+        # Click on delete button for the 1st channel in the list
+        self.driver.find_element_by_id("mt-0-channel-0-removeChannel").click()
+        time.sleep(1)
+
+        # Click on Save button
+        self.driver.find_element_by_id("menu-bar-update").click()
+        # Enter Comment in comment field
+        self.driver.find_element_by_name("comment").clear()
+        self.driver.find_element_by_name("comment").send_keys(commentValue)
+        time.sleep(1)
+        # Click on Update button
+        self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+        time.sleep(3)
+        # Click on Cancel
+        self.driver.find_element_by_id("menu-bar-cancel").click()
+        time.sleep(3)
+
+        # Verifies that default DNID and Member Number is correct for the 2nd serial number in notedChannelsList list. The 1st DNID and Member is now deleted.
+        self.assertEqual(notedChannelsList[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(notedChannelsList[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+        time.sleep(3)
+
 
 
 
