@@ -1738,8 +1738,8 @@ def check_sublist_in_other_list_if_it_exists(subAssetList, fullAssetList):
         foundRow = False;
         for x in range(0, len(fullAssetList)):
             print("Compare list row " + str(y) + "---" + str(x))
-            print(subAssetList[x])
-            print(fullAssetList[y])
+            print(subAssetList[y])
+            print(fullAssetList[x])
             if compare(fullAssetList[x], subAssetList[y]):
                 print("Compared equal")
                 foundRow = True;
