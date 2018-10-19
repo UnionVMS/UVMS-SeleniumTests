@@ -3110,9 +3110,9 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
         self.driver.find_element_by_css_selector("#asset > span").click()
         time.sleep(2)
-        self.driver.find_element_by_css_selector("#mobileTerminal > span").click()
-        time.sleep(2)
         self.driver.find_element_by_css_selector("#exchange > span").click()
+        time.sleep(2)
+        self.driver.find_element_by_css_selector("#movementrules > span").click()
         time.sleep(2)
         self.driver.find_element_by_css_selector("#systemMonitor > span").click()
         time.sleep(5)
@@ -3121,8 +3121,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("GLOBAL SETTINGS", self.driver.find_element_by_css_selector("#globalSettings > span").text)
         self.assertEqual("REPORTING", self.driver.find_element_by_css_selector("#reporting > span").text)
         self.assertEqual("ASSETS", self.driver.find_element_by_css_selector("#asset > span").text)
-        self.assertEqual("MOBILE TERMINALS", self.driver.find_element_by_css_selector("#mobileTerminal > span").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_css_selector("#exchange > span").text)
+        self.assertEqual("MOVEMENT RULES", self.driver.find_element_by_css_selector("#movementrules > span").text)
 
 
     @timeout_decorator.timeout(seconds=180)
