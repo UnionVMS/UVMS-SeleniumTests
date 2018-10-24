@@ -884,17 +884,24 @@ def check_asset_archived(self, vesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
     # Check that vessel name is greyed out
-    color_value = self.driver.find_element_by_css_selector("td[title=\"" + vesselName[35] + "\"]").value_of_css_property("color")
-    self.assertEqual(greyColorRGBA, color_value)
-    time.sleep(4)
+    # NOTE: Greyed out state has been removed, so therefore no check.
+    #color_value = self.driver.find_element_by_css_selector("td[title=\"" + vesselName[35] + "\"]").value_of_css_property("color")
+    #self.assertEqual(greyColorRGBA, color_value)
+    #time.sleep(4)
     # Click on details button
-    self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(4)
-    # Try to click on delete (archive) button. Shall not exist.
+    #self.driver.find_element_by_id("asset-toggle-form").click()
+    #time.sleep(4)
+
+    # Try to click on details button. Shall not exist.
     try:
-        self.assertFalse(self.driver.find_element_by_id("menu-bar-archive").click())
+        self.driver.find_element_by_id("asset-toggle-form").click()
     except NoSuchElementException:
         pass
+    # Try to click on delete (archive) button. Shall not exist.
+    #try:
+    #    self.assertFalse(self.driver.find_element_by_id("menu-bar-archive").click())
+    #except NoSuchElementException:
+    #    pass
     time.sleep(4)
 
 
@@ -933,8 +940,6 @@ def check_mobile_terminal_archived(self, mobileTerminalNumber):
     # Click in search button
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(5)
-    # Click on details button
-    time.sleep(2)
     # Try to click on details button. Shall not exist.
     try:
         self.driver.find_element_by_id("mt-toggle-form").click()
@@ -3644,12 +3649,13 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
         time.sleep(2)
         # Check that only one row exist with 1st ircs name from asset file
-        self.assertEqual(assetAllrows[0][0], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
-        try:
-            self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
-        except NoSuchElementException:
-            pass
-        time.sleep(5)
+        # NOTE: Following check is disabled due to howto solved bug UV-379
+        #self.assertEqual(assetAllrows[0][0], self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr/td[3]/div").text)
+        #try:
+        #    self.assertFalse(self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div[3]/div/table/tbody/tr[2]/td[3]/div").text)
+        #except NoSuchElementException:
+        #    pass
+        #time.sleep(5)
 
 
     @timeout_decorator.timeout(seconds=180)
