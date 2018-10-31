@@ -208,7 +208,7 @@ def startup_browser_and_login_to_unionVMS(cls):
     cls.driver.maximize_window()
     # Login to test user admin
     #cls.driver.get("https://unionvmstest.havochvatten.se/unionvms/")
-    cls.driver.implicitly_wait(10)
+    #cls.driver.implicitly_wait(5)
     cls.driver.get(httpUnionVMSurlString)
     time.sleep(2)
 
@@ -231,7 +231,7 @@ def startup_browser_and_login_to_unionVMS(cls):
 
     cls.driver.find_element_by_id("userId").send_keys(defaultUserName)
     cls.driver.find_element_by_id(defaultUserNamePassword).send_keys(defaultUserNamePassword)
-    time.sleep(2)
+    time.sleep(1)
     cls.driver.find_element_by_xpath(
         "//*[@id='content']/div[1]/div[3]/div/div[2]/div[3]/div[2]/form/div[3]/div/button"). \
         click()
@@ -3863,7 +3863,7 @@ class UnionVMSTestCasePerformance(unittest.TestCase):
     def setUp(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
+        time.sleep(1)
 
 
     def tearDown(self):
@@ -3880,6 +3880,7 @@ class UnionVMSTestCasePerformance(unittest.TestCase):
     def test_0052_create_assets_trip_1_2_3(self):
         # Startup browser and login
         UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
+
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
