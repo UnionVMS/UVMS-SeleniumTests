@@ -30,6 +30,7 @@ import platform
 import collections
 from pathlib import Path
 import copy
+import zeep
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
@@ -253,7 +254,7 @@ def shutdown_browser(cls):
 def create_one_new_asset_from_gui(self, vesselNumber):
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(10)
+    time.sleep(5)
     # Click on new Asset button
     self.driver.find_element_by_id("asset-btn-create").click()
     time.sleep(2)
@@ -309,7 +310,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     time.sleep(2)
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
-    time.sleep(10)
+    time.sleep(3)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -429,16 +430,16 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
 def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, vesselNumber):
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(10)
+    time.sleep(3)
     # Search for created asset
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(10)
+    time.sleep(3)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(10)
+    time.sleep(3)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(1)
@@ -478,7 +479,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     time.sleep(3)
     # Click on save button
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
-    time.sleep(5)
+    time.sleep(3)
     # Leave new asset view
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
@@ -495,7 +496,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(7)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(10)
+    time.sleep(5)
     # Click on add new terminal button
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     time.sleep(5)
@@ -551,10 +552,10 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
     self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
     self.driver.find_element_by_id("mt-btn-advanced-search").click()
-    time.sleep(7)
+    time.sleep(5)
     # Click on detail button
     self.driver.find_element_by_id("mt-toggle-form").click()
-    time.sleep(7)
+    time.sleep(5)
     # Click on link "Add new channel"
     self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
     time.sleep(2)
@@ -643,7 +644,6 @@ def check_new_asset_exists(self, vesselNumber):
     # Check that the F.S value is correct.
     #self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-countryCode").text)
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-flagStateCode").text)
-
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_id("asset-input-ircs").get_attribute("value"))
     # Check that the Name value is correct
@@ -739,7 +739,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
     time.sleep(5)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
+    time.sleep(5)
     # Click on History tab
     self.driver.find_element_by_css_selector("#HISTORY > span").click()
     time.sleep(2)
@@ -773,7 +773,7 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     time.sleep(5)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
+    time.sleep(5)
     # Select F.S value
     #self.driver.find_element_by_id("asset-input-countryCode").click()
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
@@ -845,7 +845,7 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     # Main Contact Number Value
     self.driver.find_element_by_id("asset-input-contact-number-0").clear()
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[newVesselNumber])
-    time.sleep(10)
+    time.sleep(5)
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-update").click()
     time.sleep(5)
@@ -863,7 +863,7 @@ def archive_one_asset_from_gui(self, vesselNumber):
     time.sleep(5)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
+    time.sleep(5)
     # Click on delete button (Archive)
     self.driver.find_element_by_id("menu-bar-archive").click()
     time.sleep(5)
@@ -1045,7 +1045,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     time.sleep(5)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
+    time.sleep(5)
     # Click on the Notes tab
     self.driver.find_element_by_css_selector("#NOTES > span").click()
     time.sleep(1)
@@ -1077,7 +1077,7 @@ def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber)
     time.sleep(5)
     # Click on details button
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
+    time.sleep(5)
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     time.sleep(1)
@@ -1952,6 +1952,13 @@ def get_remaining_elements_from_main_list(mainListAll, smallList):
                 except:
                     pass
     return remainList
+
+
+def get_asset_info_from_asset_database(assetCFRValue):
+    # Get detailed info about selected asset from asset database Fartyg 2
+    client = zeep.Client(wsdl=httpNationalServiceEndpointString)
+    answerValue = client.service.getVesselByCFR(assetCFRValue)
+    return answerValue
 
 
 def get_asset_cfr_via_link_list(linkList, serialNumber):
@@ -3853,6 +3860,71 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
         # Create RealTrip 3
         create_trip_from_file(datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
+
+
+    @timeout_decorator.timeout(seconds=900)
+    def test_0108_check_asset_data_from_wsdl(self):
+        # Click on asset tab
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Wait for Fartyg2 to sync assets into the UVMS system.
+        #time.sleep(600)
+        # Click on the search button
+        self.driver.find_element_by_id("asset-btn-simple-search").click()
+        time.sleep(3)
+        # Sort in Ext Mark column.
+        self.driver.find_element_by_id("asset-sort-externalMarking").click()
+        time.sleep(3)
+        # Click on details button
+        self.driver.find_element_by_id("asset-toggle-form").click()
+        time.sleep(3)
+        # Read Assets fields
+        assetFlagStateValue = self.driver.find_element_by_id("asset-input-flagStateCode").text
+        # Check that the IRCS value is correct
+        assetIRCSValue = self.driver.find_element_by_id("asset-input-ircs").get_attribute("value")
+        # Check that the Name value is correct
+        assetNameValue = self.driver.find_element_by_id("asset-input-name").get_attribute("value")
+        # Check that External Marking Value is correct
+        assetExternalMarkingValue = self.driver.find_element_by_id("asset-input-externalMarking").get_attribute("value")
+        # Check that the CFR value is correct
+        assetCFRValue = self.driver.find_element_by_id("asset-input-cfr").get_attribute("value")
+        # Check that the IMO value is correct
+        assetIMOValue = self.driver.find_element_by_id("asset-input-imo").get_attribute("value")
+        # Check that the HomePort value is correct
+        assetHomeportValue = self.driver.find_element_by_id("asset-input-homeport").get_attribute("value")
+        # Check that the Gear Type value is correct.
+        assetgearTypeValue = self.driver.find_element_by_id("asset-input-gearType").text
+        # Check that the MMSI value is correct
+        assetMMSIValue = self.driver.find_element_by_id("asset-input-mmsi").get_attribute("value")
+        # Check that the Length Type value is correct.
+        assetLengthValueValue = self.driver.find_element_by_id("asset-input-lengthValue").get_attribute("value")
+        # Check that the Gross Tonnage value is correct.
+        assetGrossTonnageValue = self.driver.find_element_by_id("asset-input-grossTonnage").get_attribute("value")
+        # Check that the Power value is correct.
+        assetPowerValue = self.driver.find_element_by_id("asset-input-power").get_attribute("value")
+        # Get all info from Fartyg2 about selected asset by using CFR
+        assetInfoValue = get_asset_info_from_asset_database(assetCFRValue)
+        # Check values
+        self.assertEqual(assetFlagStateValue, assetInfoValue['iso3AlphaNation'])
+        self.assertEqual(assetIRCSValue, assetInfoValue['ircs'])
+        self.assertEqual(assetExternalMarkingValue, assetInfoValue['district'])
+        self.assertEqual(assetCFRValue, assetInfoValue['cfr'])
+        self.assertEqual(assetNameValue, assetInfoValue['vesselName'])
+        self.assertEqual(assetIMOValue, assetInfoValue['imoNumber'])
+        self.assertEqual(assetHomeportValue, assetInfoValue['defaultPort']['port'])
+        self.assertEqual(assetLengthValueValue, assetInfoValue['loa'])
+        self.assertEqual(assetIRCSValue, assetInfoValue['ircs'])
+
+
+    def test_0199_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT)
+        wsdl = 'http://osbutv.havochvatten.se:8011/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        answerValue = client.service.getVesselByCFR('SWE000007033')
+        print(answerValue['vesselName'])
+        print('----------------------------------------------------')
+        referenceDateTime = datetime.datetime(year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000007033', referenceDateTime)
+        print(answerValue2)
 
 
 
