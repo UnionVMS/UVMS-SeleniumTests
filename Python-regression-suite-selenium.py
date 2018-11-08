@@ -433,7 +433,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     time.sleep(3)
     # Search for created asset
     self.driver.find_element_by_id("asset-input-simple-search").clear()
-    self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_id("asset-input-simple-search").send_keys(ircsValue[vesselNumber])
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(3)
@@ -3712,7 +3712,6 @@ class UnionVMSTestCase(unittest.TestCase):
 
 class UnionVMSTestCaseExtra(unittest.TestCase):
 
-
     def setUp(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -3761,7 +3760,6 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
-
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3862,6 +3860,34 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
 
 
+
+
+
+
+
+class UnionVMSTestCaseSpecial(unittest.TestCase):
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0053s_create_assets_and_mobile_terminals_39_52(self):
+        # Create Mobile Terminals 39-52 in the list
+        # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
+        for x in range(39, 52):
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
+
+
     @timeout_decorator.timeout(seconds=900)
     def test_0108_check_asset_data_from_wsdl(self):
         # Click on asset tab
@@ -3925,7 +3951,6 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         referenceDateTime = datetime.datetime(year=2007, month=1, day=1, hour=0, minute=0, second=0)
         answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000007033', referenceDateTime)
         print(answerValue2)
-
 
 
 
