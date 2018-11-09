@@ -2003,7 +2003,6 @@ def get_additional_list_result_from_from_two_channel_lists(list1, list2):
     return channelTotalList
 
 
-
 def removeChar(stringValue, charValue):
     # Return new string where the charValue is removed from stringValue
     return stringValue.replace(charValue, "")
@@ -2056,6 +2055,48 @@ def reload_page_and_goto_default(self):
     self.driver.get(httpUnionVMSurlString)
 
 
+def check_inmarsat_fully_synced(self):
+    # Reload page and goto default page
+    reload_page_and_goto_default(self)
+    time.sleep(4)
+    # Click on Mobile terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(4)
+    # Click on new terminal button
+    self.driver.find_element_by_id("mt-btn-create").click()
+    time.sleep(3)
+    # Select Transponder system
+    self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
+    time.sleep(1)
+    elementIsMissing = False
+    while True:
+        # Test if Inmarsat-C parameters fully synced
+        try:
+            self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
+        except NoSuchElementException:
+            elementIsMissing = True
+        # IF elementIsMissing THEN wait and test again ELSE break
+        if elementIsMissing:
+            # Wait 15 seconds
+            time.sleep(15)
+            # Reload page
+            reload_page_and_goto_default(self)
+            time.sleep(4)
+            # Click on Mobile terminal tab
+            self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+            time.sleep(4)
+            # Click on new terminal button
+            self.driver.find_element_by_id("mt-btn-create").click()
+            time.sleep(3)
+            # Select Transponder system
+            self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
+            time.sleep(1)
+            elementIsMissing = False
+        else:
+            break
+    time.sleep(5)
+
+
 def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
@@ -2063,6 +2104,7 @@ def get_download_path():
         return home + downloadPathWindow
     else:
         return downloadPathLinux
+
 
 
 def get_target_path():
@@ -2077,6 +2119,7 @@ def get_target_path():
         return localTargetPathWindows
     else:
         return targetPathLinux
+
 
 
 def get_test_report_path():
@@ -2154,7 +2197,7 @@ class UnionVMSTestCase(unittest.TestCase):
         shutdown_browser(self)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0001b_change_default_configuration_parameters(self):
         # The test case changes Default home page to asset and Coordinates format to dd.mmm
         # if Reporting Query List is presented, then close it
@@ -2180,6 +2223,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element_by_id("-item-4").click()
         time.sleep(5)
+        # Check inmarsat plugin is fully synced
+        check_inmarsat_fully_synced(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4344,10 +4389,10 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
         # Click on Alert tab
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
+        time.sleep(8)
         # Click on Notifications tab
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(5)
+        time.sleep(8)
         # Check Asset and Rule names
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
@@ -4507,12 +4552,14 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
         # Click on Alert tab
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
+        time.sleep(8)
         # Click on Notifications tab
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(5)
+        time.sleep(8)
         # Check Asset and Rule names
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        print("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
+        print("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]")
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
@@ -4564,10 +4611,10 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
         # Click on Alert tab
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
+        time.sleep(8)
         # Click on Notifications tab
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(5)
+        time.sleep(8)
         # Check Asset and Rule names
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
