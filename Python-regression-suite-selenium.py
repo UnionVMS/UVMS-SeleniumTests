@@ -4143,7 +4143,6 @@ class UnionVMSTestCasePerformance(unittest.TestCase):
                     print("Request NOT OK!")
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0502c_generate_multiple_NAF_positions_8_17(self):
         # Create many NAF positions for assets 8-17
@@ -4176,7 +4175,6 @@ class UnionVMSTestCasePerformance(unittest.TestCase):
                     print("200 OK")
                 else:
                     print("Request NOT OK!")
-
 
 
 
@@ -4558,8 +4556,6 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         time.sleep(8)
         # Check Asset and Rule names
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
-        print("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
-        print("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]")
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
@@ -5753,8 +5749,6 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         else:
             oneChannel = False
         self.assertTrue(oneChannel)
-
-
 
 
 
