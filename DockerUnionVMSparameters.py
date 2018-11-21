@@ -54,8 +54,9 @@ mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "T
 mobileTerminalFileName = 'mobileTerminals.csv'
 mobileTerminalSearchValue = ["*AA*","*5*","*1000*"]
 statusValue = ("Inactive", "Active")
-channelName = "VMS"
+channelDefaultName = "VMS"
 pollConfigDefaultValue = ["1", "1", "1"]
+pollConfigDefaultChangeValue = ["1", "1", "0"]
 
 # lolaPositionValues [Asset number x, lola position route y, lat=0/lon=1 z]
 lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
@@ -78,7 +79,6 @@ lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
                       [["63.403", "20.457"], ["63.403", "20.457"]]]
 
 
-
 # lolaSpeedCourseTripValues [Position Report number x, Asset Number y, lat=0/long=1/speed=2/course=3 z]
 
 lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "11.556286", "0", "271"], ["59.863", "19.130", "5", "340"]],
@@ -97,7 +97,6 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
 # Audit Parameters
 auditLogsHeadline = ("Username", "Operation", "Object type", "Date")
 auditLogsFileName = 'auditLogs.csv'
-
 
 # Mixed parameters
 reportedSpeedValue = 5
@@ -150,7 +149,6 @@ defaultContext = "AdminAllUVMS"
 # defaultUserName = "vms_admin_se"
 # defaultUserNamePassword = "password"
 # defaultContext = "AdminAllUVMS"
-
 
 blackColorRGBA = "rgba(51, 51, 51, 1)"
 greyColorRGBA = "rgba(153, 153, 153, 1)"

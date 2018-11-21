@@ -3927,7 +3927,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
     def test_0053s_create_assets_and_mobile_terminals_39_52(self):
         # Create Mobile Terminals 39-52 in the list
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
-        for x in range(39, 52):
+        for x in range(39, 53):
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
