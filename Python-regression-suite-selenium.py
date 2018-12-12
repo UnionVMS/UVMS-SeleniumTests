@@ -3922,14 +3922,32 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         shutdown_browser(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
 
     @timeout_decorator.timeout(seconds=1000)
-    def test_0053s_create_assets_and_mobile_terminals_39_52(self):
+    def test_0053test_server_create_assets_and_mobile_terminals_39_52(self):
         # Create Mobile Terminals 39-52 in the list
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
-        for x in range(39, 53):
+        # Asset (Number 39) does not exist anymore. Removed from Fartyg2
+        for x in range(40, 53):
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0053dev_server_create_assets_and_mobile_terminals_53_66(self):
+        # Create Mobile Terminals 53-66 in the list
+        # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
+        # Asset (Number 53) does not exist anymore. Removed from Fartyg2
+        for x in range(54, 67):
+            create_one_new_mobile_terminal_via_asset_tab(self, x, x)
+            time.sleep(1)
+
 
 
 
