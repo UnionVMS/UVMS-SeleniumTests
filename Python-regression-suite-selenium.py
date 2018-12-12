@@ -1522,6 +1522,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     nafSource = nafSource + "//ER//"
     nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
     totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+    print(nafSource)
     # Generate request
     r = requests.get(totalNAFrequest)
     # Check if request is OK (200)
