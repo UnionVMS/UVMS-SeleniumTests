@@ -1413,6 +1413,13 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.driver.find_element_by_name("course").send_keys(str(courseValue))
     # Click on Save Button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+
+    # Save current UTC date and time to file (Used in Audit test cases)
+    # Set referenceDateTime to current UTC time
+    referenceDateTime = datetime.datetime.utcnow()
+    # Save referenceDateTime1 to file
+    save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
+
     time.sleep(5)
     # Click on Confirm button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
@@ -1530,9 +1537,16 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
         print("200 OK")
     else:
         print("Request NOT OK!")
+
+    # Save current UTC date and time to file (Used in Audit test cases)
+    # Set referenceDateTime to current UTC time
+    referenceDateTime = datetime.datetime.utcnow()
+    # Save referenceDateTime1 to file
+    save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
+
     # Select Positions tab
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-    time.sleep(7)
+    time.sleep(10)
     # Enter IRCS for newly created position
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     self.driver.find_element_by_link_text("Custom").click()
@@ -2218,11 +2232,25 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         # Click to change Coordinates format to dd.mmm
         self.driver.find_element_by_xpath("(//input[@name='coordinateFormat'])[2]").click()
+
+        # Save current UTC date and time to file (Used in Audit test cases)
+        # Set referenceDateTime to current UTC time
+        referenceDateTime = datetime.datetime.utcnow()
+        # Save referenceDateTime1 to file
+        save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
+
         time.sleep(7)
         # Click to change Default home page to Asset page
         self.driver.find_element_by_xpath("//button[@id='']").click()
         time.sleep(5)
         self.driver.find_element_by_id("-item-4").click()
+
+        # Save current UTC date and time to file (Used in Audit test cases)
+        # Set referenceDateTime to current UTC time
+        referenceDateTime = datetime.datetime.utcnow()
+        # Save referenceDateTime1 to file
+        save_elements_to_file(referenceDateTimeFileName[1], referenceDateTime, True)
+
         time.sleep(5)
         # Check inmarsat plugin is fully synced
         check_inmarsat_fully_synced(self)
@@ -2255,6 +2283,12 @@ class UnionVMSTestCase(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
+
+        # Save current UTC date and time to file (Used in Audit test cases)
+        # Set referenceDateTime to current UTC time
+        referenceDateTime = datetime.datetime.utcnow()
+        # Save referenceDateTime1 to file
+        save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
         # Select Alarms tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
@@ -5462,14 +5496,14 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Create assets from file with several different values for filtering
         create_addtional_channels_for_mobileterminals_from_file(self, tests300FileName[3], referenceDateTime)
         # Save referenceDateTime to file
-        save_elements_to_file(referenceDateTimeFileName, referenceDateTime, True)
+        save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
 
     def test_0304_check_additional_channels_for_mobile_terminals(self):
         # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
 
         # Get referenceDateTime from file
-        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
 
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
@@ -5489,7 +5523,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
         # Get referenceDateTime from file
-        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
 
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
@@ -5611,7 +5645,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
         # Get referenceDateTime from file
-        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName)
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
 
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
@@ -5692,6 +5726,114 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         else:
             oneChannel = False
         self.assertTrue(oneChannel)
+
+
+
+class UnionVMSTestCaseAudit(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0401_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0402_check_config_update_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Filtering on Update Operation
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Update").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
+        # Click on Search button
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(1)
+
+        # Check config update value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+
+        # Get saved date/time from file to compare with current value in list row
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[1])
+        # Convert to string format incl removing the second part
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M')
+        # Get the real date and time in the list row.
+        realDateTimeValueString = self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[5]").text
+        # Remove second part from string, that is the 3 last characters in the string
+        realDateTimeValueString = realDateTimeValueString[:-3]
+        self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
+
+        self.assertEqual(auditLogsObjectAffectedValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[6]/span").text)
+
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+
+        # Get saved date/time from file to compare with current value in list row
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+        # Convert to string format incl removing the second part
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M')
+        # Get the real date and time in the list row.
+        realDateTimeValueString = self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[5]").text
+        # Remove second part from string, that is the 3 last characters in the string
+        realDateTimeValueString = realDateTimeValueString[:-3]
+        self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
+
+        self.assertEqual(auditLogsObjectAffectedValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[6]/span").text)
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0403_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0404_check_alert_update_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on all sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#ALARMS > span").click()
+        time.sleep(3)
+
+        # Check Alert value in audit list 1st row
+        self.assertEqual(defaultSystemName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+
+        # Get saved date/time from file to compare with current value in list row
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+        # Convert to string format incl removing the second part
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M')
+        # Get the real date and time in the list row.
+        realDateTimeValueString = self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[5]").text
+        # Remove second part from string, that is the 3 last characters in the string
+        realDateTimeValueString = realDateTimeValueString[:-3]
+        self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
+
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+
 
 
 

@@ -97,6 +97,10 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
 # Audit Parameters
 auditLogsHeadline = ("Username", "Operation", "Object type", "Date")
 auditLogsFileName = 'auditLogs.csv'
+auditLogsOperationValue = ("Update", "Create")
+auditLogsObjectTypeValue = ("Setting", "Alarm")
+auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See object")
+
 
 # Mixed parameters
 reportedSpeedValue = 5
@@ -134,10 +138,11 @@ targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\release-test\\target"
 downloadPathLinux = "/var/lib/jenkins/Downloads"
 downloadPathWindow = "\Downloads"
 
-referenceDateTimeFileName = 'referenceDateTime.csv'
+referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 
 tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
 
+defaultSystemName = "UVMS"
 defaultUserName = "vms_admin_se"
 defaultUserNamePassword = "password"
 defaultContext = "AdminAllUVMS"
