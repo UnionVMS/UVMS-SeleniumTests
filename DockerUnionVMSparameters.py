@@ -97,8 +97,8 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
 # Audit Parameters
 auditLogsHeadline = ("Username", "Operation", "Object type", "Date")
 auditLogsFileName = 'auditLogs.csv'
-auditLogsOperationValue = ("Update", "Create")
-auditLogsObjectTypeValue = ("Setting", "Alarm")
+auditLogsOperationValue = ("Update", "Create", "Linked")
+auditLogsObjectTypeValue = ("Setting", "Alarm", "Asset", "Mobile Terminal", "Manual position report", "Temporary position report", "Automatic position report", "Asset Group", "Poll")
 auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See object")
 
 
@@ -143,6 +143,7 @@ referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
 
 defaultSystemName = "UVMS"
+defaultNAFName = "NAF"
 defaultUserName = "vms_admin_se"
 defaultUserNamePassword = "password"
 defaultContext = "AdminAllUVMS"

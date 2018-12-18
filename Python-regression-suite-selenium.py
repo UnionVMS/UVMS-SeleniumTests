@@ -5812,7 +5812,7 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         time.sleep(5)
-        # Click on all sub tabs under Audit Log Tab
+        # Click on Alerts sub tabs under Audit Log Tab
         self.driver.find_element_by_css_selector("#ALARMS > span").click()
         time.sleep(3)
 
@@ -5833,6 +5833,217 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0405_test_0002_create_one_new_asset(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0002_create_one_new_asset(self)
+
+
+    def test_0406_check_asset_creation_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        time.sleep(3)
+
+        # Check Asset and Terminals value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0407_create_one_new_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0004_create_one_new_mobile_terminal(self)
+
+
+    def test_0408_check_mobile_terminal_creation_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        time.sleep(3)
+
+        # Check Asset and Terminals value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0409_link_asset_and_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0006_link_asset_and_mobile_terminal(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0410_check_link_asset_and_mobile_terminal_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        time.sleep(3)
+
+        # Check Asset and Terminals value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0411_generate_and_verify_manual_position(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0007_generate_and_verify_manual_position(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0412_check_manual_position_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
+        time.sleep(3)
+
+        # Check Alert value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0413_generate_NAF_and_verify_position(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0008_generate_NAF_and_verify_position(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0414_check_NAF_position_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
+        time.sleep(3)
+
+        # Check Asset and Terminals value in audit list 1st row
+        self.assertEqual(defaultNAFName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0415_create_assets_2_3_4_5_6(self):
+        # Create assets 3-6 in the list
+        for x in range(1, 6):
+            create_one_new_asset_from_gui(self, x)
+            time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0416_create_two_assets_to_group_and_check_group(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0018_create_two_assets_to_group_and_check_group(self)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0417_check_asset_group_creation_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        time.sleep(3)
+
+        # Check Asset and Terminals value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[7], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0418_change_global_settings_change_date_format(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0030_change_global_settings_change_date_format(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0419_change_global_settings_change_date_format(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0030_change_global_settings_change_date_format(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0420_check_config_date_time_update_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Filtering on Update Operation
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Update").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
+        # Click on Search button
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(1)
+        # Check config update value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[6]/span").text)
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[6]/span").text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0421_create_one_new_asset_and_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0043_create_one_new_asset_and_mobile_terminal(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0422_generate_manual_poll_and_check(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0046_generate_manual_poll_and_check(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0423_check_poll_creation_change_in_audit_log(self):
+        # Select Audit Log tab
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        time.sleep(5)
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        time.sleep(3)
+
+        # Check Asset and Terminals value in audit list 1st row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[8], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
 
 
 
