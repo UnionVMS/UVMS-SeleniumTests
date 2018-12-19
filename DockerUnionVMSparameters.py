@@ -97,9 +97,9 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
 # Audit Parameters
 auditLogsHeadline = ("Username", "Operation", "Object type", "Date")
 auditLogsFileName = 'auditLogs.csv'
-auditLogsOperationValue = ("Update", "Create", "Linked")
+auditLogsOperationValue = ("Update", "Create", "Linked", "Archive")
 auditLogsObjectTypeValue = ("Setting", "Alarm", "Asset", "Mobile Terminal", "Manual position report", "Temporary position report", "Automatic position report", "Asset Group", "Poll")
-auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See object")
+auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See object", "dateTimeFormat")
 
 
 # Mixed parameters
