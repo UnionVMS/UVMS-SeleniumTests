@@ -2297,7 +2297,8 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         time.sleep(2)
         # Check Asset name
-        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]/span").text)
+        # self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]/span").text)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
 
         # Click on Details button
         self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
@@ -3736,6 +3737,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     def test_0052_create_assets_trip_1_2_3(self):
         # Startup browser and login
         UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
+
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
