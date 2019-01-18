@@ -141,6 +141,7 @@ downloadPathWindow = "\Downloads"
 referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 
 tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
+tests400FileName = ['assets4xxxx.csv', 'mobileterminals4xxxx.csv', 'linkassetmobileterminals4xxxx.csv', 'channelstomobileterminals4xxxx.csv', 'channelstomobileterminals4bxxx.csv']
 
 defaultSystemName = "UVMS"
 defaultNAFName = "NAF"

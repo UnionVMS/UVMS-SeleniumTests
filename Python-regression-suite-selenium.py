@@ -298,6 +298,9 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     time.sleep(2)
+    # Click on "Add contact" link
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    time.sleep(1)
     # Main Contact Name Value
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
     print(contactNameValue[vesselNumber])
@@ -362,6 +365,9 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-producercode").send_keys(parameterList[13])
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    time.sleep(1)
+    # Click on "Add contact" link
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
     time.sleep(1)
     # Main Contact Name Value
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(parameterList[14])
@@ -963,16 +969,17 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     time.sleep(1)
+    # Click on "Add contact" link
     self.driver.find_element_by_id("asset-btn-add-contact").click()
     time.sleep(1)
     # Add a second contact contactNameValue, contactEmailValue and contactPhoneNumberValue
-    self.driver.find_element_by_id("asset-input-contact-name-1").click()
-    self.driver.find_element_by_id("asset-input-contact-name-1").clear()
-    self.driver.find_element_by_id("asset-input-contact-name-1").send_keys(contactNameValue[newVesselNumber])
-    self.driver.find_element_by_id("asset-input-contact-email-1").clear()
-    self.driver.find_element_by_id("asset-input-contact-email-1").send_keys(contactEmailValue[newVesselNumber])
-    self.driver.find_element_by_id("asset-input-contact-number-1").clear()
-    self.driver.find_element_by_id("asset-input-contact-number-1").send_keys(contactPhoneNumberValue[newVesselNumber])
+    self.driver.find_element_by_id("asset-input-contact-name-0").click()
+    self.driver.find_element_by_id("asset-input-contact-name-0").clear()
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[newVesselNumber])
+    self.driver.find_element_by_id("asset-input-contact-email-0").clear()
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[newVesselNumber])
+    self.driver.find_element_by_id("asset-input-contact-number-0").clear()
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[newVesselNumber])
     time.sleep(1)
     self.driver.find_element_by_id("menu-bar-update").click()
     time.sleep(1)
@@ -1082,12 +1089,12 @@ def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber)
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     time.sleep(1)
     # Check contacts info
-    self.assertEqual(contactNameValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-name-0").get_attribute("value"))
-    self.assertEqual(contactEmailValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-0").get_attribute("value"))
-    self.assertEqual(contactPhoneNumberValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
-    self.assertEqual(contactNameValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-name-1").get_attribute("value"))
-    self.assertEqual(contactEmailValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-1").get_attribute("value"))
-    self.assertEqual(contactPhoneNumberValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-1").get_attribute("value"))
+    self.assertEqual(contactNameValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-name-0").get_attribute("value"))
+    self.assertEqual(contactEmailValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-0").get_attribute("value"))
+    self.assertEqual(contactPhoneNumberValue[newVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
+    self.assertEqual(contactNameValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-name-1").get_attribute("value"))
+    self.assertEqual(contactEmailValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-email-1").get_attribute("value"))
+    self.assertEqual(contactPhoneNumberValue[currentVesselNumber], self.driver.find_element_by_id("asset-input-contact-number-1").get_attribute("value"))
     time.sleep(3)
 
 
@@ -1550,6 +1557,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     time.sleep(10)
     # Enter IRCS for newly created position
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+    time.sleep(1)
     self.driver.find_element_by_link_text("Custom").click()
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
@@ -1826,6 +1834,24 @@ def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobi
         assetVesselName = get_selected_asset_column_value_based_on_cfr(assetAllrows, linkAssetMobileTerminalAllrows[x][1], 1)
         mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetVesselName, mobileTerminalRowValue)
+
+
+
+
+def create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, mobileTerminalFileName, linkFileName):
+    # Create Mobile Terminal based on linkFile and mobileTerminalFile (mobileTerminalFileName, linkFileName)
+
+    # Open saved csv file and read all mobile terminal elements
+    mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
+
+    # Open saved csv file and read all linked elements between assets and mobile terminals
+    linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+
+    # create_one new mobile terminal for mentioned asset
+    for x in range(0, len(linkAssetMobileTerminalAllrows)):
+        mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue)
+
 
 
 
@@ -2261,9 +2287,9 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
         # Generate NAF position report with unknown Asset
 
-        # Set Current Date and time in UTC 1 hours back
+        # Set Current Date and time in UTC 4 hours into the future (This will make position report to be placed in Holding Table)
         currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionTimeValue = currentUTCValue + datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
@@ -3474,6 +3500,12 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0040b_create_NAF_position_with_speed_that_triggs_rule_one(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0037_create_NAF_position_with_speed_that_triggs_rule_one(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0041_remove_speed_rule_one(self):
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
@@ -3873,6 +3905,9 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
 
 
 class UnionVMSTestCaseSpecial(unittest.TestCase):
+    #
+    #   NOTE: Test cases in this suite shall be executed one by one. The suite is NOT intended to be run in full.
+    #
 
     def setUp(self):
         # Startup browser and login
@@ -3923,7 +3958,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=1000)
     def test_0054dev_create_one_new_mobile_terminal_and_link_to_asset(self):
         # Create Mobile Terminals 53-66 in the list
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
@@ -3931,6 +3966,12 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         for x in range(54, 67):
             create_one_new_mobile_terminal_from_gui(self, x)
             link_asset_and_mobile_terminal(self, x)
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0055_create_several_mobile_terminals_from_file(self):
+        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests400FileName[1], tests400FileName[2])
 
 
 
