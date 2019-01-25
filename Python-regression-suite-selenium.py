@@ -375,6 +375,16 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(parameterList[15])
     # Main Contact Number Value
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(parameterList[16])
+    # Main Street Value
+    self.driver.find_element_by_id("asset-input-contact-streetname-0").send_keys(parameterList[18])
+    # Main ZIP Value
+    self.driver.find_element_by_id("asset-input-contact-zipcode-0").send_keys(parameterList[19])
+    # Main City Value
+    self.driver.find_element_by_id("asset-input-contact-cityname-0").send_keys(parameterList[20])
+    # Main Country Value
+    self.driver.find_element_by_id("asset-input-contact-country-0").click()
+    self.driver.find_element_by_id("asset-input-contact-country-0-item-"+parameterList[21]).click()
+
     # Click on Save Asset button
     self.driver.find_element_by_id("menu-bar-save").click()
     time.sleep(10)

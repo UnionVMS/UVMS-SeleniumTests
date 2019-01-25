@@ -1,11 +1,11 @@
-ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue(Dermersal=0,Dermersal and pelagic=1,Pelagic=2,Unknown=3);lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue;FlagState(DNK=0,NOR=1,SWE=2)
-F20001;Fartyg20001;SWE000F20001;GG-01;4120001;502020001;MOCK-license-DB;SENOK;0;11;3;100;Kalle;;Kalle Little;kalle.little@gmail.com;+4672120001;2
-F20002;Fartyg20002;DNK000F20002;GÅ-01;2120002;478555002;MOCK-license-DB;SETRE;2;12;4;99;Kalle;;Kalle Little;kalle.little@gmail.com;+4672120002;0
-F20003;Fartyg20003;NOR000F20003;GÄ-05;2120003;630678003;MOCK-license-DB;SETRE;0;14.50;4;199;Kalle;;Kalle Little;kalle.little@gmail.com;+4672120003;1
-F20004;Fartyg20004;DNK000F20004;GG-04;2120004;881020004;MOCK-license-DB;SETRE;3;15.50;4;250;Anders;;Anders Gran;anders.gran@gmail.com;+4672120004;0
-F20005;Fartyg20005;SWE000F20005;LÅ-100;2120005;123020005;MOCK-license-DB;SENOK;3;17.99;4;289;Anders;;Anders Gran;anders.gran@gmail.com;+4672120005;2
-F20006;Fartyg20006;NOR000F20006;LÅ-101;2120006;701536006;MOCK-license-DB;SESMO;1;18.50;4;300;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120006;1
-F20007;Fartyg20007;NOR000F20007;LÅ-121;2120007;522020007;MOCK-license-DB;SESMO;0;24;4;300;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;1
-F20008;Fartyg20008;NOR000F20008;LÅ-131;2120008;522346008;MOCK-license-DB;SESIM;2;24.3;4;299.99;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;1
-F20009;Fartyg20009;DNK000F20009;MÅ-999;2120009;999923009;MOCK-license-DB;SETRE;0;24;4;501.3;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;0
-F20010;Fartyg20010;DNK000F20010;MÅ-909;2120010;122020010;MOCK-license-DB;SESIM;0;31.2;4;299.99;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;0
+ircsValue;vesselName;cfrValue;externalMarkingValue;imoValue;mmsiValue;licenseTypeValue;homeportValue;gearTypeValue(Dermersal=0,Dermersal and pelagic=1,Pelagic=2,Unknown=3);lengthValue;grossTonnageValue;powerValue;producernameValue;producercodeValue;contactNameValue;contactEmailValue;contactPhoneNumberValue;FlagState(DNK=0,NOR=1,SWE=2);contactStreetValue;contactZipValue;contactCityValue;contactFlagState(DNK=0,NOR=1,SWE=2)
+F20001;Fartyg20001;SWE000F20001;GG-01;4120001;502020001;MOCK-license-DB;SENOK;0;11;3;100;Kalle;;Kalle Little;kalle.little@gmail.com;+4672120001;2;Mastergatan 1;999 01;Grönköping;2
+F20002;Fartyg20002;DNK000F20002;GÅ-01;2120002;478555002;MOCK-license-DB;SETRE;2;12;4;99;Kalle;;Kalle Little;kalle.little@gmail.com;+4672120002;0;Mastergatan 2;999 02;Rödstad;1
+F20003;Fartyg20003;NOR000F20003;GÄ-05;2120003;630678003;MOCK-license-DB;SETRE;0;14.50;4;199;Kalle;;Kalle Little;kalle.little@gmail.com;+4672120003;1;Mastergatan 3;999 03;Blåstad;0
+F20004;Fartyg20004;DNK000F20004;GG-04;2120004;881020004;MOCK-license-DB;SETRE;3;15.50;4;250;Anders;;Anders Gran;anders.gran@gmail.com;+4672120004;0;Mastergatan 4;999 04;Gulstad;1
+F20005;Fartyg20005;SWE000F20005;LÅ-100;2120005;123020005;MOCK-license-DB;SENOK;3;17.99;4;289;Anders;;Anders Gran;anders.gran@gmail.com;+4672120005;2;Mastergatan 5;999 05;Svartstad;2
+F20006;Fartyg20006;NOR000F20006;LÅ-101;2120006;701536006;MOCK-license-DB;SESMO;1;18.50;4;300;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120006;1;Mastergatan 6;999 06;Gråstad;2
+F20007;Fartyg20007;NOR000F20007;LÅ-121;2120007;522020007;MOCK-license-DB;SESMO;0;24;4;300;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;1;Mastergatan 7;999 07;Rosastad;0
+F20008;Fartyg20008;NOR000F20008;LÅ-131;2120008;522346008;MOCK-license-DB;SESIM;2;24.3;4;299.99;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;1;Mastergatan 8;999 08;Lilastad;1
+F20009;Fartyg20009;DNK000F20009;MÅ-999;2120009;999923009;MOCK-license-DB;SETRE;0;24;4;501.3;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;0;Lillgatan 9;999 09;Brödstad;2
+F20010;Fartyg20010;DNK000F20010;MÅ-909;2120010;122020010;MOCK-license-DB;SESIM;0;31.2;4;299.99;Pelle;;Pelle Bröd;Pelle.brod@gmail.com;+4672120007;0;Lillgatan 10;999 10;Smulstad;0
