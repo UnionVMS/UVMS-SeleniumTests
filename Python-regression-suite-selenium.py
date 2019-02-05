@@ -3935,7 +3935,6 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-
     @timeout_decorator.timeout(seconds=1000)
     def test_0053test_server_create_assets_and_mobile_terminals_39_52(self):
         # Create Mobile Terminals 39-52 in the list
@@ -3944,6 +3943,16 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         for x in range(40, 53):
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0053btest_server_create_assets_and_mobile_terminals_39_52(self):
+        # Create Mobile Terminals 39-52 in the list
+        # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
+        # Asset (Number 39) does not exist anymore. Removed from Fartyg2
+        for x in range(40, 53):
+            create_one_new_mobile_terminal_from_gui(self, x)
+            link_asset_and_mobile_terminal(self, x)
+
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4755,7 +4764,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
             self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
             self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
-            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            # self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
             self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
 
         # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
