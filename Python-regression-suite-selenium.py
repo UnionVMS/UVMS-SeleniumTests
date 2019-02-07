@@ -4272,7 +4272,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         UnionVMSTestCase.test_0034_create_speed_rule_one(self)
 
 
-    def test_0034b_modify_speed_rule_one_and_add_cfr_condition(self):
+    def test_0035_modify_speed_rule_one_and_add_cfr_condition(self):
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -4333,7 +4333,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034c_generate_NAF_position_that_not_triggs_rule(self):
+    def test_0036_generate_NAF_position_that_not_triggs_rule(self):
         # Generate NAF position report that satisfies the speed part but not the CFR part of the modified rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -4374,9 +4374,14 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         time.sleep(2)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0036b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
+
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034d_generate_NAF_position_that_not_triggs_rule(self):
+    def test_0037_generate_NAF_position_that_not_triggs_rule(self):
         # Generate NAF position report that not satisfies the speed part but the CFR part of the modified rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -4416,10 +4421,14 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             pass
         time.sleep(2)
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0037b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034e_generate_NAF_position_that_triggs_rule(self):
+    def test_0038_generate_NAF_position_that_triggs_rule(self):
         # Generate NAF position report that triggs the modified rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -4475,7 +4484,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034f_modify_speed_rule_one_and_change_cfr_condition(self):
+    def test_0039_modify_speed_rule_one_and_change_cfr_condition(self):
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -4508,7 +4517,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034g_generate_NAF_position_that_not_triggs_rule(self):
+    def test_0040_generate_NAF_position_that_not_triggs_rule(self):
         # Generate NAF position report that not satisfies the CFR part of the modified rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -4550,7 +4559,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034h_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
+    def test_0041_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
         # Select Alerts tab (Holding Table)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         time.sleep(2)
@@ -4582,7 +4591,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034i_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
+    def test_0042_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
         # Generate NAF position report that triggs the CFR part of modified rule. That should now trigg the rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -4636,10 +4645,14 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
         time.sleep(5)
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0042b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0034j_generate_NAF_position_that_triggs_rule_on_speed_part(self):
+    def test_0043_generate_NAF_position_that_triggs_rule_on_speed_part(self):
         # Generate NAF position report that triggs the speed part of modified rule. That should now trigg the rule
 
         # Set Current Date and time in UTC 1 hours back
@@ -4694,7 +4707,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         time.sleep(5)
 
 
-    def test_0041_remove_speed_rule_one(self):
+    def test_0044_remove_speed_rule_one(self):
         # Startup browser and login
         UnionVMSTestCase.test_0041_remove_speed_rule_one(self)
 
