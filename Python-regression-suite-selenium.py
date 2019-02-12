@@ -708,7 +708,6 @@ def check_new_asset_exists(self, vesselNumber):
 
 
 def check_current_asset_pop_up_history_items(self, vesselNumber):
-
     # Check the values in the pop up window
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector("div.historyValues > div.col-md-6 > b").text)
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_xpath("//div[3]/b").text)
@@ -718,17 +717,22 @@ def check_current_asset_pop_up_history_items(self, vesselNumber):
     self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_xpath("//div[9]/b").text)
     self.assertEqual(licenseValue, self.driver.find_element_by_xpath("//div[10]/b").text)
     self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[11]/b").text)
-    self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_css_selector("div.col-md-12 > b").text)
-    self.assertEqual(contactEmailValue[vesselNumber], self.driver.find_element_by_xpath("//li/div[2]/b").text)
-    self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_xpath("//li/div[3]/b").text)
     self.assertEqual(gearTypeValue[vesselNumber], self.driver.find_element_by_xpath("//div[17]/b").text)
     self.assertEqual(powerValue[vesselNumber] + " kW", self.driver.find_element_by_xpath("//div[19]/b").text)
     self.assertEqual(lengthValue[vesselNumber] + " m LOA", self.driver.find_element_by_xpath("//div[20]/b").text)
     time.sleep(1)
 
 
+def check_first_contact_in_current_asset_pop_up_history_items(self, vesselNumber):
+    # Check the 1st contact values in the pop up window
+    self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_css_selector("div.col-md-12 > b").text)
+    self.assertEqual(contactEmailValue[vesselNumber], self.driver.find_element_by_xpath("//li/div[2]/b").text)
+    self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_xpath("//li/div[3]/b").text)
+
+
+
 def check_second_contact_in_current_asset_pop_up_history_items(self, vesselNumber):
-    # Check the values in the pop up window
+    # Check the 2nd contact values in the pop up window
     self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_xpath("//li[2]/div/b").text)
     self.assertEqual(contactEmailValue[vesselNumber], self.driver.find_element_by_xpath("//li[2]/div[2]/b").text)
     self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_xpath("//li[2]/div[3]/b").text)
@@ -766,9 +770,13 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
         time.sleep(2)
         # Check the values in the pop up window
         check_current_asset_pop_up_history_items(self, vesselNumberList[y])
-        # Check the second contact info if available
+        # Check the 1st and 2nd contact info if available
         if secondContactVesselNumberList[y] != 0:
-            check_second_contact_in_current_asset_pop_up_history_items(self, secondContactVesselNumberList[y])
+            # Check the second contact info if available
+            check_first_contact_in_current_asset_pop_up_history_items(self, secondContactVesselNumberList[y])
+            check_second_contact_in_current_asset_pop_up_history_items(self, vesselNumberList[y])
+        else:
+            check_first_contact_in_current_asset_pop_up_history_items(self, vesselNumberList[y])
         # Close History pop up window
         self.driver.find_element_by_css_selector("div.modal-footer > #asset-btn-close-history").click()
         time.sleep(2)
