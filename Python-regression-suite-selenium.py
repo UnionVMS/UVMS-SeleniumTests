@@ -1083,7 +1083,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.assertEqual(noteUser[currentVesselNumber], self.driver.find_element_by_xpath("//div[5]/b").text)
     self.assertEqual(notesLicenseHolder[currentVesselNumber], self.driver.find_element_by_xpath("//div[6]/b").text)
     self.assertEqual(notesContact[currentVesselNumber], self.driver.find_element_by_xpath("//div[7]/b").text)
-    self.assertEqual(commentValue, self.driver.find_element_by_css_selector("span.lowercase > b").text)
+    self.assertEqual(commentValue, self.driver.find_element_by_css_selector("span > b").text)
     self.assertEqual(readyTimeValue.strftime("%Y-%m-%d %H:%M:%S"), self.driver.find_element_by_xpath("//div[10]/b").text)
     self.assertEqual(notesSheetNumber[currentVesselNumber], self.driver.find_element_by_xpath("//div[11]/b").text)
     time.sleep(1)
