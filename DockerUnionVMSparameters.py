@@ -142,6 +142,8 @@ referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 
 tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
 tests400FileName = ['assets4xxxx.csv', 'mobileterminals4xxxx.csv', 'linkassetmobileterminals4xxxx.csv', 'channelstomobileterminals4xxxx.csv', 'channelstomobileterminals4bxxx.csv']
+tests500FileName = ['assets5xxxx.csv', 'mobileterminals5xxxx.csv', 'linkassetmobileterminals5xxxx.csv', 'channelstomobileterminals5xxxx.csv', 'channelstomobileterminals5bxxx.csv']
+
 
 defaultSystemName = "UVMS"
 defaultNAFName = "NAF"

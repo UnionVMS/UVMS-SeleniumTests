@@ -443,6 +443,57 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     time.sleep(2)
 
 
+def create_one_new_mobile_terminal_from_gui_with_parameters(self, parameterRow):
+    # Click on mobile terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Click on new terminal button
+    self.driver.find_element_by_id("mt-btn-create").click()
+    time.sleep(3)
+    # Select Transponder system
+    self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
+    time.sleep(1)
+#    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
+    self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
+    time.sleep(1)
+    # Enter serial number
+    self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterRow[0])
+    # Enter Transceiver type
+    self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterRow[1])
+    # Enter Software Version
+    self.driver.find_element_by_id("mt-0-softwareVersion").send_keys(parameterRow[2])
+    # Enter Antenna
+    self.driver.find_element_by_id("mt-0-antenna").send_keys(parameterRow[3])
+    # Enter Satellite Number
+    self.driver.find_element_by_id("mt-0-satelliteNumber").send_keys(parameterRow[4])
+    # Enter DNID Number
+    self.driver.find_element_by_name("dnid").send_keys(parameterRow[5])
+    # Enter Member Number
+    self.driver.find_element_by_name("memberId").send_keys(parameterRow[6])
+    # Enter Installed by
+    self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterRow[7])
+    # Expected frequency
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").clear()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyExpected").send_keys(parameterRow[8])
+    # Grace period
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").clear()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyGrace").send_keys(parameterRow[10])
+    # In port
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").clear()
+    self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(parameterRow[12])
+    time.sleep(2)
+    # Activate Mobile Terminal button
+    self.driver.find_element_by_id("mt-0-activation").click()
+    time.sleep(5)
+    # Click on save button
+    self.driver.find_element_by_id("menu-bar-save").click()
+    time.sleep(5)
+    # Leave new asset view
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+
+
+
 def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, vesselNumber):
     # Click on asset tab
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -1384,6 +1435,43 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     time.sleep(2)
 
 
+def link_asset_and_mobile_terminal_with_parameters(self, mobileTerminalparameterRow, ircsOrCfrValue):
+    # Select Mobile Terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Enter Serial Number in field
+    self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+    self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalparameterRow[0])
+    # Click in search button
+    self.driver.find_element_by_id("mt-btn-advanced-search").click()
+    time.sleep(5)
+    # Click on details button
+    self.driver.find_element_by_id("mt-toggle-form").click()
+    time.sleep(3)
+    # Click on Link Asset
+    self.driver.find_element_by_id("mt-btn-assign-asset").click()
+    time.sleep(2)
+    # Enter Asset Name and clicks on the search button
+    self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(ircsOrCfrValue)
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(2)
+    # Click on connect button
+    self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
+    # Click on Link button
+    time.sleep(2)
+    self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
+    # Enter Reason comment
+    self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
+    time.sleep(2)
+    # Click on Link button 2
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    time.sleep(2)
+    # Close page
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+
+
+
 def change_and_check_speed_format(self,unitNumber):
     # Select Admin tab
     self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
@@ -1868,7 +1956,9 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename(sel
     # create_one new mobile terminal for mentioned asset
     for x in range(0, len(linkAssetMobileTerminalAllrows)):
         mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
-        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue)
+        create_one_new_mobile_terminal_from_gui_with_parameters(self, mobileTerminalRowValue)
+        link_asset_and_mobile_terminal_with_parameters(self, mobileTerminalRowValue, linkAssetMobileTerminalAllrows[x][1])
+        # create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue)
 
 
 
@@ -3975,7 +4065,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=1000)
-    def test_0053dev_server_create_assets_and_mobile_terminals_53_66(self):
+    def test_0054dev_server_create_assets_and_mobile_terminals_53_66(self):
         # Create Mobile Terminals 53-66 in the list
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 53) does not exist anymore. Removed from Fartyg2
@@ -3998,7 +4088,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
     @timeout_decorator.timeout(seconds=1000)
     def test_0055_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
-        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests400FileName[1], tests400FileName[2])
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests500FileName[1], tests500FileName[2])
 
 
 
@@ -4960,7 +5050,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
         filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
         # Get all assets with Power interval 0-99 in the filteredAssetListSelected.
-        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 9, 12, 15)
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 11, 0, 100)
         # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
 
@@ -5005,7 +5095,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
         filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
         # Get all assets with Power interval 0-99 in the filteredAssetListSelected.
-        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 9, 12, 15)
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 11, 0, 100)
         # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
