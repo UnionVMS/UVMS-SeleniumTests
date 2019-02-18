@@ -1955,6 +1955,10 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename(sel
 
     # create_one new mobile terminal for mentioned asset
     for x in range(0, len(linkAssetMobileTerminalAllrows)):
+        print("-----------------------")
+        print(x)
+        print(linkAssetMobileTerminalAllrows[x][1])
+        print("-----------------------")
         mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
         create_one_new_mobile_terminal_from_gui_with_parameters(self, mobileTerminalRowValue)
         link_asset_and_mobile_terminal_with_parameters(self, mobileTerminalRowValue, linkAssetMobileTerminalAllrows[x][1])
@@ -4090,6 +4094,23 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests500FileName[1], tests500FileName[2])
 
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0056_create_several_mobile_terminals_from_file(self):
+        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests600FileName[1], tests600FileName[2])
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0057_create_several_mobile_terminals_from_file(self):
+        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests700FileName[1], tests700FileName[2])
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0058_create_several_mobile_terminals_from_file(self):
+        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests800FileName[1], tests800FileName[2])
 
 
     @timeout_decorator.timeout(seconds=900)
