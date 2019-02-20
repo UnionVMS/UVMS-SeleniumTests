@@ -1453,8 +1453,9 @@ def link_asset_and_mobile_terminal_with_parameters(self, mobileTerminalparameter
     time.sleep(2)
     # Enter Asset Name and clicks on the search button
     self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(ircsOrCfrValue)
-    self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(2)
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    time.sleep(3)
     # Click on connect button
     self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
     # Click on Link button
@@ -4037,6 +4038,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
+    # Injecting MTs for Test (via Asset tab)
     @timeout_decorator.timeout(seconds=1000)
     def test_0053test_server_create_assets_and_mobile_terminals_39_52(self):
         # Create Mobile Terminals 39-52 in the list
@@ -4046,19 +4048,10 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
-    @timeout_decorator.timeout(seconds=1000)
-    def test_0053btest_server_create_assets_and_mobile_terminals_39_52(self):
-        # Create Mobile Terminals 39-52 in the list
-        # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
-        # Asset (Number 39) does not exist anymore. Removed from Fartyg2
-        for x in range(40, 53):
-            create_one_new_mobile_terminal_from_gui(self, x)
-            link_asset_and_mobile_terminal(self, x)
 
-
-
+    # Injecting MTs for Test
     @timeout_decorator.timeout(seconds=180)
-    def test_0054test_create_one_new_mobile_terminal_and_link_to_asset(self):
+    def test_0053test_create_one_new_mobile_terminal_and_link_to_asset(self):
         # Create Mobile Terminals 39-52 in the list
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 39) does not exist anymore. Removed from Fartyg2
@@ -4068,6 +4061,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
 
 
+    # Injecting MTs for Dev (via Asset tab)
     @timeout_decorator.timeout(seconds=1000)
     def test_0054dev_server_create_assets_and_mobile_terminals_53_66(self):
         # Create Mobile Terminals 53-66 in the list
@@ -4078,7 +4072,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
             time.sleep(1)
 
 
-
+    # Injecting MTs for Dev
     @timeout_decorator.timeout(seconds=1000)
     def test_0054dev_create_one_new_mobile_terminal_and_link_to_asset(self):
         # Create Mobile Terminals 53-66 in the list
@@ -4089,24 +4083,26 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
             link_asset_and_mobile_terminal(self, x)
 
 
+
+    # Injecting MTs for Prod (All parts)
     @timeout_decorator.timeout(seconds=1000)
     def test_0055_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests500FileName[1], tests500FileName[2])
 
-
+    # Injecting MTs for Prod Part 1
     @timeout_decorator.timeout(seconds=1000)
     def test_0056_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests600FileName[1], tests600FileName[2])
 
-
+    # Injecting MTs for Prod Part 2
     @timeout_decorator.timeout(seconds=1000)
     def test_0057_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests700FileName[1], tests700FileName[2])
 
-
+    # Injecting MTs for Prod Part 3
     @timeout_decorator.timeout(seconds=1000)
     def test_0058_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
