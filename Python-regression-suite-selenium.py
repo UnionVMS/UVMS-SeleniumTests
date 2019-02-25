@@ -3756,7 +3756,7 @@ class UnionVMSTestCase(unittest.TestCase):
         check_asset_archived(self, 35)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0052_create_assets_trip_1_2_3(self):
         # Create assets, Mobile for Trip 1
         create_asset_from_file(self, 'asset1.csv')
@@ -3773,7 +3773,7 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('asset1.csv')
@@ -3823,7 +3823,7 @@ class UnionVMSTestCase(unittest.TestCase):
         #time.sleep(5)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0056_create_assets_trip_5_and_6(self):
         # Create assets, Mobile for Trip 5
         create_asset_from_file(self, 'asset5.csv')
@@ -3836,7 +3836,7 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
@@ -3845,7 +3845,7 @@ class UnionVMSTestCase(unittest.TestCase):
         create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0101_create_assets_real_trip_1(self):
         # Create assets, Mobile for RealTrip 1
         create_asset_from_file(self, 'assetreal1.csv')
@@ -3858,7 +3858,7 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=254, minutes=16), 'assetreal2.csv', 'tripreal2.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0101b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal1.csv', 'tripreal1.csv')
