@@ -6382,6 +6382,5 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
 
-
 if __name__ == '__main__':
     unittest.main(testRunner=xmlrunner.XMLTestRunner(output=get_test_report_path(), verbosity=2),failfast=False, buffer=False, catchbreak=False)
