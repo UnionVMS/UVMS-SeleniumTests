@@ -1500,7 +1500,6 @@ def change_and_check_speed_format(self,unitNumber):
     time.sleep(5)
 
 
-
 def generate_and_verify_manual_position(self,speedValue,courseValue):
     # Select Positions tab
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
