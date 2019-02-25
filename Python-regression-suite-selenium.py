@@ -262,6 +262,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     #self.driver.find_element_by_id("asset-input-countryCode").click()
     #self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-flagStateCode-item-2").click()
 
     # Enter IRCS value
