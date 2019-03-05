@@ -471,6 +471,10 @@ def create_one_new_mobile_terminal_from_gui_with_parameters(self, parameterRow):
     self.driver.find_element_by_name("dnid").send_keys(parameterRow[5])
     # Enter Member Number
     self.driver.find_element_by_name("memberId").send_keys(parameterRow[6])
+
+    # Unmark Poll default setting
+    self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[3]/div/div[2]/div[2]/label").click()
+
     # Enter Installed by
     self.driver.find_element_by_id("mt-0-channel-0-installedBy").send_keys(parameterRow[7])
     # Expected frequency
@@ -693,6 +697,76 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     # Click on Cancel
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
+
+
+
+def create_one_new_channel_for_one_mobile_terminal_without_referenceDateTime(self, channelRow):
+    # Click on mobile terminal tab
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    time.sleep(2)
+    # Search for mobile terminal via serial number
+    self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+    self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
+    self.driver.find_element_by_id("mt-btn-advanced-search").click()
+    time.sleep(5)
+    # Click on detail button
+    self.driver.find_element_by_id("mt-toggle-form").click()
+    time.sleep(5)
+    # Click on link "Add new channel"
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
+    time.sleep(2)
+    # Enter channel name
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").send_keys(channelRow[1])
+    # Activate Poll if value is "true"
+    #if channelRow[2] == "1":
+        #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-polling").click()
+        #self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[2]/label").click()
+    # Activate Config if value is "true"
+    #if channelRow[3] == "1":
+        #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-config").click()
+        #self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[3]/label").click()
+    # Activate Default if value is "true"
+    #if channelRow[4] == "1":
+        #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-default").click()
+        #self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[4]/label").click()
+    # Enter DNID value
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").send_keys(channelRow[5])
+    # Enter Member Number
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").send_keys(channelRow[6])
+    # Enter Land station
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").send_keys(channelRow[7])
+    # Enter Installer from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").send_keys(channelRow[10])
+    # Enter Exp. frequency from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").send_keys(channelRow[13])
+    # Enter Grace period from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").send_keys(channelRow[14])
+    # Enter In port from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").send_keys(channelRow[15])
+
+    # Click on Save button
+    self.driver.find_element_by_id("menu-bar-update").click()
+    time.sleep(2)
+    # Enter Comment in comment field
+    self.driver.find_element_by_name("comment").clear()
+    self.driver.find_element_by_name("comment").send_keys(commentValue)
+    time.sleep(1)
+    # Click on Update button
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    time.sleep(3)
+    # Click on Cancel
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(3)
+
+
 
 
 
@@ -1971,7 +2045,6 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename(sel
         mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
         create_one_new_mobile_terminal_from_gui_with_parameters(self, mobileTerminalRowValue)
         link_asset_and_mobile_terminal_with_parameters(self, mobileTerminalRowValue, linkAssetMobileTerminalAllrows[x][1])
-        # create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue)
 
 
 
@@ -1985,6 +2058,24 @@ def create_addtional_channels_for_mobileterminals_from_file(self, channelFileNam
     # create_one new channel for mentioned mobile terminal
     for x in range(0, len(channelAllrows)):
         create_one_new_channel_for_one_mobile_terminal(self, channelAllrows[x], referenceDateTime)
+
+
+
+def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file(self, channelFileName):
+    # Create addtional channels for Mobile Terminals from file based on channelFile
+
+    # Open saved csv file and read all asset elements
+    channelAllrows = get_elements_from_file(channelFileName)
+
+    # create_one new channel for mentioned mobile terminal
+    for x in range(0, len(channelAllrows)):
+        print("-----------------------")
+        print(x)
+        print(channelAllrows[x][0])
+        print("-----------------------")
+        create_one_new_channel_for_one_mobile_terminal_without_referenceDateTime(self, channelAllrows[x])
+
+
 
 
 
@@ -4096,25 +4187,14 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
     @timeout_decorator.timeout(seconds=1000)
     def test_0055_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
-        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests500FileName[1], tests500FileName[2])
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests900FileName[1], tests900FileName[2])
 
-    # Injecting MTs for Prod Part 1
-    @timeout_decorator.timeout(seconds=1000)
-    def test_0056_create_several_mobile_terminals_from_file(self):
-        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
-        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests600FileName[1], tests600FileName[2])
 
-    # Injecting MTs for Prod Part 2
-    @timeout_decorator.timeout(seconds=1000)
-    def test_0057_create_several_mobile_terminals_from_file(self):
-        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
-        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests700FileName[1], tests700FileName[2])
+    @timeout_decorator.timeout(seconds=180)
+    def test_0055b_create_several_additional_channels_for_mobile_terminals(self):
+        # Create assets from file with several different values for filtering
+        create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file(self, tests900FileName[3])
 
-    # Injecting MTs for Prod Part 3
-    @timeout_decorator.timeout(seconds=1000)
-    def test_0058_create_several_mobile_terminals_from_file(self):
-        # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
-        create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests800FileName[1], tests800FileName[2])
 
 
     @timeout_decorator.timeout(seconds=900)

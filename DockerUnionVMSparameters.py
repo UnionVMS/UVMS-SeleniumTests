@@ -141,11 +141,7 @@ downloadPathWindow = "\Downloads"
 referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 
 tests300FileName = ['assets3xxxx.csv', 'mobileterminals3xxxx.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
-tests400FileName = ['assets4xxxx.csv', 'mobileterminals4xxxx.csv', 'linkassetmobileterminals4xxxx.csv', 'channelstomobileterminals4xxxx.csv', 'channelstomobileterminals4bxxx.csv']
-tests500FileName = ['assets5xxxx.csv', 'mobileterminals5xxxx.csv', 'linkassetmobileterminals5xxxx.csv', 'channelstomobileterminals5xxxx.csv', 'channelstomobileterminals5bxxx.csv']
-tests600FileName = ['assets6xxxx.csv', 'mobileterminals6xxxx.csv', 'linkassetmobileterminals6xxxx.csv', 'channelstomobileterminals6xxxx.csv', 'channelstomobileterminals6bxxx.csv']
-tests700FileName = ['assets7xxxx.csv', 'mobileterminals7xxxx.csv', 'linkassetmobileterminals7xxxx.csv', 'channelstomobileterminals7xxxx.csv', 'channelstomobileterminals7bxxx.csv']
-tests800FileName = ['assets8xxxx.csv', 'mobileterminals8xxxx.csv', 'linkassetmobileterminals8xxxx.csv', 'channelstomobileterminals8xxxx.csv', 'channelstomobileterminals8bxxx.csv']
+tests900FileName = ['assetsALLxx.csv', 'mobileterminalsALLxx.csv', 'linkassetmobileterminalsALLxx.csv', 'channelstomobileterminalsALLxx.csv', 'channelstomobileterminalALLxxx.csv']
 
 
 defaultSystemName = "UVMS"
