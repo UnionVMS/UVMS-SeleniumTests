@@ -4974,6 +4974,154 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0051_create_user_area_rule_one(self):
+        # Select Alerts tab (Holding Table)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(1)
+        # Select Alerts tab (Rules)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        time.sleep(2)
+        # Click on create button
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(2)
+        # Enter Rule name
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(userAreaRuleNamne)
+        time.sleep(1)
+        # Enter Description
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys(userAreaRuleNamne)
+        time.sleep(1)
+        # Enter 1st part of the rule
+        self.driver.find_element_by_xpath("(//button[@id=''])[3]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("(").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[4]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Area").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[5]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Type").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[7]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("USERAREA").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text(")").click()
+        time.sleep(2)
+        # Select "AND" statement
+        self.driver.find_element_by_xpath("(//button[@id=''])[9]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("AND").click()
+        time.sleep(2)
+        # Click on add a new row and enter a second part of the rule statement
+        self.driver.find_element_by_css_selector("fieldset > div.row > div.col-md-12 > div.addMoreLink").click()
+        time.sleep(1)
+
+        # Enter 2nd part of the rule
+        self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("(").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Area").click()
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div/div/form/fieldset[1]/div[2]/div[3]/table/tbody/tr[2]/td[5]/div/div/input").send_keys(userAreaName)
+        #self.driver.find_element_by_name("value").send_keys(userAreaName)
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[14]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text(")").click()
+        time.sleep(2)
+        # Click on "Test rule definition"
+        self.driver.find_element_by_css_selector("span.link").click()
+        time.sleep(1)
+        # Check validation of Rule
+        self.assertEqual("Rule definition is valid.", self.driver.find_element_by_css_selector("span.success").text)
+        time.sleep(2)
+        # Submit the new Rule
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(5)
+        # Change "Notify by email" to Yes
+        self.driver.find_element_by_xpath("(//button[@id=''])[2]").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Yes").click()
+        time.sleep(5)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052_create_one_new_asset_and_mobile_terminal_36(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 36)
+        create_one_new_mobile_terminal_via_asset_tab(self, 36, 36)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0053_generate_NAF_position_that_triggs_rule(self):
+        # Generate NAF position report that triggs the modified rule
+
+
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionAreaValues[4][0]
+        longStrValue = lolaPositionAreaValues[4][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[36], ircsValue[36], cfrValue[36], externalMarkingValue[36], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[36])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(8)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(8)
+        # Check Asset and Rule names
+        self.assertEqual(vesselName[36], self.driver.find_element_by_link_text(vesselName[36]).text)
+        self.assertEqual(userAreaRuleNamne, self.driver.find_element_by_css_selector("td[title=\"" + userAreaRuleNamne + "\"]").text)
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        time.sleep(5)
+        # Check Position parameters
+        self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[6][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[6][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(5)
+
 
 
 

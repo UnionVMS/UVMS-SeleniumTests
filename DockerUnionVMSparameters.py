@@ -80,8 +80,15 @@ lolaPositionValues = [[["57.326", "16.996"], ["57.327", "16.997"]],
                       [["63.403", "20.457"], ["63.403", "20.457"]]]
 
 
-# lolaSpeedCourseTripValues [Position Report number x, Asset Number y, lat=0/long=1/speed=2/course=3 z]
+# lolaPositionAreaValues [lola position route y, lat=0/lon=1 z]
+lolaPositionAreaValues = [["58.031", "14.441"],
+                          ["58.032", "14.432"],
+                          ["58.035", "14.386"],
+                          ["58.033", "14.368"],
+                          ["58.033", "14.355"]]
 
+
+# lolaSpeedCourseTripValues [Position Report number x, Asset Number y, lat=0/long=1/speed=2/course=3 z]
 lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "11.556286", "0", "271"], ["59.863", "19.130", "5", "340"]],
                             [["57.626013", "11.356717", "10", "174"], ["57.964829", "11.402715", "5", "346"], ["59.786", "19.140", "5", "197"]],
                             [["57.458007", "11.378829", "10", "150"], ["58.126604", "11.330559", "10", "346"], ["59.712", "19.099", "5", "178"]],
@@ -102,10 +109,13 @@ auditLogsOperationValue = ("Update", "Create", "Linked", "Archive")
 auditLogsObjectTypeValue = ("Setting", "Alarm", "Asset", "Mobile Terminal", "Manual position report", "Temporary position report", "Automatic position report", "Asset Group", "Poll")
 auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See object", "dateTimeFormat")
 
-# Area Management
+# Area Management Parameters
 userAreaFileName = "area1.csv"
 userAreaName = "Area 1"
 userAreaTypeName = "AREATYPE1"
+
+# Rule Parameters
+userAreaRuleNamne = "Area 1 Triggered"
 
 
 # Mixed parameters
