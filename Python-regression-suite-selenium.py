@@ -1564,8 +1564,15 @@ def change_and_check_speed_format(self,unitNumber):
     time.sleep(2)
     # Click on Position Tab to check correct speed unit
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-    time.sleep(10)
-    print("Short Unit: " + speedUnitTypesShort[unitNumber])
+    time.sleep(3)
+    # Select Custom mode
+    self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+    time.sleep(1)
+    self.driver.find_element_by_link_text("Custom").click()
+    time.sleep(1)
+    # Click on search button
+    self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+    time.sleep(5)
     currentSpeedValue = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]").text
     print("Current: " +  currentSpeedValue + " Short Unit: " + speedUnitTypesShort[unitNumber])
     if currentSpeedValue.find(speedUnitTypesShort[unitNumber]) == -1:
