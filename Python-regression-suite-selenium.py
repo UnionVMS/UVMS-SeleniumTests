@@ -1565,6 +1565,7 @@ def change_and_check_speed_format(self,unitNumber):
     # Click on Position Tab to check correct speed unit
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
     time.sleep(10)
+    print("Short Unit: " + speedUnitTypesShort[unitNumber])
     currentSpeedValue = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]").text
     print("Current: " +  currentSpeedValue + " Short Unit: " + speedUnitTypesShort[unitNumber])
     if currentSpeedValue.find(speedUnitTypesShort[unitNumber]) == -1:
@@ -3429,10 +3430,19 @@ class UnionVMSTestCase(unittest.TestCase):
         UnionVMSTestCase.test_0030_change_global_settings_change_date_format(self)
 
 
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0030c_generate_NAF_and_verify_position(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0008_generate_NAF_and_verify_position(self)
+
+
+
     @timeout_decorator.timeout(seconds=180)
     def test_0031_change_global_settings_change_speed_format(self):
         # Change and check speed unit type for Global Settings
         for x in [2,1,0]:
+            print(x)
             change_and_check_speed_format(self,x)
             reload_page_and_goto_default(self)
             time.sleep(3)
@@ -4913,6 +4923,57 @@ class UnionVMSTestCaseRules(unittest.TestCase):
     def test_0044_remove_speed_rule_one(self):
         # Startup browser and login
         UnionVMSTestCase.test_0041_remove_speed_rule_one(self)
+
+
+    def test_0050_create_user_area(self):
+        # Startup browser and login
+        # Click on Area Management tab
+        self.driver.find_element_by_id("uvms-header-menu-item-areas").click()
+        time.sleep(3)
+        # Click on New are button
+        self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
+        time.sleep(2)
+        # Click on Coordinates button
+        self.driver.find_element_by_css_selector("div.editingTools.text-center > div.btn-group > button.btn.btn-default").click()
+        time.sleep(2)
+        # Click and select WGS84 projection
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/div/span").click()
+        time.sleep(1)
+        self.driver.find_element_by_link_text("WGS 84").click()
+        time.sleep(1)
+
+        # Open saved csv file and read all area elements
+        userAreaAllrows = get_elements_from_file(userAreaFileName)
+        print(userAreaAllrows)
+        # create_one_new_asset
+        for x in range(0, len(userAreaAllrows)):
+            # Click on "plus" button
+            self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/button").click()
+            time.sleep(1)
+            # Enter Long Lat position
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(6 + x*2) + "]").clear()
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(6 + x*2) + "]").send_keys(userAreaAllrows[x][0])
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(7 + x*2) + "]").clear()
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(7 + x*2) + "]").send_keys(userAreaAllrows[x][1])
+            time.sleep(1)
+        # Click on Apply button
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/div/button[2]").click()
+        time.sleep(1)
+        # Enter User Area Name
+        self.driver.find_element_by_name("userAreaName").clear()
+        self.driver.find_element_by_name("userAreaName").send_keys(userAreaName)
+        time.sleep(1)
+        # Enter User Area Type Name
+        self.driver.find_element_by_name("comboEditableInput").clear()
+        self.driver.find_element_by_name("comboEditableInput").send_keys(userAreaTypeName)
+        time.sleep(1)
+        # Click on Save button to save the new User Area.
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[3]/div/button").click()
+        time.sleep(3)
+
+
+
 
 
 

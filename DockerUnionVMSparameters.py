@@ -33,6 +33,7 @@ flagStateIndex = ["DNK", "NOR", "SWE"]
 gearTypeIndex = ["Demersal", "Demersal and pelagic", "Pelagic", "Unknown"]
 assetFileName = 'assets.csv'
 
+
 # Mobile Terminals
 serialNoValue = ["M0101", "2M010", "13M00", "0M014", "1050M", "6M010", "T6EBT4490478", "030M1", "4M100", "2M400", "0403M", "4M004", "M0540", "0604M", "0047M", "8M004", "400M9", "04M01", "5100M", "2050M", "003M5", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "M1991", "M2991", "M3991", "M5000", "M6000", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "907ATB991TF5", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "907ATB991TF5"]
 transceiverType = ["Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Sailor 6140M MiniC", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Type A", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Type A", "Type A", "Type A", "Type A", "Type A", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC", "Sailor 6140M MiniC"]
@@ -101,6 +102,11 @@ auditLogsOperationValue = ("Update", "Create", "Linked", "Archive")
 auditLogsObjectTypeValue = ("Setting", "Alarm", "Asset", "Mobile Terminal", "Manual position report", "Temporary position report", "Automatic position report", "Asset Group", "Poll")
 auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See object", "dateTimeFormat")
 
+# Area Management
+userAreaFileName = "area1.csv"
+userAreaName = "Area 1"
+userAreaTypeName = "AREATYPE1"
+
 
 # Mixed parameters
 reportedSpeedValue = 5
@@ -115,7 +121,6 @@ httpNAFRequestString = "http://" + appServerName + ":28080/naf/rest/message/"
 httpUnionVMSurlString = "http://" + appServerName + ":28080/unionvms/"
 connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'" + " port='25432'"
 dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":25432/" + dbServerName
-
 
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6")
