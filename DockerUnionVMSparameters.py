@@ -111,7 +111,7 @@ auditLogsObjectAffectedValue = ("defaultHomePage", "coordinateFormat", "See obje
 
 # Area Management Parameters
 userAreaFileName = "area1.csv"
-userAreaName = "Area 1"
+userAreaName = "Area1"
 userAreaTypeName = "AREATYPE1"
 
 # Rule Parameters

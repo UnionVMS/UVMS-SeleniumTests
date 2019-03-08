@@ -1572,7 +1572,7 @@ def change_and_check_speed_format(self,unitNumber):
     time.sleep(1)
     # Click on search button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-    time.sleep(5)
+    time.sleep(10)
     currentSpeedValue = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]").text
     print("Current: " +  currentSpeedValue + " Short Unit: " + speedUnitTypesShort[unitNumber])
     if currentSpeedValue.find(speedUnitTypesShort[unitNumber]) == -1:
@@ -5076,8 +5076,6 @@ class UnionVMSTestCaseRules(unittest.TestCase):
     def test_0053_generate_NAF_position_that_triggs_rule(self):
         # Generate NAF position report that triggs the modified rule
 
-
-
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
@@ -5115,14 +5113,14 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
         time.sleep(5)
         # Check Position parameters
-        self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
-        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
-        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
-        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
-        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(countryValue[36], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[36], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[36], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[36], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[36], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
         self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
-        self.assertEqual(lolaPositionValues[6][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
-        self.assertEqual(lolaPositionValues[6][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(latStrValue, self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(longStrValue, self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
         self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
