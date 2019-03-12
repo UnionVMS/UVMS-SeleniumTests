@@ -5065,16 +5065,60 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0052_create_one_new_asset_and_mobile_terminal_36(self):
+    def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
         # Create new asset (7th in the list)
-        create_one_new_asset_from_gui(self, 36)
-        create_one_new_mobile_terminal_via_asset_tab(self, 36, 36)
+        create_one_new_asset_from_gui(self, 34)
+        create_one_new_mobile_terminal_via_asset_tab(self, 34, 34)
 
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0053_generate_NAF_position_that_triggs_rule(self):
-        # Generate NAF position report that triggs the modified rule
+    def test_0053_generate_NAF_position_that_not_triggs_rule(self):
+        # Generate NAF position report that is outside defined user area.  The rule should NOT be triggered.
+
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionAreaValues[2][0]
+        longStrValue = lolaPositionAreaValues[2][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[34], ircsValue[34], cfrValue[34], externalMarkingValue[34], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[34])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+        # Click on Alert tab
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        time.sleep(5)
+        # Click on Notifications tab
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + userAreaRuleNamne + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0054_generate_NAF_position_that_triggs_rule(self):
+        # Generate NAF position report that is inside defined user area. The rule should be triggered.
 
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
@@ -5088,7 +5132,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         longStrValue = lolaPositionAreaValues[4][1]
 
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(countryValue[36], ircsValue[36], cfrValue[36], externalMarkingValue[36], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[36])
+        nafSource = generate_NAF_string(countryValue[34], ircsValue[34], cfrValue[34], externalMarkingValue[34], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[34])
         print(nafSource)
         nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
         totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -5107,17 +5151,17 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
         time.sleep(8)
         # Check Asset and Rule names
-        self.assertEqual(vesselName[36], self.driver.find_element_by_link_text(vesselName[36]).text)
+        self.assertEqual(vesselName[34], self.driver.find_element_by_link_text(vesselName[34]).text)
         self.assertEqual(userAreaRuleNamne, self.driver.find_element_by_css_selector("td[title=\"" + userAreaRuleNamne + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
         time.sleep(5)
         # Check Position parameters
-        self.assertEqual(countryValue[36], self.driver.find_element_by_css_selector("div.value").text)
-        self.assertEqual(ircsValue[36], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
-        self.assertEqual(cfrValue[36], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
-        self.assertEqual(externalMarkingValue[36], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
-        self.assertEqual(vesselName[36], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(countryValue[34], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[34], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[34], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[34], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[34], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
         self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
         self.assertEqual(latStrValue, self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
         self.assertEqual(longStrValue, self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
