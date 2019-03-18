@@ -1839,6 +1839,8 @@ def save_elements_to_file(fileName, dataElementToSave, dateTimeState):
     print('----------------------------')
     # Save path to current dir
     cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Save current dir (cwd)")
+    print(cwd)
     # Change to target folder
     targetPath = get_target_path()
     os.chdir(targetPath)
