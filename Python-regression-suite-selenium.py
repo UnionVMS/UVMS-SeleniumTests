@@ -4199,16 +4199,22 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
             link_asset_and_mobile_terminal(self, x)
 
 
+    # Create Special Asset for Prod
+    @timeout_decorator.timeout(seconds=180)
+    def test_0055a_create_one_new_asset(self):
+        # Create special asset (Number 52 - Test3 )
+        create_one_new_asset_from_gui(self, 52)
+
 
     # Injecting MTs for Prod (All parts)
     @timeout_decorator.timeout(seconds=1000)
-    def test_0055_create_several_mobile_terminals_from_file(self):
+    def test_0055b_create_several_mobile_terminals_from_file(self):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests900FileName[1], tests900FileName[2])
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0055b_create_several_additional_channels_for_mobile_terminals(self):
+    def test_0055c_create_several_additional_channels_for_mobile_terminals(self):
         # Create assets from file with several different values for filtering
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file(self, tests900FileName[3])
 
