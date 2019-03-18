@@ -144,10 +144,15 @@ uvmsGitHubPath = 'https://github.com/UnionVMS/'
 
 uvmsCheckoutPath = "/tmp/git-uvms-database"
 
-testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/unionvms-test/target/failsafe-reports"
+#testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/unionvms-test/target/failsafe-reports"
+testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-test-frontend/unionvms-test/target/failsafe-reports"
+
+
 testResultPathWindows = 'C:\\test-reports'
 
-targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/unionvms-test/target"
+#targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/unionvms-test/target"
+targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-test-frontend/unionvms-test/target"
+
 targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\unionvms-test\\target"
 
 downloadPathLinux = "/var/lib/jenkins/Downloads"
