@@ -2382,7 +2382,6 @@ def get_target_path():
         print("targetPathWindows is: " + localTargetPathWindows)
         return localTargetPathWindows
     else:
-        print(os.environ)
         return targetPathLinux
 
 
@@ -2398,7 +2397,6 @@ def get_test_report_path():
         print("testResultPathWindows is:" + localTestResultPathWindows)
         return localTestResultPathWindows
     else:
-        print(os.environ)
         return testResultPathLinux
 
 
