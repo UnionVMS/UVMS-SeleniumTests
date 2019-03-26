@@ -3125,16 +3125,21 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0023_advanced_search_of_assets(self):
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
         time.sleep(1)
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
         # Search for all External Marking called "EXT3"(externalMarkingValue[0])
+        wait_for_element_by_id_to_exist(wait, "asset-input-search-externalMarking", "asset-input-search-externalMarking checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-input-search-externalMarking").send_keys(externalMarkingValue[0])
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(7)
+        time.sleep(5)
         # Get asset name values in the list
         assetList = []
         for x in range(6):
@@ -3167,14 +3172,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[2])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(3)
         # Reload page
         self.driver.refresh()
-        time.sleep(10)
         # Check that Group 3 exists in the list
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "uvms-header-menu-item-assets checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
