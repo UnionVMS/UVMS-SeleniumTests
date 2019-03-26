@@ -1600,7 +1600,7 @@ def change_and_check_speed_format(self,unitNumber):
     # Select Custom mode
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     time.sleep(1)
-    self.driver.find_element_by_link_text("Custom").click()
+    self.driver.find_element_by_link_text(linkTextValue).click()
     time.sleep(1)
     # Click on search button
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
@@ -1660,8 +1660,8 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 7")
     time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
-    wait_for_element_by_link_text_to_exist(wait, "Custom", "Link text Custom checked 8")
-    self.driver.find_element_by_link_text("Custom").click()
+    wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text Custom checked 8")
+    self.driver.find_element_by_link_text(linkTextValue).click()
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
     # Click on search button
@@ -1731,6 +1731,8 @@ def read_all_channels_for_selected_Mobile_Terminal(self):
 
 
 def generate_NAF_and_verify_position(self,speedValue,courseValue):
+    # Set Webdriver wait
+    wait = WebDriverWait(self.driver, 60)
     # Get Current Date and time in UTC
     currentUTCValue = datetime.datetime.utcnow()
     earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
@@ -1781,19 +1783,23 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
     # Select Positions tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-movement", "uvms-header-menu-item-movement checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-    time.sleep(10)
     # Enter IRCS for newly created position
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
+    time.sleep(1)
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     time.sleep(1)
-    self.driver.find_element_by_link_text("Custom").click()
+    wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 3")
+    self.driver.find_element_by_link_text(linkTextValue).click()
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
-    time.sleep(5)
     # Click on search button
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 4")
+    time.sleep(1)
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-    time.sleep(5)
     # Enter Vessel to verify position data
+    wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS selector checked 5")
     self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
     self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
     self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
@@ -1801,14 +1807,12 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[6]").text)
     self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][0] + "\"]").text)
     self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_css_selector("td[title=\"" + lolaPositionValues[0][0][1] + "\"]").text)
-
     # Log speed Value Log
     print("td[title=\"" + "%.2f" % speedValue + " kts" + "\"]")
-
     self.assertEqual("%.2f" % speedValue + " kts", self.driver.find_element_by_css_selector("td[title=\"" + "%.2f" % speedValue + " kts" + "\"]").text)
     self.assertEqual(str(courseValue) + "°", self.driver.find_element_by_css_selector("td[title=\"" + str(courseValue) + "°" + "\"]").text)
     self.assertEqual(sourceValue[0], self.driver.find_element_by_css_selector("td[title=\"" + sourceValue[0] + "\"]").text)
-    time.sleep(5)
+    time.sleep(3)
     return earlierPositionDateTimeValueString
 
 
@@ -2723,22 +2727,29 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0013_unlink_asset_and_mobile_terminal(self):
+        wait = WebDriverWait(self.driver, 60)
         # Select Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
         # Enter Serial Number in field
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[0])
         # Click in search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(5)
         # Click on details button
-        self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(2)
-        # Click on unlinking button
-        self.driver.find_element_by_id("menu-bar-unlink").click()
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
         time.sleep(1)
-        # Enter comment and click on unlinking button
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        # Click on unlinking button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-unlink", "menu-bar-unlink checked 5")
+        self.driver.find_element_by_id("menu-bar-unlink").click()
+        # Enter comment
+        wait_for_element_by_name_to_exist(wait, "comment", "Element name comment checked 6")
         self.driver.find_element_by_name("comment").send_keys("Unlink Asset and MT.")
+        # Click on unlinking button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 7")
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
 
@@ -2746,36 +2757,45 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0015_link_asset_to_another_mobile_terminal(self):
+        wait = WebDriverWait(self.driver, 60)
         # Select Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         time.sleep(2)
         # Enter Serial Number in field
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[1])
         # Click in search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(5)
         # Click on details button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(2)
         # Click on Link Asset
+        wait_for_element_by_id_to_exist(wait, "mt-btn-assign-asset", "mt-btn-assign-asset checked 5")
         self.driver.find_element_by_id("mt-btn-assign-asset").click()
-        time.sleep(2)
         # Enter Asset Name and clicks on the search button
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[23]", "XPATH checked 6")
         self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[0])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(2)
         # Click on connect button
+        wait_for_element_by_css_selector_to_exist(wait, "td.textAlignRight > button.btn.btn-primary", "CSS Selector checked 7")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
         # Click on Link button
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "div.col-md-6.textAlignRight > button.btn.btn-primary", "CSS Selector checked 8")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
         # Enter Reason comment
+        wait_for_element_by_name_to_exist(wait, "comment", "Element name checked 9")
         self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
-        time.sleep(2)
         # Click on Link button 2
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 10")
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-        time.sleep(2)
         # Close page
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
+        time.sleep(1)
         self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
 

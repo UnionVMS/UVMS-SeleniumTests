@@ -122,6 +122,8 @@ userAreaRuleNamne = "Area 1 Triggered"
 reportedSpeedValue = 5
 reportedCourseValue = 180
 
+linkTextValue = "Custom"
+
 appServerName = "localhost"
 dbServerName = "db71u"
 hostdbServerName = "localhost"
