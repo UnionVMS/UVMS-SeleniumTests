@@ -3029,10 +3029,13 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0021_create_second_group_and_add_assets_to_group(self):
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Search for "ship"
+        wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
         self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
@@ -3052,22 +3055,25 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         # Select Action "Save as Group"
         self.driver.find_element_by_id("asset-dropdown-actions").click()
-        time.sleep(1)
+        wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 3")
         self.driver.find_element_by_link_text("Save as Group").click()
-        time.sleep(1)
         # Enter Group name and click on save button
+        wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 4")
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(8)
         # Check that Group 2 has been created
-        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 4")
         time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 5")
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_link_text_to_exist(wait, groupName[1], "Link text checked 6")
         self.assertEqual(groupName[1], self.driver.find_element_by_link_text(groupName[1]).text)
-        time.sleep(2)
         # Click on Group 2
         self.driver.find_element_by_link_text(groupName[1]).click()
-        time.sleep(5)
         # Check Assets in Group
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[2] + "\"]", "CSS Selector checked 7")
+        time.sleep(1)
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
@@ -3082,35 +3088,39 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(cfrValue[4], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[4] + "\"]").text)
         self.assertEqual(gearTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[7]").text)
         self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[2]/td[8]").text)
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0022_delete_second_group_and_check(self):
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on "saved groups" drop box
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 2")
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
-        time.sleep(2)
         # Click on delete button for Group 2
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-delete-item-1", "asset-dropdown-saved-search-delete-item-1 checked 3")
         self.driver.find_element_by_id("asset-dropdown-saved-search-delete-item-1").click()
-        time.sleep(2)
         # Click on confirmation button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 4")
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(1)
         # Reload page
         self.driver.refresh()
-        time.sleep(10)
         # Check that Group 1 exists and Group 2 does not exist
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 5")
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_link_text_to_exist(wait, groupName[0], "Link text checked 6")
         time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         try:
             self.assertFalse(self.driver.find_element_by_link_text(groupName[1]).text)
         except NoSuchElementException:
             pass
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
