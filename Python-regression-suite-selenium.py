@@ -3751,9 +3751,9 @@ class UnionVMSTestCase(unittest.TestCase):
         # Select Alerts tab (Holding Table)
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Select Alerts tab (Rules)
         wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
         time.sleep(1)
-        # Select Alerts tab (Rules)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
         # Check Headline Names
         wait_for_element_by_css_selector_to_exist(wait, "th.st-sort", "CSS Selector checked 3")
@@ -3851,30 +3851,38 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0038_inactivate_speed_rule_one_and_check(self):
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(2)
         # Select Alerts tab (Rules)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
-        time.sleep(2)
         # Click on edit rule icon
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
-        time.sleep(2)
         # Click on selection drop down button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[2]", "XPATH checked 4")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[2]").click()
-        time.sleep(2)
         # Select "Inactive" state
+        wait_for_element_by_link_text_to_exist(wait, "Inactive", "Link text checked 5")
         self.driver.find_element_by_link_text("Inactive").click()
-        time.sleep(2)
         # Click on update button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 6")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-        time.sleep(2)
         # Click on confirmation button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 7")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(4)
         # Check that rule one is in inactive state
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/span", "XPATH checked 8")
         self.assertEqual("INACTIVE", self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/span").text)
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
