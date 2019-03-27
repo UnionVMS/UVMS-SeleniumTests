@@ -3377,7 +3377,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0027_view_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-        # Click on mobile terminal tab
+        # Click on Audit tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
@@ -3409,22 +3409,26 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0028_view_audit_and_export_log_to_file(self):
-        # Select Audit Log tab
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Audit tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(7)
         # Enter User Name in the Username field
+        wait_for_element_by_xpath_to_exist(wait, "//input[@type='text']", "XPATH checked 2")
         self.driver.find_element_by_xpath("//input[@type='text']").clear()
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys(defaultUserName)
-        time.sleep(1)
         # Filter on Create Operation
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
-        time.sleep(1)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div/div/ul/li[5]/a", "XPATH checked 4")
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[3]/div/div[1]/div/div/form/div/div/div/div[1]/div[2]/div/div/ul/li[5]/a").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 5")
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(5)
         # Check that the 4 first items in the Audit list are Mobile Terminals logs
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[2]", "XPATH checked 6")
+        time.sleep(1)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[2]").text)
         self.assertEqual("Create", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[3]").text)
         self.assertEqual("Mobile Terminal", self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[1]/td[4]").text)
@@ -3482,7 +3486,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[5]").click()
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "admin-dropdown-actions", "admin-dropdown-actions checked 7")
         self.driver.find_element_by_id("admin-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 8")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
@@ -3508,7 +3514,7 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Test row: " + str(y))
                 for z in range(4):
                     self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
