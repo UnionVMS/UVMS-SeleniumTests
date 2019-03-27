@@ -1582,30 +1582,35 @@ def link_asset_and_mobile_terminal_with_parameters(self, mobileTerminalparameter
 
 
 def change_and_check_speed_format(self,unitNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Select Admin tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-    time.sleep(5)
+    wait_for_element_by_link_text_to_exist(wait, "CONFIGURATION", "Link text checked 2")
     self.driver.find_element_by_link_text("CONFIGURATION").click()
     time.sleep(3)
     # Click on Global setting subtab under Configuration Tab
+    wait_for_element_by_css_selector_to_exist(wait, "#globalSettings > span", "CSS Selector checked 3")
     self.driver.find_element_by_css_selector("#globalSettings > span").click()
-    time.sleep(1)
     # Set Speed format to knots
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[4]", "XPATH checked 4")
     self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
-    time.sleep(1)
+    wait_for_element_by_link_text_to_exist(wait, speedUnitTypesInText[unitNumber], "Link text checked 5")
     self.driver.find_element_by_link_text(speedUnitTypesInText[unitNumber]).click()
-    time.sleep(2)
     # Click on Position Tab to check correct speed unit
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-movement", "uvms-header-menu-item-movement checked 6")
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
-    time.sleep(3)
+    time.sleep(1)
     # Select Custom mode
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 7")
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
-    time.sleep(1)
+    wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 8")
     self.driver.find_element_by_link_text(linkTextValue).click()
-    time.sleep(1)
     # Click on search button
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 8")
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
-    time.sleep(10)
+    wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]", "XPATH checked 9")
     currentSpeedValue = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]").text
     print("Current: " +  currentSpeedValue + " Short Unit: " + speedUnitTypesShort[unitNumber])
     if currentSpeedValue.find(speedUnitTypesShort[unitNumber]) == -1:
@@ -1613,7 +1618,7 @@ def change_and_check_speed_format(self,unitNumber):
     else:
         foundCorrectUnit = True
     self.assertTrue(foundCorrectUnit)
-    time.sleep(5)
+    time.sleep(3)
 
 
 def generate_and_verify_manual_position(self,speedValue,courseValue):
@@ -3615,23 +3620,25 @@ class UnionVMSTestCase(unittest.TestCase):
             print(x)
             change_and_check_speed_format(self,x)
             reload_page_and_goto_default(self)
-            time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0032_check_view_help_text(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on User Guide icon (Question mark icon)
         # Note: User Guide page is opened in a new tab
+        wait_for_element_by_xpath_to_exist(wait, "//div[4]/a/i", "XPATH checked 1")
         self.driver.find_element_by_xpath("//div[4]/a/i").click()
-        time.sleep(15)
         # Switch tab focus for Selenium to the new tab
         self.driver.switch_to.window(self.driver.window_handles[-1])
-        time.sleep(5)
         # Check User guide page
+        wait_for_element_by_id_to_exist(wait, "title-text", "title-text checked 2")
+        time.sleep(5)
         self.assertEqual("Union VMS - User Manual", self.driver.find_element_by_id("title-text").text)
-        time.sleep(5)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='main-content']/div[3]/ul/li[1]/span/a", "XPATH checked 3")
         self.assertEqual("Welcome to Union VMS!", self.driver.find_element_by_xpath("//*[@id='main-content']/div[3]/ul/li[1]/span/a").text)
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)

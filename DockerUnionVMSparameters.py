@@ -123,7 +123,7 @@ reportedSpeedValue = 5
 reportedCourseValue = 180
 
 linkTextValue = "Custom"
-WebDriverWaitTimeValue = 60
+WebDriverWaitTimeValue = 30
 
 appServerName = "localhost"
 dbServerName = "db71u"
