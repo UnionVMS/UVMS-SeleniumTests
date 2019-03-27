@@ -3746,13 +3746,18 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0035_verify_created_speed_rule_one(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(2)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(1)
         # Select Alerts tab (Rules)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
-        time.sleep(2)
         # Check Headline Names
+        wait_for_element_by_css_selector_to_exist(wait, "th.st-sort", "CSS Selector checked 3")
+        time.sleep(1)
         self.assertEqual(rulesHeadlineNames[0], self.driver.find_element_by_css_selector("th.st-sort").text)
         self.assertEqual(rulesHeadlineNames[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/thead/tr/th[3]").text)
         self.assertEqual(rulesHeadlineNames[2], self.driver.find_element_by_css_selector("th.st-sort.st-sort-descent").text)
@@ -3766,26 +3771,31 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[1]").text)
         self.assertEqual("Yes", self.driver.find_element_by_xpath("(//button[@id=''])[2]").text)
         self.assertEqual("ACTIVE", self.driver.find_element_by_css_selector("span.label.label-success").text)
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0036_create_manual_position_with_speed_that_triggs_rule_one(self):
         # Create a manual position and verify the position
         earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(5)
         # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[0], "Link text checked 3")
+        time.sleep(1)
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        time.sleep(2)
         # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 4")
+        time.sleep(1)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
@@ -3805,19 +3815,25 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0037_create_NAF_position_with_speed_that_triggs_rule_one(self):
         # Create a NAF position and verify the position
         earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
         time.sleep(5)
         # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[0], "Link text checked 3")
+        time.sleep(1)
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        time.sleep(2)
         # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 4")
+        time.sleep(1)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
@@ -3830,7 +3846,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
