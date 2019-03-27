@@ -2636,7 +2636,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Check Asset name
-        # self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]/span").text)
         wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
 
@@ -3185,18 +3184,21 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0024_export_assets_to_excel_file(self):
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "ship"
+        wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
         self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
         # Get asset name values in the list
         assetList = []
         for x in range(6):
-            tempAssetName = self.driver.find_element_by_xpath(
-                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            tempAssetName = self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
             assetList.append(tempAssetName)
         # Check if asset list is not sorted
         if sorted(assetList) != assetList:
@@ -3206,7 +3208,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Select Fartyg1001 and Fartyg1002 by click
         self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
-        time.sleep(2)
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -3217,7 +3218,9 @@ class UnionVMSTestCase(unittest.TestCase):
         if os.path.exists(assetFileName):
             os.remove(assetFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 3")
         self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 4")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
@@ -3250,7 +3253,7 @@ class UnionVMSTestCase(unittest.TestCase):
                 self.assertEqual(cfrValue[y-1], allrows[y][4])
                 self.assertEqual(gearTypeValue[y-1], allrows[y][5])
                 self.assertEqual(licenseTypeValue, allrows[y][6])
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -3262,22 +3265,25 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0026_export_mobile_terminals_to_excel_file(self):
-        # Select Mobile Terminal tab
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on mobile terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
         # Search on MemberID 100
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[9]", "XPATH checked 2")
         self.driver.find_element_by_xpath("(//input[@type='text'])[9]").send_keys(memberIdnumber[0])
-        time.sleep(1)
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 3")
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(2)
         # Sort on "Serial no"
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
-        time.sleep(3)
         # Select Not linked row number 2-4 by click
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='checkbox'])[2]", "XPATH checked 5")
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[2]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
-        time.sleep(2)
         # Save row information for rows 2-4 in the list
         allrowsbackup = ['']
         currentrow = []
@@ -3336,7 +3342,9 @@ class UnionVMSTestCase(unittest.TestCase):
         if os.path.exists(mobileTerminalFileName):
             os.remove(mobileTerminalFileName)
         # Select Action "Export selection"
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[4]", "XPATH checked 6")
         self.driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
@@ -3362,29 +3370,32 @@ class UnionVMSTestCase(unittest.TestCase):
                 print("Test row: " + str(y))
                 for z in range(8):
                     self.assertEqual(allrowsbackup[y-1][z].lower(), allrows[y][z].lower())
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0027_view_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on mobile terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         # Select Audit Log tab
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(7)
         # Click on all sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#EXCHANGE > span", "CSS Selector checked 2")
         self.driver.find_element_by_css_selector("#EXCHANGE > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 3")
         self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 4")
         self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#GIS > span", "CSS Selector checked 5")
         self.driver.find_element_by_css_selector("#GIS > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#ALARMS > span", "CSS Selector checked 6")
         self.driver.find_element_by_css_selector("#ALARMS > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#ACCESS_CONTROL > span", "CSS Selector checked 7")
         self.driver.find_element_by_css_selector("#ACCESS_CONTROL > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#ALL > span", "CSS Selector checked 8")
         self.driver.find_element_by_css_selector("#ALL > span").click()
-        time.sleep(2)
         # Check sub tab names
         self.assertEqual("ALL", self.driver.find_element_by_css_selector("#ALL > span").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_css_selector("#EXCHANGE > span").text)
@@ -3393,7 +3404,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("GIS", self.driver.find_element_by_css_selector("#GIS > span").text)
         self.assertEqual("ALERTS", self.driver.find_element_by_css_selector("#ALARMS > span").text)
         self.assertEqual("ACCESS CONTROL", self.driver.find_element_by_css_selector("#ACCESS_CONTROL > span").text)
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
