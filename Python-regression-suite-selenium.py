@@ -3519,24 +3519,26 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0029_view_configuration_pages(self):
-        # Select Admin tab
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Audit tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
+        wait_for_element_by_link_text_to_exist(wait, "CONFIGURATION", "Link text checked 2")
         self.driver.find_element_by_link_text("CONFIGURATION").click()
-        time.sleep(2)
         # Click on all sub tabs under Configuration Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#globalSettings > span", "CSS Selector checked 3")
         self.driver.find_element_by_css_selector("#globalSettings > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#reporting > span", "CSS Selector checked 4")
         self.driver.find_element_by_css_selector("#reporting > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#asset > span", "CSS Selector checked 5")
         self.driver.find_element_by_css_selector("#asset > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#exchange > span", "CSS Selector checked 6")
         self.driver.find_element_by_css_selector("#exchange > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#movementrules > span", "CSS Selector checked 7")
         self.driver.find_element_by_css_selector("#movementrules > span").click()
-        time.sleep(2)
+        wait_for_element_by_css_selector_to_exist(wait, "#systemMonitor > span", "CSS Selector checked 8")
         self.driver.find_element_by_css_selector("#systemMonitor > span").click()
-        time.sleep(5)
         # Check sub tab names
         self.assertEqual("SYSTEM MONITOR", self.driver.find_element_by_css_selector("#systemMonitor > span").text)
         self.assertEqual("GLOBAL SETTINGS", self.driver.find_element_by_css_selector("#globalSettings > span").text)
@@ -3544,16 +3546,20 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual("ASSETS", self.driver.find_element_by_css_selector("#asset > span").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_css_selector("#exchange > span").text)
         self.assertEqual("MOVEMENT RULES", self.driver.find_element_by_css_selector("#movementrules > span").text)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0030_change_global_settings_change_date_format(self):
-        # Select Admin tab
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Audit tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
+        wait_for_element_by_link_text_to_exist(wait, "CONFIGURATION", "Link text checked 2")
         self.driver.find_element_by_link_text("CONFIGURATION").click()
-        time.sleep(3)
         # Click on Global setting subtab under Configuration Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#globalSettings > span", "CSS Selector checked 3")
         self.driver.find_element_by_css_selector("#globalSettings > span").click()
         time.sleep(1)
         # Check that Date format is correct
@@ -3585,7 +3591,7 @@ class UnionVMSTestCase(unittest.TestCase):
             time.sleep(2)
             currentDate = self.driver.find_element_by_css_selector("current-time.currentTime").text
             self.assertEqual("-", currentDate[4])
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
