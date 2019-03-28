@@ -262,6 +262,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     #self.driver.find_element_by_id("asset-input-countryCode").click()
     #self.driver.find_element_by_id("asset-input-countryCode-item-2").click()
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 3")
+    time.sleep(2)
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-2", "asset-input-flagStateCode-item-2 checked 3")
     self.driver.find_element_by_id("asset-input-flagStateCode-item-2").click()
@@ -3736,7 +3737,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Change "Notify by email" to Yes
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[2]", "XPATH checked 19")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@id=''])[2]").click()
         wait_for_element_by_link_text_to_exist(wait, "Yes", "Link text checked 20")
         time.sleep(1)
