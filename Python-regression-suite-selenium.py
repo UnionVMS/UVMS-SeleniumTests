@@ -510,28 +510,36 @@ def create_one_new_mobile_terminal_from_gui_with_parameters(self, parameterRow):
 
 
 def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(3)
     # Search for created asset
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(ircsValue[vesselNumber])
-    time.sleep(1)
+    wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(3)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(3)
     # Click on add new terminal button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
-    time.sleep(1)
     # Select Transponder system
+    wait_for_element_by_id_to_exist(wait, "mt-0-typeAndPlugin", "mt-0-typeAndPlugin checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
+    wait_for_element_by_link_text_to_exist(wait, "Inmarsat-C : Thrane&Thrane", "Link text checked 7")
     time.sleep(1)
-#    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
-    time.sleep(1)
     # Enter serial number
+    wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber checked 8")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-0-serialNumber").send_keys(serialNoValue[mobileTerminalNumber])
     # Enter Transceiver type
     self.driver.find_element_by_id("mt-0-tranciverType").send_keys(transceiverType[mobileTerminalNumber])
@@ -558,11 +566,13 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("mt-0-channel-0-frequencyPort").send_keys(inPortFrequencyHours)
     # Activate Mobile Terminal button
     self.driver.find_element_by_id("mt-0-activation").click()
-    time.sleep(3)
     # Click on save button
+    wait_for_element_by_xpath_to_exist(wait, "//*[@id='menu-bar-update']", "XPATH checked 8")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
-    time.sleep(3)
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
+    time.sleep(2)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -4015,30 +4025,36 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0046_generate_manual_poll_and_check(self):
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Polling tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-polling-logs", "uvms-header-menu-item-polling-logs checked 1")
         self.driver.find_element_by_id("uvms-header-menu-item-polling-logs").click()
-        time.sleep(5)
         # Click on new New poll button
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/div/ul/li[2]/a").click()
-        #self.driver.find_element_by_link_text("New poll").click()
-        time.sleep(2)
-        # Search for IRCS
-        self.driver.find_element_by_xpath("(//input[@type='text'])[2]").send_keys(ircsValue[6])
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/div/ul/li[2]/a", "XPATH checked 2")
         time.sleep(1)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/div/ul/li[2]/a").click()
+        # Search for IRCS
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[2]", "XPATH checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@type='text'])[2]").send_keys(ircsValue[6])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(5)
         # Select IRCS in the list
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div/span/div/table/tbody/tr/td[6]/button", "XPATH checked 4")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div/span/div/table/tbody/tr/td[6]/button").click()
         time.sleep(1)
         # Click on next button
+        wait_for_element_by_css_selector_to_exist(wait, "div.col-md-12.textAlignRight > button.btn.btn-primary", "CSS Selector checked 5")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.col-md-12.textAlignRight > button.btn.btn-primary").click()
-        time.sleep(1)
         # Enter comment in comment field
-        self.driver.find_element_by_name("comment").send_keys("The best comment to IRCS " + ircsValue[6])
+        wait_for_element_by_name_to_exist(wait, "comment", "Link name checked 6")
         time.sleep(1)
+        self.driver.find_element_by_name("comment").send_keys("The best comment to IRCS " + ircsValue[6])
         # Submit poll
         self.driver.find_element_by_css_selector("div.col-md-8.textAlignRight > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
