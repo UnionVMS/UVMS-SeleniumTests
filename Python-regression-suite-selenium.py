@@ -793,7 +793,6 @@ def create_one_new_channel_for_one_mobile_terminal_without_referenceDateTime(sel
 def check_new_asset_exists(self, vesselNumber):
     # Set Webdriver wait
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
     # Click on asset tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
@@ -902,18 +901,26 @@ def click_on_selected_asset_history_event(self, numberEvent):
 
 
 def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList):
+    # Set Webdriver wait
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Go through the history for one asset and compare the values towards the asset values controled by the vesselNumberList
+    # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumberList[0]])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 3")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-toggle-form").click()
     time.sleep(5)
     # Click on History tab
+    wait_for_element_by_css_selector_to_exist(wait, "#HISTORY > span", "CSS Selector checked 4")
+    time.sleep(1)
     self.driver.find_element_by_css_selector("#HISTORY > span").click()
     time.sleep(2)
     # Click on and check the items in the History list
@@ -934,6 +941,8 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
         self.driver.find_element_by_css_selector("div.modal-footer > #asset-btn-close-history").click()
         time.sleep(2)
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 3")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
 
@@ -941,92 +950,92 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
 
 
 def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
+    # Set Webdriver wait
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[oldVesselNumber])
+    wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
     # Click on details button
-    self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(5)
-    # Select F.S value
-    #self.driver.find_element_by_id("asset-input-countryCode").click()
-    self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
     time.sleep(1)
-    #self.driver.find_element_by_id("asset-input-countryCode-item-1").click()
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    # Select F.S value
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 4")
+    time.sleep(2)
+    self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-1", "asset-input-flagStateCode-item-1 checked 4")
     self.driver.find_element_by_id("asset-input-flagStateCode-item-1").click()
     # Enter IRCS value
     self.driver.find_element_by_id("asset-input-ircs").clear()
     self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[newVesselNumber])
-    time.sleep(1)
     # Enter Name value
     self.driver.find_element_by_id("asset-input-name").clear()
     self.driver.find_element_by_id("asset-input-name").send_keys(vesselName[newVesselNumber])
-    time.sleep(1)
     # Enter External Marking Value
     self.driver.find_element_by_id("asset-input-externalMarking").clear()
     self.driver.find_element_by_id("asset-input-externalMarking").send_keys(externalMarkingValue[newVesselNumber])
-    time.sleep(1)
     # Enter CFR Value
     self.driver.find_element_by_id("asset-input-cfr").clear()
     self.driver.find_element_by_id("asset-input-cfr").send_keys(cfrValue[newVesselNumber])
-    time.sleep(1)
     # Enter IMO Value
     self.driver.find_element_by_id("asset-input-imo").clear()
     self.driver.find_element_by_id("asset-input-imo").send_keys(imoValue[newVesselNumber])
-    time.sleep(1)
     # Enter HomePort Value
     self.driver.find_element_by_id("asset-input-homeport").clear()
     self.driver.find_element_by_id("asset-input-homeport").send_keys(homeportValue[newVesselNumber])
-    time.sleep(1)
     # Select Gear Type value
     self.driver.find_element_by_id("asset-input-gearType").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-2", "asset-input-gearType-item-2 checked 4")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType-item-2").click()
     # Enter MMSI Value
     self.driver.find_element_by_id("asset-input-mmsi").clear()
     self.driver.find_element_by_id("asset-input-mmsi").send_keys(mmsiValue[newVesselNumber])
-    time.sleep(1)
     # Select License Type value
     # Not changed
-    time.sleep(1)
     # Length Value
     self.driver.find_element_by_id("asset-input-lengthValue").clear()
     self.driver.find_element_by_id("asset-input-lengthValue").send_keys(lengthValue[newVesselNumber])
-    time.sleep(1)
     # Gross Tonnage Value
     self.driver.find_element_by_id("asset-input-grossTonnage").clear()
     self.driver.find_element_by_id("asset-input-grossTonnage").send_keys(grossTonnageValue[newVesselNumber])
-    time.sleep(1)
     # Main Power Value
     self.driver.find_element_by_id("asset-input-power").clear()
     self.driver.find_element_by_id("asset-input-power").send_keys(powerValue[newVesselNumber])
-    time.sleep(1)
     # Main Producer Name Value
     #  self.driver.find_element_by_id("asset-input-producername").send_keys(producernameValue) Should be included when this works
     # Main Producer Code Value
     #  self.driver.find_element_by_id("asset-input-producercode").send_keys(producercodeValue) Should be included when this works
     # Click on the Contacts tab
+    wait_for_element_by_xpath_to_exist(wait, "//*[@id='CONTACTS']/span", "XPATH checked 5")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     time.sleep(1)
     # Main Contact Name Value
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-name-0").clear()
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[newVesselNumber])
-    time.sleep(1)
     # Main E-mail Value
     self.driver.find_element_by_id("asset-input-contact-email-0").clear()
     self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[newVesselNumber])
-    time.sleep(1)
     # Main Contact Number Value
     self.driver.find_element_by_id("asset-input-contact-number-0").clear()
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[newVesselNumber])
-    time.sleep(5)
     # Click on Save Asset button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
+    time.sleep(2)
     self.driver.find_element_by_id("menu-bar-update").click()
-    time.sleep(5)
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
+    time.sleep(2)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
 
@@ -1128,22 +1137,31 @@ def check_mobile_terminal_archived(self, mobileTerminalNumber):
 
 
 def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
+    time.sleep(2)
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
     # Click on the Contacts tab
+    wait_for_element_by_xpath_to_exist(wait, "//*[@id='CONTACTS']/span", "XPATH checked 5")
+    time.sleep(2)
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
-    time.sleep(1)
     # Click on "Add contact" link
-    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 6")
     time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
     # Add a second contact contactNameValue, contactEmailValue and contactPhoneNumberValue
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 7")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-name-0").click()
     self.driver.find_element_by_id("asset-input-contact-name-0").clear()
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[newVesselNumber])
@@ -1151,86 +1169,99 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[newVesselNumber])
     self.driver.find_element_by_id("asset-input-contact-number-0").clear()
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[newVesselNumber])
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 8")
     time.sleep(1)
     self.driver.find_element_by_id("menu-bar-update").click()
-    time.sleep(1)
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
 
 
 def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(2)
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
     # Click on details button
-    self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(7)
-    # Click on the Notes tab
-    self.driver.find_element_by_css_selector("#NOTES > span").click()
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 3")
     time.sleep(1)
+    self.driver.find_element_by_id("asset-toggle-form").click()
+    # Click on the Notes tab
+    wait_for_element_by_css_selector_to_exist(wait, "#NOTES > span", "#NOTES > span checked 4")
+    time.sleep(2)
+    self.driver.find_element_by_css_selector("#NOTES > span").click()
     # Enter note parameters
     # Enter date
     currentUTCValue = datetime.datetime.utcnow()
     startTimeValue = currentUTCValue - datetime.timedelta(hours=336)  # 2 weeks back
+    wait_for_element_by_id_to_exist(wait, "asset-input-notesDate", "asset-input-notesDate checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-notesDate").click()
     self.driver.find_element_by_id("asset-input-notesDate").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    time.sleep(1)
     # Select activity EL1
+    wait_for_element_by_id_to_exist(wait, "asset-dropdown-notesActivity", "asset-dropdown-notesActivity checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-dropdown-notesActivity").click()
     self.driver.find_element_by_id("asset-dropdown-notesActivity-item-22").click()
-    time.sleep(1)
     # Enter Note User
     self.driver.find_element_by_id("asset-input-notesUser").click()
     self.driver.find_element_by_id("asset-input-notesUser").send_keys(noteUser[currentVesselNumber])
-    time.sleep(1)
     # Enter Ready date
     currentUTCValue = datetime.datetime.utcnow()
     readyTimeValue = currentUTCValue + datetime.timedelta(hours=336)  # 2 weeks ahead
+    wait_for_element_by_id_to_exist(wait, "asset-input-notesReadyDate", "asset-input-notesReadyDate checked 7")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-notesReadyDate").click()
     self.driver.find_element_by_id("asset-input-notesReadyDate").send_keys(readyTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    time.sleep(1)
     # Enter License Holder
     self.driver.find_element_by_id("asset-input-notesLicenseHolder").clear()
     self.driver.find_element_by_id("asset-input-notesLicenseHolder").send_keys(notesLicenseHolder[currentVesselNumber])
-    time.sleep(1)
     # Enter Note Contact
     self.driver.find_element_by_id("asset-input-notesContact").clear()
     self.driver.find_element_by_id("asset-input-notesContact").send_keys(notesContact[currentVesselNumber])
-    time.sleep(1)
     # Enter notes comment
     self.driver.find_element_by_id("asset-input-notesNotes").click()
     self.driver.find_element_by_id("asset-input-notesNotes").send_keys(commentValue)
-    time.sleep(1)
     # Enter Sheet number
     self.driver.find_element_by_id("asset-input-notesSheetNumber").click()
     self.driver.find_element_by_id("asset-input-notesSheetNumber").send_keys(notesSheetNumber[currentVesselNumber])
-    time.sleep(1)
     # Click on save button
-    self.driver.find_element_by_id("menu-bar-update").click()
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 8")
     time.sleep(1)
+    self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
-    time.sleep(3)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 10")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[currentVesselNumber])
-    time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 11")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(5)
     # Click on the Notes tab
+    wait_for_element_by_css_selector_to_exist(wait, "#NOTES > span", "CSS Selector checked 12")
+    time.sleep(2)
     self.driver.find_element_by_css_selector("#NOTES > span").click()
-    time.sleep(1)
     # Click on registered note
-    self.driver.find_element_by_css_selector("td").click()
+    wait_for_element_by_css_selector_to_exist(wait, "td", "CSS Selector checked 14")
     time.sleep(1)
+    self.driver.find_element_by_css_selector("td").click()
     # Check parameter values
+    wait_for_element_by_css_selector_to_exist(wait, "b", "CSS Selector checked 15")
+    time.sleep(1)
     self.assertEqual(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"), self.driver.find_element_by_css_selector("b").text)
     self.assertEqual("EL1", self.driver.find_element_by_xpath("//div[4]/b").text)
     self.assertEqual(noteUser[currentVesselNumber], self.driver.find_element_by_xpath("//div[5]/b").text)
@@ -1241,8 +1272,10 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.assertEqual(notesSheetNumber[currentVesselNumber], self.driver.find_element_by_xpath("//div[11]/b").text)
     time.sleep(1)
     # Click on close button to close popup window
-    self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 16")
     time.sleep(1)
+    self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+    time.sleep(2)
 
 
 def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber):
