@@ -1042,32 +1042,51 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
 
 
 def archive_one_asset_from_gui(self, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(5)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(5)
     # Click on delete button (Archive)
+    wait_for_element_by_id_to_exist(wait, "menu-bar-archive", "menu-bar-archive checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-archive").click()
-    time.sleep(5)
     # Add some comment to the asset that shall be archived
+    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 6")
+    time.sleep(1)
     self.driver.find_element_by_name("comment").send_keys("Archive this asset!")
-    time.sleep(3)
     # Click on Yes button
+    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 7")
+    time.sleep(1)
     self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-    time.sleep(5)
+    time.sleep(2)
 
 
 def check_asset_archived(self, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(5)
     # Search for selected asset in the asset list
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumber])
+    wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     time.sleep(5)
     # Check that vessel name is greyed out
@@ -1089,42 +1108,60 @@ def check_asset_archived(self, vesselNumber):
     #    self.assertFalse(self.driver.find_element_by_id("menu-bar-archive").click())
     #except NoSuchElementException:
     #    pass
-    time.sleep(4)
+    time.sleep(3)
 
 
 def archive_one_mobile_terminal_from_gui(self, mobileTerminalNumber):
-    # Select Mobile Terminal tab
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on mobile terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    time.sleep(2)
     # Enter Serial Number in serial search field
+    wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[7]", "XPATH checked 2")
+    time.sleep(1)
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").clear()
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
+    wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 3")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
-    time.sleep(5)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-toggle-form").click()
-    time.sleep(2)
     # Click on archive button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-archive", "menu-bar-archive checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-archive").click()
-    time.sleep(2)
     # Add some comment to the asset that shall be archived
+    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 6")
+    time.sleep(1)
     self.driver.find_element_by_name("comment").send_keys("Archive this mobile terminal!")
-    time.sleep(3)
     # Click on Archive button
+    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 7")
+    time.sleep(1)
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-    time.sleep(5)
+    time.sleep(2)
 
 
 
 def check_mobile_terminal_archived(self, mobileTerminalNumber):
-    # Select Mobile Terminal tab
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on mobile terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    time.sleep(2)
     # Enter Serial Number in serial search field
+    wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[7]", "XPATH checked 2")
+    time.sleep(1)
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").clear()
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
+    wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 3")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
     time.sleep(5)
     # Try to click on details button. Shall not exist.
@@ -1503,22 +1540,30 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Select Mobile Terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    time.sleep(2)
     # Enter Serial Number in serial search field
+    wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[7]", "XPATH checked 2")
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").clear()
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
-    self.driver.find_element_by_xpath("//button[@type='submit']").click()
-    time.sleep(5)
-    # Click on details button
-    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
-    time.sleep(2)
-    # Click on add Channel link
-    self.driver.find_element_by_id("mt-0-addChannel").click()
+    wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 3")
     time.sleep(1)
+    self.driver.find_element_by_xpath("//button[@type='submit']").click()
+    # Click on details button
+    wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button", "XPATH checked 4")
+    time.sleep(1)
+    self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
+    # Click on add Channel link
+    wait_for_element_by_id_to_exist(wait, "mt-0-addChannel", "mt-0-addChannel checked 5")
+    time.sleep(1)
+    self.driver.find_element_by_id("mt-0-addChannel").click()
     # Enter 2:nd DNID Number
+    wait_for_element_by_id_to_exist(wait, "mt-0-channel-1-dnid", "mt-0-channel-1-dnid checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-0-channel-1-dnid").send_keys(dnidNumber[newMobileTerminalNumber])
     # Enter 2:nd Member Number
     self.driver.find_element_by_id("mt-0-channel-1-memberId").send_keys(memberIdnumber[mobileTerminalNumber])
@@ -1530,17 +1575,21 @@ def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTe
     self.driver.find_element_by_id("mt-0-channel-1-frequencyGrace").send_keys(gracePeriodFrequencyHours)
     # In port
     self.driver.find_element_by_id("mt-0-channel-1-frequencyPort").send_keys(inPortFrequencyHours)
-    time.sleep(1)
     # Click on save button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-update").click()
-    time.sleep(1)
     # Enter comment in the comment field
+    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 7")
+    time.sleep(1)
     self.driver.find_element_by_name("comment").send_keys("comment")
-    time.sleep(1)
     # Click on update button
-    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 8")
     time.sleep(1)
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
     # Click on cancel button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-cancel checked 9")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
