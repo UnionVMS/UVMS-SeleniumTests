@@ -336,6 +336,7 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     #self.driver.find_element_by_id("asset-input-countryCode").click()
     #self.driver.find_element_by_id("asset-input-countryCode-item-"+parameterList[17]).click()
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
+    time.sleep(2)
     self.driver.find_element_by_id("asset-input-flagStateCode-item-"+parameterList[17]).click()
 
     # Enter IRCS value
@@ -2742,15 +2743,15 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0007_generate_and_verify_manual_position(self):
-        # Create a manual position and verify the position
-        generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
+    def test_0007_generate_NAF_and_verify_position(self):
+        # Create a NAF position and verify the position
+        generate_NAF_and_verify_position(self,reportedSpeedValue,reportedCourseValue)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0008_generate_NAF_and_verify_position(self):
-        # Create a NAF position and verify the position
-        generate_NAF_and_verify_position(self,reportedSpeedValue,reportedCourseValue)
+    def test_0008_generate_and_verify_manual_position(self):
+        # Create a manual position and verify the position
+        generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -2857,7 +2858,7 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0016_generate_and_verify_manual_position(self):
         # Startup browser and login
-        UnionVMSTestCase.test_0007_generate_and_verify_manual_position(self)
+        UnionVMSTestCase.test_0008_generate_and_verify_manual_position(self)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -3655,7 +3656,7 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0030c_generate_NAF_and_verify_position(self):
         # Startup browser and login
-        UnionVMSTestCase.test_0008_generate_NAF_and_verify_position(self)
+        UnionVMSTestCase.test_0007_generate_NAF_and_verify_position(self)
 
 
 
@@ -3782,7 +3783,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Change "Notify by email" to Yes
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[2]", "XPATH checked 19")
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@id=''])[2]").click()
         wait_for_element_by_link_text_to_exist(wait, "Yes", "Link text checked 20")
         time.sleep(1)
@@ -3821,45 +3822,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0036_create_manual_position_with_speed_that_triggs_rule_one(self):
-        # Create a manual position and verify the position
-        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
-        # Set Webdriver wait
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-        # Click on Alert tab
-        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
-        time.sleep(3)
-        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        # Click on Notifications tab
-        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
-        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        # Check Asset and Rule names
-        wait_for_element_by_link_text_to_exist(wait, vesselName[0], "Link text checked 3")
-        time.sleep(1)
-        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
-        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text)
-        # Click on details button
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        # Check Position parameters
-        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 4")
-        time.sleep(1)
-        self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("div.value").text)
-        self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
-        self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
-        self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
-        self.assertEqual(vesselName[0], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
-        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
-        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
-        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
-        self.assertEqual(str(reportedSpeedDefault[0] + 1) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
-        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
-        # Close position window
-        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(2)
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0037_create_NAF_position_with_speed_that_triggs_rule_one(self):
+    def test_0036_create_NAF_position_with_speed_that_triggs_rule_one(self):
         # Create a NAF position and verify the position
         earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
         # Set Webdriver wait
@@ -3895,6 +3858,44 @@ class UnionVMSTestCase(unittest.TestCase):
         # Close position window
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
         time.sleep(3)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0037_create_manual_position_with_speed_that_triggs_rule_one(self):
+        # Create a manual position and verify the position
+        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        # Set Webdriver wait
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(3)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[0], "Link text checked 3")
+        time.sleep(1)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text)
+        # Click on details button
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 4")
+        time.sleep(1)
+        self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[0], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[0][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[0][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[0] + 1) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4003,7 +4004,7 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0040b_create_NAF_position_with_speed_that_triggs_rule_one(self):
         # Startup browser and login
-        UnionVMSTestCase.test_0037_create_NAF_position_with_speed_that_triggs_rule_one(self)
+        UnionVMSTestCase.test_0036_create_NAF_position_with_speed_that_triggs_rule_one(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -6788,7 +6789,7 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0413_generate_NAF_and_verify_position(self):
         # Startup browser and login
-        UnionVMSTestCase.test_0008_generate_NAF_and_verify_position(self)
+        UnionVMSTestCase.test_0007_generate_NAF_and_verify_position(self)
 
 
     @timeout_decorator.timeout(seconds=180)
