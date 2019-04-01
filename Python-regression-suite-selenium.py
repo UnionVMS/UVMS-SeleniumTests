@@ -326,20 +326,25 @@ def create_one_new_asset_from_gui(self, vesselNumber):
 
 
 def create_one_new_asset_from_gui_with_parameters(self, parameterList):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
-    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
     time.sleep(1)
+    self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Click on new Asset button
+    wait_for_element_by_id_to_exist(wait, "asset-btn-create", "asset-btn-create checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-btn-create").click()
-    time.sleep(2)
     # Select F.S value
-    #self.driver.find_element_by_id("asset-input-countryCode").click()
-    #self.driver.find_element_by_id("asset-input-countryCode-item-"+parameterList[17]).click()
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
-    time.sleep(2)
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-"+parameterList[17], "asset-input-flagStateCode+parameterList checked 4")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-flagStateCode-item-"+parameterList[17]).click()
 
     # Enter IRCS value
+    wait_for_element_by_id_to_exist(wait, "asset-input-ircs", "asset-input-ircs checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-ircs").send_keys(parameterList[0])
     # Enter Name value
     self.driver.find_element_by_id("asset-input-name").send_keys(parameterList[1])
@@ -353,6 +358,8 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-homeport").send_keys(parameterList[7])
     # Select Gear Type value
     self.driver.find_element_by_id("asset-input-gearType").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-"+parameterList[8], "asset-input-gearType+parameterList checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType-item-"+parameterList[8]).click()
     # Enter MMSI Value
     self.driver.find_element_by_id("asset-input-mmsi").send_keys(parameterList[5])
@@ -372,11 +379,13 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-producercode").send_keys(parameterList[13])
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
-    time.sleep(1)
     # Click on "Add contact" link
-    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 7")
     time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
     # Main Contact Name Value
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 8")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(parameterList[14])
     # Main E-mail Value
     self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(parameterList[15])
@@ -390,12 +399,16 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("asset-input-contact-cityname-0").send_keys(parameterList[20])
     # Main Country Value
     self.driver.find_element_by_id("asset-input-contact-country-0").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0-item-"+parameterList[21], "asset-input-contact-country-0-item+parameterList checked 10")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-country-0-item-"+parameterList[21]).click()
-
     # Click on Save Asset button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 11")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-save").click()
-    time.sleep(10)
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
+    time.sleep(2)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
 
@@ -577,29 +590,40 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
+
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-    time.sleep(2)
     # Search for created asset
+    wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName)
-    time.sleep(2)
+    wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
-    time.sleep(7)
     # Click on details button
+    wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-toggle-form").click()
-    time.sleep(5)
     # Click on add new terminal button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
-    time.sleep(5)
     # Select Transponder system
+    wait_for_element_by_id_to_exist(wait, "mt-0-typeAndPlugin", "mt-0-typeAndPlugin checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-0-typeAndPlugin").click()
+    wait_for_element_by_link_text_to_exist(wait, "Inmarsat-C : Thrane&Thrane", "Link text checked 7")
     time.sleep(1)
-#    self.driver.find_element_by_link_text("Inmarsat-C : twostage").click()
     self.driver.find_element_by_link_text("Inmarsat-C : Thrane&Thrane").click()
-    time.sleep(1)
     # Enter serial number
+    wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber checked 8")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-0-serialNumber").send_keys(parameterRow[0])
     # Enter Transceiver type
     self.driver.find_element_by_id("mt-0-tranciverType").send_keys(parameterRow[1])
@@ -627,11 +651,13 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     # Activate Mobile Terminal button if parameter is Active=1
     if parameterRow[14] == "1":
        self.driver.find_element_by_id("mt-0-activation").click()
-    time.sleep(3)
     # Click on save button
+    wait_for_element_by_xpath_to_exist(wait, "//*[@id='menu-bar-update']", "XPATH checked 9")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
-    time.sleep(7)
     # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -4219,46 +4245,56 @@ class UnionVMSTestCase(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
         create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
         create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
+        time.sleep(1)
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('asset1.csv')
-        time.sleep(5)
         # Select Reporting tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
-        time.sleep(5)
         # Enter reporting name (based on 1st ircs name from asset file)
         reportName = "Test (only " + assetAllrows[0][0] +")"
+        wait_for_element_by_id_to_exist(wait, "reportName", "reportName checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("reportName").send_keys(reportName)
         # Enter Start and end Date Time
         currentUTCValue = datetime.datetime.utcnow()
         startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
         endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
         self.driver.find_element_by_id("report-start-date-picker").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-        time.sleep(1)
         self.driver.find_element_by_id("report-end-date-picker").send_keys(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-        time.sleep(1)
         # Select asset view
         self.driver.find_element_by_link_text("Select assets").click()
-        time.sleep(2)
         # Enter asset value
-        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[13]", "XPATH checked 3")
         time.sleep(2)
+        self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
         # Select Asset and save
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[26]", "XPATH checked 4")
+        time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[30]", "XPATH checked 5")
         time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@type='button'])[30]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[33]", "XPATH checked 6")
         time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 7")
         time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
-        time.sleep(10)
         # Click on Tabular view icon
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 8")
         time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         # Click on Tracks tab
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a", "XPATH checked 9")
+        time.sleep(2)
         self.driver.find_element_by_xpath("//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a").click()
         time.sleep(2)
         # Check that only one row exist with 1st ircs name from asset file
