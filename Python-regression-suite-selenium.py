@@ -4323,6 +4323,7 @@ class UnionVMSTestCase(unittest.TestCase):
         #time.sleep(5)
 
 
+
     @timeout_decorator.timeout(seconds=300)
     def test_0056_create_assets_trip_5_and_6(self):
         # Create assets, Mobile for Trip 5
