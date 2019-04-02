@@ -4463,7 +4463,6 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_report_and_check_trip_position_reports(self, 'assetreal3.csv', 'tripreal3.csv')
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0103_create_assets_real_trip_3(self):
         # Create assets, Mobile for RealTrip 4a and 4b
@@ -4520,9 +4519,6 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
         # Create RealTrip 3
         create_trip_from_file(datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
-
-
-
 
 
 
