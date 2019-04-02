@@ -2328,21 +2328,21 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_link_text("Select assets").click()
     # Enter asset value
     wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[13]", "XPATH checked 5")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
     # Select Asset and save
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[27]", "XPATH checked 6")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[31]", "XPATH checked 7")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//button[@type='button'])[31]").click()
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[35]", "XPATH checked 8")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//button[@type='button'])[35]").click()
     # Run the new report
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 9")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
     # Click on Tabular view icon
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 10")
@@ -2775,10 +2775,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         # Click on search button
         wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 2")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Check Asset name
         wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(2)
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
 
         # Click on Details button
@@ -4277,7 +4278,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Enter reporting name (based on 1st ircs name from asset file)
         reportName = "Test (only " + assetAllrows[0][0] +")"
         wait_for_element_by_id_to_exist(wait, "reportName", "reportName checked 2")
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_id("reportName").send_keys(reportName)
         # Enter Start and end Date Time
         currentUTCValue = datetime.datetime.utcnow()
