@@ -822,6 +822,7 @@ def check_new_asset_exists(self, vesselNumber):
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Search for the new created asset in the asset list
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
@@ -830,6 +831,7 @@ def check_new_asset_exists(self, vesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Check that the new asset exists in the list.
     wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[vesselNumber] + "\"]", "asset-input-simple-search checked 4")
+    time.sleep(1)
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[vesselNumber] + "\"]").text)
     # Click on details button for new asset
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 5")
@@ -882,8 +884,9 @@ def check_new_asset_exists(self, vesselNumber):
     self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
-    time.sleep(3)
+    time.sleep(2)
 
 
 def check_current_asset_pop_up_history_items(self, vesselNumber):
@@ -2343,7 +2346,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
     # Click on Tabular view icon
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 10")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
     # Click on Date column tab (To sort on Date)
     wait_for_element_by_xpath_to_exist(wait, "//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div", "XPATH checked 11")
@@ -3766,6 +3769,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//div[4]/a/i").click()
         # Switch tab focus for Selenium to the new tab
         self.driver.switch_to.window(self.driver.window_handles[-1])
+        time.sleep(5)
         # Check User guide page
         wait_for_element_by_id_to_exist(wait, "title-text", "title-text checked 2")
         time.sleep(5)
