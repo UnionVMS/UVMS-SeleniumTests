@@ -2293,49 +2293,61 @@ def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
 
 
 def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(assetFileName)
     # Open saved csv file and read all trip elements for asset
     assetTripAllrows = get_elements_from_file(tripFileName)
-    time.sleep(10)
     # Create a new Report
     # Select Reporting tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
-    time.sleep(15)
     # Click on New Report button
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[18]", "XPATH checked 2")
+    time.sleep(1)
     self.driver.find_element_by_xpath("(//button[@type='button'])[18]").click()
-    time.sleep(2)
     # Enter reporting name (based on 1st ircs name from asset file)
     reportName = "Test (only " + assetAllrows[0][0] +")"
+    wait_for_element_by_id_to_exist(wait, "reportName", "reportName checked 3")
+    time.sleep(1)
     self.driver.find_element_by_id("reportName").send_keys(reportName)
     # Enter Start and end Date Time
     currentUTCValue = datetime.datetime.utcnow()
     startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
     endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
     self.driver.find_element_by_id("report-start-date-picker").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    time.sleep(1)
     self.driver.find_element_by_id("report-end-date-picker").send_keys(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    time.sleep(1)
     # Select asset view
+    wait_for_element_by_link_text_to_exist(wait, "Select assets", "Link text checked 4")
+    time.sleep(2)
     self.driver.find_element_by_link_text("Select assets").click()
-    time.sleep(2)
     # Enter asset value
-    self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
-    time.sleep(5)
-    # Select Asset and save
-    self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
-    time.sleep(5)
-    self.driver.find_element_by_xpath("(//button[@type='button'])[31]").click()
-    time.sleep(5)
-    self.driver.find_element_by_xpath("(//button[@type='button'])[35]").click()
-    time.sleep(5)
-    # Run the new report
-    self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
-    time.sleep(10)
-    # Click on Tabular view icon
-    self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+    wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[13]", "XPATH checked 5")
     time.sleep(2)
+    self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
+    # Select Asset and save
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[27]", "XPATH checked 6")
+    time.sleep(2)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[31]", "XPATH checked 7")
+    time.sleep(2)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[31]").click()
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[35]", "XPATH checked 8")
+    time.sleep(2)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[35]").click()
+    # Run the new report
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 9")
+    time.sleep(2)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+    # Click on Tabular view icon
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 10")
+    time.sleep(2)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
     # Click on Date column tab (To sort on Date)
+    wait_for_element_by_xpath_to_exist(wait, "//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div", "XPATH checked 11")
+    time.sleep(2)
     self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div").click()
     time.sleep(2)
     # Check the 5 first positions for mentioned asset
@@ -2350,7 +2362,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
             # Compare expected value with 5 decimals that only has 4 decimals resolution
             self.assertEqual(str("%.5f" % float(str("%.4f" % float(assetTripAllrows[y][3])))) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[9]/div").text)
         self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[11]/div").text)
-    time.sleep(5)
+    time.sleep(3)
 
 
 def get_selected_elements_in_list_from_mainList(assetAllrows, assetListIndexNumber, selectionValue):
@@ -4325,8 +4337,9 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
         reload_page_and_goto_default(self)
-        time.sleep(2)
+        time.sleep(1)
         create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
+        time.sleep(1)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -4347,8 +4360,9 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal1.csv', 'tripreal1.csv')
         reload_page_and_goto_default(self)
-        time.sleep(2)
+        time.sleep(1)
         create_report_and_check_trip_position_reports(self, 'assetreal2.csv', 'tripreal2.csv')
+        time.sleep(1)
 
 
 
