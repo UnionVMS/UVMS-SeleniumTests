@@ -1374,12 +1374,15 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Select Mobile Terminal tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     # Enter Serial Number in
     wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[7]", "XPATH checked 2")
+    time.sleep(1)
     self.driver.find_element_by_xpath("(//input[@type='text'])[7]").send_keys(serialNoValue[mobileTerminalNumber])
     # Click in search button
     wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 3")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
     # Check Serial Number in the list
     wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[3]", "XPATH checked 4")
@@ -1391,9 +1394,11 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
     # Click on details button
     wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button", "XPATH checked 5")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     # Check Serial Number
     wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber checked 6")
+    time.sleep(1)
     self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
     # Check Transceiver Type
     self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
@@ -2875,13 +2880,15 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Mobile Terminal tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
         # Enter Serial Number in field
         wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[0])
         # Click in search button
         wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         # Click on details button
         wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
@@ -2906,13 +2913,15 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Mobile Terminal tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(2)
         # Enter Serial Number in field
         wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(serialNoValue[1])
         # Click in search button
         wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         # Click on details button
         wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-btn-advanced-search checked 4")
@@ -2923,6 +2932,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("mt-btn-assign-asset").click()
         # Enter Asset Name and clicks on the search button
         wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[23]", "XPATH checked 6")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//input[@type='text'])[23]").send_keys(vesselName[0])
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Click on connect button
@@ -3027,9 +3037,11 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Search for "ship"
         wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "uvms-header-menu-item-assets checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
@@ -3055,8 +3067,10 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_id("saveGroupDropdown").click()
         wait_for_element_by_xpath_to_exist(wait, "//a[contains(text(),'" + groupName[0] + "')]", "XPATH checked 8")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//a[contains(text(),'" + groupName[0] + "')]").click()
         wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 9")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Check that Group 1 has been created
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 10")
@@ -3110,11 +3124,14 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on saved groups
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "uvms-header-menu-item-assets checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         wait_for_element_by_link_text_to_exist(wait, groupName[0], "Link text checked 3")
+        time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         # Click on Group 1
         self.driver.find_element_by_link_text(groupName[0]).click()
@@ -3175,9 +3192,11 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Search for "ship"
         wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-input-simple-search").send_keys("ship")
         self.driver.find_element_by_id("asset-btn-simple-search").click()
         time.sleep(5)
@@ -3198,9 +3217,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Select Action "Save as Group"
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 3")
+        time.sleep(1)
         self.driver.find_element_by_link_text("Save as Group").click()
         # Enter Group name and click on save button
         wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 4")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Check that Group 2 has been created
@@ -3239,12 +3260,15 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on "saved groups" drop box
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 2")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         # Click on delete button for Group 2
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-delete-item-1", "asset-dropdown-saved-search-delete-item-1 checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-delete-item-1").click()
         # Click on confirmation button
         wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 4")
@@ -3271,6 +3295,7 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on advanced search
         wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
@@ -3331,6 +3356,7 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         time.sleep(5)
         # Search for "ship"
@@ -3412,6 +3438,7 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on mobile terminal tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         # Search on MemberID 100
         wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[9]", "XPATH checked 2")
