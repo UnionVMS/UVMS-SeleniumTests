@@ -1085,7 +1085,7 @@ def archive_one_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on delete button (Archive)
     wait_for_element_by_id_to_exist(wait, "menu-bar-archive", "menu-bar-archive checked 5")
@@ -1241,7 +1241,7 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
 
@@ -2780,7 +2780,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         # Click on search button
         wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 2")
-        time.sleep(2)
+        time.sleep(4)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Check Asset name
         wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
@@ -4001,7 +4001,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
         # Check Position parameters
         wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 4")
-        time.sleep(1)
+        time.sleep(2)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[0], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
