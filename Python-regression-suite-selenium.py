@@ -4348,11 +4348,11 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 7")
-        time.sleep(3)
+        time.sleep(5)
         self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
         # Click on Tabular view icon
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 8")
-        time.sleep(5)
+        time.sleep(7)
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         # Click on Tracks tab
         wait_for_element_by_xpath_to_exist(wait, "//*[@id='map']/div[6]/div/div/div/div/div/div[1]/ul/li[3]/a", "XPATH checked 9")
