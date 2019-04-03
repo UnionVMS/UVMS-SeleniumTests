@@ -1660,7 +1660,7 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_xpath("//button[@type='submit']").click()
     # Click on connect button
     wait_for_element_by_css_selector_to_exist(wait, "td.textAlignRight > button.btn.btn-primary", "td.textAlignRight > button.btn.btn-primary checked 6")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
     # Click on Link button
     wait_for_element_by_css_selector_to_exist(wait, "div.col-md-6.textAlignRight > button.btn.btn-primary", "div.col-md-6.textAlignRight > button.btn.btn-primary checked 7")
@@ -1933,11 +1933,14 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     time.sleep(1)
     wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 3")
+    time.sleep(1)
     self.driver.find_element_by_link_text(linkTextValue).click()
+    wait_for_element_by_xpath_to_exist(wait, "//input[@type='text']", "XPATH checked 4")
+    time.sleep(1)
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
     # Click on search button
-    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 4")
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 5")
     time.sleep(1)
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
     # Enter Vessel to verify position data
@@ -2901,12 +2904,15 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_id("mt-toggle-form").click()
         # Click on unlinking button
         wait_for_element_by_id_to_exist(wait, "menu-bar-unlink", "menu-bar-unlink checked 5")
+        time.sleep(1)
         self.driver.find_element_by_id("menu-bar-unlink").click()
         # Enter comment
         wait_for_element_by_name_to_exist(wait, "comment", "Element name comment checked 6")
+        time.sleep(1)
         self.driver.find_element_by_name("comment").send_keys("Unlink Asset and MT.")
         # Click on unlinking button
         wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 7")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         time.sleep(2)
 
@@ -2942,7 +2948,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Click on connect button
         wait_for_element_by_css_selector_to_exist(wait, "td.textAlignRight > button.btn.btn-primary", "CSS Selector checked 7")
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_css_selector("td.textAlignRight > button.btn.btn-primary").click()
         # Click on Link button
         wait_for_element_by_css_selector_to_exist(wait, "div.col-md-6.textAlignRight > button.btn.btn-primary", "CSS Selector checked 8")
@@ -2950,9 +2956,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.col-md-6.textAlignRight > button.btn.btn-primary").click()
         # Enter Reason comment
         wait_for_element_by_name_to_exist(wait, "comment", "Element name checked 9")
+        time.sleep(1)
         self.driver.find_element_by_name("comment").send_keys("Need to connect this mobile terminal with this asset.")
         # Click on Link button 2
         wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 10")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         # Close page
         wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
@@ -3992,7 +4000,7 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
-        time.sleep(3)
+        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         # Click on Notifications tab
         wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
@@ -4001,6 +4009,8 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_link_text_to_exist(wait, vesselName[0], "Link text checked 3")
         time.sleep(1)
         self.assertEqual(vesselName[0], self.driver.find_element_by_link_text(vesselName[0]).text)
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]", "CSS Selector checked 3")
+        time.sleep(2)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]), self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + "\"]").text)
         # Click on details button
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
