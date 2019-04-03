@@ -2785,6 +2785,7 @@ class UnionVMSTestCase(unittest.TestCase):
 
         # Select Alarms tab (Holding Table)
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(3)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
         # Click on search button
         wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 2")
@@ -2797,10 +2798,11 @@ class UnionVMSTestCase(unittest.TestCase):
 
         # Click on Details button
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[9]", "XPATH checked 4")
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[9]").click()
         # Check Position report fields
         wait_for_element_by_xpath_to_exist(wait, "/html/body/div[7]/div/div/div[2]/div[3]/div[2]/div[1]/div", "XPATH checked 4")
+        time.sleep(1)
         self.assertEqual(countryValue[37], self.driver.find_element_by_xpath("/html/body/div[7]/div/div/div[2]/div[3]/div[2]/div[1]/div").text)
         self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[3]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[3]/div[2]/div[3]/div").text)
@@ -2812,8 +2814,9 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(str(reportedCourseValue) + " °", self.driver.find_element_by_xpath("//div[7]/div[2]/div[4]/div").text)
         # Close Report Window
         wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 5")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(5)
+        time.sleep(3)
 
 
     @timeout_decorator.timeout(seconds=180)
