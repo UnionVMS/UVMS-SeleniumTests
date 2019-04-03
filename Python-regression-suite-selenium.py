@@ -2345,17 +2345,17 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
     # Select Asset and save
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[27]", "XPATH checked 6")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[31]", "XPATH checked 7")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[31]").click()
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[35]", "XPATH checked 8")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[35]").click()
     # Run the new report
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 9")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
     # Click on Tabular view icon
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 10")
@@ -2363,7 +2363,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
     # Click on Date column tab (To sort on Date)
     wait_for_element_by_xpath_to_exist(wait, "//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div", "XPATH checked 11")
-    time.sleep(2)
+    time.sleep(4)
     self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div").click()
     time.sleep(2)
     # Check the 5 first positions for mentioned asset
@@ -2541,10 +2541,10 @@ def check_inmarsat_fully_synced(self):
             time.sleep(15)
             # Reload page
             reload_page_and_goto_default(self)
-            time.sleep(4)
+            time.sleep(5)
             # Click on Mobile terminal tab
             self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-            time.sleep(4)
+            time.sleep(5)
             # Click on new terminal button
             self.driver.find_element_by_id("mt-btn-create").click()
             time.sleep(3)
@@ -4335,20 +4335,20 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("Select assets").click()
         # Enter asset value
         wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[13]", "XPATH checked 3")
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
         # Select Asset and save
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[26]", "XPATH checked 4")
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[26]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[30]", "XPATH checked 5")
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[30]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[33]", "XPATH checked 6")
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 7")
-        time.sleep(2)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
         # Click on Tabular view icon
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 8")
