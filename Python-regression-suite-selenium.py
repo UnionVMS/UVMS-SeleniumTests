@@ -283,8 +283,10 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("asset-input-homeport").send_keys(homeportValue[vesselNumber])
     # Select Gear Type value
     wait_for_element_by_id_to_exist(wait, "asset-input-gearType", "asset-input-gearType checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType").click()
     wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-0", "asset-input-gearType-item-0 checked 5")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType-item-0").click()
     # Enter MMSI Value
     self.driver.find_element_by_id("asset-input-mmsi").send_keys(mmsiValue[vesselNumber])
@@ -306,9 +308,11 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     # Click on "Add contact" link
     wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 6")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-btn-add-contact").click()
     # Main Contact Name Value
     wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 7")
+    time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
     print(contactNameValue[vesselNumber])
     # Main E-mail Value
@@ -317,6 +321,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
     # Click on Save Asset button
     wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 8")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
@@ -4194,7 +4199,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Select IRCS in the list
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div/span/div/table/tbody/tr/td[6]/button", "XPATH checked 4")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div/span/div/table/tbody/tr/td[6]/button").click()
         time.sleep(1)
         # Click on next button
