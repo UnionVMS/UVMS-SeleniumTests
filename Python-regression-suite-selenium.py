@@ -258,17 +258,17 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Click on new Asset button
     wait_for_element_by_id_to_exist(wait, "asset-btn-create", "uvms-header-menu-item-assets checked 2")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-btn-create").click()
     # Select F.S value
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 3")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-2", "asset-input-flagStateCode-item-2 checked 3")
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-2", "asset-input-flagStateCode-item-2 checked 4")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-flagStateCode-item-2").click()
     # Enter IRCS value
-    wait_for_element_by_id_to_exist(wait, "asset-input-ircs", "asset-input-ircs checked 4")
+    wait_for_element_by_id_to_exist(wait, "asset-input-ircs", "asset-input-ircs checked 5")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-ircs").send_keys(ircsValue[vesselNumber])
     # Enter Name value
@@ -282,17 +282,17 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Enter HomePort Value
     self.driver.find_element_by_id("asset-input-homeport").send_keys(homeportValue[vesselNumber])
     # Select Gear Type value
-    wait_for_element_by_id_to_exist(wait, "asset-input-gearType", "asset-input-gearType checked 5")
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType", "asset-input-gearType checked 6")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-0", "asset-input-gearType-item-0 checked 5")
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-0", "asset-input-gearType-item-0 checked 7")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType-item-0").click()
     # Enter MMSI Value
     self.driver.find_element_by_id("asset-input-mmsi").send_keys(mmsiValue[vesselNumber])
     # Select License Type value
     self.driver.find_element_by_id("asset-input-licenseType").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType-item-0", "asset-input-licenseType-item-0 checked 6")
+    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType-item-0", "asset-input-licenseType-item-0 checked 8")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
     # Length Value
@@ -308,11 +308,11 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     # Click on "Add contact" link
-    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 7")
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 9")
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-add-contact").click()
     # Main Contact Name Value
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 8")
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 10")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
     print(contactNameValue[vesselNumber])
@@ -321,11 +321,11 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     # Main Contact Number Value
     self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
     # Click on Save Asset button
-    wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 9")
+    wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 11")
     time.sleep(1)
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
-    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
     time.sleep(1)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -340,18 +340,18 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Click on new Asset button
     wait_for_element_by_id_to_exist(wait, "asset-btn-create", "asset-btn-create checked 2")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-btn-create").click()
     # Select F.S value
-    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 4")
-    time.sleep(1)
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 3")
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-"+parameterList[17], "asset-input-flagStateCode+parameterList checked 5")
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-"+parameterList[17], "asset-input-flagStateCode+parameterList checked 4")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-flagStateCode-item-"+parameterList[17]).click()
 
     # Enter IRCS value
-    wait_for_element_by_id_to_exist(wait, "asset-input-ircs", "asset-input-ircs checked 6")
+    wait_for_element_by_id_to_exist(wait, "asset-input-ircs", "asset-input-ircs checked 5")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-ircs").send_keys(parameterList[0])
     # Enter Name value
@@ -365,19 +365,19 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     # Enter HomePort Value
     self.driver.find_element_by_id("asset-input-homeport").send_keys(parameterList[7])
     # Select Gear Type value
-    wait_for_element_by_id_to_exist(wait, "asset-input-gearType", "asset-input-gearType checked 7")
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType", "asset-input-gearType checked 6")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-"+parameterList[8], "asset-input-gearType+parameterList checked 8")
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-"+parameterList[8], "asset-input-gearType+parameterList checked 7")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-gearType-item-"+parameterList[8]).click()
     # Enter MMSI Value
     self.driver.find_element_by_id("asset-input-mmsi").send_keys(parameterList[5])
     # Select License Type value
-    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType", "asset-input-licenseType checked 9")
+    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType", "asset-input-licenseType checked 8")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-licenseType").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType-item-0", "asset-input-licenseType-item-0 checked 10")
+    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType-item-0", "asset-input-licenseType-item-0 checked 9")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
     # Length Value
@@ -395,11 +395,11 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     # Click on "Add contact" link
-    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 12")
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 10")
     time.sleep(1)
     self.driver.find_element_by_id("asset-btn-add-contact").click()
     # Main Contact Name Value
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 8")
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 11")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(parameterList[14])
     # Main E-mail Value
@@ -413,18 +413,18 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     # Main City Value
     self.driver.find_element_by_id("asset-input-contact-cityname-0").send_keys(parameterList[20])
     # Main Country Value
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0", "asset-input-contact-country-0 checked 13")
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0", "asset-input-contact-country-0 checked 12")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-country-0").click()
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0-item-"+parameterList[21], "asset-input-contact-country-0-item+parameterList checked 10")
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0-item-"+parameterList[21], "asset-input-contact-country-0-item+parameterList checked 13")
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-contact-country-0-item-"+parameterList[21]).click()
     # Click on Save Asset button
-    wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 11")
+    wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 14")
     time.sleep(1)
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
-    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 15")
     time.sleep(2)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
@@ -857,12 +857,12 @@ def check_new_asset_exists(self, vesselNumber):
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[vesselNumber] + "\"]").text)
     # Click on details button for new asset
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 5")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Check that the F.S value is correct.
     #self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-countryCode").text)
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 6")
-    time.sleep(1)
+    time.sleep(3)
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-flagStateCode").text)
     # Check that the IRCS value is correct
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_id("asset-input-ircs").get_attribute("value"))
@@ -1022,11 +1022,11 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Select F.S value
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 4")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-flagStateCode").click()
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode-item-1", "asset-input-flagStateCode-item-1 checked 5")
     time.sleep(1)
