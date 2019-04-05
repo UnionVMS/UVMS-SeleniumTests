@@ -5433,34 +5433,46 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0041_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(2)
         # Select Alerts tab (Rules)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(2)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
-        time.sleep(2)
         # Click on edit rule icon
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
         time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         # Change Rule name
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 4")
+        time.sleep(2)
         self.driver.find_element_by_name("name").clear()
         self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
-        time.sleep(1)
         # Change Description
+        wait_for_element_by_name_to_exist(wait, "description", "Name checked 5")
+        time.sleep(1)
         self.driver.find_element_by_name("description").clear()
         self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
-        time.sleep(1)
         # Change condition state from AND to OR
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[8]", "XPATH checked 6")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        wait_for_element_by_link_text_to_exist(wait, "OR", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("OR").click()
-        time.sleep(1)
         # Click on Update rule button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[4]", "XPATH checked 8")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(2)
         # Click on Yes button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 9")
+        time.sleep(2)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
