@@ -5477,19 +5477,18 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0042_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Generate NAF position report that triggs the CFR part of modified rule. That should now trigg the rule
-
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Set Long/Lat
         latStrValue = lolaPositionValues[7][0][0]
         longStrValue = lolaPositionValues[7][0][1]
-
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
         nafSource = generate_NAF_string(countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
         print(nafSource)
@@ -5502,20 +5501,26 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(8)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(8)
         # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(3)
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
         # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        time.sleep(2)
         # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(2)
         self.assertEqual(countryValue[38], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
@@ -5527,8 +5532,10 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         self.assertEqual(str(reportedSpeedValue) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(5)
+        time.sleep(2)
 
     @timeout_decorator.timeout(seconds=180)
     def test_0042b_delay_one_minute(self):
@@ -5538,19 +5545,18 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0043_generate_NAF_position_that_triggs_rule_on_speed_part(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Generate NAF position report that triggs the speed part of modified rule. That should now trigg the rule
-
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Set Long/Lat
         latStrValue = lolaPositionValues[6][0][0]
         longStrValue = lolaPositionValues[6][0][1]
-
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
         nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
@@ -5563,20 +5569,26 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(8)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(8)
         # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(3)
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
         # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        time.sleep(2)
         # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(2)
         self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
@@ -5588,8 +5600,10 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(5)
+        time.sleep(2)
 
 
     def test_0044_remove_speed_rule_one(self):
@@ -5598,51 +5612,65 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
 
     def test_0050_create_user_area(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Startup browser and login
         # Click on Area Management tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-areas", "uvms-header-menu-item-areas checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-areas").click()
-        time.sleep(3)
         # Click on New are button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[5]", "XPATH checked 2")
+        time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
-        time.sleep(2)
         # Click on Coordinates button
+        wait_for_element_by_css_selector_to_exist(wait, "div.editingTools.text-center > div.btn-group > button.btn.btn-default", "CSS Selector checked 3")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.editingTools.text-center > div.btn-group > button.btn.btn-default").click()
-        time.sleep(2)
         # Click and select WGS84 projection
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/div/span", "XPATH checked 4")
+        time.sleep(2)
         self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/div/span").click()
+        wait_for_element_by_link_text_to_exist(wait, "WGS 84", "Link text checked 5")
         time.sleep(1)
         self.driver.find_element_by_link_text("WGS 84").click()
-        time.sleep(1)
-
         # Open saved csv file and read all area elements
         userAreaAllrows = get_elements_from_file(userAreaFileName)
         print(userAreaAllrows)
         # create_one_new_asset
         for x in range(0, len(userAreaAllrows)):
             # Click on "plus" button
-            self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/button").click()
+            wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/button", "XPATH checked 5")
             time.sleep(1)
+            self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/button").click()
             # Enter Long Lat position
+            wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[" + str(6 + x*2) + "]", "XPATH checked 6")
+            time.sleep(1)
             self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(6 + x*2) + "]").clear()
             self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(6 + x*2) + "]").send_keys(userAreaAllrows[x][0])
+            wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[" + str(7 + x*2) + "]", "XPATH checked 7")
             time.sleep(1)
             self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(7 + x*2) + "]").clear()
             self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(7 + x*2) + "]").send_keys(userAreaAllrows[x][1])
-            time.sleep(1)
         # Click on Apply button
-        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/div/button[2]").click()
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/div/button[2]", "XPATH checked 6")
         time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/div/button[2]").click()
         # Enter User Area Name
+        wait_for_element_by_name_to_exist(wait, "userAreaName", "Name checked 7")
+        time.sleep(1)
         self.driver.find_element_by_name("userAreaName").clear()
         self.driver.find_element_by_name("userAreaName").send_keys(userAreaName)
-        time.sleep(1)
         # Enter User Area Type Name
+        wait_for_element_by_name_to_exist(wait, "comboEditableInput", "Name checked 8")
+        time.sleep(1)
         self.driver.find_element_by_name("comboEditableInput").clear()
         self.driver.find_element_by_name("comboEditableInput").send_keys(userAreaTypeName)
-        time.sleep(1)
         # Click on Save button to save the new User Area.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[3]/div/button", "XPATH checked 9")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[3]/div/button").click()
-        time.sleep(3)
+        time.sleep(2)
 
 
 
