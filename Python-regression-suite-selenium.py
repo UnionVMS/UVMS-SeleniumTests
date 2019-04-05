@@ -5276,6 +5276,7 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             pass
         time.sleep(2)
 
+
     @timeout_decorator.timeout(seconds=180)
     def test_0037b_delay_one_minute(self):
         # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
@@ -5347,52 +5348,60 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0039_modify_speed_rule_one_and_change_cfr_condition(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(2)
         # Select Alerts tab (Rules)
-        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
-        time.sleep(4)
-        # Click on edit rule icon
-        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
         time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        # Click on edit rule icon
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         # Change Rule name
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 4")
+        time.sleep(2)
         self.driver.find_element_by_name("name").clear()
         self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR")
-        time.sleep(1)
         # Change Description
+        wait_for_element_by_name_to_exist(wait, "description", "Name checked 5")
+        time.sleep(1)
         self.driver.find_element_by_name("description").clear()
         self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR")
-        time.sleep(1)
-        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").click()
-        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
-        time.sleep(1)
         # Change the CFR value
-        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[38])
+        wait_for_element_by_css_selector_to_exist(wait, "div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]", "CSS Selector checked 6")
         time.sleep(1)
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[38])
         # Click on Update rule button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[4]", "XPATH checked 7")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
-        time.sleep(2)
         # Click on Yes button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 8")
+        time.sleep(2)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0040_generate_NAF_position_that_not_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Generate NAF position report that not satisfies the CFR part of the modified rule
-
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Set Long/Lat
         latStrValue = lolaPositionValues[6][0][0]
         longStrValue = lolaPositionValues[6][0][1]
-
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
         nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
@@ -5405,11 +5414,13 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
         time.sleep(5)
         # Try to find speed rule name in the Notification list (Should not exist)
