@@ -5236,19 +5236,18 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0037_generate_NAF_position_that_not_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Generate NAF position report that not satisfies the speed part but the CFR part of the modified rule
-
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Set Long/Lat
         latStrValue = lolaPositionValues[6][0][0]
         longStrValue = lolaPositionValues[6][0][1]
-
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
         nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
@@ -5261,11 +5260,13 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(5)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
         time.sleep(5)
         # Try to find speed rule name in the Notification list (Should not exist)
@@ -5283,19 +5284,18 @@ class UnionVMSTestCaseRules(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0038_generate_NAF_position_that_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Generate NAF position report that triggs the modified rule
-
         # Set Current Date and time in UTC 1 hours back
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Set Long/Lat
         latStrValue = lolaPositionValues[6][0][0]
         longStrValue = lolaPositionValues[6][0][1]
-
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
         nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
@@ -5308,20 +5308,26 @@ class UnionVMSTestCaseRules(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
-        time.sleep(8)
         # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
         self.driver.find_element_by_link_text("NOTIFICATIONS").click()
-        time.sleep(8)
         # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(3)
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
         self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
         # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
-        time.sleep(5)
         # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(3)
         self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
         self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
         self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
@@ -5333,8 +5339,10 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
         self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
         # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
