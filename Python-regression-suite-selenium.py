@@ -326,7 +326,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -425,7 +425,7 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 15")
-    time.sleep(2)
+    time.sleep(4)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -484,7 +484,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-save checked 7")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -606,7 +606,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -677,7 +677,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -908,7 +908,7 @@ def check_new_asset_exists(self, vesselNumber):
     self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -972,7 +972,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on History tab
     wait_for_element_by_css_selector_to_exist(wait, "#HISTORY > span", "CSS Selector checked 5")
@@ -998,7 +998,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
         time.sleep(2)
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 6")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1096,7 +1096,7 @@ def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1276,7 +1276,7 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
-    time.sleep(2)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1348,7 +1348,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     # Search for selected asset in the asset list
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 13")
@@ -1472,7 +1472,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     self.assertEqual(installedByName, self.driver.find_element_by_id("mt-0-channel-0-installedBy").get_attribute("value"))
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 7")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1735,7 +1735,7 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
     # Close page
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -3047,7 +3047,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
         # Close page
         wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
 
