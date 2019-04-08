@@ -6,6 +6,7 @@ import datetime
 import random
 import sys
 from unittest.case import _AssertRaisesContext
+import selenium
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
@@ -203,6 +204,8 @@ def convertBooleanToZeroOneString(booleanValue):
 
 
 def startup_browser_and_login_to_unionVMS(self):
+    # Print Selenium version
+    print(selenium.__version__)
     # Start Chrome browser
     self.driver = webdriver.Chrome()
     # Maximize browser window
