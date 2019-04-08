@@ -205,9 +205,13 @@ def convertBooleanToZeroOneString(booleanValue):
 
 def startup_browser_and_login_to_unionVMS(self):
     # Print Selenium version
+    print("Selenium version")
     print(selenium.__version__)
     # Start Chrome browser
     self.driver = webdriver.Chrome()
+    # Print Chrome version
+    print("Driver capabilities")
+    print (self.driver.capabilities)
     # Maximize browser window
     self.driver.maximize_window()
     # Login to test user admin
