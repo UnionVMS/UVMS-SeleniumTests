@@ -558,7 +558,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on add new terminal button
     wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
@@ -628,7 +628,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on add new terminal button
     wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
@@ -1297,7 +1297,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on the Notes tab
     wait_for_element_by_css_selector_to_exist(wait, "#NOTES > span", "#NOTES > span checked 5")
@@ -1360,7 +1360,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 15")
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on the Notes tab
     wait_for_element_by_css_selector_to_exist(wait, "#NOTES > span", "CSS Selector checked 16")
@@ -1407,7 +1407,7 @@ def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber)
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(1)
+    time.sleep(2)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on the Contacts tab
     wait_for_element_by_xpath_to_exist(wait, "//*[@id='CONTACTS']/span", "XPATH checked 5")
