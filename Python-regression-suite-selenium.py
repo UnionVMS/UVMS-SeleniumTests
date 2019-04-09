@@ -6772,6 +6772,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0207b_check_mobile_terminal_exported_to_file(self):
         # Test case checks that mobile terminals from test_0207 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
@@ -6779,20 +6781,25 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Open saved csv file and read all linked elements between assets and mobile terminals
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
 
-
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-name").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
 
         # Enter Member Number and Satellite Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-memberNumber", "mt-input-search-memberNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-memberNumber").clear()
         self.driver.find_element_by_id("mt-input-search-memberNumber").send_keys(mobileTerminalSearchValue[1])
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").clear()
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").send_keys(mobileTerminalSearchValue[2])
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(2)
 
@@ -6846,7 +6853,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
-        time.sleep(5)
+        time.sleep(2)
 
 
 
