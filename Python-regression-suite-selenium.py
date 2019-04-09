@@ -3392,6 +3392,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 11")
+        time.sleep(1)
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
         self.assertEqual(ircsValue[2], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[2] + "\"]").text)
         self.assertEqual(cfrValue[2], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[2] + "\"]").text)
@@ -5971,36 +5973,48 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0202_advanced_search_of_assets_fs_geartypes(self):
         # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
         time.sleep(3)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
         time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
         # Search for all assets with Flag State (F.S.) called "NOR"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates", "asset-dropdown-search-flagstates checked 5")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates-item-1", "asset-dropdown-search-flagstates-item-1 checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-flagstates-item-1").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates", "asset-dropdown-search-flagstates checked 7")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 8")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(5)
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
         filteredAssetList = get_selected_elements_in_list_from_mainList(assetAllrows, 17, str(1))
         # Get the remaining assets in the filteredAssetList
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetList)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetList[0][17])] + "\"]", "CSS Selector checked 9")
+        time.sleep(5)
         for x in range(0, len(filteredAssetList)):
             self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
@@ -6021,23 +6035,28 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 pass
 
         # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-gearType", "asset-dropdown-search-gearType checked 10")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-gearType-item-2", "asset-dropdown-search-gearType-item-2 checked 11")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-gearType-item-2").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 12")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
 
         # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 13")
+        time.sleep(3)
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 14")
         time.sleep(1)
         self.driver.find_element_by_name("name").clear()
-        time.sleep(1)
         self.driver.find_element_by_name("name").send_keys(groupName[3])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 15")
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(1)
 
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
         filteredAssetListSelected = get_selected_elements_in_list_from_mainList(filteredAssetList, 8, str(2))
@@ -6045,6 +6064,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 9")
+        time.sleep(1)
         for x in range(0, len(filteredAssetListSelected)):
             self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
@@ -6062,7 +6083,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
             except NoSuchElementException:
                 pass
-        time.sleep(4)
+        time.sleep(2)
 
 
 
