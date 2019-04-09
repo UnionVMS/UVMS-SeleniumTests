@@ -1319,7 +1319,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on the Notes tab
     wait_for_element_by_css_selector_to_exist(wait, "#NOTES > span", "#NOTES > span checked 5")
@@ -4306,7 +4306,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
         # Click on edit rule icon
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         # Click on selection drop down button
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[2]", "XPATH checked 4")
