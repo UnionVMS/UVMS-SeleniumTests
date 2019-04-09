@@ -7250,21 +7250,31 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0402_check_config_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Filtering on Update Operation
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Update", "Link text checked 3")
         time.sleep(1)
         self.driver.find_element_by_link_text("Update").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
         time.sleep(1)
         # Click on Search button
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 4")
         time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
 
         # Check config update value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 5")
+        time.sleep(1)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7308,14 +7318,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0404_check_alert_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Alerts sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ALARMS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ALARMS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ALARMS > span").click()
 
         # Check Alert value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultSystemName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7329,7 +7345,6 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         # Remove second part from string, that is the 3 last characters in the string
         realDateTimeValueString = realDateTimeValueString[:-3]
         self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
-
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
 
