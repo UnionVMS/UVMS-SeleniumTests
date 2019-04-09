@@ -6090,6 +6090,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0202b_check_group_exported_to_file(self):
         # Test case checks that group from test_0202 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
@@ -6099,19 +6101,24 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
         # Select Group 4 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-0", "asset-dropdown-saved-search-item-0 checked 4")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-0").click()
-        time.sleep(5)
         # Select all assets in the list
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-select-all", "asset-checkbox-select-all checked 5")
+        time.sleep(3)
         self.driver.find_element_by_id("asset-checkbox-select-all").click()
-        time.sleep(2)
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -6122,7 +6129,10 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         if os.path.exists(assetFileName):
             os.remove(assetFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
@@ -6157,7 +6167,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
