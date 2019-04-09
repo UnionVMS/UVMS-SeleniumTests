@@ -635,7 +635,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(2)
+    time.sleep(4)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on add new terminal button
     wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
@@ -6667,6 +6667,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=360)
     def test_0207_search_of_mobile_terminals_member_nr_satellite_nr_and_export_to_file(self):
         # Test case tests search functions filtering on member and satellite Number. Also export list result to file.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
@@ -6675,24 +6677,30 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
 
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-name").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
 
         # Enter Member Number and Satellite Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-memberNumber", "mt-input-search-memberNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-memberNumber").clear()
         self.driver.find_element_by_id("mt-input-search-memberNumber").send_keys(mobileTerminalSearchValue[1])
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").clear()
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").send_keys(mobileTerminalSearchValue[2])
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(2)
 
         # Select all mobile terminals in the list
-        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        wait_for_element_by_id_to_exist(wait, "mt-checkbox-select-all", "mt-checkbox-select-all checked 5")
         time.sleep(2)
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -6703,10 +6711,12 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         if os.path.exists(mobileTerminalFileName):
             os.remove(mobileTerminalFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "mt-dropdown-actions", "mt-dropdown-actions checked 6")
+        time.sleep(2)
         self.driver.find_element_by_id("mt-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
-        time.sleep(3)
         # Change back the path to current dir
         os.chdir(cwd)
 
@@ -6719,6 +6729,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalList)
 
         # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(1) + "]/td[2]/span[1]/a", "XPATH checked 8")
+        time.sleep(3)
         for x in range(0, len(filteredmobileTerminalList)):
             # Get CFR Value based on Link list between assets and mobile terminals
             tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalList[x][0])
