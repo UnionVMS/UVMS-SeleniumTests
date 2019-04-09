@@ -635,7 +635,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(2)
+    time.sleep(4)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on add new terminal button
     wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
@@ -3392,6 +3392,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 11")
+        time.sleep(1)
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
         self.assertEqual(ircsValue[2], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[2] + "\"]").text)
         self.assertEqual(cfrValue[2], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[2] + "\"]").text)
@@ -5971,36 +5973,48 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0202_advanced_search_of_assets_fs_geartypes(self):
         # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
         time.sleep(3)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
         time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
         # Search for all assets with Flag State (F.S.) called "NOR"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates", "asset-dropdown-search-flagstates checked 5")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates-item-1", "asset-dropdown-search-flagstates-item-1 checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-flagstates-item-1").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates", "asset-dropdown-search-flagstates checked 7")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 8")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(5)
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
         filteredAssetList = get_selected_elements_in_list_from_mainList(assetAllrows, 17, str(1))
         # Get the remaining assets in the filteredAssetList
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetList)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetList[0][17])] + "\"]", "CSS Selector checked 9")
+        time.sleep(5)
         for x in range(0, len(filteredAssetList)):
             self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
@@ -6021,23 +6035,28 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 pass
 
         # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-gearType", "asset-dropdown-search-gearType checked 10")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-gearType-item-2", "asset-dropdown-search-gearType-item-2 checked 11")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-gearType-item-2").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 12")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
 
         # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 13")
+        time.sleep(3)
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 14")
         time.sleep(1)
         self.driver.find_element_by_name("name").clear()
-        time.sleep(1)
         self.driver.find_element_by_name("name").send_keys(groupName[3])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 15")
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(1)
 
         # Get all assets with geartype Pelagic(2) in the filteredAssetList.
         filteredAssetListSelected = get_selected_elements_in_list_from_mainList(filteredAssetList, 8, str(2))
@@ -6045,6 +6064,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 9")
+        time.sleep(1)
         for x in range(0, len(filteredAssetListSelected)):
             self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
@@ -6062,13 +6083,15 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
             except NoSuchElementException:
                 pass
-        time.sleep(4)
+        time.sleep(2)
 
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0202b_check_group_exported_to_file(self):
         # Test case checks that group from test_0202 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
@@ -6078,19 +6101,24 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
         # Select Group 4 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-0", "asset-dropdown-saved-search-item-0 checked 4")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-0").click()
-        time.sleep(5)
         # Select all assets in the list
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-select-all", "asset-checkbox-select-all checked 5")
+        time.sleep(3)
         self.driver.find_element_by_id("asset-checkbox-select-all").click()
-        time.sleep(2)
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -6101,7 +6129,10 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         if os.path.exists(assetFileName):
             os.remove(assetFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
@@ -6136,48 +6167,62 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
         time.sleep(3)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
         time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
 
         # Search for all assets with Length inteval (12-14,99) and Power interval "0-99"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-lengthValue", "asset-dropdown-search-lengthValue checked 5")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-lengthValue-item-1", "asset-dropdown-search-lengthValue-item-1 checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-lengthValue-item-1").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-power", "asset-dropdown-search-power checked 7")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-power").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-power-item-0", "asset-dropdown-search-power-item-0 checked 8")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-power-item-0").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 9")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
 
         # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 10")
+        time.sleep(3)
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 11")
         time.sleep(1)
         self.driver.find_element_by_name("name").clear()
-        time.sleep(1)
         self.driver.find_element_by_name("name").send_keys(groupName[4])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 12")
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(3)
 
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
         filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
@@ -6188,17 +6233,21 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
         # Reload page
         self.driver.refresh()
-        time.sleep(7)
         # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 13")
+        time.sleep(3)
         self.driver.find_element_by_id("asset-sort-ircs").click()
-        time.sleep(1)
         # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search 14")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-1", "asset-dropdown-saved-search-item-1 15")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-1").click()
-        time.sleep(7)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 16")
+        time.sleep(3)
         for x in range(0, len(filteredAssetListSelected)):
             self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
@@ -6216,12 +6265,14 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
             except NoSuchElementException:
                 pass
-        time.sleep(4)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0203b_check_group_exported_to_file(self):
         # Test case checks that group from test_0203 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
@@ -6231,19 +6282,24 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
-        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
         # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-1", "asset-dropdown-saved-search-item-1 checked 4")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-1").click()
-        time.sleep(5)
         # Select all assets in the list
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-select-all", "asset-checkbox-select-all checked 5")
+        time.sleep(3)
         self.driver.find_element_by_id("asset-checkbox-select-all").click()
-        time.sleep(2)
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -6254,7 +6310,10 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         if os.path.exists(assetFileName):
             os.remove(assetFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
@@ -6289,33 +6348,41 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0204_advanced_search_of_assets_extmark_port(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
         time.sleep(3)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
         time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
 
         # Search for all assets with Ext Mark value
+        wait_for_element_by_id_to_exist(wait, "asset-input-search-externalMarking", "asset-input-search-externalMarking checked 5")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-input-search-externalMarking").clear()
         self.driver.find_element_by_id("asset-input-search-externalMarking").send_keys(externalMarkingSearchValue[0])
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 6")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
 
         # Get all assets with the marked value in the External Marking field in the asset list.
         filteredAssetList = get_selected_elements_in_list_from_mainList(assetAllrows, 3, externalMarkingSearchValue[0])
@@ -6326,6 +6393,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetList)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + filteredAssetList[0][3] + "\"]", "CSS Selector checked 7")
+        time.sleep(3)
         for x in range(0, len(filteredAssetList)):
             self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
@@ -6343,25 +6412,29 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
             except NoSuchElementException:
                 pass
-        time.sleep(1)
 
         # Search for all assets with Ext Mark value and Home port value
+        wait_for_element_by_id_to_exist(wait, "asset-input-search-homeport", "asset-input-search-homeport checked 8")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-input-search-homeport").clear()
         self.driver.find_element_by_id("asset-input-search-homeport").send_keys(homeportSearchValue[0])
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 9")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
 
         # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 10")
+        time.sleep(3)
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 11")
         time.sleep(1)
         self.driver.find_element_by_name("name").clear()
-        time.sleep(1)
         self.driver.find_element_by_name("name").send_keys(groupName[5])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 12")
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(3)
 
         # Get all assets with the marked value in the External Marking field in the asset list.
         filteredAssetListSelected = get_selected_elements_in_list_from_mainList(filteredAssetList, 7, homeportSearchValue[0])
@@ -6370,17 +6443,21 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
         # Reload page
         self.driver.refresh()
-        time.sleep(7)
         # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 13")
+        time.sleep(3)
         self.driver.find_element_by_id("asset-sort-ircs").click()
-        time.sleep(1)
         # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 14")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-2", "asset-dropdown-saved-search-item-2 checked 15")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-2").click()
-        time.sleep(7)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 16")
+        time.sleep(3)
         for x in range(0, len(filteredAssetListSelected)):
             self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
@@ -6398,7 +6475,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
             except NoSuchElementException:
                 pass
-        time.sleep(4)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -6411,6 +6488,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=360)
     def test_0206_search_of_mobile_terminals_serialnr_and_export_to_file(self):
         # Test case tests search functions filtering on Serial Number. Also export list result to file.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
@@ -6419,21 +6498,27 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
 
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-name").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
 
         # Enter Serial Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalSearchValue[0])
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(2)
 
         # Select all mobile terminals in the list
-        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        wait_for_element_by_id_to_exist(wait, "mt-checkbox-select-all", "mt-checkbox-select-all checked 5")
         time.sleep(2)
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -6444,10 +6529,12 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         if os.path.exists(mobileTerminalFileName):
             os.remove(mobileTerminalFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "mt-dropdown-actions", "mt-dropdown-actions checked 6")
+        time.sleep(2)
         self.driver.find_element_by_id("mt-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
-        time.sleep(3)
         # Change back the path to current dir
         os.chdir(cwd)
 
@@ -6457,6 +6544,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalList)
 
         # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(1) + "]/td[2]/span[1]/a", "XPATH checked 8")
+        time.sleep(3)
         for x in range(0, len(filteredmobileTerminalList)):
             # Get CFR Value based on Link list between assets and mobile terminals
             tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalList[x][0])
@@ -6464,7 +6553,6 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
             tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
             # Get asset name based on CFR value found in assetAllrows list
             tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
-
             self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
             self.assertEqual(filteredmobileTerminalList[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
             self.assertEqual(filteredmobileTerminalList[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
@@ -6498,6 +6586,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0206b_check_mobile_terminal_exported_to_file(self):
         # Test case checks that mobile terminals from test_0206 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
@@ -6505,17 +6595,22 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Open saved csv file and read all linked elements between assets and mobile terminals
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
 
-
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-name").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
 
         # Enter Serial Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalSearchValue[0])
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(2)
 
@@ -6566,12 +6661,14 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
-        time.sleep(5)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=360)
     def test_0207_search_of_mobile_terminals_member_nr_satellite_nr_and_export_to_file(self):
         # Test case tests search functions filtering on member and satellite Number. Also export list result to file.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
@@ -6580,24 +6677,30 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
 
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-name").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
 
         # Enter Member Number and Satellite Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-memberNumber", "mt-input-search-memberNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-memberNumber").clear()
         self.driver.find_element_by_id("mt-input-search-memberNumber").send_keys(mobileTerminalSearchValue[1])
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").clear()
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").send_keys(mobileTerminalSearchValue[2])
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(2)
 
         # Select all mobile terminals in the list
-        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        wait_for_element_by_id_to_exist(wait, "mt-checkbox-select-all", "mt-checkbox-select-all checked 5")
         time.sleep(2)
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -6608,10 +6711,12 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         if os.path.exists(mobileTerminalFileName):
             os.remove(mobileTerminalFileName)
         # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "mt-dropdown-actions", "mt-dropdown-actions checked 6")
+        time.sleep(2)
         self.driver.find_element_by_id("mt-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
-        time.sleep(3)
         # Change back the path to current dir
         os.chdir(cwd)
 
@@ -6624,6 +6729,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalList)
 
         # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(1) + "]/td[2]/span[1]/a", "XPATH checked 8")
+        time.sleep(3)
         for x in range(0, len(filteredmobileTerminalList)):
             # Get CFR Value based on Link list between assets and mobile terminals
             tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalList[x][0])
@@ -6665,6 +6772,8 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0207b_check_mobile_terminal_exported_to_file(self):
         # Test case checks that mobile terminals from test_0207 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Open saved csv file and read all mobile terminal elements
@@ -6672,20 +6781,25 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         # Open saved csv file and read all linked elements between assets and mobile terminals
         linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
 
-
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-name").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
 
         # Enter Member Number and Satellite Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-memberNumber", "mt-input-search-memberNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-memberNumber").clear()
         self.driver.find_element_by_id("mt-input-search-memberNumber").send_keys(mobileTerminalSearchValue[1])
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").clear()
         self.driver.find_element_by_id("mt-input-search-satelliteNumber").send_keys(mobileTerminalSearchValue[2])
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
         time.sleep(2)
 
@@ -6739,7 +6853,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         print(resultExists)
         # The test case shall pass if ALL of the boolean values in resultExists list are False
         self.assertFalse(checkAnyTrue(resultExists))
-        time.sleep(5)
+        time.sleep(2)
 
 
 
