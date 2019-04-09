@@ -6172,43 +6172,57 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
-        time.sleep(5)
         # Click on advanced search
-        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
-        time.sleep(1)
-        # Click on search button
-        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
         time.sleep(3)
-        # Click on sort IRCS
-        self.driver.find_element_by_id("asset-sort-ircs").click()
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
         time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
 
         # Search for all assets with Length inteval (12-14,99) and Power interval "0-99"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-lengthValue", "asset-dropdown-search-lengthValue checked 5")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-lengthValue-item-1", "asset-dropdown-search-lengthValue-item-1 checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-lengthValue-item-1").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-power", "asset-dropdown-search-power checked 7")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-power").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-power-item-0", "asset-dropdown-search-power-item-0 checked 8")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-search-power-item-0").click()
-        time.sleep(1)
         # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 9")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-btn-advanced-search").click()
-        time.sleep(3)
 
         # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 10")
+        time.sleep(3)
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 11")
         time.sleep(1)
         self.driver.find_element_by_name("name").clear()
-        time.sleep(1)
         self.driver.find_element_by_name("name").send_keys(groupName[4])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 12")
         time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
-        time.sleep(5)
+        time.sleep(3)
 
         # Get all assets with Length interval 12-14.99 in the assetAllrows.
         filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
@@ -6219,17 +6233,21 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
         # Reload page
         self.driver.refresh()
-        time.sleep(7)
         # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 13")
+        time.sleep(3)
         self.driver.find_element_by_id("asset-sort-ircs").click()
-        time.sleep(1)
         # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search 14")
+        time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-1", "asset-dropdown-saved-search-item-1 15")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search-item-1").click()
-        time.sleep(7)
 
         # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 16")
+        time.sleep(3)
         for x in range(0, len(filteredAssetListSelected)):
             self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
             self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
@@ -6247,7 +6265,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
                 self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
             except NoSuchElementException:
                 pass
-        time.sleep(4)
+        time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
