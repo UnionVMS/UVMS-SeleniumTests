@@ -205,9 +205,13 @@ def convertBooleanToZeroOneString(booleanValue):
 
 def startup_browser_and_login_to_unionVMS(self):
     # Print Selenium version
+    print("Selenium version")
     print(selenium.__version__)
     # Start Chrome browser
     self.driver = webdriver.Chrome()
+    # Print Chrome version
+    print("Driver capabilities")
+    print (self.driver.capabilities)
     # Maximize browser window
     self.driver.maximize_window()
     # Login to test user admin
@@ -687,21 +691,31 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
 
 
 def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDateTimeValue):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on mobile terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    time.sleep(2)
     # Search for mobile terminal via serial number
+    wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
+    time.sleep(2)
     self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
     self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
+    wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-btn-advanced-search").click()
-    time.sleep(5)
     # Click on detail button
+    wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
+    time.sleep(3)
     self.driver.find_element_by_id("mt-toggle-form").click()
-    time.sleep(5)
     # Click on link "Add new channel"
+    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-addChannel", "mt-x-addChannel checked 5")
+    time.sleep(3)
     self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
-    time.sleep(2)
     # Enter channel name
+    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel", "mt-x-addChannel-y-communicationChannel checked 6")
+    time.sleep(2)
     self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").clear()
     self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").send_keys(channelRow[1])
     # Activate Poll if value is "true"
@@ -755,18 +769,23 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").send_keys(channelRow[15])
 
     # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
+    time.sleep(1)
     self.driver.find_element_by_id("menu-bar-update").click()
-    time.sleep(2)
     # Enter Comment in comment field
+    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 8")
+    time.sleep(2)
     self.driver.find_element_by_name("comment").clear()
     self.driver.find_element_by_name("comment").send_keys(commentValue)
-    time.sleep(1)
     # Click on Update button
+    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 9")
+    time.sleep(1)
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-    time.sleep(3)
     # Click on Cancel
-    self.driver.find_element_by_id("menu-bar-cancel").click()
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
     time.sleep(3)
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
 
 
 
@@ -1300,7 +1319,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("asset-btn-simple-search").click()
     # Click on details button
     wait_for_element_by_id_to_exist(wait, "asset-toggle-form", "asset-toggle-form checked 4")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on the Notes tab
     wait_for_element_by_css_selector_to_exist(wait, "#NOTES > span", "#NOTES > span checked 5")
@@ -1531,6 +1550,8 @@ def compareChannelLists(notedList, fileList):
 def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
     #
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
     channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2])
     channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
@@ -1538,25 +1559,33 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     channelTotalList.sort(key=lambda x: x[0])
 
     # Click on Mobile Terminal tab
-    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    time.sleep(5)
-    # Sort on linked asset column
-    self.driver.find_element_by_id("mt-sort-serialNumber").click()
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
     time.sleep(1)
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    # Sort on linked asset column
+    wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+    time.sleep(3)
+    self.driver.find_element_by_id("mt-sort-serialNumber").click()
 
     # Read all Mobile Terminal data presented on Mobile Terminal List Tab.
     notedMobileTerminalList = []
     notedChannelsList = []
     for x in range(0, len(mobileTerminalAllrows)):
         # Search for mobile terminal via serial number
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[x][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(5)
         # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form 5")
+        time.sleep(3)
         self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(5)
         # Add elements values to notedMobileTerminal list row
+        wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber 6")
+        time.sleep(3)
         notedMobileTerminal = []
         notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
         notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
@@ -1608,6 +1637,8 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
             currentChannel = currentChannel + 1
             notedChannelsList.append(notedChannelRow)
         # Click on cancel button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel 7")
+        time.sleep(2)
         self.driver.find_element_by_id("menu-bar-cancel").click()
         time.sleep(2)
 
@@ -4275,7 +4306,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
         # Click on edit rule icon
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
         # Click on selection drop down button
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[2]", "XPATH checked 4")
@@ -6747,6 +6778,8 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0302b_check_mobile_terminal_list(self):
         # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file(tests300FileName[0])
         # Open saved csv file and read all mobile terminal elements
@@ -6757,9 +6790,12 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         # Sort mobileTerminalAllrows on 1st column (that is SerialNumber value)
         mobileTerminalAllrows.sort(key=lambda x: x[0])
         # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(5)
         # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+        time.sleep(3)
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
 
@@ -6772,6 +6808,8 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
             # Get asset name based on CFR value found in assetAllrows list
             tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
 
+            wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a", "XPATH checked 3")
+            time.sleep(1)
             self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
             self.assertEqual(mobileTerminalAllrows[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
             self.assertEqual(mobileTerminalAllrows[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
@@ -6783,6 +6821,9 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
             # Get Status Value (Active/Inactive) for current mobile terminal in UPPER case.
             tempStatusValue = statusValue[int(mobileTerminalAllrows[x][14])]
             tempStatusValue = tempStatusValue.upper()
+
+            wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span", "XPATH checked 3")
+            time.sleep(1)
             self.assertEqual(tempStatusValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span").text)
 
 
@@ -6819,6 +6860,9 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
     def test_0305_change_default_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
 
@@ -6843,23 +6887,32 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
 
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(3)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
 
         # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(5)
 
         # Verifies that default DNID and Member Number is correct for the 2nd serial number in mobileTerminalAllrows list.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 5")
+        time.sleep(3)
         self.assertEqual(mobileTerminalAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(mobileTerminalAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
 
         # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 6")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
         time.sleep(3)
 
@@ -6885,33 +6938,45 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
                 time.sleep(1)
 
         # Click on Save button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
+        time.sleep(1)
         self.driver.find_element_by_id("menu-bar-update").click()
         # Enter Comment in comment field
+        wait_for_element_by_name_to_exist(wait, "comment", "Name checked 8")
+        time.sleep(1)
         self.driver.find_element_by_name("comment").clear()
         self.driver.find_element_by_name("comment").send_keys(commentValue)
-        time.sleep(1)
         # Click on Update button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 9")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-        time.sleep(3)
         # Click on Cancel
-        self.driver.find_element_by_id("menu-bar-cancel").click()
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
         time.sleep(3)
+        self.driver.find_element_by_id("menu-bar-cancel").click()
 
         # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 11")
+        time.sleep(3)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 12")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(3)
 
         # Verifies that new default DNID and Member Number is correct for the 2nd serial number in channelAllrows list.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 13")
+        time.sleep(3)
         self.assertEqual(channelAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(channelAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
 
         # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 14")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(3)
 
         # Read all channels for selected Mobile Terminal
+        time.sleep(3)
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
 
 
@@ -6941,6 +7006,9 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
     def test_0306_delete_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
 
@@ -6965,56 +7033,75 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
 
         # Click on Mobile Terminal tab
-        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-        time.sleep(3)
-        # Sort on linked asset column
-        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
 
         # Search for mobile terminal via serial number (The 9th serial number in mobileTerminalAllrows is used)
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
         self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[8][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        time.sleep(5)
 
         # Verifies that default DNID and Member Number is correct for the 9th serial number in mobileTerminalAllrows list.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 5")
+        time.sleep(3)
         self.assertEqual(mobileTerminalAllrows[8][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(mobileTerminalAllrows[8][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
 
         # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 6")
+        time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
-        time.sleep(3)
 
         # Read all channels for selected Mobile Terminal
+        time.sleep(3)
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
 
         # Click on delete button for the 1st channel in the list
-        self.driver.find_element_by_id("mt-0-channel-0-removeChannel").click()
+        wait_for_element_by_id_to_exist(wait, "mt-0-channel-0-removeChannel", "mt-0-channel-0-removeChannel checked 7")
         time.sleep(1)
+        self.driver.find_element_by_id("mt-0-channel-0-removeChannel").click()
 
         # Click on Save button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 8")
+        time.sleep(1)
         self.driver.find_element_by_id("menu-bar-update").click()
         # Enter Comment in comment field
+        wait_for_element_by_name_to_exist(wait, "comment", "Name checked 9")
+        time.sleep(1)
         self.driver.find_element_by_name("comment").clear()
         self.driver.find_element_by_name("comment").send_keys(commentValue)
         time.sleep(1)
         # Click on Update button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 10")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-        time.sleep(3)
         # Click on Cancel
-        self.driver.find_element_by_id("menu-bar-cancel").click()
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
         time.sleep(3)
+        self.driver.find_element_by_id("menu-bar-cancel").click()
 
         # Verifies that default DNID and Member Number is correct for the 2nd serial number in notedChannelsList list. The 1st DNID and Member is now deleted.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 12")
+        time.sleep(3)
         self.assertEqual(notedChannelsList[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(notedChannelsList[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-        time.sleep(3)
 
         # Click on detail button
-        self.driver.find_element_by_id("mt-toggle-form").click()
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 13")
         time.sleep(3)
+        self.driver.find_element_by_id("mt-toggle-form").click()
 
         # Read all channels for selected Mobile Terminal
+        time.sleep(3)
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
 
         # Checks the number of channels read. If the list does not consists of one channel then something is wrong
@@ -7023,6 +7110,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         else:
             oneChannel = False
         self.assertTrue(oneChannel)
+
 
 
 
