@@ -4618,13 +4618,13 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0052_create_assets_trip_1_2_3(self):
         # Startup browser and login
         UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Startup browser and login
         UnionVMSTestCase.test_0052b_create_report_and_check_asset_in_reporting_view(self)
@@ -4639,7 +4639,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
             time.sleep(1)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0055_create_assets_trip_4(self):
         # Create assets, Mobile for Trip 4
         create_asset_from_file(self, 'asset4.csv')
@@ -4647,7 +4647,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
@@ -4676,7 +4676,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         time.sleep(1)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0057_create_assets_trip_7(self):
         # Create assets, Mobile for Trip 7
         create_asset_from_file(self, 'asset7.csv')
@@ -4684,7 +4684,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0058_create_assets_trip_8(self):
         # Create assets, Mobile for Trip 8
         create_asset_from_file(self, 'asset8.csv')
@@ -4692,7 +4692,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0059_create_assets_trip_9(self):
         # Create assets, Mobile for Trip 9
         create_asset_from_file(self, 'asset9.csv')
@@ -4700,7 +4700,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0102_create_assets_real_trip_2(self):
         # Create assets, Mobile for RealTrip 3
         create_asset_from_file(self, 'assetreal3.csv')
@@ -4709,13 +4709,13 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0102b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal3.csv', 'tripreal3.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0103_create_assets_real_trip_3(self):
         # Create assets, Mobile for RealTrip 4a and 4b
         create_asset_from_file(self, 'assetreal4.csv')
@@ -4725,7 +4725,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=48), 'assetreal4.csv', 'tripreal4b.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0104_create_assets_real_trip_4(self):
         # Create assets, Mobile for RealTrip 5
         create_asset_from_file(self, 'assetreal5.csv')
@@ -4734,13 +4734,13 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=48), 'assetreal5.csv', 'tripreal5.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0104b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal5.csv', 'tripreal5.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0105_create_assets_real_trip_5(self):
         # Create assets, Mobile for RealTrip 6
         create_asset_from_file(self, 'assetreal6.csv')
@@ -4749,13 +4749,13 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0105b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'assetreal6.csv', 'tripreal6.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0106_create_assets_real_trip_6(self):
         # Create assets, Mobile for RealTrip 7
         create_asset_from_file(self, 'assetreal7.csv')
@@ -4764,7 +4764,7 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=270), 'assetreal7.csv', 'tripreal7.csv')
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0107_create_assets_real_trip_7(self):
         # Create assets, Mobile for RealTrip 7
         create_asset_from_file(self, 'assetreal8.csv')
@@ -5967,7 +5967,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=300)
+    @timeout_decorator.timeout(seconds=360)
     def test_0201_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
         create_asset_from_file(self, 'assets2xxxx.csv')
@@ -6481,7 +6481,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(2)
 
 
-    @timeout_decorator.timeout(seconds=300)
+    @timeout_decorator.timeout(seconds=360)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
         # Create mobile terminals from file with several different values for filtering
         create_mobileterminal_from_file_based_on_link_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv', 'linkassetmobileterminals2xxxx.csv')
@@ -6879,13 +6879,13 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=360)
     def test_0301_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
         create_asset_from_file(self, tests300FileName[0])
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=360)
     def test_0302_create_several_mobile_terminals_for_editing(self):
         # Create mobile terminals from file with different values.
         # NOTE: Several mobile terminals are added to the same asset.
@@ -6944,7 +6944,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
             self.assertEqual(tempStatusValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span").text)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=360)
     def test_0303_create_several_additional_channels_for_mobile_terminals(self):
         # Set referenceDateTime to current UTC time
         referenceDateTime = datetime.datetime.utcnow()
