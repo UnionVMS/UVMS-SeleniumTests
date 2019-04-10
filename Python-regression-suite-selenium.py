@@ -1020,7 +1020,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
         time.sleep(2)
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 6")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1472,7 +1472,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
     # Click on details button
     wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button", "XPATH checked 5")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     # Check Serial Number
     wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber checked 6")
@@ -2835,9 +2835,11 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text("CONFIGURATION").click()
         # Click on Global setting subtab under Configuration Tab
         wait_for_element_by_css_selector_to_exist(wait, "#globalSettings > span", "CSS Selector #globalSettings > span checked")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#globalSettings > span").click()
         # Click to change Coordinates format to dd.mmm
         wait_for_element_by_xpath_to_exist(wait, "(//input[@name='coordinateFormat'])[2]", "XPATH checked")
+        time.sleep(1)
         self.driver.find_element_by_xpath("(//input[@name='coordinateFormat'])[2]").click()
         # Save current UTC date and time to file (Used in Audit test cases)
         # Set referenceDateTime to current UTC time
@@ -2846,8 +2848,10 @@ class UnionVMSTestCase(unittest.TestCase):
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
         # Click to change Default home page to Asset page
         wait_for_element_by_xpath_to_exist(wait, "//button[@id='']", "XPATH checked")
+        time.sleep(1)
         self.driver.find_element_by_xpath("//button[@id='']").click()
         wait_for_element_by_id_to_exist(wait, "-item-4", "uvms-header-menu-item-audit-log checked")
+        time.sleep(1)
         self.driver.find_element_by_id("-item-4").click()
         # Save current UTC date and time to file (Used in Audit test cases)
         # Set referenceDateTime to current UTC time
@@ -3363,24 +3367,24 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         # Select Action "Save as Group"
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 4")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 5")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_link_text("Save as Group").click()
         # Enter Group name and click on save button
         wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 6")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
         wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 7")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Check that Group 2 has been created
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 8")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 9")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         wait_for_element_by_link_text_to_exist(wait, groupName[1], "Link text checked 10")
         time.sleep(1)
@@ -4572,30 +4576,6 @@ class UnionVMSTestCase(unittest.TestCase):
         #time.sleep(5)
 
 
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0056_create_assets_trip_5_and_6(self):
-        # Create assets, Mobile for Trip 5
-        create_asset_from_file(self, 'asset5.csv')
-        create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
-        # Create assets, Mobile for Trip 6
-        create_asset_from_file(self, 'asset6.csv')
-        create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
-        # Create Trip 5-6
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
-        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0056b_create_report_and_check_position_reports(self):
-        # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
-        reload_page_and_goto_default(self)
-        time.sleep(1)
-        create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
-        time.sleep(1)
-
-
     @timeout_decorator.timeout(seconds=300)
     def test_0101_create_assets_real_trip_1(self):
         # Create assets, Mobile for RealTrip 1
@@ -4671,6 +4651,29 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0056_create_assets_trip_5_and_6(self):
+        # Create assets, Mobile for Trip 5
+        create_asset_from_file(self, 'asset5.csv')
+        create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
+        # Create assets, Mobile for Trip 6
+        create_asset_from_file(self, 'asset6.csv')
+        create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
+        # Create Trip 5-6
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
+        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0056b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
+        reload_page_and_goto_default(self)
+        time.sleep(1)
+        create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
+        time.sleep(1)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -7250,21 +7253,31 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0402_check_config_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Filtering on Update Operation
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Update", "Link text checked 3")
         time.sleep(1)
         self.driver.find_element_by_link_text("Update").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
         time.sleep(1)
         # Click on Search button
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 4")
         time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
 
         # Check config update value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 5")
+        time.sleep(1)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7308,14 +7321,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0404_check_alert_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Alerts sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ALARMS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ALARMS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ALARMS > span").click()
 
         # Check Alert value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultSystemName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7329,7 +7348,6 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         # Remove second part from string, that is the 3 last characters in the string
         realDateTimeValueString = realDateTimeValueString[:-3]
         self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
-
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
 
@@ -7341,14 +7359,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     def test_0406_check_asset_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7363,14 +7387,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     def test_0408_check_mobile_terminal_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7386,14 +7416,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0410_check_link_asset_and_mobile_terminal_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7404,19 +7440,25 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0411_generate_and_verify_manual_position(self):
         # Startup browser and login
-        UnionVMSTestCase.test_0007_generate_and_verify_manual_position(self)
+        UnionVMSTestCase.test_0008_generate_and_verify_manual_position(self)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0412_check_manual_position_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
 
         # Check Alert value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7438,14 +7480,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0414_check_NAF_position_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultNAFName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7458,7 +7506,6 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         # Create assets 3-6 in the list
         for x in range(1, 6):
             create_one_new_asset_from_gui(self, x)
-            time.sleep(2)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -7470,14 +7517,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0417_check_asset_group_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[7], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7498,20 +7551,29 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0420_check_config_date_time_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Filtering on Update Operation
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
+        time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Update", "Link text checked 4")
         time.sleep(1)
         self.driver.find_element_by_link_text("Update").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 5")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
-        time.sleep(1)
         # Click on Search button
-        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 6")
         time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
         # Check config update value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 7")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7538,20 +7600,25 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0423_check_poll_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[8], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
-
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -7560,17 +7627,22 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         UnionVMSTestCase.test_0047_create_modify_and_check_asset_history(self)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0425_check_asset_creation_and_modifocation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7584,7 +7656,6 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         time.sleep(2)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0426_create_one_new_mobile_terminal(self):
         # Startup browser and login
@@ -7593,14 +7664,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0427_check_mobile_terminal_creation_and_modifocation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7622,14 +7699,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0429_check_mobile_terminal_archiving_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
@@ -7645,14 +7728,20 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0431_check_asset_archiving_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        time.sleep(5)
         # Click on Asset and Terminals sub tabs under Audit Log Tab
-        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
 
         # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
