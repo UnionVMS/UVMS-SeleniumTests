@@ -1020,7 +1020,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
         time.sleep(2)
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 6")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1472,7 +1472,7 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
     # Click on details button
     wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button", "XPATH checked 5")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[10]/button").click()
     # Check Serial Number
     wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber checked 6")
@@ -3363,24 +3363,24 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
         # Select Action "Save as Group"
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 4")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 5")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_link_text("Save as Group").click()
         # Enter Group name and click on save button
         wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 6")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
         wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 7")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Check that Group 2 has been created
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 8")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 9")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         wait_for_element_by_link_text_to_exist(wait, groupName[1], "Link text checked 10")
         time.sleep(1)
