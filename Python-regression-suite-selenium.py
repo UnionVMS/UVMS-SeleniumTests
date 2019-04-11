@@ -569,7 +569,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on add new terminal button
     wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mt-0-typeAndPlugin", "mt-0-typeAndPlugin checked 6")
@@ -639,7 +639,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_id("asset-toggle-form").click()
     # Click on add new terminal button
     wait_for_element_by_id_to_exist(wait, "menu-bar-vessel-add-terminal", "menu-bar-vessel-add-terminal checked 5")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("menu-bar-vessel-add-terminal").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mt-0-typeAndPlugin", "mt-0-typeAndPlugin checked 6")
@@ -2029,15 +2029,16 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
         print("200 OK")
     else:
         print("Request NOT OK!")
-
     # Save current UTC date and time to file (Used in Audit test cases)
     # Set referenceDateTime to current UTC time
     referenceDateTime = datetime.datetime.utcnow()
     # Save referenceDateTime1 to file
     save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
-
+    # Wait 3 seconds
+    time.sleep(3)
     # Select Positions tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-movement", "uvms-header-menu-item-movement checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
     # Enter IRCS for newly created position
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
