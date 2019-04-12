@@ -2192,10 +2192,25 @@ def get_elements_from_file_without_deleting_paths_and_rows(fileName):
 
 
 def get_reference_date_time_from_file(referenceDateTimeFileName):
+
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Save current dir (cwd)")
+    print(cwd)
+    # Change to target folder
+    targetPath = get_target_path()
+    os.chdir(targetPath)
+    print(os.path.abspath(os.path.dirname(__file__)))
+    print('Current working dir: ' + targetPath)
+
     # Open saved csv file and read saved referenceDateTime elements
     referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_rows(referenceDateTimeFileName)
-
     print(referenceDateTimeElementsFromFile)
+
+    # Change back the path to current dir
+    os.chdir(cwd)
+    print(cwd)
+
 
     yearValue = int(referenceDateTimeElementsFromFile[0][0])
     monthValue = int(referenceDateTimeElementsFromFile[0][1])
