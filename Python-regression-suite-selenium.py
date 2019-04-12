@@ -1840,7 +1840,7 @@ def change_and_check_speed_format(self,unitNumber):
     self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
     # Select Custom mode
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 7")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
     wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 8")
     time.sleep(1)
