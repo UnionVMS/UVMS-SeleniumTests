@@ -4544,7 +4544,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Enter reporting name (based on 1st ircs name from asset file)
         reportName = "Test (only " + assetAllrows[0][0] +")"
         wait_for_element_by_id_to_exist(wait, "reportName", "reportName checked 2")
-        time.sleep(3)
+        time.sleep(5)
         self.driver.find_element_by_id("reportName").send_keys(reportName)
         # Enter Start and end Date Time
         currentUTCValue = datetime.datetime.utcnow()
