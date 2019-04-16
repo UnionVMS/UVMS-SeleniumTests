@@ -4592,6 +4592,116 @@ class UnionVMSTestCase(unittest.TestCase):
         #time.sleep(5)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052c_export_position_reports_to_excel_file(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Positions tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-movement", "uvms-header-menu-item-movement checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
+        # Select Custom mode
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_link_text(linkTextValue).click()
+        # Enter IRCS selection
+        wait_for_element_by_xpath_to_exist(wait, "//input[@type='text']", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//input[@type='text']").clear()
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F900")
+        # Click on search button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 5")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
+        # Click on ICRS header to sort on IRCS
+        wait_for_element_by_id_to_exist(wait, "movement-sort-ircs", "movement-sort-ircs checked 6")
+        time.sleep(2)
+        self.driver.find_element_by_id("movement-sort-ircs").click()
+
+        # Select row number 3-4 by click
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='checkbox'])[4]", "XPATH checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[5]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[19]").click()
+        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[20]").click()
+        # Save row information for rows 3-4 and 18-19 in the list
+        allrowsbackup = ['']
+        for x in [3, 4, 18, 19]:
+            print(x)
+            # Save one row in the list
+            # Start with an empty row
+            currentrow = []
+            # Add the 3 first columns to current row
+            for y in [2, 3, 4]:
+                currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[" + str(x) + "]/td[" + str(y) + "]").text)
+            # Add the 4th row (Asset name). Depends on
+            if x in [3, 4]:
+                currentrow.append(self.driver.find_element_by_xpath("(//a[contains(text(),'Fartyg9001')])[" + str(x) + "]").text)
+            elif x == 18:
+                currentrow.append(self.driver.find_element_by_xpath("(//a[contains(text(),'Fartyg9002')])[6]").text)
+            elif x == 19:
+                currentrow.append(self.driver.find_element_by_xpath("(//a[contains(text(),'Fartyg9002')])[7]").text)
+            # Add the remaning columns to current row
+            for y in [6, 7, 8, 9, 10, 11, 12, 13, 14]:
+                currentrow.append(self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[" + str(x) + "]/td[" + str(y) + "]").text)
+            allrowsbackup.append(currentrow)
+
+        del allrowsbackup[0]
+        print("-------------------- SAVE START-----------------------")
+        print(allrowsbackup)
+        print("-------------------- SAVE END-----------------------")
+
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(movementFileName):
+            os.remove(movementFileName)
+
+        # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "movement-dropdown-actions", "movement-dropdown-actions checked 8")
+        time.sleep(2)
+        self.driver.find_element_by_id("movement-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
+
+        # Open saved csv file and read all elements to "allrows"
+        ifile  = open(movementFileName, "rt", encoding="utf8")
+        reader = csv.reader(ifile, delimiter=';')
+        allrows =['']
+        for row in reader:
+            allrows.append(row)
+        ifile.close()
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+
+        # Check that the elements in csv file is correct
+        for y in range(len(allrows)):
+            if y==0:
+                # Check Headlines
+                for x in range(len(movementHeadline)):
+                    if not (x == 0):
+                        self.assertEqual(movementHeadline[x], allrows[y][x])
+            else:
+                print("Test row: " + str(y))
+                for z in range(len(movementHeadline)):
+                    self.assertEqual(allrowsbackup[y - 1][z].lower(), allrows[y][z].lower())
+
+        time.sleep(2)
+
+
+
     @timeout_decorator.timeout(seconds=300)
     def test_0101_create_assets_real_trip_1(self):
         # Create assets, Mobile for RealTrip 1
