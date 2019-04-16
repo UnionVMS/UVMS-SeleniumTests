@@ -4601,23 +4601,28 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-movement").click()
         # Select Custom mode
-        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 1")
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
         time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
-        wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 8")
+        wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 3")
         time.sleep(1)
         self.driver.find_element_by_link_text(linkTextValue).click()
-        # Click on search button
-        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 2")
+        # Enter IRCS selection
+        wait_for_element_by_xpath_to_exist(wait, "//input[@type='text']", "XPATH checked 4")
         time.sleep(1)
+        self.driver.find_element_by_xpath("//input[@type='text']").clear()
+        self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F900")
+        # Click on search button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 5")
+        time.sleep(2)
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         # Click on ICRS header to sort on IRCS
-        wait_for_element_by_id_to_exist(wait, "movement-sort-ircs", "movement-sort-ircs checked 3")
+        wait_for_element_by_id_to_exist(wait, "movement-sort-ircs", "movement-sort-ircs checked 6")
         time.sleep(2)
         self.driver.find_element_by_id("movement-sort-ircs").click()
 
         # Select row number 3-4 by click
-        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='checkbox'])[4]", "XPATH checked 4")
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='checkbox'])[4]", "XPATH checked 7")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
         self.driver.find_element_by_xpath("(//input[@type='checkbox'])[5]").click()
@@ -4661,10 +4666,10 @@ class UnionVMSTestCase(unittest.TestCase):
             os.remove(movementFileName)
 
         # Select Action "Export selection"
-        wait_for_element_by_id_to_exist(wait, "movement-dropdown-actions", "movement-dropdown-actions checked 5")
+        wait_for_element_by_id_to_exist(wait, "movement-dropdown-actions", "movement-dropdown-actions checked 8")
         time.sleep(2)
         self.driver.find_element_by_id("movement-dropdown-actions").click()
-        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 5")
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 9")
         time.sleep(1)
         self.driver.find_element_by_link_text("Export selection to CSV").click()
         time.sleep(3)
