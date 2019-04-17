@@ -3413,7 +3413,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
         wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 11")
-        time.sleep(1)
+        time.sleep(3)
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
         self.assertEqual(ircsValue[2], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[2] + "\"]").text)
         self.assertEqual(cfrValue[2], self.driver.find_element_by_css_selector("td[title=\"" + cfrValue[2] + "\"]").text)
@@ -4618,7 +4618,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
         # Click on ICRS header to sort on IRCS
         wait_for_element_by_id_to_exist(wait, "movement-sort-ircs", "movement-sort-ircs checked 6")
-        time.sleep(2)
+        time.sleep(5)
         self.driver.find_element_by_id("movement-sort-ircs").click()
 
         # Select row number 3-4 by click
