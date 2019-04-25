@@ -122,6 +122,10 @@ userAreaTypeName = "AREATYPE1"
 # Rule Parameters
 userAreaRuleNamne = "Area 1 Triggered"
 
+# Map Export Parameters
+mapTitle = "Map Title"
+mapSubTitle = "Map sub Title"
+mapDescription = "Map Desciption"
 
 # Mixed parameters
 reportedSpeedValue = 5

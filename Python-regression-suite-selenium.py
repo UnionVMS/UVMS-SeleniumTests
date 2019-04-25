@@ -4735,17 +4735,17 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_name_to_exist(wait, "attribute.name", "Name checked 7")
         time.sleep(1)
         self.driver.find_element_by_name("attribute.name").clear()
-        self.driver.find_element_by_name("attribute.name").send_keys("Title1")
+        self.driver.find_element_by_name("attribute.name").send_keys(mapTitle)
         # Enter Subtitle
         wait_for_element_by_css_selector_to_exist(wait, "ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]", "CSS Selector checked 8")
         time.sleep(1)
         self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]").clear()
-        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]").send_keys("Subtitle1")
+        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]").send_keys(mapSubTitle)
         # Enter Description
         wait_for_element_by_css_selector_to_exist(wait, "ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]", "CSS Selector checked 9")
         time.sleep(1)
         self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]").clear()
-        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]").send_keys("Description1")
+        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]").send_keys(mapDescription)
         # Click on Export Map button
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[16]", "XPATH checked 10")
         time.sleep(1)
