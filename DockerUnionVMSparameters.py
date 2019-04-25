@@ -126,6 +126,8 @@ userAreaRuleNamne = "Area 1 Triggered"
 mapTitle = "Map Title"
 mapSubTitle = "Map sub Title"
 mapDescription = "Map Desciption"
+mapPrefixFileName = "unionvms"
+mapSuffixFileName = ".pdf"
 
 # Mixed parameters
 reportedSpeedValue = 5
