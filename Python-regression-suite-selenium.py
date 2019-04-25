@@ -4570,6 +4570,7 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[33]", "XPATH checked 7")
         time.sleep(3)
         self.driver.find_element_by_xpath("(//button[@type='button'])[33]").click()
+        # Click on run button to start running the report
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 8")
         time.sleep(5)
         self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
@@ -4699,6 +4700,58 @@ class UnionVMSTestCase(unittest.TestCase):
                     self.assertEqual(allrowsbackup[y - 1][z].lower(), allrows[y][z].lower())
 
         time.sleep(2)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052d_export_map_to_file_check_that_map_file_exists(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('asset1.csv')
+        # Select Reporting tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
+        # Click on run button to start running the report
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+        # Click on Export Map button
+        wait_for_element_by_id_to_exist(wait, "map-fish-print-config-btn", "map-fish-print-config-btn checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("map-fish-print-config-btn").click()
+        # Select Format type to PDF
+        wait_for_element_by_css_selector_to_exist(wait, "#map-fish-print-config > div.row > div.col-md-12.window-top-tools", "CSS Selector checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("#map-fish-print-config > div.row > div.col-md-12.window-top-tools").click()
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='map-fish-print-config']/div[2]/ng-form/div/div[2]/div/div/div/div", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='map-fish-print-config']/div[2]/ng-form/div/div[2]/div/div/div/div").click()
+        wait_for_element_by_link_text_to_exist(wait, "pdf", "Link text checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("pdf").click()
+        # Enter Title
+        wait_for_element_by_name_to_exist(wait, "attribute.name", "Name checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_name("attribute.name").clear()
+        self.driver.find_element_by_name("attribute.name").send_keys("Title1")
+        # Enter Subtitle
+        wait_for_element_by_css_selector_to_exist(wait, "ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]", "CSS Selector checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]").clear()
+        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm1\"] > div.print-content-control > input[name=\"attribute.name\"]").send_keys("Subtitle1")
+        # Enter Description
+        wait_for_element_by_css_selector_to_exist(wait, "ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]", "CSS Selector checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]").clear()
+        self.driver.find_element_by_css_selector("ng-form[name=\"mapfishDetailForm2\"] > div.print-content-control > input[name=\"attribute.name\"]").send_keys("Description1")
+        # Click on Export Map button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[16]", "XPATH checked 10")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
+        time.sleep(3)
+
 
 
 
