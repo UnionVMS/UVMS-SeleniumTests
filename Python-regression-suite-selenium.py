@@ -261,11 +261,11 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-    time.sleep(1)
+    time.sleep(4)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Click on new Asset button
     wait_for_element_by_id_to_exist(wait, "asset-btn-create", "uvms-header-menu-item-assets checked 2")
-    time.sleep(3)
+    time.sleep(4)
     self.driver.find_element_by_id("asset-btn-create").click()
     # Select F.S value
     wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 3")
@@ -5027,7 +5027,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
 
     # Injecting MTs for Test
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=1000)
     def test_0053test_create_one_new_mobile_terminal_and_link_to_asset(self):
         # Create Mobile Terminals 39-52 in the list
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
