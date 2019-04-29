@@ -2691,6 +2691,7 @@ def check_inmarsat_fully_synced(self):
     time.sleep(5)
 
 
+
 def get_download_path():
     # Get correct download path
     if platform.system() == "Windows":
