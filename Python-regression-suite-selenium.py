@@ -2644,13 +2644,19 @@ def reload_page_and_goto_default(self):
 
 
 def check_inmarsat_fully_synced(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Reload page and goto default page
     reload_page_and_goto_default(self)
     time.sleep(4)
     # Click on Mobile terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     time.sleep(4)
     # Click on new terminal button
+    wait_for_element_by_id_to_exist(wait, "mt-btn-create", "mt-btn-create checked")
+    time.sleep(1)
     self.driver.find_element_by_id("mt-btn-create").click()
     time.sleep(3)
     # Select Transponder system
@@ -2683,6 +2689,7 @@ def check_inmarsat_fully_synced(self):
         else:
             break
     time.sleep(5)
+
 
 
 def get_download_path():
@@ -2846,8 +2853,10 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Admin tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked")
+        time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
         wait_for_element_by_link_text_to_exist(wait, "CONFIGURATION", "CONFIGURATION checked")
+        time.sleep(1)
         self.driver.find_element_by_link_text("CONFIGURATION").click()
         # Click on Global setting subtab under Configuration Tab
         wait_for_element_by_css_selector_to_exist(wait, "#globalSettings > span", "CSS Selector #globalSettings > span checked")
