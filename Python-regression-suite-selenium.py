@@ -13,6 +13,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 import os
 import psycopg2
@@ -7975,6 +7976,139 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
+
+
+
+class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0002_create_one_new_asset(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0002_create_one_new_asset(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0052_create_assets_trip_1_2_3(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0052b_create_report_and_check_asset_in_reporting_view(self):
+        # Startup browser and login
+        UnionVMSTestCase.test_0052b_create_report_and_check_asset_in_reporting_view(self)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052e_run_report_and_click_in_postion(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('asset1.csv')
+
+
+        # Select Reporting tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
+        # Click on run button to start running the report
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+        time.sleep(20)
+        print("Execute!")
+
+        # elem = self.driver.find_element_by_css_selector("#realtimeMap canvas")
+        # elem = self.driver.find_element_by_xpath('//*[@id="realtimeMap"]/div[3]/canvas')
+
+        #elem = self.driver.find_element_by_id("map")
+        elem = self.driver.find_element_by_css_selector("#map canvas")
+        ac = ActionChains(self.driver)
+        ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+        ac.move_to_element(elem).move_by_offset(-93, 74).click().perform()
+
+        print("Done!")
+        time.sleep(10)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052f_realtime_view_and_click_in_postion(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+
+        # Select Realtime view
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+        time.sleep(5)
+
+
+
+
+
+        # Set Current Date and time in UTC 4 hours into the future (This will make position report to be placed in Holding Table)
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[0], ircsValue[0], cfrValue[0], externalMarkingValue[0], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[0])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+
+
+
+
+
+        time.sleep(10)
+        print("Execute!")
+
+        elem = self.driver.find_element_by_css_selector("#realtimeMap canvas")
+        # elem = self.driver.find_element_by_xpath('//*[@id="realtimeMap"]/div[3]/canvas')
+
+        ac = ActionChains(self.driver)
+        ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+        ac.move_to_element(elem).move_by_offset(105, -64).click().perform()
+
+        print("Done!")
+        time.sleep(10)
+
+
+
 
 
 
