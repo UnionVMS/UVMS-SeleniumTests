@@ -8063,8 +8063,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
 
-
-
         # Set Current Date and time in UTC 4 hours into the future (This will make position report to be placed in Holding Table)
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
