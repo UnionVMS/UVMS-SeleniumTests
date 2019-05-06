@@ -2733,8 +2733,6 @@ def get_test_report_path():
         testResultPathLinux = os.path.abspath(os.path.dirname(__file__))
         return testResultPathLinux
 
-
-
 if platform.system() == "Windows":
     # Set environment variable HOME to the value of USERPROFILE
     os.environ["HOME"] = os.environ["USERPROFILE"]
