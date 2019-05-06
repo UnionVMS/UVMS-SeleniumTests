@@ -3157,13 +3157,17 @@ class UnionVMSTestCase(unittest.TestCase):
             self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1001 and Fartyg1002 by click
-        self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-listitem", "asset-checkbox-listitem checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-checkbox-listitem").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[2]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[2]").click()
         # Select Action "Save as Group"
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 4")
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
-        wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 5")
+        wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 7")
         time.sleep(1)
         self.driver.find_element_by_link_text("Save as Group").click()
         # Enter Group name and click on save button
@@ -3226,8 +3230,12 @@ class UnionVMSTestCase(unittest.TestCase):
             self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1005 and Fartyg1006 by click
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[7]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[5]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[5]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[6]", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[6]").click()
         # Select Action "Add to Group"
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         wait_for_element_by_link_text_to_exist(wait, "Add to Group", "Link text checked 7")
@@ -3319,24 +3327,28 @@ class UnionVMSTestCase(unittest.TestCase):
             self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1002 and Fartyg1005
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[2]", "XPATH checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[2]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[3]", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[3]").click()
         # Click on action button
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 4")
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 5")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
         # Remove selected assets from Group 1
-        wait_for_element_by_link_text_to_exist(wait, "Remove from Group", "Link text checked 5")
+        wait_for_element_by_link_text_to_exist(wait, "Remove from Group", "Link text checked 6")
         time.sleep(1)
         self.driver.find_element_by_link_text("Remove from Group").click()
         time.sleep(1)
         # Reload page
         self.driver.refresh()
         # Click on saved groups
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 6")
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 7")
         time.sleep(1)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
-        wait_for_element_by_link_text_to_exist(wait, groupName[0], "Link text checked 7")
+        wait_for_element_by_link_text_to_exist(wait, groupName[0], "Link text checked 8")
         time.sleep(1)
         self.assertEqual(groupName[0], self.driver.find_element_by_link_text(groupName[0]).text)
         # Click on Group 1
@@ -3344,6 +3356,17 @@ class UnionVMSTestCase(unittest.TestCase):
         # Check Assets in Group
         wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS Selector checked 8")
         time.sleep(1)
+        # Get asset name values in the group list
+        assetList = []
+        for x in range(2):
+            tempAssetName = self.driver.find_element_by_xpath(
+                "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) +"]/td[4]").text
+            assetList.append(tempAssetName)
+        # Check if asset list is not sorted
+        if sorted(assetList) != assetList:
+            # Sort on "Name" by click on "Name" once
+            self.driver.find_element_by_id("asset-sort-name").click()
+            time.sleep(1)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
         self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
@@ -3389,36 +3412,40 @@ class UnionVMSTestCase(unittest.TestCase):
             self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1003 and Fartyg1005 by click
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[6]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[3]", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[3]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[5]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[5]").click()
         # Select Action "Save as Group"
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 4")
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
         time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
-        wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 5")
+        wait_for_element_by_link_text_to_exist(wait, "Save as Group", "Link text checked 7")
         time.sleep(2)
         self.driver.find_element_by_link_text("Save as Group").click()
         # Enter Group name and click on save button
-        wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 6")
+        wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 8")
         time.sleep(2)
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[1])
-        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 7")
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 9")
         time.sleep(2)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         # Check that Group 2 has been created
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 8")
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 10")
         time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-actions").click()
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 9")
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 11")
         time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
-        wait_for_element_by_link_text_to_exist(wait, groupName[1], "Link text checked 10")
+        wait_for_element_by_link_text_to_exist(wait, groupName[1], "Link text checked 12")
         time.sleep(1)
         self.assertEqual(groupName[1], self.driver.find_element_by_link_text(groupName[1]).text)
         # Click on Group 2
         self.driver.find_element_by_link_text(groupName[1]).click()
         # Check Assets in Group
-        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[2] + "\"]", "CSS Selector checked 11")
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[2] + "\"]", "CSS Selector checked 13")
         time.sleep(1)
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
@@ -3568,8 +3595,12 @@ class UnionVMSTestCase(unittest.TestCase):
             self.driver.find_element_by_id("asset-sort-name").click()
             time.sleep(1)
         # Select Fartyg1001 and Fartyg1002 by click
-        self.driver.find_element_by_css_selector("td.checkboxContainer > input[type=\"checkbox\"]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-listitem", "asset-checkbox-listitem checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-checkbox-listitem").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//input[@id='asset-checkbox-listitem'])[2]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//input[@id='asset-checkbox-listitem'])[2]").click()
         # Save path to current dir
         cwd = os.path.abspath(os.path.dirname(__file__))
         # Change to Download folder for current user
@@ -3644,12 +3675,12 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 4")
         time.sleep(1)
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
-        # Select Not linked row number 2-4 by click
-        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='checkbox'])[2]", "XPATH checked 5")
+        # Select row number 1-3 by click
+        wait_for_element_by_id_to_exist(wait, "mt-checkbox-listitem", "mt-checkbox-listitem checked 5")
         time.sleep(1)
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[2]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[3]").click()
-        self.driver.find_element_by_xpath("(//input[@type='checkbox'])[4]").click()
+        self.driver.find_element_by_id("mt-checkbox-listitem").click()
+        self.driver.find_element_by_xpath("(//input[@id='mt-checkbox-listitem'])[2]").click()
+        self.driver.find_element_by_xpath("(//input[@id='mt-checkbox-listitem'])[3]").click()
         # Save row information for rows 2-4 in the list
         allrowsbackup = ['']
         currentrow = []

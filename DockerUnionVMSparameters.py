@@ -125,7 +125,7 @@ userAreaRuleNamne = "Area 1 Triggered"
 # Map Export Parameters
 mapTitle = "Map Title"
 mapSubTitle = "Map sub Title"
-mapDescription = "Map Desciption"
+mapDescription = "Map Description"
 mapPrefixFileName = "unionvms"
 mapSuffixFileName = ".pdf"
 
