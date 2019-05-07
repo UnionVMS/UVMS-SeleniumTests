@@ -1021,8 +1021,81 @@ def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
                 print("200 OK")
             else:
                 print("Request NOT OK!")
+            # Delay 100ms
+            time.sleep(0.1)
 
 
+def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+    # Open saved csv file and read all trip elements for asset
+    assetTripAllrows = get_elements_from_file(tripFileName)
+    # Create a new Report
+    # Select Reporting tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
+    time.sleep(1)
+    self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
+    # Click on New Report button
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[18]", "XPATH checked 2")
+    time.sleep(3)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[18]").click()
+    # Enter reporting name (based on 1st ircs name from asset file)
+    reportName = "Test (only " + assetAllrows[0][0] +")"
+    wait_for_element_by_id_to_exist(wait, "reportName", "reportName checked 3")
+    time.sleep(1)
+    self.driver.find_element_by_id("reportName").send_keys(reportName)
+    # Enter Start and end Date Time
+    currentUTCValue = datetime.datetime.utcnow()
+    startTimeValue = currentUTCValue - datetime.timedelta(hours=336) # 2 weeks back
+    endTimeValue = currentUTCValue + datetime.timedelta(hours=336) # 2 weeks ahead
+    self.driver.find_element_by_id("report-start-date-picker").send_keys(startTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_id("report-end-date-picker").send_keys(endTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Select asset view
+    wait_for_element_by_link_text_to_exist(wait, "Select assets", "Link text checked 4")
+    time.sleep(2)
+    self.driver.find_element_by_link_text("Select assets").click()
+    # Enter asset value
+    wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[13]", "XPATH checked 5")
+    time.sleep(3)
+    self.driver.find_element_by_xpath("(//input[@type='text'])[13]").send_keys(assetAllrows[0][0])
+    # Select Asset and save
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[27]", "XPATH checked 6")
+    time.sleep(5)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[27]").click()
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[31]", "XPATH checked 7")
+    time.sleep(5)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[31]").click()
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[35]", "XPATH checked 8")
+    time.sleep(5)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[35]").click()
+    # Run the new report
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 9")
+    time.sleep(5)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
+    # Click on Tabular view icon
+    wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 10")
+    time.sleep(5)
+    self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+    # Click on Date column tab (To sort on Date)
+    wait_for_element_by_xpath_to_exist(wait, "//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div", "XPATH checked 11")
+    time.sleep(4)
+    self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/thead/tr[3]/th[5]/div").click()
+    time.sleep(2)
+    # Check the 5 first positions for mentioned asset
+    for y in range(0, 5):
+        self.assertEqual(str("%.3f" % float(assetTripAllrows[y][0])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[6]/div").text)
+        self.assertEqual(str("%.3f" % float(assetTripAllrows[y][1])), self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[7]/div").text)
+        # Special case if speed is zero (No decimals then)
+        if float(assetTripAllrows[y][3]) == 0:
+            self.assertEqual(assetTripAllrows[y][3] + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[9]/div").text)
+        else:
+            #self.assertEqual(str("%.5f" % float(assetTripAllrows[y][3])) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y) + "]/td[9]/div").text)
+            # Compare expected value with 5 decimals that only has 4 decimals resolution
+            self.assertEqual(str("%.5f" % float(str("%.4f" % float(assetTripAllrows[y][3])))) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[9]/div").text)
+        self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[11]/div").text)
+    time.sleep(2)
 
 
 
@@ -1268,6 +1341,66 @@ class UnionVMSTestCase(unittest.TestCase):
         #time.sleep(5)
 
 
+    @timeout_decorator.timeout(seconds=300)
+    def test_0055_create_assets_trip_4(self):
+        # Create assets, Mobile for Trip 4
+        create_asset_from_file(self, 'asset4.csv')
+        create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0055b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0056_create_assets_trip_5_and_6(self):
+        # Create assets, Mobile for Trip 5
+        create_asset_from_file(self, 'asset5.csv')
+        create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
+        # Create assets, Mobile for Trip 6
+        create_asset_from_file(self, 'asset6.csv')
+        create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
+        # Create Trip 5-6
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
+        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0056b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
+        reload_page_and_goto_default(self)
+        time.sleep(1)
+        create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
+        time.sleep(1)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0057_create_assets_trip_7(self):
+        # Create assets, Mobile for Trip 7
+        create_asset_from_file(self, 'asset7.csv')
+        create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0058_create_assets_trip_8(self):
+        # Create assets, Mobile for Trip 8
+        create_asset_from_file(self, 'asset8.csv')
+        create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
+        create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0059_create_assets_trip_9(self):
+        # Create assets, Mobile for Trip 9
+        create_asset_from_file(self, 'asset9.csv')
+        create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
+        create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+
 
 
 class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
@@ -1296,52 +1429,32 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3(self):
-        # Startup browser and login
-        UnionVMSTestCase.test_0052_create_assets_trip_1_2_3(self)
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0052b_create_report_and_check_asset_in_reporting_view(self):
-        # Startup browser and login
-        UnionVMSTestCase.test_0052b_create_report_and_check_asset_in_reporting_view(self)
-
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0052e_run_report_and_click_in_postion(self):
-        # Set wait time for web driver
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-        # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file('asset1.csv')
-
-
-        # Select Reporting tab
-        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
+    def test_0052_0059_create_assets_trip_1_9_without_mobile_terminal(self):
+        # Create assets, Mobile for Trip 1
+        create_asset_from_file(self, 'asset1.csv')
+        # Create assets, Mobile for Trip 2
+        create_asset_from_file(self, 'asset2.csv')
+        # Create assets, Mobile for Trip 3
+        create_asset_from_file(self, 'asset3.csv')
+        # Create assets, Mobile for Trip 4
+        create_asset_from_file(self, 'asset4.csv')
+        # Create assets, Mobile for Trip 5
+        create_asset_from_file(self, 'asset5.csv')
+        # Create assets, Mobile for Trip 6
+        create_asset_from_file(self, 'asset6.csv')
+        # Create assets, Mobile for Trip 7
+        create_asset_from_file(self, 'asset7.csv')
+        # Create assets, Mobile for Trip 8
+        create_asset_from_file(self, 'asset8.csv')
+        # Create assets, Mobile for Trip 9
+        create_asset_from_file(self, 'asset9.csv')
         time.sleep(1)
-        self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
-        # Click on run button to start running the report
-        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[19]", "XPATH checked 2")
-        time.sleep(2)
-        self.driver.find_element_by_xpath("(//button[@type='button'])[19]").click()
-        time.sleep(20)
-        print("Execute!")
-
-        # elem = self.driver.find_element_by_css_selector("#realtimeMap canvas")
-        # elem = self.driver.find_element_by_xpath('//*[@id="realtimeMap"]/div[3]/canvas')
-
-        #elem = self.driver.find_element_by_id("map")
-        elem = self.driver.find_element_by_css_selector("#map canvas")
-        ac = ActionChains(self.driver)
-        ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
-        ac.move_to_element(elem).move_by_offset(-93, 74).click().perform()
-
-        print("Done!")
-        time.sleep(10)
 
 
-    @timeout_decorator.timeout(seconds=180)
-    def test_0052f_realtime_view_and_click_in_postion(self):
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0200c_realtime_view_and_click_in_postion(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
 
@@ -1354,31 +1467,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(2)
         self.driver.find_element_by_link_text("Kartan").click()
 
-        # Set Current Date and time in UTC 4 hours into the future (This will make position report to be placed in Holding Table)
-        currentUTCValue = datetime.datetime.utcnow()
-        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
-        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
-        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
-        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
 
-        # Set Long/Lat
-        latStrValue = lolaPositionValues[6][0][0]
-        longStrValue = lolaPositionValues[6][0][1]
-
-        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
-        nafSource = generate_NAF_string(countryValue[0], ircsValue[0], cfrValue[0], externalMarkingValue[0], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[0])
-        print(nafSource)
-        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
-        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
-        # Generate request
-        r = requests.get(totalNAFrequest)
-        # Check if request is OK (200)
-        if r.ok:
-            print("200 OK")
-        else:
-            print("Request NOT OK!")
-
-        time.sleep(5)
         # Activate view on Flags
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Flags'])[1]/following::span[1]", "XPATH checked 2")
         time.sleep(1)
@@ -1396,7 +1485,22 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::button[1]").click()
 
-        time.sleep(5)
+
+        # Create Trip 1-9
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
+        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+        create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+        create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+        time.sleep(1)
+
+
+
+        time.sleep(20)
         print("Execute!")
 
         # Click in the middle of the Map
@@ -1408,8 +1512,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         print("Done!")
         time.sleep(10)
-
-
 
 
 
