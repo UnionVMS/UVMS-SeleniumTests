@@ -14,6 +14,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 import subprocess
 import os
 import psycopg2
@@ -1452,7 +1453,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
 
-
     @timeout_decorator.timeout(seconds=1000)
     def test_0200c_realtime_view_and_click_in_postion(self):
         # Set wait time for web driver
@@ -1496,11 +1496,16 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
         create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
         create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
-        time.sleep(1)
-
-
-
         time.sleep(20)
+
+        # Enter Asset name in search field
+        self.driver.find_element_by_id("mat-input-0").send_keys("Fartyg9001 ")
+        time.sleep(1)
+        self.driver.find_element_by_id("mat-input-0").send_keys(Keys.BACKSPACE)
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[2]/following::span[1]").click()
+        #### CONTINUE ######
+
         print("Execute!")
 
         # Click in the middle of the Map
