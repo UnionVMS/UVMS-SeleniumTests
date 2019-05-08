@@ -1423,12 +1423,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=180)
-    def test_0002_create_one_new_asset(self):
-        # Startup browser and login
-        UnionVMSTestCase.test_0002_create_one_new_asset(self)
-
-
     @timeout_decorator.timeout(seconds=300)
     def test_0052_0059_create_assets_trip_1_9_without_mobile_terminal(self):
         # Create assets, Mobile for Trip 1
@@ -1436,19 +1430,19 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create assets, Mobile for Trip 2
         create_asset_from_file(self, 'asset2.csv')
         # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, 'asset3.csv')
+        #create_asset_from_file(self, 'asset3.csv')
         # Create assets, Mobile for Trip 4
-        create_asset_from_file(self, 'asset4.csv')
+        #create_asset_from_file(self, 'asset4.csv')
         # Create assets, Mobile for Trip 5
-        create_asset_from_file(self, 'asset5.csv')
+        #create_asset_from_file(self, 'asset5.csv')
         # Create assets, Mobile for Trip 6
-        create_asset_from_file(self, 'asset6.csv')
+        #create_asset_from_file(self, 'asset6.csv')
         # Create assets, Mobile for Trip 7
-        create_asset_from_file(self, 'asset7.csv')
+        #create_asset_from_file(self, 'asset7.csv')
         # Create assets, Mobile for Trip 8
-        create_asset_from_file(self, 'asset8.csv')
+        #create_asset_from_file(self, 'asset8.csv')
         # Create assets, Mobile for Trip 9
-        create_asset_from_file(self, 'asset9.csv')
+        #create_asset_from_file(self, 'asset9.csv')
         time.sleep(1)
 
 
@@ -1457,7 +1451,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
     def test_0200c_realtime_view_and_click_in_postion(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
         # Select Realtime view
         #wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
         #time.sleep(1)
@@ -1489,22 +1482,30 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create Trip 1-9
         create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
         create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
-        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
-        create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
-        create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
-        time.sleep(20)
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
+        #create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+        #create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+        #create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
 
-        # Enter Asset name in search field
-        self.driver.find_element_by_id("mat-input-0").send_keys("Fartyg9001 ")
+        # Open saved csv files and read all asset elements
+        assetAllrows1 = get_elements_from_file('asset1.csv')
+        assetAllrows2 = get_elements_from_file('asset2.csv')
+
+        time.sleep(5)
+
+        # Enter the name of Asset 1 in search field
+        wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 6")
         time.sleep(1)
-        self.driver.find_element_by_id("mat-input-0").send_keys(Keys.BACKSPACE)
-        time.sleep(1)
-        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[2]/following::span[1]").click()
-        #### CONTINUE ######
+        self.driver.find_element_by_id("mat-input-0").send_keys(assetAllrows1[0][1])
+        # Click on the first item in the list to select asset
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::span[1]", "XPATH checked 5")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::span[1]").click()
+
+        time.sleep(3)
 
         print("Execute!")
 
