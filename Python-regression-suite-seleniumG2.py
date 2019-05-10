@@ -1452,10 +1452,10 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Realtime view
-        #wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-        #time.sleep(1)
-        #self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
-        self.driver.get(httpRealMapUrlString)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+        #self.driver.get(httpRealMapUrlString)
         wait_for_element_by_link_text_to_exist(wait, "Kartan", "Link text checked 1")
         time.sleep(2)
         self.driver.find_element_by_link_text("Kartan").click()
@@ -1473,10 +1473,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]", "XPATH checked 4")
         time.sleep(1)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]").click()
-        # Activate view on selcted Track
-        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::button[1]", "XPATH checked 5")
-        time.sleep(1)
-        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::button[1]").click()
 
 
         # Create Trip 1-9
@@ -1492,7 +1488,15 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         # Open saved csv files and read all asset elements
         assetAllrows1 = get_elements_from_file('asset1.csv')
-        assetAllrows2 = get_elements_from_file('asset2.csv')
+
+        # Open saved csv files and read all trip elements
+        assetTripAllrows1 = get_elements_from_file('trip1.csv')
+
+        print("-----assetAllrows1-----")
+        print(assetAllrows1)
+        print("-----assetTripAllrows1-----")
+        print(assetTripAllrows1)
+
 
         time.sleep(5)
 
@@ -1507,18 +1511,35 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         time.sleep(3)
 
-        print("Execute!")
-
         # Click in the middle of the Map
+        print("Execute!")
         elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
         ac = ActionChains(self.driver)
         ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
         ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
-
-
         print("Done!")
-        time.sleep(10)
+        time.sleep(5)
 
+        # Check Asset Name
+        self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("fieldset > div").text)
+        # Check IRCS
+        self.assertEqual(assetAllrows1[0][0], self.driver.find_element_by_xpath("//fieldset[2]/div").text)
+        # Check MMSI
+        self.assertEqual(assetAllrows1[0][5], self.driver.find_element_by_xpath("//fieldset[3]/div").text)
+        # Check Speed
+        self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), self.driver.find_element_by_xpath("//fieldset[4]/div").text)
+        # Check Course
+        self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), self.driver.find_element_by_xpath("//fieldset[5]/div").text)
+        # Check Flag state
+        self.assertEqual(flagStateIndex[int(assetAllrows1[0][17])], self.driver.find_element_by_xpath("//fieldset[6]/div").text)
+        # Check Ext Marking
+        self.assertEqual(assetAllrows1[0][3], self.driver.find_element_by_xpath("//fieldset[7]/div").text)
+        # Check asset Length
+        self.assertEqual(assetAllrows1[0][9], self.driver.find_element_by_xpath("//fieldset[8]/div").text)
+        # Check licenseTypeValue
+        self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//fieldset[9]/div").text)
+        # Check Producer Name
+        self.assertEqual(assetAllrows1[0][12], self.driver.find_element_by_xpath("//fieldset[10]/div").text)
 
 
 
