@@ -209,14 +209,13 @@ def startup_browser_and_login_to_unionVMS(self):
     print(selenium.__version__)
     # Start Chrome browser
     self.driver = webdriver.Chrome()
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Print Chrome version
     print("Driver capabilities")
     print (self.driver.capabilities)
     # Maximize browser window
     self.driver.maximize_window()
-    # Login to test user admin
-    #self.driver.get("https://unionvmstest.havochvatten.se/unionvms/")
-    #self.driver.implicitly_wait(5)
     self.driver.get(httpUnionVMSurlString)
     time.sleep(2)
 
@@ -237,6 +236,8 @@ def startup_browser_and_login_to_unionVMS(self):
     except:
         pass
 
+    wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
+    time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
     self.driver.find_element_by_id(defaultUserNamePassword).send_keys(defaultUserNamePassword)
     time.sleep(1)
