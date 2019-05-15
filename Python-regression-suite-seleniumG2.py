@@ -1269,13 +1269,13 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0052_create_assets_trip_1_2_3(self):
         # Create assets, Mobile for Trip 1
         create_asset_from_file(self, 'asset1.csv')
-        create_mobileterminal_from_file(self, 'asset1.csv', 'mobileterminal1.csv')
+        #create_mobileterminal_from_file(self, 'asset1.csv', 'mobileterminal1.csv')
         # Create assets, Mobile for Trip 2
         create_asset_from_file(self, 'asset2.csv')
-        create_mobileterminal_from_file(self, 'asset2.csv', 'mobileterminal2.csv')
+        #create_mobileterminal_from_file(self, 'asset2.csv', 'mobileterminal2.csv')
         # Create assets, Mobile for Trip 3
         create_asset_from_file(self, 'asset3.csv')
-        create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
+        #create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
         # Create Trip 1-3
         create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
         create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
@@ -1349,7 +1349,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0055_create_assets_trip_4(self):
         # Create assets, Mobile for Trip 4
         create_asset_from_file(self, 'asset4.csv')
-        create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
+        #create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
         create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
 
 
@@ -1363,10 +1363,10 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0056_create_assets_trip_5_and_6(self):
         # Create assets, Mobile for Trip 5
         create_asset_from_file(self, 'asset5.csv')
-        create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
+        #create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
         # Create assets, Mobile for Trip 6
         create_asset_from_file(self, 'asset6.csv')
-        create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
+        #create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
         # Create Trip 5-6
         create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
         create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
@@ -1386,7 +1386,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0057_create_assets_trip_7(self):
         # Create assets, Mobile for Trip 7
         create_asset_from_file(self, 'asset7.csv')
-        create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
+        #create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
         create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
 
 
@@ -1394,7 +1394,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0058_create_assets_trip_8(self):
         # Create assets, Mobile for Trip 8
         create_asset_from_file(self, 'asset8.csv')
-        create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
+        #create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
         create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
 
 
@@ -1402,7 +1402,7 @@ class UnionVMSTestCase(unittest.TestCase):
     def test_0059_create_assets_trip_9(self):
         # Create assets, Mobile for Trip 9
         create_asset_from_file(self, 'asset9.csv')
-        create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
+        #create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
         create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
 
 
@@ -1433,32 +1433,30 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create assets, Mobile for Trip 2
         create_asset_from_file(self, 'asset2.csv')
         # Create assets, Mobile for Trip 3
-        #create_asset_from_file(self, 'asset3.csv')
+        create_asset_from_file(self, 'asset3.csv')
         # Create assets, Mobile for Trip 4
-        #create_asset_from_file(self, 'asset4.csv')
+        create_asset_from_file(self, 'asset4.csv')
         # Create assets, Mobile for Trip 5
-        #create_asset_from_file(self, 'asset5.csv')
+        create_asset_from_file(self, 'asset5.csv')
         # Create assets, Mobile for Trip 6
-        #create_asset_from_file(self, 'asset6.csv')
+        create_asset_from_file(self, 'asset6.csv')
         # Create assets, Mobile for Trip 7
-        #create_asset_from_file(self, 'asset7.csv')
+        create_asset_from_file(self, 'asset7.csv')
         # Create assets, Mobile for Trip 8
-        #create_asset_from_file(self, 'asset8.csv')
+        create_asset_from_file(self, 'asset8.csv')
         # Create assets, Mobile for Trip 9
-        #create_asset_from_file(self, 'asset9.csv')
+        create_asset_from_file(self, 'asset9.csv')
         time.sleep(1)
 
 
-
     @timeout_decorator.timeout(seconds=1000)
-    def test_0200c_realtime_view_and_click_in_postion(self):
+    def test_0200c_realtime_search_for_asset_and_click_asset_on_map(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Realtime view
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
         time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
-        #self.driver.get(httpRealMapUrlString)
         wait_for_element_by_link_text_to_exist(wait, "Kartan", "Link text checked 1")
         time.sleep(2)
         self.driver.find_element_by_link_text("Kartan").click()
@@ -1477,10 +1475,16 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]").click()
 
+        # Change Cap tracks (min) History value
+        wait_for_element_by_css_selector_to_exist(wait, "input[type=\"number\"]", "CSS Selector checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("input[type=\"number\"]").clear()
+        self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(str(capTracksMinValue))
+        self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(Keys.ENTER)
 
         # Create Trip 1-9
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), assetFileNameList[0], tripFileNameList[0])
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
@@ -1490,22 +1494,19 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         #create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
 
         # Open saved csv files and read all asset elements
-        assetAllrows1 = get_elements_from_file('asset1.csv')
+        assetAllrows1 = get_elements_from_file(assetFileNameList[0])
 
         # Open saved csv files and read all trip elements
-        assetTripAllrows1 = get_elements_from_file('trip1.csv')
+        assetTripAllrows1 = get_elements_from_file(tripFileNameList[0])
 
         print("-----assetAllrows1-----")
         print(assetAllrows1)
         print("-----assetTripAllrows1-----")
         print(assetTripAllrows1)
 
-
-        time.sleep(5)
-
         # Enter the name of Asset 1 in search field
         wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 6")
-        time.sleep(1)
+        time.sleep(5)
         self.driver.find_element_by_id("mat-input-0").send_keys(assetAllrows1[0][1])
         # Click on the first item in the list to select asset
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::span[1]", "XPATH checked 5")
@@ -1521,9 +1522,10 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
         ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
         print("Done!")
-        time.sleep(5)
 
         # Check Asset Name
+        wait_for_element_by_css_selector_to_exist(wait, "fieldset > div", "CSS Selector checked 6")
+        time.sleep(1)
         self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("fieldset > div").text)
         # Check IRCS
         self.assertEqual(assetAllrows1[0][0], self.driver.find_element_by_xpath("//fieldset[2]/div").text)
@@ -1544,6 +1546,13 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Check Producer Name
         self.assertEqual(assetAllrows1[0][12], self.driver.find_element_by_xpath("//fieldset[10]/div").text)
 
+        # Enter the coordinates for the position report
+        wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 6")
+        time.sleep(5)
+        self.driver.find_element_by_id("mat-input-0").clear()
+        self.driver.find_element_by_id("mat-input-0").send_keys("/c " + assetTripAllrows1[0][1] + " " + assetTripAllrows1[0][0])
+        self.driver.find_element_by_id("mat-input-0").send_keys(Keys.ENTER)
+        time.sleep(5)
 
 
 

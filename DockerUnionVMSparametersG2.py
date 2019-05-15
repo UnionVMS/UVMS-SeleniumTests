@@ -32,6 +32,7 @@ commentValue = "some note comment."
 flagStateIndex = ["DNK", "NOR", "SWE"]
 gearTypeIndex = ["Demersal", "Demersal and pelagic", "Pelagic", "Unknown"]
 assetFileName = 'assets.csv'
+assetFileNameList = ["asset1.csv", "asset2.csv", "asset3.csv", "asset4.csv", "asset5.csv", "asset6.csv", "asset7.csv", "asset8.csv", "asset9.csv"]
 
 
 # Mobile Terminals
@@ -102,6 +103,8 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
                             [["56.472983", "12.819032", "10", "161"], ["58.937", "11.171477", "0", "0"], ["58.850", "18.068", "5", "324"]],
                             [["56.435436", "12.843660", "5", "180"], ["58.937", "11.171477", "0", "0"], ["58.850", "18.068", "5", "324"]]]
 
+tripFileNameList = ["trip1.csv", "trip2.csv", "trip3.csv", "trip4.csv", "trip5.csv", "trip6.csv", "trip7.csv", "trip8.csv", "trip9.csv"]
+
 # Movement Parameters
 movementHeadline = ("F.S", "Ext. marking", "IRCS", "Name", "Time", "Lat.", "Long.", "Status", "MS", "CS", "Course", "Msg. Type", "Source")
 movementFileName = 'movements.csv'
@@ -128,6 +131,9 @@ mapSubTitle = "Map sub Title"
 mapDescription = "Map Description"
 mapPrefixFileName = "unionvms"
 mapSuffixFileName = ".pdf"
+
+# Realtime Map Parameters
+capTracksMinValue = 10000
 
 # Mixed parameters
 reportedSpeedValue = 5
