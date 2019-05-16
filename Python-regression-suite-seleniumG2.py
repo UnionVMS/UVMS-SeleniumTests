@@ -1450,7 +1450,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=1000)
-    def test_0200c_realtime_search_for_asset_and_click_asset_on_map(self):
+    def test_0200a_realtime_search_for_asset_and_click_asset_on_map(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Select Realtime view
@@ -1504,6 +1504,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         print("-----assetTripAllrows1-----")
         print(assetTripAllrows1)
 
+        # Wait to secure that the generated trip is finished.
+        time.sleep(5)
+
         # Enter the name of Asset 1 in search field
         wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 6")
         time.sleep(5)
@@ -1546,12 +1549,43 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Check Producer Name
         self.assertEqual(assetAllrows1[0][12], self.driver.find_element_by_xpath("//fieldset[10]/div").text)
 
+        # Activate tracks
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Track'])[1]/following::span[1]", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Track'])[1]/following::span[1]").click()
+        time.sleep(5)
+
         # Enter the coordinates for the position report
         wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 6")
         time.sleep(5)
         self.driver.find_element_by_id("mat-input-0").clear()
         self.driver.find_element_by_id("mat-input-0").send_keys("/c " + assetTripAllrows1[0][1] + " " + assetTripAllrows1[0][0])
         self.driver.find_element_by_id("mat-input-0").send_keys(Keys.ENTER)
+        time.sleep(5)
+
+        # Click in the middle of the Map
+        print("Execute!")
+        elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+        ac = ActionChains(self.driver)
+        ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+        ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
+        print("Done!")
+
+        time.sleep(5)
+
+        # Click to expand the track list
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]", "XPATH checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]").click()
+
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]", "XPATH checked 8")
+        time.sleep(3)
+        self.assertEqual(str("%.5f" % float(assetTripAllrows1[0][1])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]").text)
+        self.assertEqual(str("%.5f" % float(assetTripAllrows1[0][0])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[3]").text)
+        self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[4]").text)
+        self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[5]").text)
+        #self.assertEqual("2019-05-13 13:18:00", self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
+
         time.sleep(5)
 
 
