@@ -1580,8 +1580,8 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]", "XPATH checked 8")
         time.sleep(3)
-        self.assertEqual(str("%.5f" % float(assetTripAllrows1[0][1])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]").text)
-        self.assertEqual(str("%.5f" % float(assetTripAllrows1[0][0])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[3]").text)
+        self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][1]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]").text)
+        self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][0]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[3]").text)
         self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[4]").text)
         self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[5]").text)
         #self.assertEqual("2019-05-13 13:18:00", self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
