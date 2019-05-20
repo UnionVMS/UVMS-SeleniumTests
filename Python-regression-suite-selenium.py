@@ -32,10 +32,13 @@ import collections
 from pathlib import Path
 import copy
 import zeep
+from lxml import etree
+
+import FLUXVesselPositionMessage_4p0
+
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
-
 
 def externalError(process):
     print("Process '%s' returned code %s" % (process.args, process.returncode))
@@ -2075,6 +2078,19 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     return earlierPositionDateTimeValueString
 
 
+def generate_FLUX_and_verify_position(self,speedValue,courseValue):
+    # Set Webdriver wait
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Get Current Date and time in UTC
+    currentUTCValue = datetime.datetime.utcnow()
+    earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+    earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+    earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+    earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+
+
+
 def generate_NAF_string(countryValue, ircsValue, cfrValue, externalMarkingValue, latValue, longValue, speedValue, courseValue, dateValue, timeValue, vesselNameValue):
     # Generate NAF string to send
     nafSource = '//SR//FR/'
@@ -2548,6 +2564,12 @@ def get_asset_info_from_asset_database(assetCFRValue):
     client = zeep.Client(wsdl=httpNationalServiceEndpointString)
     answerValue = client.service.getVesselByCFR(assetCFRValue)
     return answerValue
+
+
+def put_position_report_to_union_vms_database():
+    # Put position report to UVMS
+    client = zeep.Client(wsdl=httpFluxServiceEndpointString)
+    return statusValue
 
 
 def get_asset_cfr_via_link_list(linkList, serialNumber):
@@ -5173,6 +5195,34 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         self.assertEqual(assetHomeportValue, assetInfoValue['defaultPort']['port'])
         self.assertEqual(assetLengthValueValue, assetInfoValue['loa'])
         self.assertEqual(assetIRCSValue, assetInfoValue['ircs'])
+
+
+    def test_0198_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT)
+        #xml = open('FLUXVesselPositionMessage_4p0.xsd').read()
+        xml = open('javaex.xml').read()
+        print(xml)
+        resultObj = FLUXVesselPositionMessage_4p0.CreateFromDocument(xml)
+
+
+
+    def test_0198b_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT)
+        wsdl = httpFluxServiceEndpointString
+        client = zeep.Client(wsdl=wsdl)
+        referenceDateTime = datetime.datetime.utcnow()
+        xml = open('javaex.xml').read()
+        print(xml)
+        resultObj = FLUXVesselPositionMessage_4p0.CreateFromDocument(xml)
+        #eXml = etree.fromstring(xml)
+
+        data = open('javaex.xml', 'rb')
+        xml_content = data.read()
+        eXml = etree.XML(xml_content)
+
+        answerValue = client.service.post(eXml, "on", "SWE", referenceDateTime, "df", True, 1234, "ct", "vb")
+
+
 
 
     def test_0199_test_wsdl(self):
