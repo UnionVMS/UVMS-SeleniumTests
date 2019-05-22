@@ -32,6 +32,7 @@ import collections
 from pathlib import Path
 import copy
 import zeep
+from zeep import Client
 from lxml import etree
 
 import FLUXVesselPositionMessage_4p0
@@ -2812,7 +2813,9 @@ def wait_for_element_by_name_to_exist(wait, nameOfElement, finallyText):
     finally:
         print(finallyText)
 
-
+def send_request(client, data):
+    r = client.service.post(document=data)
+    return r
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -5198,29 +5201,50 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
 
     def test_0198_test_wsdl(self):
-        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT)
+        # test wsdl from FLUX point
         #xml = open('FLUXVesselPositionMessage_4p0.xsd').read()
         xml = open('javaex.xml').read()
         print(xml)
         resultObj = FLUXVesselPositionMessage_4p0.CreateFromDocument(xml)
+        print(resultObj)
 
 
 
     def test_0198b_test_wsdl(self):
-        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT)
+        # test wsdl from FLUX point
         wsdl = httpFluxServiceEndpointString
         client = zeep.Client(wsdl=wsdl)
         referenceDateTime = datetime.datetime.utcnow()
+        yearValue = 2019
+        monthValue = 5
+        dayValue = 20
+        hourValue = 13
+        minuteValue = 54
+        secondValue = 15
+        referenceDateTime = datetime.datetime(year=yearValue, month=monthValue, day=dayValue, hour=hourValue, minute=minuteValue, second=secondValue)
+        print('Print XML ----')
         xml = open('javaex.xml').read()
         print(xml)
-        resultObj = FLUXVesselPositionMessage_4p0.CreateFromDocument(xml)
-        #eXml = etree.fromstring(xml)
 
         data = open('javaex.xml', 'rb')
         xml_content = data.read()
+        print('Print XML Content ----')
+        print(xml_content)
         eXml = etree.XML(xml_content)
+        print('Print eXML ----')
+        print(eXml)
 
         answerValue = client.service.post(eXml, "on", "SWE", referenceDateTime, "df", True, 1234, "ct", "vb")
+
+
+
+    def test_0198c_test_wsdl(self):
+        # test wsdl from FLUX point
+        wsdl = httpFluxServiceEndpointString
+        client = zeep.Client(wsdl=wsdl)
+        client.wsdl.dump()
+
+
 
 
 
