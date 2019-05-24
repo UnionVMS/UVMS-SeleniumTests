@@ -1433,19 +1433,19 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create assets, Mobile for Trip 2
         create_asset_from_file(self, 'asset2.csv')
         # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, 'asset3.csv')
+        #create_asset_from_file(self, 'asset3.csv')
         # Create assets, Mobile for Trip 4
-        create_asset_from_file(self, 'asset4.csv')
+        #create_asset_from_file(self, 'asset4.csv')
         # Create assets, Mobile for Trip 5
-        create_asset_from_file(self, 'asset5.csv')
+        #create_asset_from_file(self, 'asset5.csv')
         # Create assets, Mobile for Trip 6
-        create_asset_from_file(self, 'asset6.csv')
+        #create_asset_from_file(self, 'asset6.csv')
         # Create assets, Mobile for Trip 7
-        create_asset_from_file(self, 'asset7.csv')
+        #create_asset_from_file(self, 'asset7.csv')
         # Create assets, Mobile for Trip 8
-        create_asset_from_file(self, 'asset8.csv')
+        #create_asset_from_file(self, 'asset8.csv')
         # Create assets, Mobile for Trip 9
-        create_asset_from_file(self, 'asset9.csv')
+        #create_asset_from_file(self, 'asset9.csv')
         time.sleep(1)
 
 
@@ -1481,6 +1481,11 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         self.driver.find_element_by_css_selector("input[type=\"number\"]").clear()
         self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(str(capTracksMinValue))
         self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(Keys.ENTER)
+
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
         # Create Trip 1-9
         create_trip_from_file(datetime.timedelta(hours=72), assetFileNameList[0], tripFileNameList[0])
@@ -1578,13 +1583,15 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]").click()
 
+        # Check position data
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]", "XPATH checked 8")
         time.sleep(3)
         self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][1]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]").text)
         self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][0]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[3]").text)
         self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[4]").text)
         self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[5]").text)
-        #self.assertEqual("2019-05-13 13:18:00", self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
+        currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        self.assertEqual(currentPositionDateTimeValueString, self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
 
         time.sleep(5)
 
