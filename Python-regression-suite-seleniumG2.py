@@ -1429,9 +1429,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
     @timeout_decorator.timeout(seconds=300)
     def test_0052_0059_create_assets_trip_1_9_without_mobile_terminal(self):
         # Create assets, Mobile for Trip 1
-        create_asset_from_file(self, 'asset1.csv')
+        create_asset_from_file(self, assetFileNameList[0])
         # Create assets, Mobile for Trip 2
-        create_asset_from_file(self, 'asset2.csv')
+        create_asset_from_file(self, assetFileNameList[1])
         # Create assets, Mobile for Trip 3
         #create_asset_from_file(self, 'asset3.csv')
         # Create assets, Mobile for Trip 4
@@ -1464,15 +1464,15 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         # Activate view on Flags
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Flags'])[1]/following::span[1]", "XPATH checked 2")
-        time.sleep(1)
+        time.sleep(0.2)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Flags'])[1]/following::span[1]").click()
         # Activate view on Names
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Names'])[1]/following::span[1]", "XPATH checked 3")
-        time.sleep(1)
+        time.sleep(0.2)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Names'])[1]/following::span[1]").click()
         # Activate view on Speeds
         wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]", "XPATH checked 4")
-        time.sleep(1)
+        time.sleep(0.2)
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]").click()
 
         # Change Cap tracks (min) History value
@@ -1489,7 +1489,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         # Create Trip 1-9
         create_trip_from_file(datetime.timedelta(hours=72), assetFileNameList[0], tripFileNameList[0])
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
+        create_trip_from_file(datetime.timedelta(hours=72), assetFileNameList[1], tripFileNameList[1])
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
@@ -1497,6 +1497,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         #create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
         #create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
         #create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+
+
+
 
         # Open saved csv files and read all asset elements
         assetAllrows1 = get_elements_from_file(assetFileNameList[0])
@@ -1592,6 +1595,19 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[5]").text)
         currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y-%m-%d %H:%M:00')
         self.assertEqual(currentPositionDateTimeValueString, self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
+        time.sleep(3)
+
+        # Delete the postion report in the list
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::i[1]", "XPATH checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::i[1]").click()
+
+        time.sleep(3)
+
+        # Collapse the track list
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]", "XPATH checked 10")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]").click()
 
         time.sleep(5)
 
