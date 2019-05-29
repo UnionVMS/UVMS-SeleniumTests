@@ -1846,6 +1846,8 @@ def change_and_check_speed_format(self,unitNumber):
     wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 8")
     time.sleep(1)
     self.driver.find_element_by_link_text(linkTextValue).click()
+    # Set default start stop date time interval
+    set_start_stop_date_time(self, startDateTimeDefault, stopDateTimeDefault)
     # Click on search button
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 8")
     time.sleep(1)
@@ -1917,6 +1919,8 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.driver.find_element_by_link_text(linkTextValue).click()
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
     self.driver.find_element_by_xpath("//input[@type='text']").send_keys(ircsValue[0])
+    # Set default start stop date time interval
+    set_start_stop_date_time(self, startDateTimeDefault, stopDateTimeDefault)
     # Click on search button
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 9")
     time.sleep(1)
@@ -2048,6 +2052,8 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     wait_for_element_by_link_text_to_exist(wait, linkTextValue, "Link text checked 3")
     time.sleep(1)
     self.driver.find_element_by_link_text(linkTextValue).click()
+    # Set default start stop date time
+    set_start_stop_date_time(self, startDateTimeDefault, stopDateTimeDefault)
     wait_for_element_by_xpath_to_exist(wait, "//input[@type='text']", "XPATH checked 4")
     time.sleep(1)
     self.driver.find_element_by_xpath("//input[@type='text']").clear()
@@ -2790,6 +2796,17 @@ def wait_for_element_by_name_to_exist(wait, nameOfElement, finallyText):
     finally:
         print(finallyText)
 
+
+def set_start_stop_date_time(self, startDateTime, stopDateTime):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Enter default start date time value
+    wait_for_element_by_id_to_exist(wait, "simple-movement-search-from-date-picker", "simple-movement-search-from-date-picker checked 1")
+    time.sleep(1)
+    self.driver.find_element_by_id("simple-movement-search-from-date-picker").clear()
+    self.driver.find_element_by_id("simple-movement-search-from-date-picker").send_keys(startDateTime)
+    self.driver.find_element_by_id("simple-movement-search-to-date-picker").clear()
+    self.driver.find_element_by_id("simple-movement-search-to-date-picker").send_keys(stopDateTime)
 
 
 
@@ -4654,6 +4671,8 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_xpath("//input[@type='text']").clear()
         self.driver.find_element_by_xpath("//input[@type='text']").send_keys("F900")
+        # Set default start stop date time interval
+        set_start_stop_date_time(self, startDateTimeDefault, stopDateTimeDefault)
         # Click on search button
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 5")
         time.sleep(2)
@@ -4750,8 +4769,6 @@ class UnionVMSTestCase(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
         assetAllrows = get_elements_from_file('asset1.csv')
-
-
         # Select Reporting tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
         time.sleep(1)
@@ -4832,8 +4849,6 @@ class UnionVMSTestCase(unittest.TestCase):
         # Change back the path to current dir
         os.chdir(cwd)
         print(cwd)
-
-
 
 
     @timeout_decorator.timeout(seconds=300)
