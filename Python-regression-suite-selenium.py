@@ -2451,7 +2451,7 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     self.driver.find_element_by_id("uvms-header-menu-item-reporting").click()
     # Click on New Report button
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[18]", "XPATH checked 2")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='button'])[18]").click()
     # Enter reporting name (based on 1st ircs name from asset file)
     reportName = "Test (only " + assetAllrows[0][0] +")"
