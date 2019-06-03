@@ -13,7 +13,6 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 import os
 import psycopg2
@@ -2739,6 +2738,8 @@ def get_test_report_path():
     else:
         testResultPathLinux = os.path.abspath(os.path.dirname(__file__))
         return testResultPathLinux
+
+
 
 if platform.system() == "Windows":
     # Set environment variable HOME to the value of USERPROFILE
@@ -8021,11 +8022,6 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
-
-
-
-
-
 
 
 
