@@ -130,6 +130,9 @@ mapPrefixFileName = "unionvms"
 mapSuffixFileName = ".pdf"
 
 # Mixed parameters
+startDateTimeDefault = "1970-01-01 00:00:00"
+stopDateTimeDefault = "2070-01-01 00:00:00"
+
 reportedSpeedValue = 5
 reportedCourseValue = 180
 
