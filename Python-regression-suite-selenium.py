@@ -334,7 +334,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(3)
+    time.sleep(4)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -556,10 +556,11 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Search for created asset
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(ircsValue[vesselNumber])
     wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
@@ -4909,7 +4910,9 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     def test_0053_create_assets_and_mobile_terminals_21_33(self):
         # Create assets 21-33 in the list
         for x in range(21, 34):
+            print(x)
             create_one_new_asset_from_gui(self, x)
+            time.sleep(2)
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
