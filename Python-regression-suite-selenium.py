@@ -492,7 +492,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-save checked 7")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -988,7 +988,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Search for selected asset in the asset list
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumberList[0]])
     wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
@@ -1300,7 +1300,7 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1372,7 +1372,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     # Search for selected asset in the asset list
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 13")
@@ -1717,7 +1717,7 @@ def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTe
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
     # Click on cancel button
     wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-cancel checked 9")
-    time.sleep(1)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
