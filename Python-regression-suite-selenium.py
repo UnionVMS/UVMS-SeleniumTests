@@ -3279,7 +3279,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text(groupName[0]).click()
         # Check Assets in Group
         wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS Selector checked 12")
-        time.sleep(1)
+        time.sleep(2)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
         self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
@@ -3578,10 +3578,10 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.refresh()
         # Check that Group 3 exists in the list
         wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "uvms-header-menu-item-assets checked 5")
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
         wait_for_element_by_link_text_to_exist(wait, groupName[2], "Link text checked 6")
-        time.sleep(1)
+        time.sleep(2)
         self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
         time.sleep(2)
 
