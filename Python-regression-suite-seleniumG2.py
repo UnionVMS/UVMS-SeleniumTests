@@ -1515,8 +1515,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(Keys.ENTER)
 
 
-
-
         for x in range(0, 2):
 
             # Print Asset Index Value
@@ -1641,6 +1639,184 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # End pause
         time.sleep(1)
 
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0200b_realtime_search_for_asset_and_click_asset_on_map(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=14)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+
+        # Select Realtime view
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+        wait_for_element_by_link_text_to_exist(wait, "Realtime map", "Link text checked 1")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("Realtime map").click()
+
+
+        # Activate view on Flags
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Flags'])[1]/following::span[1]", "XPATH checked 2")
+        time.sleep(0.2)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Flags'])[1]/following::span[1]").click()
+        # Activate view on Names
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Names'])[1]/following::span[1]", "XPATH checked 3")
+        time.sleep(0.2)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Names'])[1]/following::span[1]").click()
+        # Activate view on Speeds
+        wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]", "XPATH checked 4")
+        time.sleep(0.2)
+        self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Speeds'])[1]/following::span[1]").click()
+
+        # Change Cap tracks (min) History value
+        wait_for_element_by_css_selector_to_exist(wait, "input[type=\"number\"]", "CSS Selector checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("input[type=\"number\"]").clear()
+        self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(str(capTracksMinValue))
+        self.driver.find_element_by_css_selector("input[type=\"number\"]").send_keys(Keys.ENTER)
+
+        # Create Trip 1-9
+        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[0], tripFileNameList[0])
+        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[1], tripFileNameList[1])
+        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[2], tripFileNameList[2])
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
+        #create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+        #create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+        #create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+        #create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+
+        # Wait to secure that the generated trip is finished.
+        time.sleep(10)
+
+        for x in range(0, 2):
+
+            # Print Asset Index Value
+            print("Print Asset Index Value: " + str(x))
+
+            # Open saved csv files and read all asset elements
+            assetAllrows1 = get_elements_from_file(assetFileNameList[x])
+
+            # Open saved csv files and read all trip elements
+            assetTripAllrows1 = get_elements_from_file(tripFileNameList[x])
+
+            print("-----assetAllrows1-----")
+            print(assetAllrows1)
+            print("-----assetTripAllrows1-----")
+            print(assetTripAllrows1)
+
+            # Enter the Asset name in search field
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]", "XPATH checked 6")
+            time.sleep(5)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]").clear()
+            time.sleep(5)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]").send_keys(assetAllrows1[0][1])
+
+            # Click on the first item in the list to select asset
+            # NOTE: Different xpath for different asset (Strange)
+            if x == 0:
+                wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::span[1]", "XPATH checked 5(1)")
+                time.sleep(2)
+                self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::span[1]").click()
+            else:
+                wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[1]/following::span[1]", "XPATH checked 5(1)")
+                time.sleep(2)
+                self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Minimize'])[2]/following::span[1]").click()
+
+            time.sleep(5)
+
+            # Click in the middle of the Map
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
+            print("Done!")
+
+            # Check Asset Name
+            wait_for_element_by_css_selector_to_exist(wait, "fieldset > div", "CSS Selector checked 6")
+            time.sleep(1)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("fieldset > div").text)
+            # Check IRCS
+            self.assertEqual(assetAllrows1[0][0], self.driver.find_element_by_xpath("//fieldset[2]/div").text)
+            # Check MMSI
+            self.assertEqual(assetAllrows1[0][5], self.driver.find_element_by_xpath("//fieldset[3]/div").text)
+            # Check Speed
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), self.driver.find_element_by_xpath("//fieldset[4]/div").text)
+            # Check Course
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), self.driver.find_element_by_xpath("//fieldset[5]/div").text)
+            # Check Flag state
+            self.assertEqual(flagStateIndex[int(assetAllrows1[0][17])], self.driver.find_element_by_xpath("//fieldset[6]/div").text)
+            # Check Ext Marking
+            self.assertEqual(assetAllrows1[0][3], self.driver.find_element_by_xpath("//fieldset[7]/div").text)
+            # Check asset Length
+            self.assertEqual(assetAllrows1[0][9], self.driver.find_element_by_xpath("//fieldset[8]/div").text)
+            # Check licenseTypeValue
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//fieldset[9]/div").text)
+            # Check Producer Name
+            self.assertEqual(assetAllrows1[0][12], self.driver.find_element_by_xpath("//fieldset[10]/div").text)
+
+            # Activate tracks
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Track'])[1]/following::span[1]", "XPATH checked 6")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Track'])[1]/following::span[1]").click()
+            time.sleep(5)
+
+            # Enter the coordinates for the position report
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]", "XPATH checked 6")
+            time.sleep(5)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]").clear()
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]").send_keys("/c " + assetTripAllrows1[0][1] + " " + assetTripAllrows1[0][0])
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Search'])[2]/following::input[1]").send_keys(Keys.ENTER)
+            time.sleep(5)
+
+            # Click in the middle of the Map
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
+            print("Done!")
+
+            time.sleep(5)
+
+            # Click to expand the track list
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]", "XPATH checked 7")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]").click()
+
+            # Check position data
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]", "XPATH checked 8")
+            time.sleep(3)
+            self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][1]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[2]").text)
+            self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][0]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[3]").text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[4]").text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[5]").text)
+            currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y-%m-%d %H:%M:00')
+            self.assertEqual(currentPositionDateTimeValueString, self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
+            time.sleep(3)
+
+            # Delete the postion report in the list
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::i[1]", "XPATH checked 9")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::i[1]").click()
+
+            time.sleep(3)
+
+            # Collapse the track list
+            wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]", "XPATH checked 10")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='alt + 9'])[1]/following::i[2]").click()
+
+            time.sleep(5)
+
+        # End pause
+        time.sleep(1)
 
 
 
