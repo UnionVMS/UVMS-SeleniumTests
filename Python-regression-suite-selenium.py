@@ -701,7 +701,7 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     # Search for mobile terminal via serial number
     wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
-    time.sleep(2)
+    time.sleep(4)
     self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
     self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
     wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
@@ -7729,23 +7729,34 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        # Click on Positions Reports sub tabs under Audit Log Tab
         wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 2")
         time.sleep(3)
         self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
 
+        # Click on Object type
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[3]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        # Select Manual position report selection
+        wait_for_element_by_link_text_to_exist(wait, "Manual position report", "Link text checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Manual position report").click()
+        # Click on Object type
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[3]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        # Click on Search button
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+
         # Check Alert value in audit list 1st row
-        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 7")
         time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
-        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
-
-        # Check config update value in audit list 2nd row
-        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
-        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
-        self.assertEqual(auditLogsObjectTypeValue[5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
 
