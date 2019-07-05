@@ -443,11 +443,11 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on mobile terminal tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     # Click on new terminal button
     wait_for_element_by_id_to_exist(wait, "mt-btn-create", "mt-btn-create checked 2")
-    time.sleep(1)
+    time.sleep(10)
     self.driver.find_element_by_id("mt-btn-create").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mt-0-typeAndPlugin", "mt-btn-create checked 3")
@@ -1771,7 +1771,7 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
     # Close page
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -5081,6 +5081,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 39) does not exist anymore. Removed from Fartyg2
         for x in range(40, 53):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
@@ -5092,6 +5093,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 39) does not exist anymore. Removed from Fartyg2
         for x in range(40, 53):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_from_gui(self, x)
             link_asset_and_mobile_terminal(self, x)
 
@@ -5104,6 +5106,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 53) does not exist anymore. Removed from Fartyg2
         for x in range(54, 67):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
@@ -5115,6 +5118,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 53) does not exist anymore. Removed from Fartyg2
         for x in range(54, 67):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_from_gui(self, x)
             link_asset_and_mobile_terminal(self, x)
 
