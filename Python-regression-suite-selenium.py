@@ -4763,7 +4763,6 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0052d_export_map_to_file_check_that_map_file_exists(self):
         # Set wait time for web driver
