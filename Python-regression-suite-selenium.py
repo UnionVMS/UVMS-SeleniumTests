@@ -239,7 +239,7 @@ def startup_browser_and_login_to_unionVMS(self):
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
     time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
-    self.driver.find_element_by_id(defaultUserNamePassword).send_keys(defaultUserNamePassword)
+    self.driver.find_element_by_id("password").send_keys(defaultUserNamePassword)
     time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div/div[2]/div[3]/div[2]/form/div[3]/div/button").click()
     time.sleep(2)
@@ -852,7 +852,7 @@ def create_one_new_channel_for_one_mobile_terminal_without_referenceDateTime(sel
     time.sleep(1)
     # Click on Update button
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-    time.sleep(3)
+    time.sleep(8)
     # Click on Cancel
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -4845,7 +4845,12 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[16]", "XPATH checked 14")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
-        time.sleep(20)
+        time.sleep(30)
+
+        # Check that the exported map file exits after creation
+        self.assertTrue(os.path.exists(mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName))
+
+
 
         # Change back the path to current dir
         os.chdir(cwd)
