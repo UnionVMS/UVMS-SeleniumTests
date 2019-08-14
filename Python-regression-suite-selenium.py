@@ -6460,6 +6460,12 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0202c_delay_one_minute(self):
+        # Delay test case to secure change in advance asset list headers.
+        time.sleep(60)
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6467,7 +6473,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(1)
+        time.sleep(5)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on advanced search
         wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
