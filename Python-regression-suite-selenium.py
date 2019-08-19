@@ -697,11 +697,11 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on mobile terminal tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(1)
+    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     # Search for mobile terminal via serial number
     wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
-    time.sleep(4)
+    time.sleep(5)
     self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
     self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
     wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
@@ -3955,14 +3955,19 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_css_selector("#globalSettings > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#reporting > span", "CSS Selector checked 4")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#reporting > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#asset > span", "CSS Selector checked 5")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#asset > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#exchange > span", "CSS Selector checked 6")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#exchange > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#movementrules > span", "CSS Selector checked 7")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#movementrules > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#systemMonitor > span", "CSS Selector checked 8")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#systemMonitor > span").click()
         # Check sub tab names
         self.assertEqual("SYSTEM MONITOR", self.driver.find_element_by_css_selector("#systemMonitor > span").text)
@@ -5140,7 +5145,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests900FileName[1], tests900FileName[2])
 
-
+    # Injecting additional channels for all MTs for Prod
     @timeout_decorator.timeout(seconds=180)
     def test_0055c_create_several_additional_channels_for_mobile_terminals(self):
         # Create assets from file with several different values for filtering
