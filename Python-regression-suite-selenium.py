@@ -5936,11 +5936,13 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         time.sleep(2)
 
 
+    @timeout_decorator.timeout(seconds=180)
     def test_0044_remove_speed_rule_one(self):
         # Startup browser and login
         UnionVMSTestCase.test_0041_remove_speed_rule_one(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
     def test_0050_create_user_area(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
