@@ -6481,7 +6481,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(5)
+        time.sleep(10)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on advanced search
         wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
@@ -6586,7 +6586,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(1)
+        time.sleep(10)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on sort IRCS
         wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
@@ -6662,7 +6662,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(1)
+        time.sleep(10)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on advanced search
         wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
