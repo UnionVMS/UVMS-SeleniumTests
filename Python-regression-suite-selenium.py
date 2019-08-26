@@ -6260,7 +6260,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=360)
+    @timeout_decorator.timeout(seconds=500)
     def test_0201_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
         create_asset_from_file(self, 'assets2xxxx.csv')
@@ -6781,7 +6781,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(2)
 
 
-    @timeout_decorator.timeout(seconds=360)
+    @timeout_decorator.timeout(seconds=500)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
         # Create mobile terminals from file with several different values for filtering
         create_mobileterminal_from_file_based_on_link_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv', 'linkassetmobileterminals2xxxx.csv')
