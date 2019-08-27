@@ -4768,7 +4768,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
 
 
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0052d_export_map_to_file_check_that_map_file_exists(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4852,6 +4852,7 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(30)
 
         # Check that the exported map file exits after creation
+        print("Exported path and filename: "+mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName)
         self.assertTrue(os.path.exists(mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName))
 
 
