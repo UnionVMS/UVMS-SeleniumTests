@@ -4849,13 +4849,11 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[16]", "XPATH checked 14")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
-        time.sleep(30)
+        time.sleep(60)
 
         # Check that the exported map file exits after creation
         print("Exported path and filename: "+mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName)
         self.assertTrue(os.path.exists(mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName))
-
-
 
         # Change back the path to current dir
         os.chdir(cwd)
