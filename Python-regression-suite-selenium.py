@@ -26,7 +26,6 @@ import xmlrunner
 import distutils.dir_util
 from io import BytesIO
 from zipfile import ZipFile
-import urllib.request
 import platform
 import collections
 from pathlib import Path
