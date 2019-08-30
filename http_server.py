@@ -13,10 +13,14 @@ import sys
 import xml.dom.minidom
 import socket
 
+# Globals
+port = 38080
+
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         request_path = self.path
         print("----- Message Received (GET) -----")
+        print(port)
         print("Message (URL Decoded): \n", urllib.parse.unquote_plus(request_path))
         self.send_response(200)
         self.send_header("Set-Cookie", "foo=bar")
@@ -25,6 +29,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         request_path = self.path
         print("----- Message Received (POST) -----")
+        print(port)
         print("Message:", request_path)
         request_headers = self.headers
         content_length = request_headers.get('Content-Length')
@@ -44,24 +49,18 @@ class RequestHandler(BaseHTTPRequestHandler):
 def main():
 
     arg = sys.argv
+    global port
     port = int(arg[1])
-
     print('Listening on', socket.gethostbyname(socket.gethostname()), port)
-
     server = HTTPServer(('', port), RequestHandler)
-
     server.serve_forever()
 
 
 if __name__ == "__main__":
     parser = OptionParser()
-
     parser.usage = ("Creates an http-server that will echo out any GET or POST parameters\n"
-
                     "Run:\n\n"
-
                     "   reflect")
-
     (options, args) = parser.parse_args()
 
     main()
