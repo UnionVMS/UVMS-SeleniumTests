@@ -21,7 +21,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         request_path = self.path
         fileLog = open("output"+ str(port) + ".log", "a")
         print("----- Message Received (GET) -----")
-        lineString = urllib.parse.unquote_plus(request_path) + "\n"
+        lineString = urllib.parse.unquote_plus(request_path, encoding='utf-8') + "\n"
         print("Message (URL Decoded): \n", lineString)
         fileLog.write(lineString)
         self.send_response(200)
