@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin python3
 
 # Reflects the requests from HTTP methods GET, POST, PUT, and DELETE
 
@@ -19,17 +19,20 @@ port = 38080
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         request_path = self.path
+        fileLog = open("output"+ str(port) + ".log", "a")
         print("----- Message Received (GET) -----")
-        print(port)
-        print("Message (URL Decoded): \n", urllib.parse.unquote_plus(request_path))
+        lineString = urllib.parse.unquote_plus(request_path) + "\n"
+        print("Message (URL Decoded): \n", lineString)
+        fileLog.write(lineString)
         self.send_response(200)
         self.send_header("Set-Cookie", "foo=bar")
         self.end_headers()
+        fileLog.close()
 
     def do_POST(self):
         request_path = self.path
+        fileLog = open("output"+ str(port) + ".log", "a")
         print("----- Message Received (POST) -----")
-        print(port)
         print("Message:", request_path)
         request_headers = self.headers
         content_length = request_headers.get('Content-Length')
@@ -38,8 +41,10 @@ class RequestHandler(BaseHTTPRequestHandler):
         dom = xml.dom.minidom.parseString(xml_string)
         xml_string_fixed = dom.toprettyxml()                    # Makes the XML more pretty
         print("Message content (XML Fixed): \n", xml_string_fixed)
+        fileLog.write(xml_string_fixed)
         self.send_response(200)
         self.end_headers()
+        fileLog.close()
 
     do_PUT = do_POST
 
