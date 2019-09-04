@@ -133,7 +133,7 @@ mapPrefixFileName = "unionvms"
 mapSuffixFileName = ".pdf"
 
 # Realtime Map Parameters
-capTracksMinValue = 10000
+capTracksMinValue = 20000
 
 # Mixed parameters
 reportedSpeedValue = 5

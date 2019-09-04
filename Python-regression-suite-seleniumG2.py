@@ -992,12 +992,8 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(2)
 
 
-def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
+def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
-
-    # Set Current Date and time in UTC x hours back
-    currentUTCValue = datetime.datetime.utcnow()
-    currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(assetFileName)
@@ -1280,10 +1276,15 @@ class UnionVMSTestCase(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=300)
     def test_0052_create_assets_trip_1_2_3_part2(self):
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+
         # Create Trip 1-3
-        create_trip_from_file(datetime.timedelta(hours=14), 'asset1.csv', 'trip1.csv')
-        create_trip_from_file(datetime.timedelta(hours=14), 'asset2.csv', 'trip2.csv')
-        create_trip_from_file(datetime.timedelta(hours=14), 'asset3.csv', 'trip3.csv')
+        create_trip_from_file(currentPositionTimeValue, 'asset1.csv', 'trip1.csv')
+        create_trip_from_file(currentPositionTimeValue, 'asset2.csv', 'trip2.csv')
+        create_trip_from_file(currentPositionTimeValue, 'asset3.csv', 'trip3.csv')
         time.sleep(1)
 
 
@@ -1355,10 +1356,15 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_from_file(self, 'asset4.csv')
         create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
 
+
     @timeout_decorator.timeout(seconds=300)
     def test_0055_create_assets_trip_4_part2(self):
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 4
-        create_trip_from_file(datetime.timedelta(hours=14), 'asset4.csv', 'trip4.csv')
+        create_trip_from_file(currentPositionTimeValue, 'asset4.csv', 'trip4.csv')
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1376,11 +1382,21 @@ class UnionVMSTestCase(unittest.TestCase):
         create_asset_from_file(self, 'asset6.csv')
         create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
 
+
     @timeout_decorator.timeout(seconds=300)
     def test_0056_create_assets_trip_5_and_6_part2(self):
-        # Create Trip 5-6
-        create_trip_from_file(datetime.timedelta(hours=18), 'asset5.csv', 'trip5.csv')
-        create_trip_from_file(datetime.timedelta(hours=7, minutes=40), 'asset6.csv', 'trip6.csv')
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 5
+        create_trip_from_file(currentPositionTimeValue, 'asset5.csv', 'trip5.csv')
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=61, minutes=40)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 6
+        create_trip_from_file(currentPositionTimeValue, 'asset6.csv', 'trip6.csv')
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1398,7 +1414,12 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create assets, Mobile for Trip 7
         create_asset_from_file(self, 'asset7.csv')
         create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
-        create_trip_from_file(datetime.timedelta(hours=14), 'asset7.csv', 'trip7.csv')
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 7
+        create_trip_from_file(currentPositionTimeValue, 'asset7.csv', 'trip7.csv')
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1406,7 +1427,12 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create assets, Mobile for Trip 8
         create_asset_from_file(self, 'asset8.csv')
         create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
-        create_trip_from_file(datetime.timedelta(hours=6), 'asset8.csv', 'trip8.csv')
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=24)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 8
+        create_trip_from_file(currentPositionTimeValue, 'asset8.csv', 'trip8.csv')
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1414,7 +1440,11 @@ class UnionVMSTestCase(unittest.TestCase):
         # Create assets, Mobile for Trip 9
         create_asset_from_file(self, 'asset9.csv')
         create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
-        create_trip_from_file(datetime.timedelta(hours=30), 'asset9.csv', 'trip9.csv')
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=48)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        create_trip_from_file(currentPositionTimeValue, 'asset9.csv', 'trip9.csv')
 
 
 
@@ -1439,24 +1469,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=300)
     def test_0052_0059_create_assets_trip_1_9_without_mobile_terminal(self):
-        # Create assets, Mobile for Trip 1
-        create_asset_from_file(self, assetFileNameList[0])
-        # Create assets, Mobile for Trip 2
-        create_asset_from_file(self, assetFileNameList[1])
-        # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, assetFileNameList[2])
-        # Create assets, Mobile for Trip 4
-        #create_asset_from_file(self, 'asset4.csv')
-        # Create assets, Mobile for Trip 5
-        #create_asset_from_file(self, 'asset5.csv')
-        # Create assets, Mobile for Trip 6
-        #create_asset_from_file(self, 'asset6.csv')
-        # Create assets, Mobile for Trip 7
-        #create_asset_from_file(self, 'asset7.csv')
-        # Create assets, Mobile for Trip 8
-        #create_asset_from_file(self, 'asset8.csv')
-        # Create assets, Mobile for Trip 9
-        #create_asset_from_file(self, 'asset9.csv')
+        for x in range(0, 9):
+            # Create assets, Mobile for Trip 1-9
+            create_asset_from_file(self, assetFileNameList[x])
         time.sleep(1)
 
 
@@ -1470,16 +1485,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
-        # Create Trip 1-9
-        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[0], tripFileNameList[0])
-        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[1], tripFileNameList[1])
-        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[2], tripFileNameList[2])
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
-        #create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
-        #create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
-        #create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+        # Create Trip 1-3
+        for x in range(0, 3):
+            create_trip_from_file(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
 
         # Wait to secure that the generated trip is finished.
         time.sleep(10)
@@ -1596,7 +1604,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 9")
             time.sleep(5)
             self.driver.find_element_by_id("mat-input-0").clear()
-            self.driver.find_element_by_id("mat-input-0").send_keys("/c " + assetTripAllrows1[0][1] + " " + assetTripAllrows1[0][0])
+            self.driver.find_element_by_id("mat-input-0").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
             self.driver.find_element_by_id("mat-input-0").send_keys(Keys.ENTER)
 
             time.sleep(5)
@@ -1681,9 +1689,17 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
 
         # Set Current Date and time in UTC x hours back
-        deltaTimeValue = datetime.timedelta(hours=14)
         currentUTCValue = datetime.datetime.utcnow()
-        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Set deltaTimeValueWithIndex
+        deltaTimeValueWithIndex = [datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0) ,datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0) ]
+        deltaTimeValueWithIndex[6] = datetime.timedelta(hours=14)
+        deltaTimeValueWithIndex[7] = datetime.timedelta(hours=8)
+        # Set currentPositionTimeValue from correct deltaTimeValueWithIndex value
+        currentPositionTimeValueWithIndex = [currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue]
+        for x in range(6, 8):
+            currentPositionTimeValueWithIndex[x] = currentUTCValue - deltaTimeValueWithIndex[x]
+
+
 
         # Select Realtime view
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
@@ -1719,21 +1735,15 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Cap tracks (min)'])[1]/following::input[1]").send_keys(str(capTracksMinValue))
         self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Cap tracks (min)'])[1]/following::input[1]").send_keys(Keys.ENTER)
 
-        # Create Trip 1-9
-        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[0], tripFileNameList[0])
-        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[1], tripFileNameList[1])
-        create_trip_from_file(datetime.timedelta(hours=14), assetFileNameList[2], tripFileNameList[2])
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
-        #create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
-        #create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
-        #create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
-        #create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+
+        # Create Trip 7 and 8
+        for x in range(6, 8):
+            create_trip_from_file(currentPositionTimeValueWithIndex[x], assetFileNameList[x], tripFileNameList[x])
 
         # Wait to secure that the generated trip is finished.
         time.sleep(10)
 
-        for x in range(0, 3):
+        for x in range(6, 8):
             # Print Asset Index Value
             print("Print Asset Index Value: " + str(x))
 
@@ -1809,7 +1819,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 9")
             time.sleep(5)
             self.driver.find_element_by_id("mat-input-0").clear()
-            self.driver.find_element_by_id("mat-input-0").send_keys("/c " + assetTripAllrows1[0][1] + " " + assetTripAllrows1[0][0])
+            self.driver.find_element_by_id("mat-input-0").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
             self.driver.find_element_by_id("mat-input-0").send_keys(Keys.ENTER)
             time.sleep(5)
 
@@ -1846,7 +1856,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][0]), 3)), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[3]").text)
             self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[4]").text)
             self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[5]").text)
-            currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y-%m-%d %H:%M:00')
+            currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValueWithIndex[x], '%Y-%m-%d %H:%M:00')
             self.assertEqual(currentPositionDateTimeValueString, self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Time'])[1]/following::td[6]").text)
             time.sleep(3)
 
