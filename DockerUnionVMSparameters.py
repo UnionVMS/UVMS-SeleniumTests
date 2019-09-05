@@ -32,7 +32,7 @@ commentValue = "some note comment."
 flagStateIndex = ["DNK", "NOR", "SWE"]
 gearTypeIndex = ["Demersal", "Demersal and pelagic", "Pelagic", "Unknown"]
 assetFileName = 'assets.csv'
-
+assetFileNameList = ["asset1.csv", "asset2.csv", "asset3.csv", "asset4.csv", "asset5.csv", "asset6.csv", "asset7.csv", "asset8.csv", "asset9.csv", "assetreal1.csv", "assetreal2.csv", "assetreal3.csv", "assetreal4.csv", "assetreal5.csv", "assetreal6.csv", "assetreal7.csv", "assetreal8.csv"]
 
 # Mobile Terminals
 serialNoValue = ["M0101", "2M010", "13M00", "0M014", "1050M", "6M010", "T6EBT4490478", "030M1", "4M100", "2M400", "0403M", "4M004", "M0540", "0604M", "0047M", "8M004", "400M9", "04M01", "5100M", "2050M", "003M5", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "M1991", "M2991", "M3991", "M5000", "M6000", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "907ATB991TF5", "ED6T2947F0T6", "497T259D809T", "0E74DE479TDT", "3T349B47TF50", "CTT7499007D3", "9340DT0T9071", "0483A9T739BT", "968FD4T70ETD", "5097T7E2T46E", "T09674F1F2T1", "428T9017ATC5", "54914TTA0927", "907ATB991TF4", "907ATB991TF5"]
@@ -53,6 +53,7 @@ deltaTimeValue = 4
 transponderType = ("Iridium", "Inmarsat-C")
 mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
 mobileTerminalFileName = 'mobileTerminals.csv'
+mobileTerminalFileNameList = ["mobileterminal1.csv", "mobileterminal2.csv", "mobileterminal3.csv", "mobileterminal4.csv", "mobileterminal5.csv", "mobileterminal6.csv", "mobileterminal7.csv", "mobileterminal8.csv", "mobileterminal9.csv", "mobileterminalreal1.csv", "mobileterminalreal2.csv", "mobileterminalreal3.csv", "mobileterminalreal4.csv", "mobileterminalreal5.csv", "mobileterminalreal6.csv", "mobileterminalreal7.csv", "mobileterminalreal8.csv"]
 mobileTerminalSearchValue = ["*AA*","*5*","*1000*"]
 statusValue = ("Inactive", "Active")
 channelDefaultName = "VMS"
@@ -101,6 +102,9 @@ lolaSpeedCourseTripValues= [[["57.681", "11.6478", "10", "252"], ["57.951837", "
                             [["56.543136", "12.545422", "10", "115"], ["58.923874", "11.088947", "5", "0"], ["58.828", "18.224", "5", "285"]],
                             [["56.472983", "12.819032", "10", "161"], ["58.937", "11.171477", "0", "0"], ["58.850", "18.068", "5", "324"]],
                             [["56.435436", "12.843660", "5", "180"], ["58.937", "11.171477", "0", "0"], ["58.850", "18.068", "5", "324"]]]
+
+# Trip Parameters
+tripFileNameList = ["trip1.csv", "trip2.csv", "trip3.csv", "trip4.csv", "trip5.csv", "trip6.csv", "trip7.csv", "trip8.csv", "trip9.csv", "tripreal1.csv", "tripreal2.csv", "tripreal3.csv", "tripreal4.csv", "tripreal5.csv", "tripreal6.csv", "tripreal7.csv", "tripreal8.csv"]
 
 # Movement Parameters
 movementHeadline = ("F.S", "Ext. marking", "IRCS", "Name", "Time", "Lat.", "Long.", "Status", "MS", "CS", "Course", "Msg. Type", "Source")
@@ -161,13 +165,11 @@ uvmsGitHubPath = 'https://github.com/UnionVMS/'
 
 uvmsCheckoutPath = "/tmp/git-uvms-database"
 
-#testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/unionvms-test/target/failsafe-reports"
 testResultPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-frontend-test/unionvms-test/target/failsafe-reports"
 
 
 testResultPathWindows = 'C:\\test-reports'
 
-#targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-dev-test-frontend/unionvms-test/target"
 targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-frontend-test/unionvms-test/target"
 
 targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\unionvms-test\\target"
