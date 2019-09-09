@@ -1264,14 +1264,14 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=300)
     def test_0052_create_assets_trip_1_2_3_part1(self):
         # Create assets, Mobile for Trip 1
-        create_asset_from_file(self, 'asset1.csv')
-        create_mobileterminal_from_file(self, 'asset1.csv', 'mobileterminal1.csv')
+        create_asset_from_file(self, assetFileNameList[0])
+        create_mobileterminal_from_file(self, assetFileNameList[0], mobileTerminalFileNameList[0])
         # Create assets, Mobile for Trip 2
-        create_asset_from_file(self, 'asset2.csv')
-        create_mobileterminal_from_file(self, 'asset2.csv', 'mobileterminal2.csv')
+        create_asset_from_file(self, assetFileNameList[1])
+        create_mobileterminal_from_file(self, assetFileNameList[1], mobileTerminalFileNameList[1])
         # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, 'asset3.csv')
-        create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
+        create_asset_from_file(self, assetFileNameList[2])
+        create_mobileterminal_from_file(self, assetFileNameList[2], mobileTerminalFileNameList[2])
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1282,9 +1282,9 @@ class UnionVMSTestCase(unittest.TestCase):
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
         # Create Trip 1-3
-        create_trip_from_file(currentPositionTimeValue, 'asset1.csv', 'trip1.csv')
-        create_trip_from_file(currentPositionTimeValue, 'asset2.csv', 'trip2.csv')
-        create_trip_from_file(currentPositionTimeValue, 'asset3.csv', 'trip3.csv')
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[0], tripFileNameList[0])
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[1], tripFileNameList[1])
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[2], tripFileNameList[2])
         time.sleep(1)
 
 
@@ -1353,8 +1353,8 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=300)
     def test_0055_create_assets_trip_4_part1(self):
         # Create assets, Mobile for Trip 4
-        create_asset_from_file(self, 'asset4.csv')
-        create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
+        create_asset_from_file(self, assetFileNameList[3])
+        create_mobileterminal_from_file(self, assetFileNameList[3], mobileTerminalFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1363,24 +1363,24 @@ class UnionVMSTestCase(unittest.TestCase):
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
-        # Create Trip 4
-        create_trip_from_file(currentPositionTimeValue, 'asset4.csv', 'trip4.csv')
+        # Create RealTrip 4
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0056_create_assets_trip_5_and_6_part1(self):
         # Create assets, Mobile for Trip 5
-        create_asset_from_file(self, 'asset5.csv')
-        create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
+        create_asset_from_file(self, assetFileNameList[4])
+        create_mobileterminal_from_file(self, assetFileNameList[4], mobileTerminalFileNameList[4])
         # Create assets, Mobile for Trip 6
-        create_asset_from_file(self, 'asset6.csv')
-        create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
+        create_asset_from_file(self, assetFileNameList[5])
+        create_mobileterminal_from_file(self, assetFileNameList[5], mobileTerminalFileNameList[5])
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -1390,61 +1390,60 @@ class UnionVMSTestCase(unittest.TestCase):
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 5
-        create_trip_from_file(currentPositionTimeValue, 'asset5.csv', 'trip5.csv')
-        # Set Current Date and time in UTC x hours back
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[4], tripFileNameList[4])
         deltaTimeValue = datetime.timedelta(hours=61, minutes=40)
-        currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 6
-        create_trip_from_file(currentPositionTimeValue, 'asset6.csv', 'trip6.csv')
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[5], tripFileNameList[5])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[4], tripFileNameList[4])
         reload_page_and_goto_default(self)
         time.sleep(1)
-        create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[5], tripFileNameList[5])
         time.sleep(1)
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0057_create_assets_trip_7(self):
         # Create assets, Mobile for Trip 7
-        create_asset_from_file(self, 'asset7.csv')
-        create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
+        create_asset_from_file(self, assetFileNameList[6])
+        create_mobileterminal_from_file(self, assetFileNameList[6], mobileTerminalFileNameList[6])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 7
-        create_trip_from_file(currentPositionTimeValue, 'asset7.csv', 'trip7.csv')
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[6], tripFileNameList[6])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0058_create_assets_trip_8(self):
         # Create assets, Mobile for Trip 8
-        create_asset_from_file(self, 'asset8.csv')
-        create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
+        create_asset_from_file(self, assetFileNameList[7])
+        create_mobileterminal_from_file(self, assetFileNameList[7], mobileTerminalFileNameList[7])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=24)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 8
-        create_trip_from_file(currentPositionTimeValue, 'asset8.csv', 'trip8.csv')
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[7], tripFileNameList[7])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0059_create_assets_trip_9(self):
         # Create assets, Mobile for Trip 9
-        create_asset_from_file(self, 'asset9.csv')
-        create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
+        create_asset_from_file(self, assetFileNameList[8])
+        create_mobileterminal_from_file(self, assetFileNameList[8], mobileTerminalFileNameList[8])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=48)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
-        create_trip_from_file(currentPositionTimeValue, 'asset9.csv', 'trip9.csv')
+        # Create Trip 9
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[8], tripFileNameList[8])
 
 
 
