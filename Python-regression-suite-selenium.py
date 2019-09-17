@@ -32,6 +32,7 @@ from pathlib import Path
 import copy
 import zeep
 
+
 # Import parameters from parameter file
 from UnionVMSparameters import *
 
@@ -5272,9 +5273,49 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         answerValue = client.service.getVesselByCFR('SWE000007033')
         print(answerValue['vesselName'])
         print('----------------------------------------------------')
-        referenceDateTime = datetime.datetime(year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        referenceDateTime = datetime.datetime(year=2019, month=1, day=1, hour=0, minute=0, second=0)
         answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000007033', referenceDateTime)
         print(answerValue2)
+
+
+    def test_0199b_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT) PROD
+        wsdl = 'http://osbprod.havochvatten.se:8001/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        answerValue = client.service.getVesselByCFR('DNK000036587')
+        print(answerValue['vesselName'])
+        print('----------------------------------------------------')
+        referenceDateTime = datetime.datetime(year=2019, month=9, day=9, hour=0, minute=0, second=0)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('DNK000036587', referenceDateTime)
+        print(answerValue2)
+
+
+    def test_0199c_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT) TEST
+        wsdl = 'http://osbtest.havochvatten.se:8011/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        #answerValue = client.service.getVesselByIRCS('SWJA')
+        #answerValue = client.service.getVesselById('8234')
+        answerValue = client.service.getVesselByCFR('SWE000008027')
+        print(answerValue['vesselName'])
+        print('----------------------------------------------------')
+        referenceDateTime = datetime.datetime(year=2019, month=9, day=9, hour=0, minute=0, second=0)
+        #answerValue2 = client.service.getVesselByIRCSFromHistoric('SWJA', referenceDateTime)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000008027', referenceDateTime)
+        print(answerValue2)
+
+
+    def test_0199d_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT) TEST
+        wsdl = 'http://osbtest.havochvatten.se:8011/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        answerValue = client.service.getVesselByCFR('SWE000000084')
+        print(answerValue['vesselName'])
+        print('----------------------------------------------------')
+        referenceDateTime = datetime.datetime(year=2019, month=9, day=15, hour=0, minute=0, second=0)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000000084', referenceDateTime)
+        print(answerValue2)
+
 
 
 
