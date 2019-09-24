@@ -315,6 +315,109 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     time.sleep(2)
 
 
+def create_one_new_asset_from_gui_g2(self, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on Realtime tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+    time.sleep(1)
+    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(2)
+    self.driver.find_element_by_link_text("Assets").click()
+
+    # Click on Create button
+    wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]", "XPATH checked 2")
+    time.sleep(2)
+    self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]").click()
+
+    # Select F.S value
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
+    time.sleep(2)
+    self.driver.find_element_by_css_selector("#asset-form--flagstate mat-select").click()
+
+    wait_for_element_by_id_to_exist(wait, "mat-option-SWE", "mat-option-SWE checked 4")
+    time.sleep(1)
+    self.driver.find_element_by_id("mat-option-SWE").click()
+
+    # Enter IRCS value
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5")
+    time.sleep(1)
+    self.driver.find_element_by_css_selector("#asset-form--ircs input").send_keys(ircsValue[vesselNumber])
+
+    # Enter Name value
+    self.driver.find_element_by_css_selector("#asset-form--name input").send_keys(vesselName[vesselNumber])
+
+    # Enter External Marking Value
+    self.driver.find_element_by_css_selector("#asset-form--externalMarking input").send_keys(externalMarkingValue[vesselNumber])
+
+    # Enter CFR Value
+    self.driver.find_element_by_css_selector("#asset-form--cfr input").send_keys(cfrValue[vesselNumber])
+
+    # Enter IMO Value
+    self.driver.find_element_by_css_selector("#asset-form--imo input").send_keys(imoValue[vesselNumber])
+
+    # Enter HomePort Value
+    self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").send_keys(homeportValue[vesselNumber])
+
+    # Enter MMSI Value
+    self.driver.find_element_by_css_selector("#asset-form--mmsi input").send_keys(mmsiValue[vesselNumber])
+
+    # Length of all Value
+    self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(lengthValue[vesselNumber])
+
+    # Length between Perpendiculars Value (lengthBetweenPerpendiculars)
+    # TBD Need to be added
+
+    # Gross Tonnage Value
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(grossTonnageValue[vesselNumber])
+
+    # Main Power Value
+    self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").send_keys(powerValue[vesselNumber])
+
+    # Main Producer Name Value
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").send_keys(producernameValue)
+
+    # Main Producer Code Value
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").send_keys(producercodeValue)
+
+    # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "asset-form--save", "asset-form--save checked 11")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-form--save").click()
+
+
+    '''
+    # To be fixed when the functionality exists in the new frontend
+
+    # Click on the Contacts tab
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    # Click on "Add contact" link
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 9")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    # Main Contact Name Value
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 10")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
+    print(contactNameValue[vesselNumber])
+    # Main E-mail Value
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[vesselNumber])
+    # Main Contact Number Value
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
+
+    # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
+    time.sleep(3)
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+    '''
+
+    time.sleep(10)
+
+
 def check_new_asset_exists(self, vesselNumber):
     # Set Webdriver wait
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -1464,6 +1567,12 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0002_create_one_new_asset_g2(self):
+        # Create new asset (first in the list)
+        create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=300)
