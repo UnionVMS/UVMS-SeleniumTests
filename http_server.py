@@ -42,8 +42,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         xml_string_fixed = dom.toprettyxml()                    # Makes the XML more pretty
         print("Message content (XML Fixed): \n", xml_string_fixed)
         fileLog.write(xml_string_fixed)
+        xml_string_response = '<?xml version="1.0" ?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><POSTMSGOUT xmlns="urn:xeu:connector-bridge:v1"><AssignedON/></POSTMSGOUT></soap:Body></soap:Envelope>'
         self.send_response(200)
+        self.send_header("Content-type", "text/application-xml")
         self.end_headers()
+        self.wfile.write(xml_string_response.encode("utf-8"))
         fileLog.close()
 
     do_PUT = do_POST

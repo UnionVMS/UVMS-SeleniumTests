@@ -5289,11 +5289,20 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         wsdl = 'http://osbprod.havochvatten.se:8001/esb/Vessel/v2?wsdl'
         client = zeep.Client(wsdl=wsdl)
         answerValue = client.service.getVesselByCFR('DNK000036587')
+        print('---------------------------------------------------- 0')
         print(answerValue['vesselName'])
-        print('----------------------------------------------------')
+        print(answerValue['ircs'])
+        print('---------------------------------------------------- 1')
         referenceDateTime = datetime.datetime(year=2019, month=9, day=9, hour=0, minute=0, second=0)
         answerValue2 = client.service.getVesselByCFRFromHistoric('DNK000036587', referenceDateTime)
         print(answerValue2)
+        print('---------------------------------------------------- 2')
+        answerValue3 = client.service.getVesselEuFormatByCFR('DNK000036587')
+        print(answerValue3)
+        print('---------------------------------------------------- 3')
+        answerValue4 = client.service.getVesselEuFormatByIRCS(answerValue2['ircs'])
+        print(answerValue4)
+
 
 
     def test_0199c_test_wsdl(self):
