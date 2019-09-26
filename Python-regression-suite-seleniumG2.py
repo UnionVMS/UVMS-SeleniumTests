@@ -280,7 +280,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     time.sleep(1)
     self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
     # Length Value
-    self.driver.find_element_by_id("asset-input-lengthValue").send_keys(lengthValue[vesselNumber])
+    self.driver.find_element_by_id("asset-input-lengthValue").send_keys(lengthOverAllValue[vesselNumber])
     # Gross Tonnage Value
     self.driver.find_element_by_id("asset-input-grossTonnage").send_keys(grossTonnageValue[vesselNumber])
     # Main Power Value
@@ -322,54 +322,41 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
     time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
-
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
-    time.sleep(2)
+    time.sleep(1)
     self.driver.find_element_by_link_text("Assets").click()
-
     # Click on Create button
     wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]", "XPATH checked 2")
-    time.sleep(2)
+    time.sleep(1)
     self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]").click()
-
     # Select F.S value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
-    time.sleep(2)
+    time.sleep(1)
     self.driver.find_element_by_css_selector("#asset-form--flagstate mat-select").click()
-
     wait_for_element_by_id_to_exist(wait, "mat-option-SWE", "mat-option-SWE checked 4")
     time.sleep(1)
     self.driver.find_element_by_id("mat-option-SWE").click()
-
     # Enter IRCS value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5")
     time.sleep(1)
     self.driver.find_element_by_css_selector("#asset-form--ircs input").send_keys(ircsValue[vesselNumber])
-
     # Enter Name value
     self.driver.find_element_by_css_selector("#asset-form--name input").send_keys(vesselName[vesselNumber])
-
     # Enter External Marking Value
     self.driver.find_element_by_css_selector("#asset-form--externalMarking input").send_keys(externalMarkingValue[vesselNumber])
-
     # Enter CFR Value
     self.driver.find_element_by_css_selector("#asset-form--cfr input").send_keys(cfrValue[vesselNumber])
-
     # Enter IMO Value
     self.driver.find_element_by_css_selector("#asset-form--imo input").send_keys(imoValue[vesselNumber])
-
     # Enter HomePort Value
     self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").send_keys(homeportValue[vesselNumber])
-
     # Enter MMSI Value
     self.driver.find_element_by_css_selector("#asset-form--mmsi input").send_keys(mmsiValue[vesselNumber])
-
     # Length of all Value
-    self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(lengthValue[vesselNumber])
-
+    self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(lengthOverAllValue[vesselNumber])
     # Length between Perpendiculars Value (lengthBetweenPerpendiculars)
-    # TBD Need to be added
+    self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").send_keys(lengthBetweenPerpendicularsValue[vesselNumber])
 
     # Gross Tonnage Value
     self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(grossTonnageValue[vesselNumber])
@@ -391,7 +378,6 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
 
     '''
     # To be fixed when the functionality exists in the new frontend
-
     # Click on the Contacts tab
     self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
     # Click on "Add contact" link
@@ -464,7 +450,7 @@ def check_new_asset_exists(self, vesselNumber):
     # Check that the License Type value is correct.
     self.assertEqual(licenseTypeValue, self.driver.find_element_by_id("asset-input-licenseType").text)
     # Check that the Length Type value is correct.
-    self.assertEqual(lengthValue[vesselNumber], self.driver.find_element_by_id("asset-input-lengthValue").get_attribute("value"))
+    self.assertEqual(lengthOverAllValue[vesselNumber], self.driver.find_element_by_id("asset-input-lengthValue").get_attribute("value"))
     # Check that the Gross Tonnage value is correct.
     self.assertEqual(grossTonnageValue[vesselNumber], self.driver.find_element_by_id("asset-input-grossTonnage").get_attribute("value"))
     # Check that the Power value is correct.
@@ -492,6 +478,102 @@ def check_new_asset_exists(self, vesselNumber):
     time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def check_new_asset_exists_g2(self, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on Realtime tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+    time.sleep(1)
+    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(1)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Enter name in the name search field for the newly created asset
+    wait_for_element_by_name_to_exist(wait, "name", "name checked 2")
+    time.sleep(1)
+    self.driver.find_element_by_name("name").send_keys(vesselName[vesselNumber])
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
+    time.sleep(1)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+
+    # Check that the new asset exists in the list.
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 4")
+    time.sleep(1)
+    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").text)
+    self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-ircs").text)
+    self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-mmsi").text)
+    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-flagstate").text)
+    self.assertEqual(externalMarkingValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-externalMarking").text)
+    self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-cfr").text)
+
+    # Click on details button for new asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(1)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+
+    # Continue here
+
+    '''
+
+    # Check that the F.S value is correct.
+    #self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-countryCode").text)
+    wait_for_element_by_id_to_exist(wait, "asset-input-flagStateCode", "asset-input-flagStateCode checked 6")
+    time.sleep(3)
+    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_id("asset-input-flagStateCode").text)
+    # Check that the IRCS value is correct
+    self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_id("asset-input-ircs").get_attribute("value"))
+    # Check that the Name value is correct
+    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_id("asset-input-name").get_attribute("value"))
+    # Check that External Marking Value is correct
+    self.assertEqual(externalMarkingValue[vesselNumber], self.driver.find_element_by_id("asset-input-externalMarking").get_attribute("value"))
+    # Check that the CFR value is correct
+    self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_id("asset-input-cfr").get_attribute("value"))
+    # Check that the IMO value is correct
+    self.assertEqual(imoValue[vesselNumber], self.driver.find_element_by_id("asset-input-imo").get_attribute("value"))
+    # Check that the HomePort value is correct
+    self.assertEqual(homeportValue[vesselNumber], self.driver.find_element_by_id("asset-input-homeport").get_attribute("value"))
+    # Check that the Gear Type value is correct.
+    self.assertEqual(gearTypeValue[vesselNumber], self.driver.find_element_by_id("asset-input-gearType").text)
+    # Check that the MMSI value is correct
+    self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_id("asset-input-mmsi").get_attribute("value"))
+    # Check that the License Type value is correct.
+    self.assertEqual(licenseTypeValue, self.driver.find_element_by_id("asset-input-licenseType").text)
+    # Check that the Length Type value is correct.
+    self.assertEqual(lengthOverAllValue[vesselNumber], self.driver.find_element_by_id("asset-input-lengthValue").get_attribute("value"))
+    # Check that the Gross Tonnage value is correct.
+    self.assertEqual(grossTonnageValue[vesselNumber], self.driver.find_element_by_id("asset-input-grossTonnage").get_attribute("value"))
+    # Check that the Power value is correct.
+    self.assertEqual(powerValue[vesselNumber], self.driver.find_element_by_id("asset-input-power").get_attribute("value"))
+    # Check that the Producer Name value is correct.
+    #
+    # Needs to be updated according to asset database
+    #
+    #
+    # self.assertEqual("Mikael", self.driver.find_element_by_id("asset-input-producername").get_attribute("value"))
+    # Check that the Producer Code value is correct.
+    self.assertEqual(producercodeValue, self.driver.find_element_by_id("asset-input-producercode").get_attribute("value"))
+    # Click on the Contacts tab
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    # Check that the Contact Name value is correct.
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 7")
+    time.sleep(1)
+    self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-name-0").get_attribute("value"))
+    # Check that the E-mail value is correct.
+    self.assertEqual(contactEmailValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-email-0").get_attribute("value"))
+    # Check that the E-mail value is correct.
+    self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
+    # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 8")
+    time.sleep(3)
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+    '''
+
+    time.sleep(10)
 
 
 def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
@@ -1573,6 +1655,14 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
     def test_0002_create_one_new_asset_g2(self):
         # Create new asset (first in the list)
         create_one_new_asset_from_gui_g2(self, 0)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0003_check_new_asset_exist_g2(self):
+        # Check new asset (first in the list)
+        check_new_asset_exists_g2(self, 0)
+
+
 
 
     @timeout_decorator.timeout(seconds=300)
