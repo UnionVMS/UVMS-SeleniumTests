@@ -514,34 +514,36 @@ def check_new_asset_exists_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
 
-    # Check that the F.S value is correct.
-    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show label + div", "CSS Selector checked 6")
+    #Get all elements from the Asset table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show div", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
-    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div").text)
+    allElements = self.driver.find_elements_by_css_selector(".left-column asset-show div")
+    # Check that the F.S value is correct.
+    self.assertEqual(countryValue[vesselNumber], allElements[0].text)
     # Check that External Marking Value is correct
-    self.assertEqual(externalMarkingValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div").text)
+    self.assertEqual(externalMarkingValue[vesselNumber], allElements[1].text)
     # Check that the CFR value is correct
-    self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div").text)
+    self.assertEqual(cfrValue[vesselNumber], allElements[2].text)
     # Check that the IRCS value is correct
-    self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div").text)
+    self.assertEqual(ircsValue[vesselNumber], allElements[3].text)
     # Check that the IMO value is correct
-    self.assertEqual(imoValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(imoValue[vesselNumber], allElements[4].text)
     # Check that the HomePort value is correct
-    self.assertEqual(homeportValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(homeportValue[vesselNumber], allElements[5].text)
     # Check that the MMSI value is correct
-    self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(mmsiValue[vesselNumber], allElements[6].text)
     # Check that the Length Type over all value is correct.
-    self.assertEqual(lengthOverAllValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(lengthOverAllValue[vesselNumber], allElements[7].text)
     # Check that the Length Type between perpendiculars value is correct.
-    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], allElements[8].text)
     # Check that the Gross Tonnage value PLUS Gross Tonnage type are correct.
-    self.assertEqual(grossTonnageValue[vesselNumber] +" " + grossTonnageTypeValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(grossTonnageValue[vesselNumber] +" " + grossTonnageTypeValue[vesselNumber], allElements[9].text)
     # Check that the Power value is correct.
-    self.assertEqual(powerValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(powerValue[vesselNumber], allElements[10].text)
     # Check that the Product Org Code value is correct.
-    self.assertEqual(productOrgCodeValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(productOrgCodeValue[vesselNumber], allElements[11].text)
     # Check that the Product Org Name value is correct.
-    self.assertEqual(productOrgNameValue[vesselNumber], self.driver.find_element_by_css_selector(".left-column asset-show label + div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div ~ div").text)
+    self.assertEqual(productOrgNameValue[vesselNumber], allElements[12].text)
     # Check that the Name value is correct.left-column asset-show l
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("asset-show-page h1").text)
 
