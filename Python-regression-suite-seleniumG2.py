@@ -984,6 +984,16 @@ def create_asset_from_file(self, assetFileName):
         create_one_new_asset_from_gui_with_parameters(self, assetAllrows[x])
 
 
+def create_asset_from_file_g2(self, assetFileName):
+    # Create asset (assetFileName)
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+    # create_one_new_asset
+    for x in range(0, len(assetAllrows)):
+        create_one_new_asset_from_gui_with_parameters_g2(self, assetAllrows[x])
+
+
+
 def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName):
     # Create Mobile Terminal for mentioned asset (assetFileName, mobileTerminalFileName)
 
@@ -1096,6 +1106,122 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Click on Create button
+    wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]", "XPATH checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]").click()
+    # Select F.S value
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#asset-form--flagstate mat-select").click()
+    wait_for_element_by_id_to_exist(wait, "mat-option-"+parameterList[17], "asset-input-flagStateCode+parameterList checked 4")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mat-option-"+parameterList[17]).click()
+    # Enter IRCS value
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#asset-form--ircs input").send_keys(parameterList[0])
+    # Enter Name value
+    self.driver.find_element_by_css_selector("#asset-form--name input").send_keys(parameterList[1])
+    # Enter External Marking Value
+    self.driver.find_element_by_css_selector("#asset-form--externalMarking input").send_keys(parameterList[3])
+    # Enter CFR Value
+    self.driver.find_element_by_css_selector("#asset-form--cfr input").send_keys(parameterList[2])
+    # Enter IMO Value
+    self.driver.find_element_by_css_selector("#asset-form--imo input").send_keys(parameterList[4])
+    # Enter HomePort Value
+    self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").send_keys(parameterList[7])
+    # Enter MMSI Value
+    self.driver.find_element_by_css_selector("#asset-form--mmsi input").send_keys(parameterList[5])
+    # Length of all Value
+    self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(parameterList[9])
+    # Length between Perpendiculars Value (lengthBetweenPerpendiculars)
+    self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").send_keys(parameterList[22])
+    # Gross Tonnage Value
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(parameterList[10])
+    # Main Power Value
+    self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").send_keys(parameterList[11])
+    # Main Producer Name Value
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").send_keys(parameterList[12])
+    # Main Producer Code Value
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").send_keys(parameterList[13])
+
+    # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "asset-form--save", "asset-form--save checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("asset-form--save").click()
+
+    '''
+    # To be fixed when the functionality exists in the new frontend
+
+    # Select Gear Type value
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType", "asset-input-gearType checked 6")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-gearType").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-gearType-item-"+parameterList[8], "asset-input-gearType+parameterList checked 7")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-gearType-item-"+parameterList[8]).click()
+    # Select License Type value
+    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType", "asset-input-licenseType checked 8")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-licenseType").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-licenseType-item-0", "asset-input-licenseType-item-0 checked 9")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-licenseType-item-0").click()
+
+
+    # Click on the Contacts tab
+    wait_for_element_by_xpath_to_exist(wait, "//*[@id='CONTACTS']/span", "XPATH checked 11")
+    time.sleep(1)
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    # Click on "Add contact" link
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 10")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    # Main Contact Name Value
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 11")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(parameterList[14])
+    # Main E-mail Value
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(parameterList[15])
+    # Main Contact Number Value
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(parameterList[16])
+    # Main Street Value
+    self.driver.find_element_by_id("asset-input-contact-streetname-0").send_keys(parameterList[18])
+    # Main ZIP Value
+    self.driver.find_element_by_id("asset-input-contact-zipcode-0").send_keys(parameterList[19])
+    # Main City Value
+    self.driver.find_element_by_id("asset-input-contact-cityname-0").send_keys(parameterList[20])
+    # Main Country Value
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0", "asset-input-contact-country-0 checked 12")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-contact-country-0").click()
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-country-0-item-"+parameterList[21], "asset-input-contact-country-0-item+parameterList checked 13")
+    time.sleep(1)
+    self.driver.find_element_by_id("asset-input-contact-country-0-item-"+parameterList[21]).click()
+    # Click on Save Asset button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-save", "menu-bar-save checked 14")
+    time.sleep(1)
+    self.driver.find_element_by_id("menu-bar-save").click()
+    # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 15")
+    time.sleep(5)
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+    '''
+
+    time.sleep(2)
+
+
 
 
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
@@ -1659,9 +1785,15 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=300)
     def test_0052_0059_create_assets_trip_1_9_without_mobile_terminal(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Realtime tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
         for x in range(0, 9):
             # Create assets, Mobile for Trip 1-9
-            create_asset_from_file(self, assetFileNameList[x])
+            create_asset_from_file_g2(self, assetFileNameList[x])
         time.sleep(1)
 
 
