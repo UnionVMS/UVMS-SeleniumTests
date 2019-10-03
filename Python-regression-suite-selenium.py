@@ -26,12 +26,12 @@ import xmlrunner
 import distutils.dir_util
 from io import BytesIO
 from zipfile import ZipFile
-import urllib.request
 import platform
 import collections
 from pathlib import Path
 import copy
 import zeep
+
 
 # Import parameters from parameter file
 from UnionVMSparameters import *
@@ -239,7 +239,7 @@ def startup_browser_and_login_to_unionVMS(self):
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
     time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
-    self.driver.find_element_by_id(defaultUserNamePassword).send_keys(defaultUserNamePassword)
+    self.driver.find_element_by_id("password").send_keys(defaultUserNamePassword)
     time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div/div[2]/div[3]/div[2]/form/div[3]/div/button").click()
     time.sleep(2)
@@ -334,7 +334,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(3)
+    time.sleep(4)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -443,11 +443,11 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on mobile terminal tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     # Click on new terminal button
     wait_for_element_by_id_to_exist(wait, "mt-btn-create", "mt-btn-create checked 2")
-    time.sleep(1)
+    time.sleep(10)
     self.driver.find_element_by_id("mt-btn-create").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mt-0-typeAndPlugin", "mt-btn-create checked 3")
@@ -492,7 +492,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-save checked 7")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -556,10 +556,11 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+    time.sleep(1)
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Search for created asset
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(ircsValue[vesselNumber])
     wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
@@ -685,7 +686,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     self.driver.find_element_by_xpath("//*[@id='menu-bar-update']").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -696,11 +697,11 @@ def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDa
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on mobile terminal tab
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(1)
+    time.sleep(5)
     self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
     # Search for mobile terminal via serial number
     wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
-    time.sleep(2)
+    time.sleep(5)
     self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
     self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
     wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
@@ -851,7 +852,7 @@ def create_one_new_channel_for_one_mobile_terminal_without_referenceDateTime(sel
     time.sleep(1)
     # Click on Update button
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-    time.sleep(3)
+    time.sleep(8)
     # Click on Cancel
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(3)
@@ -987,7 +988,7 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
     self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
     # Search for selected asset in the asset list
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 2")
-    time.sleep(1)
+    time.sleep(3)
     self.driver.find_element_by_id("asset-input-simple-search").clear()
     self.driver.find_element_by_id("asset-input-simple-search").send_keys(vesselName[vesselNumberList[0]])
     wait_for_element_by_id_to_exist(wait, "asset-btn-simple-search", "asset-btn-simple-search checked 3")
@@ -1299,7 +1300,7 @@ def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 9")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1371,7 +1372,7 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     self.driver.find_element_by_id("menu-bar-update").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     # Search for selected asset in the asset list
     wait_for_element_by_id_to_exist(wait, "asset-input-simple-search", "asset-input-simple-search checked 13")
@@ -1716,7 +1717,7 @@ def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTe
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
     # Click on cancel button
     wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-cancel checked 9")
-    time.sleep(1)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1770,7 +1771,7 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
     # Close page
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -2408,12 +2409,8 @@ def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from
 
 
 
-def create_trip_from_file(deltaTimeValue, assetFileName, tripFileName):
+def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName):
     # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
-
-    # Set Current Date and time in UTC x hours back
-    currentUTCValue = datetime.datetime.utcnow()
-    currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
     # Open saved csv file and read all asset elements
     assetAllrows = get_elements_from_file(assetFileName)
@@ -3278,7 +3275,7 @@ class UnionVMSTestCase(unittest.TestCase):
         self.driver.find_element_by_link_text(groupName[0]).click()
         # Check Assets in Group
         wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS Selector checked 12")
-        time.sleep(1)
+        time.sleep(2)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
         self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
@@ -3569,18 +3566,24 @@ class UnionVMSTestCase(unittest.TestCase):
             self.assertEqual(licenseTypeValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]").text)
         time.sleep(3)
         # Click on save group button
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 5")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_css_selector_to_exist(wait, "form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]", "CSS Selector checked 6")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("form[name=\"saveForm\"] > div.form-group > input[name=\"name\"]").send_keys(groupName[2])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 7")
+        time.sleep(1)
         self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
         time.sleep(3)
         # Reload page
         self.driver.refresh()
         # Check that Group 3 exists in the list
-        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "uvms-header-menu-item-assets checked 5")
-        time.sleep(1)
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "uvms-header-menu-item-assets checked 8")
+        time.sleep(2)
         self.driver.find_element_by_id("asset-dropdown-saved-search").click()
-        wait_for_element_by_link_text_to_exist(wait, groupName[2], "Link text checked 6")
-        time.sleep(1)
+        wait_for_element_by_link_text_to_exist(wait, groupName[2], "Link text checked 9")
+        time.sleep(2)
         self.assertEqual(groupName[2], self.driver.find_element_by_link_text(groupName[2]).text)
         time.sleep(2)
 
@@ -3954,14 +3957,19 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_css_selector("#globalSettings > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#reporting > span", "CSS Selector checked 4")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#reporting > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#asset > span", "CSS Selector checked 5")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#asset > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#exchange > span", "CSS Selector checked 6")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#exchange > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#movementrules > span", "CSS Selector checked 7")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#movementrules > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#systemMonitor > span", "CSS Selector checked 8")
+        time.sleep(0.2)
         self.driver.find_element_by_css_selector("#systemMonitor > span").click()
         # Check sub tab names
         self.assertEqual("SYSTEM MONITOR", self.driver.find_element_by_css_selector("#systemMonitor > span").text)
@@ -4574,18 +4582,22 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=300)
     def test_0052_create_assets_trip_1_2_3(self):
         # Create assets, Mobile for Trip 1
-        create_asset_from_file(self, 'asset1.csv')
-        create_mobileterminal_from_file(self, 'asset1.csv', 'mobileterminal1.csv')
+        create_asset_from_file(self, assetFileNameList[0])
+        create_mobileterminal_from_file(self, assetFileNameList[0], mobileTerminalFileNameList[0])
         # Create assets, Mobile for Trip 2
-        create_asset_from_file(self, 'asset2.csv')
-        create_mobileterminal_from_file(self, 'asset2.csv', 'mobileterminal2.csv')
+        create_asset_from_file(self, assetFileNameList[1])
+        create_mobileterminal_from_file(self, assetFileNameList[1], mobileTerminalFileNameList[1])
         # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, 'asset3.csv')
-        create_mobileterminal_from_file(self, 'asset3.csv', 'mobileterminal3.csv')
+        create_asset_from_file(self, assetFileNameList[2])
+        create_mobileterminal_from_file(self, assetFileNameList[2], mobileTerminalFileNameList[2])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 1-3
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset1.csv', 'trip1.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset2.csv', 'trip2.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset3.csv', 'trip3.csv')
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[0], tripFileNameList[0])
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[1], tripFileNameList[1])
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[2], tripFileNameList[2])
         time.sleep(1)
 
 
@@ -4594,7 +4606,7 @@ class UnionVMSTestCase(unittest.TestCase):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file('asset1.csv')
+        assetAllrows = get_elements_from_file(assetFileNameList[0])
         # Select Reporting tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
         time.sleep(1)
@@ -4762,13 +4774,12 @@ class UnionVMSTestCase(unittest.TestCase):
         time.sleep(2)
 
 
-
-    @timeout_decorator.timeout(seconds=180)
+    @timeout_decorator.timeout(seconds=300)
     def test_0052d_export_map_to_file_check_that_map_file_exists(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file('asset1.csv')
+        assetAllrows = get_elements_from_file(assetFileNameList[0])
         # Select Reporting tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
         time.sleep(1)
@@ -4844,7 +4855,11 @@ class UnionVMSTestCase(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[16]", "XPATH checked 14")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@type='button'])[16]").click()
-        time.sleep(20)
+        time.sleep(60)
+
+        # Check that the exported map file exits after creation
+        print("Exported path and filename: "+mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName)
+        self.assertTrue(os.path.exists(mapPrefixFileName+"_"+tmpDayString+"-"+tmpMonthString+"-"+tmpYearString+mapSuffixFileName))
 
         # Change back the path to current dir
         os.chdir(cwd)
@@ -4854,23 +4869,30 @@ class UnionVMSTestCase(unittest.TestCase):
     @timeout_decorator.timeout(seconds=300)
     def test_0101_create_assets_real_trip_1(self):
         # Create assets, Mobile for RealTrip 1
-        create_asset_from_file(self, 'assetreal1.csv')
-        create_mobileterminal_from_file(self, 'assetreal1.csv', 'mobileterminalreal1.csv')
+        create_asset_from_file(self, assetFileNameList[9])
+        create_mobileterminal_from_file(self, assetFileNameList[9], mobileTerminalFileNameList[9])
         # Create assets, Mobile for RealTrip 2
-        create_asset_from_file(self, 'assetreal2.csv')
-        create_mobileterminal_from_file(self, 'assetreal2.csv', 'mobileterminalreal2.csv')
-        # Create RealTrip 1-2
-        create_trip_from_file(datetime.timedelta(hours=256), 'assetreal1.csv', 'tripreal1.csv')
-        create_trip_from_file(datetime.timedelta(hours=254, minutes=16), 'assetreal2.csv', 'tripreal2.csv')
+        create_asset_from_file(self, assetFileNameList[10])
+        create_mobileterminal_from_file(self, assetFileNameList[10], mobileTerminalFileNameList[10])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=256)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 1
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[9], tripFileNameList[9])
+        deltaTimeValue = datetime.timedelta(hours=254, minutes=16)
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 2
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[10], tripFileNameList[10])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0101b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'assetreal1.csv', 'tripreal1.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[9], tripFileNameList[9])
         reload_page_and_goto_default(self)
         time.sleep(1)
-        create_report_and_check_trip_position_reports(self, 'assetreal2.csv', 'tripreal2.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[10], tripFileNameList[10])
         time.sleep(1)
 
 
@@ -4909,7 +4931,9 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     def test_0053_create_assets_and_mobile_terminals_21_33(self):
         # Create assets 21-33 in the list
         for x in range(21, 34):
+            print(x)
             create_one_new_asset_from_gui(self, x)
+            time.sleep(2)
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
@@ -4917,135 +4941,189 @@ class UnionVMSTestCaseExtra(unittest.TestCase):
     @timeout_decorator.timeout(seconds=300)
     def test_0055_create_assets_trip_4(self):
         # Create assets, Mobile for Trip 4
-        create_asset_from_file(self, 'asset4.csv')
-        create_mobileterminal_from_file(self, 'asset4.csv', 'mobileterminal4.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset4.csv', 'trip4.csv')
+        create_asset_from_file(self, assetFileNameList[3])
+        create_mobileterminal_from_file(self, assetFileNameList[3], mobileTerminalFileNameList[3])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 4
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'asset4.csv', 'trip4.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0056_create_assets_trip_5_and_6(self):
         # Create assets, Mobile for Trip 5
-        create_asset_from_file(self, 'asset5.csv')
-        create_mobileterminal_from_file(self, 'asset5.csv', 'mobileterminal5.csv')
+        create_asset_from_file(self, assetFileNameList[4])
+        create_mobileterminal_from_file(self, assetFileNameList[4], mobileTerminalFileNameList[4])
         # Create assets, Mobile for Trip 6
-        create_asset_from_file(self, 'asset6.csv')
-        create_mobileterminal_from_file(self, 'asset6.csv', 'mobileterminal6.csv')
-        # Create Trip 5-6
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset5.csv', 'trip5.csv')
-        create_trip_from_file(datetime.timedelta(hours=61, minutes=40), 'asset6.csv', 'trip6.csv')
+        create_asset_from_file(self, assetFileNameList[5])
+        create_mobileterminal_from_file(self, assetFileNameList[5], mobileTerminalFileNameList[5])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 5
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[4], tripFileNameList[4])
+        deltaTimeValue = datetime.timedelta(hours=61, minutes=40)
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 6
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[5], tripFileNameList[5])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'asset5.csv', 'trip5.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[4], tripFileNameList[4])
         reload_page_and_goto_default(self)
         time.sleep(1)
-        create_report_and_check_trip_position_reports(self, 'asset6.csv', 'trip6.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[5], tripFileNameList[5])
         time.sleep(1)
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0057_create_assets_trip_7(self):
         # Create assets, Mobile for Trip 7
-        create_asset_from_file(self, 'asset7.csv')
-        create_mobileterminal_from_file(self, 'asset7.csv', 'mobileterminal7.csv')
-        create_trip_from_file(datetime.timedelta(hours=72), 'asset7.csv', 'trip7.csv')
+        create_asset_from_file(self, assetFileNameList[6])
+        create_mobileterminal_from_file(self, assetFileNameList[6], mobileTerminalFileNameList[6])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 7
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[6], tripFileNameList[6])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0058_create_assets_trip_8(self):
         # Create assets, Mobile for Trip 8
-        create_asset_from_file(self, 'asset8.csv')
-        create_mobileterminal_from_file(self, 'asset8.csv', 'mobileterminal8.csv')
-        create_trip_from_file(datetime.timedelta(hours=24), 'asset8.csv', 'trip8.csv')
+        create_asset_from_file(self, assetFileNameList[7])
+        create_mobileterminal_from_file(self, assetFileNameList[7], mobileTerminalFileNameList[7])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=24)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 8
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[7], tripFileNameList[7])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0059_create_assets_trip_9(self):
         # Create assets, Mobile for Trip 9
-        create_asset_from_file(self, 'asset9.csv')
-        create_mobileterminal_from_file(self, 'asset9.csv', 'mobileterminal9.csv')
-        create_trip_from_file(datetime.timedelta(hours=48), 'asset9.csv', 'trip9.csv')
+        create_asset_from_file(self, assetFileNameList[8])
+        create_mobileterminal_from_file(self, assetFileNameList[8], mobileTerminalFileNameList[8])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=48)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create Trip 9
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[8], tripFileNameList[8])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0102_create_assets_real_trip_2(self):
         # Create assets, Mobile for RealTrip 3
-        create_asset_from_file(self, 'assetreal3.csv')
-        create_mobileterminal_from_file(self, 'assetreal3.csv', 'mobileterminalreal3.csv')
+        create_asset_from_file(self, assetFileNameList[11])
+        create_mobileterminal_from_file(self, assetFileNameList[11], mobileTerminalFileNameList[11])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=192)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 3
-        create_trip_from_file(datetime.timedelta(hours=192), 'assetreal3.csv', 'tripreal3.csv')
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[11], tripFileNameList[11])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0102b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'assetreal3.csv', 'tripreal3.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[11], tripFileNameList[11])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0103_create_assets_real_trip_3(self):
         # Create assets, Mobile for RealTrip 4a and 4b
-        create_asset_from_file(self, 'assetreal4.csv')
-        create_mobileterminal_from_file(self, 'assetreal4.csv', 'mobileterminalreal4.csv')
-        # Create RealTrip 4a-4b
-        create_trip_from_file(datetime.timedelta(hours=256), 'assetreal4.csv', 'tripreal4a.csv')
-        create_trip_from_file(datetime.timedelta(hours=48), 'assetreal4.csv', 'tripreal4b.csv')
+        create_asset_from_file(self, assetFileNameList[12])
+        create_mobileterminal_from_file(self, assetFileNameList[12], mobileTerminalFileNameList[12])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=256)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 4a
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[12], tripFileNameList[12][:9] + "a" + tripFileNameList[12][9:])
+        deltaTimeValue = datetime.timedelta(hours=48)
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 4b
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[12], tripFileNameList[12][:9] + "b" + tripFileNameList[12][9:])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0104_create_assets_real_trip_4(self):
         # Create assets, Mobile for RealTrip 5
-        create_asset_from_file(self, 'assetreal5.csv')
-        create_mobileterminal_from_file(self, 'assetreal5.csv', 'mobileterminalreal5.csv')
-        # Create RealTrip 3
-        create_trip_from_file(datetime.timedelta(hours=48), 'assetreal5.csv', 'tripreal5.csv')
+        create_asset_from_file(self, assetFileNameList[13])
+        create_mobileterminal_from_file(self, assetFileNameList[13], mobileTerminalFileNameList[13])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=48)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 5
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[13], tripFileNameList[13])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0104b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'assetreal5.csv', 'tripreal5.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[13], tripFileNameList[13])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0105_create_assets_real_trip_5(self):
         # Create assets, Mobile for RealTrip 6
-        create_asset_from_file(self, 'assetreal6.csv')
-        create_mobileterminal_from_file(self, 'assetreal6.csv', 'mobileterminalreal6.csv')
-        # Create RealTrip 3
-        create_trip_from_file(datetime.timedelta(hours=72), 'assetreal6.csv', 'tripreal6.csv')
+        create_asset_from_file(self, assetFileNameList[14])
+        create_mobileterminal_from_file(self, assetFileNameList[14], mobileTerminalFileNameList[14])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=72)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 6
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[14], tripFileNameList[14])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0105b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, 'assetreal6.csv', 'tripreal6.csv')
+        create_report_and_check_trip_position_reports(self, assetFileNameList[14], tripFileNameList[14])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0106_create_assets_real_trip_6(self):
         # Create assets, Mobile for RealTrip 7
-        create_asset_from_file(self, 'assetreal7.csv')
-        create_mobileterminal_from_file(self, 'assetreal7.csv', 'mobileterminalreal7.csv')
-        # Create RealTrip 3
-        create_trip_from_file(datetime.timedelta(hours=270), 'assetreal7.csv', 'tripreal7.csv')
+        create_asset_from_file(self, assetFileNameList[15])
+        create_mobileterminal_from_file(self, assetFileNameList[15], mobileTerminalFileNameList[15])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=270)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 7
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[15], tripFileNameList[15])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0107_create_assets_real_trip_7(self):
-        # Create assets, Mobile for RealTrip 7
-        create_asset_from_file(self, 'assetreal8.csv')
-        create_mobileterminal_from_file(self, 'assetreal8.csv', 'mobileterminalreal8.csv')
-        # Create RealTrip 3
-        create_trip_from_file(datetime.timedelta(hours=270), 'assetreal8.csv', 'tripreal8.csv')
+        # Create assets, Mobile for RealTrip 8
+        create_asset_from_file(self, assetFileNameList[16])
+        create_mobileterminal_from_file(self, assetFileNameList[16], mobileTerminalFileNameList[16])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=270)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 9
+        create_trip_from_file(currentPositionTimeValue, assetFileNameList[16], tripFileNameList[16])
 
 
 
@@ -5078,6 +5156,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 39) does not exist anymore. Removed from Fartyg2
         for x in range(40, 53):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
@@ -5089,6 +5168,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 39) does not exist anymore. Removed from Fartyg2
         for x in range(40, 53):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_from_gui(self, x)
             link_asset_and_mobile_terminal(self, x)
 
@@ -5101,6 +5181,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 53) does not exist anymore. Removed from Fartyg2
         for x in range(54, 67):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_via_asset_tab(self, x, x)
             time.sleep(1)
 
@@ -5112,6 +5193,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Note: Assets from National asset database (Fartyg2) must be synced before executing this test case
         # Asset (Number 53) does not exist anymore. Removed from Fartyg2
         for x in range(54, 67):
+            print("Number: " + str(x))
             create_one_new_mobile_terminal_from_gui(self, x)
             link_asset_and_mobile_terminal(self, x)
 
@@ -5129,7 +5211,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename(self, tests900FileName[1], tests900FileName[2])
 
-
+    # Injecting additional channels for all MTs for Prod
     @timeout_decorator.timeout(seconds=180)
     def test_0055c_create_several_additional_channels_for_mobile_terminals(self):
         # Create assets from file with several different values for filtering
@@ -5197,9 +5279,58 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         answerValue = client.service.getVesselByCFR('SWE000007033')
         print(answerValue['vesselName'])
         print('----------------------------------------------------')
-        referenceDateTime = datetime.datetime(year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        referenceDateTime = datetime.datetime(year=2019, month=1, day=1, hour=0, minute=0, second=0)
         answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000007033', referenceDateTime)
         print(answerValue2)
+
+
+    def test_0199b_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT) PROD
+        wsdl = 'http://osbprod.havochvatten.se:8001/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        answerValue = client.service.getVesselByCFR('DNK000036587')
+        print('---------------------------------------------------- 0')
+        print(answerValue['vesselName'])
+        print(answerValue['ircs'])
+        print('---------------------------------------------------- 1')
+        referenceDateTime = datetime.datetime(year=2019, month=9, day=9, hour=0, minute=0, second=0)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('DNK000036587', referenceDateTime)
+        print(answerValue2)
+        print('---------------------------------------------------- 2')
+        answerValue3 = client.service.getVesselEuFormatByCFR('DNK000036587')
+        print(answerValue3)
+        print('---------------------------------------------------- 3')
+        answerValue4 = client.service.getVesselEuFormatByIRCS(answerValue2['ircs'])
+        print(answerValue4)
+
+
+
+    def test_0199c_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT) TEST
+        wsdl = 'http://osbtest.havochvatten.se:8011/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        #answerValue = client.service.getVesselByIRCS('SWJA')
+        #answerValue = client.service.getVesselById('8234')
+        answerValue = client.service.getVesselByCFR('SWE000008027')
+        print(answerValue['vesselName'])
+        print('----------------------------------------------------')
+        referenceDateTime = datetime.datetime(year=2019, month=9, day=9, hour=0, minute=0, second=0)
+        #answerValue2 = client.service.getVesselByIRCSFromHistoric('SWJA', referenceDateTime)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000008027', referenceDateTime)
+        print(answerValue2)
+
+
+    def test_0199d_test_wsdl(self):
+        # test wsdl from Fartyg2 (NATIONAL_SERVICE_ENDPOINT) TEST
+        wsdl = 'http://osbtest.havochvatten.se:8011/esb/Vessel/v2?wsdl'
+        client = zeep.Client(wsdl=wsdl)
+        answerValue = client.service.getVesselByCFR('SWE000000084')
+        print(answerValue['vesselName'])
+        print('----------------------------------------------------')
+        referenceDateTime = datetime.datetime(year=2019, month=9, day=15, hour=0, minute=0, second=0)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000000084', referenceDateTime)
+        print(answerValue2)
+
 
 
 
@@ -5920,11 +6051,13 @@ class UnionVMSTestCaseRules(unittest.TestCase):
         time.sleep(2)
 
 
+    @timeout_decorator.timeout(seconds=180)
     def test_0044_remove_speed_rule_one(self):
         # Startup browser and login
         UnionVMSTestCase.test_0041_remove_speed_rule_one(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
     def test_0050_create_user_area(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6242,7 +6375,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         UnionVMSTestCase.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=360)
+    @timeout_decorator.timeout(seconds=500)
     def test_0201_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
         create_asset_from_file(self, 'assets2xxxx.csv')
@@ -6449,6 +6582,13 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0202c_delay_one_minute(self):
+        # Delay test case to secure change in advance asset list headers.
+        time.sleep(60)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0203_advanced_search_of_assets_length_power(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6456,7 +6596,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(1)
+        time.sleep(10)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on advanced search
         wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
@@ -6561,7 +6701,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(1)
+        time.sleep(10)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on sort IRCS
         wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
@@ -6637,7 +6777,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         assetAllrows = get_elements_from_file('assets2xxxx.csv')
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
-        time.sleep(1)
+        time.sleep(10)
         self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
         # Click on advanced search
         wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
@@ -6756,7 +6896,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
         time.sleep(2)
 
 
-    @timeout_decorator.timeout(seconds=360)
+    @timeout_decorator.timeout(seconds=500)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
         # Create mobile terminals from file with several different values for filtering
         create_mobileterminal_from_file_based_on_link_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv', 'linkassetmobileterminals2xxxx.csv')
@@ -7726,23 +7866,34 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
         time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
-        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        # Click on Positions Reports sub tabs under Audit Log Tab
         wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 2")
         time.sleep(3)
         self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
 
+        # Click on Object type
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[3]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        # Select Manual position report selection
+        wait_for_element_by_link_text_to_exist(wait, "Manual position report", "Link text checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Manual position report").click()
+        # Click on Object type
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[3]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        # Click on Search button
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+
         # Check Alert value in audit list 1st row
-        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 7")
         time.sleep(3)
         self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
         self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
         self.assertEqual(auditLogsObjectTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
-        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
-
-        # Check config update value in audit list 2nd row
-        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
-        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
-        self.assertEqual(auditLogsObjectTypeValue[5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
         self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
         time.sleep(2)
 

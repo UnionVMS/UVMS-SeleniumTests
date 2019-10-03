@@ -1797,34 +1797,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(1)
 
 
-    @timeout_decorator.timeout(seconds=300)
-    def test_rest_api(self):
-        # Set wait time for web driver
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-        # Click on Realtime tab
-        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-        # Get Token
-        url = "http://localhost:28080/unionvms/usm-administration/rest/authenticate"
-        datas = {"userName": "vms_admin_se", "password": "password"}
-        headers = {'Content-type': 'application/json'}
-        rsp = requests.post(url, json=datas, headers=headers)
-        token = rsp.json()['jwtoken']
-        print(rsp.json()['jwtoken'])
-        # Create Asset vis REST
-        url = "http://localhost:28080/unionvms/asset/rest/asset"
-        datas = {"grossTonnageUnit": "LONDON", "flagStateCode": "SWE", "externalMarking": "GG-10", "name": "Fartyg0001"}
-        headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
-        print(datas)
-        print(headers)
-        rsp2 = requests.post(url, json=datas, headers=headers)
-        print(rsp2)
-
-
-
-
-
-
-
     @timeout_decorator.timeout(seconds=1000)
     def test_0200a_realtime_search_for_asset_and_click_asset_on_map(self):
         # Set wait time for web driver
@@ -2244,6 +2216,53 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         # End pause
         time.sleep(1)
+
+
+
+class UnionVMSTestCaseSpecial(unittest.TestCase):
+    #
+    #   NOTE: Test cases in this suite shall be executed one by one. The suite is NOT intended to be run in full.
+    #
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_rest_api(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Realtime tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+        # Get Token
+        url = "http://localhost:28080/unionvms/usm-administration/rest/authenticate"
+        datas = {"userName": "vms_admin_se", "password": "password"}
+        headers = {'Content-type': 'application/json'}
+        rsp = requests.post(url, json=datas, headers=headers)
+        token = rsp.json()['jwtoken']
+        print(rsp.json()['jwtoken'])
+        # Create Asset vis REST
+        url = "http://localhost:28080/unionvms/asset/rest/asset"
+        datas = {"grossTonnageUnit": "LONDON", "flagStateCode": "SWE", "externalMarking": "GG-10", "name": "Fartyg0001"}
+        headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
+        print(datas)
+        print(headers)
+        rsp2 = requests.post(url, json=datas, headers=headers)
+        print(rsp2)
+
+
+
+
+
+
+
 
 
 
