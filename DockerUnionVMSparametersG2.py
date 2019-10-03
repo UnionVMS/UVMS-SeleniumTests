@@ -34,6 +34,7 @@ commentValue = "some note comment."
 flagStateIndex = ["DNK", "NOR", "SWE"]
 gearTypeIndex = ["Demersal", "Demersal and pelagic", "Pelagic", "Unknown"]
 assetFileName = 'assets.csv'
+assetFileNameListOLD = ["asset1.csv", "asset2.csv", "asset3.csv", "asset4.csv", "asset5.csv", "asset6.csv", "asset7.csv", "asset8.csv", "asset9.csv", "assetreal1.csv", "assetreal2.csv", "assetreal3.csv", "assetreal4.csv", "assetreal5.csv", "assetreal6.csv", "assetreal7.csv", "assetreal8.csv"]
 assetFileNameList = ["asset1G2.csv", "asset2G2.csv", "asset3G2.csv", "asset4G2.csv", "asset5G2.csv", "asset6G2.csv", "asset7G2.csv", "asset8G2.csv", "asset9G2.csv", "assetreal1G2.csv", "assetreal2G2.csv", "assetreal3G2.csv", "assetreal4G2.csv", "assetreal5G2.csv", "assetreal6G2.csv", "assetreal7G2.csv", "assetreal8G2.csv"]
 
 
@@ -135,6 +136,10 @@ mapSubTitle = "Map sub Title"
 mapDescription = "Map Description"
 mapPrefixFileName = "unionvms"
 mapSuffixFileName = ".pdf"
+
+# Mixed parameters
+startDateTimeDefault = "1970-01-01 00:00:00"
+stopDateTimeDefault = "2070-01-01 00:00:00"
 
 # Realtime Map Parameters
 capTracksMinValue = 20000
