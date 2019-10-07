@@ -182,6 +182,243 @@ def save_elements_to_file(fileName, dataElementToSave, dateTimeState):
     print(cwd)
 
 
+def get_asset_cfr_via_link_list(linkList, serialNumber):
+    # Returns corresponding cfr value based on selected SerialNumber and LinkList
+    for x in range(0, len(linkList)):
+        if serialNumber in linkList[x][0]:
+            return linkList[x][1]
+    return ""
+
+
+
+def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValue):
+    # Returns asset column value where cfrValue satisfies the asset cfr column list
+    for x in range(0, len(assetList)):
+        if cfrValue in assetList[x][2]:
+            return assetList[x][columnValue]
+    return ""
+
+
+def get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalList, serialNumberValue):
+    # Returns mobile terminal row where serialNumber value satisfies the mobile terminal serialNumber column list
+    for x in range(0, len(mobileTerminalList)):
+        if serialNumberValue in mobileTerminalList[x][0]:
+            return mobileTerminalList[x]
+    return []
+
+
+def get_selected_elements_in_list_from_mainList(assetAllrows, assetListIndexNumber, selectionValue):
+    # Get a new asset List based on selected selection value
+    assetList = []
+    for x in range(0, len(assetAllrows)):
+        if selectionValue in assetAllrows[x][assetListIndexNumber]:
+            assetList.append(assetAllrows[x])
+    return assetList
+
+
+def get_selected_assets_from_assetList_interval(assetAllrows, assetListIndexNumber, intervalValueLow, intervalValueHigh):
+    # Get a new asset List based on selected selection value
+    assetList = []
+    for x in range(0, len(assetAllrows)):
+        if (float(assetAllrows[x][assetListIndexNumber]) >= intervalValueLow) and (float(assetAllrows[x][assetListIndexNumber]) < intervalValueHigh) :
+                assetList.append(assetAllrows[x])
+    return assetList
+
+
+def get_remaining_elements_from_main_list(mainListAll, smallList):
+    # Get a new remaining asset List based on asset list assetListAll and assetListSmall
+    # Define compare rule
+    compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+    remainList = mainListAll.copy()
+    for y in range(0, len(smallList)):
+        for x in range(0, len(mainListAll)):
+            if not compare(mainListAll[x], smallList[y]):
+                try:
+                    remainList.remove(smallList[y])
+                except:
+                    pass
+    return remainList
+
+
+def get_elements_from_file_without_deleting_paths_and_rows(fileName):
+    # Open csv file and return all elements in list
+    ifile = open(fileName, "rt", encoding="utf8")
+    reader = csv.reader(ifile, delimiter=';')
+    allRows = ['']
+    for row in reader:
+        allRows.append(row)
+    ifile.close()
+    # Deleting empty row
+    del allRows[0]
+    # Change back the path to current dir
+    return allRows
+
+
+def get_reference_date_time_from_file(referenceDateTimeFileName):
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Save current dir (cwd)")
+    print(cwd)
+    # Change to target folder
+    targetPath = get_target_path()
+    os.chdir(targetPath)
+    print(os.path.abspath(os.path.dirname(__file__)))
+    print('Current working dir: ' + targetPath)
+    # Open saved csv file and read saved referenceDateTime elements
+    referenceDateTimeElementsFromFile = get_elements_from_file_without_deleting_paths_and_rows(referenceDateTimeFileName)
+    print(referenceDateTimeElementsFromFile)
+    # Change back the path to current dir
+    os.chdir(cwd)
+    print(cwd)
+    yearValue = int(referenceDateTimeElementsFromFile[0][0])
+    monthValue = int(referenceDateTimeElementsFromFile[0][1])
+    dayValue = int(referenceDateTimeElementsFromFile[0][2])
+    hourValue = int(referenceDateTimeElementsFromFile[0][3])
+    minuteValue = int(referenceDateTimeElementsFromFile[0][4])
+    secondValue = int(referenceDateTimeElementsFromFile[0][5])
+    print("------------------------------------------------")
+    print(yearValue)
+    print("------------------------------------------------")
+    print(monthValue)
+    print("------------------------------------------------")
+    print(dayValue)
+    print("------------------------------------------------")
+    print(hourValue)
+    print("------------------------------------------------")
+    print(minuteValue)
+    print("------------------------------------------------")
+    print(secondValue)
+    # Set referenceDateTime to value based from referenceDateTimeElementsFromFile
+    referenceDateTime = datetime.datetime(year=yearValue, month=monthValue, day=dayValue, hour=hourValue, minute=minuteValue, second=secondValue)
+    return referenceDateTime
+
+
+def adapt_asset_list_to_exported_CSV_file_standard(originAssetList):
+    # Adapt originAssetList list to the "format" as for exported CSV files
+    # The result is saved in newAssetListCSVformat
+    newAssetListCSVformat = []
+    for y in range(len(originAssetList)):
+        # Building up one row in the list
+        row = [flagStateIndex[int(originAssetList[y][17])], originAssetList[y][3], originAssetList[y][1], originAssetList[y][0], originAssetList[y][2], gearTypeIndex[int(originAssetList[y][8])], licenseTypeValue, '']
+        newAssetListCSVformat.append(row)
+    return newAssetListCSVformat
+
+
+def adapt_mobile_terminal_list_to_exported_CSV_file_standard(originMobileTerminalList, originAssetList, linkAssetMobileTerminalList):
+    # Adapt originMobileTerminalList list to the "format" as for exported CSV files
+    # The result is saved in newMobileTerminalListCSVformat
+    newMobileTerminalListCSVformat = []
+    for y in range(len(originMobileTerminalList)):
+        # Get CFR Value based on Link list between assets and mobile terminals
+        tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalList, originMobileTerminalList[y][0])
+        # Get asset name based on CFR value found in assetAllrows list
+        tempAssetName = get_selected_asset_column_value_based_on_cfr(originAssetList, tempCFRValue, 1)
+        # Get asset name based on CFR value found in assetAllrows list
+        tempMMSIValue = get_selected_asset_column_value_based_on_cfr(originAssetList, tempCFRValue, 5)
+        # Building up one row in the list
+        row = [tempAssetName, originMobileTerminalList[y][0], originMobileTerminalList[y][6], originMobileTerminalList[y][5], transponderType[1], originMobileTerminalList[y][4], tempMMSIValue, statusValue[1]]
+        newMobileTerminalListCSVformat.append(row)
+    return newMobileTerminalListCSVformat
+
+
+def check_sublist_in_other_list_if_it_exists(subAssetList, fullAssetList):
+    # Check subAssetList in fullAssetList row by row
+    # Returns a new list consists of booleans values
+    compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+    resultExists = []
+    for y in range(0, len(subAssetList)):
+        foundRow = False;
+        for x in range(0, len(fullAssetList)):
+            print("Compare list row " + str(y) + "---" + str(x))
+            print(subAssetList[y])
+            print(fullAssetList[x])
+            if compare(fullAssetList[x], subAssetList[y]):
+                print("Compared equal")
+                foundRow = True;
+        resultExists.append(foundRow)
+    return resultExists
+
+
+def checkAllTrue(booleanList):
+    # Return True if All values in list are True, else False.
+    for x in range(0, len(booleanList)):
+        if not booleanList[x]:
+            return False
+    return True
+
+
+def checkAnyTrue(booleanList):
+    # Return True if Any values in list are True, else False.
+    for x in range(0, len(booleanList)):
+        if booleanList[x]:
+            return True
+    return False
+
+
+def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList, pollValue, configValue, defaultValue):
+    # Returns the channel values from the mobile terminal list
+    channelListPart = []
+    for x in range(0, len(mobileTerminalList)):
+        # Create one channel row from the mobile terminal list
+        tempChannelPartRow = [mobileTerminalList[x][0], channelDefaultName, pollValue, configValue, defaultValue, mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
+        channelListPart.append(tempChannelPartRow)
+    return channelListPart
+
+
+def get_additional_list_result_from_from_two_channel_lists(list1, list2):
+    # Return the total sum of list1 and list2
+    channelTotalList = list1.copy()
+    for x in range(0, len(list2)):
+        channelTotalList.append(list2[x])
+    return channelTotalList
+
+
+def removeChar(stringValue, charValue):
+    # Return new string where the charValue is removed from stringValue
+    return stringValue.replace(charValue, "")
+
+
+def convertHoursValueInListToDateTimeFormat(channelList, referenceDateTimeValue):
+    # Convert the time coloumn fields with Hour values as is the base in the read CSV files.
+    newChannelList = copy.deepcopy(channelList)
+    for x in range(0, len(newChannelList)):
+        if newChannelList[x][8] == "0":
+            newChannelList[x][8] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][8]))
+            newChannelList[x][8] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+
+        if newChannelList[x][9] == "0":
+            newChannelList[x][9] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][9]))
+            newChannelList[x][9] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+
+        if newChannelList[x][11] == "0":
+            newChannelList[x][11] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][11]))
+            newChannelList[x][11] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+
+        if newChannelList[x][12] == "0":
+            newChannelList[x][12] = ""
+        else:
+            tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(newChannelList[x][12]))
+            newChannelList[x][12] = tempTimeValue.strftime("%Y-%m-%d %H:%M:%S")
+    return newChannelList
+
+
+def removeLastNumberElementsInListRow(channelList,numberValue):
+    # Delete numberValue of elements last in a list row.
+    newChannelList = copy.deepcopy(channelList)
+    for x in range(0, len(newChannelList)):
+        # Create a temp row of current newChannelList row
+        tmpRow = newChannelList[x]
+        # Remove the last element in the temp row
+        newChannelList[x] = tmpRow[:-numberValue]
+    return newChannelList
+
+
 def reload_page_and_goto_default(self):
     # Reload page and goto default page
     self.driver.get(httpUnionVMSurlString)
@@ -243,6 +480,12 @@ def get_download_path():
     else:
         return downloadPathLinux
 
+
+def convertBooleanToZeroOneString(booleanValue):
+    if booleanValue:
+        return "1"
+    else:
+        return "0"
 
 
 def create_one_new_asset_from_gui(self, vesselNumber):
@@ -322,7 +565,7 @@ def create_one_new_asset_from_gui(self, vesselNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -503,9 +746,9 @@ def check_new_asset_exists_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
     # Enter name in the name search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "name", "name checked 2")
+    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("name").send_keys(vesselName[vesselNumber])
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -1145,7 +1388,7 @@ def create_one_new_mobile_terminal_from_gui(self, mobileTerminalNumber):
     self.driver.find_element_by_id("menu-bar-save").click()
     # Leave new asset view
     wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-save checked 7")
-    time.sleep(3)
+    time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
@@ -1219,6 +1462,82 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
     time.sleep(2)
 
 
+def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on Realtime tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Enter IRCS in the ircs search field for the newly created asset
+    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for new asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on create button for new mobile terminal
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    # Select Transponder system
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--mobileTerminalType").click()
+    # Select Inmarsat-C system
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-option-text").click()
+    # Enter serial number
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--serialNo .mat-input-element").send_keys(serialNoValue[mobileTerminalNumber])
+    # Enter Transceiver type
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-input-element").send_keys(transceiverType[mobileTerminalNumber])
+    # Enter Software Version
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-input-element").send_keys(softwareVersion)
+    # Enter Antenna
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(antennaVersion)
+    # Enter Satellite Number
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(satelliteNumber[mobileTerminalNumber])
+    # Click on new channel button
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Enter DNID Number
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[mobileTerminalNumber])
+    # Enter Member Number
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
+    # Enter Installed by
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    # Expected frequency
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyHours)
+    # Grace period
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyHours)
+    # In port
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyHours)
+    # Click on save button
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+    time.sleep(defaultSleepTimeValue * 10)
+
+
+
 def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     # Set Webdriver wait
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -1269,6 +1588,164 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def compareChannelLists(notedList, fileList):
+    # Sort both lists
+    notedList.sort(key=lambda x: x[0])
+    fileList.sort(key=lambda x: x[0])
+
+    # Get all Serial number (1st column) of fileList
+    tmpColumn = getAllColumnValuesforSelectedColumn(fileList,0)
+    # Remove duplicated values in tmpColumn
+    tmpColumn = list(set(tmpColumn))
+    # Sort tmpColumn
+    tmpColumn.sort()
+    # Loop through all Serial numbers in tmpColumn
+    totalResultExists = []
+    for x in range(0, len(tmpColumn)):
+        # Loop through all rows in fileList
+        fileListWithOneSerialNumber = []
+        for y in range(0, len(fileList)):
+            # If current serial number tmpColumn satisfies serial number fileList the add current fileList row to fileListWithOneSerialNumber
+            if tmpColumn[x] == fileList[y][0]:
+                fileListWithOneSerialNumber.append(fileList[y])
+        # Loop through all rows in notedList
+        notedListWithOneSerialNumber = []
+        for y in range(0, len(notedList)):
+            # If current serial number tmpColumn satisfies serial number notedList the add current notedList row to notedListWithOneSerialNumber
+            if tmpColumn[x] == notedList[y][0]:
+                notedListWithOneSerialNumber.append(notedList[y])
+        # Compare the two list notedListWithOneSerialNumber and fileListWithOneSerialNumber. Return a result boolean list
+        resultExists = check_sublist_in_other_list_if_it_exists(notedListWithOneSerialNumber, fileListWithOneSerialNumber)
+        # Add boolean result to totalResultExists.
+        totalResultExists.append(checkAllTrue(resultExists))
+    print("compareChannelLists totalResultExists")
+    print(totalResultExists)
+    return checkAllTrue(totalResultExists)
+
+
+def getAllColumnValuesforSelectedColumn(stringList, columnValue):
+    tmpColumn = []
+    for x in range(0, len(stringList)):
+        tmpColumn.append(stringList[x][columnValue])
+    return tmpColumn
+
+
+def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
+    # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
+    #
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+    channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultValue[0], pollConfigDefaultValue[1], pollConfigDefaultValue[2])
+    channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+    # Sort the allrows list (1st Column)
+    channelTotalList.sort(key=lambda x: x[0])
+
+    # Click on Mobile Terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+    time.sleep(1)
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    # Sort on linked asset column
+    wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+    time.sleep(3)
+    self.driver.find_element_by_id("mt-sort-serialNumber").click()
+
+    # Read all Mobile Terminal data presented on Mobile Terminal List Tab.
+    notedMobileTerminalList = []
+    notedChannelsList = []
+    for x in range(0, len(mobileTerminalAllrows)):
+        # Search for mobile terminal via serial number
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[x][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form 5")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        # Add elements values to notedMobileTerminal list row
+        wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber 6")
+        time.sleep(3)
+        notedMobileTerminal = []
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-softwareVersion").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-antenna").get_attribute("value"))
+        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-satelliteNumber").get_attribute("value"))
+
+        # Add append notedMobileTerminal row to notedMobileTerminalList
+        notedMobileTerminalList.append(notedMobileTerminal)
+
+        # Read all channels for current Mobile Terminal
+        currentChannel = 0
+        elementIsMissing = False
+        while True:
+            notedChannelRow = []
+            # Test if current channel row exist
+            try:
+                testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
+            except NoSuchElementException:
+                elementIsMissing = True
+            # Channel row exist then add channel row to notedChannelRow
+            if elementIsMissing:
+                break
+            else:
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+
+                # Get checkbox-polling Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+
+                # Get checkbox-config Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+
+                # Get checkbox-default Value and convert boolean value to zero or one in String type
+                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
+
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
+                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
+
+            currentChannel = currentChannel + 1
+            notedChannelsList.append(notedChannelRow)
+        # Click on cancel button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel 7")
+        time.sleep(2)
+        self.driver.find_element_by_id("menu-bar-cancel").click()
+        time.sleep(2)
+
+    # Sort the notedMobileTerminalList list (1st Column)
+    notedMobileTerminalList.sort(key=lambda x: x[0])
+    mobileTerminalAllrows.sort(key=lambda x: x[0])
+    notedChannelsList.sort(key=lambda x: x[0])
+
+    print("notedChannelsList")
+    print(notedChannelsList)
+
+    # Convert hour value in channelTotalList to correct Datetime format and save it in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+    channelTotalListDateTimeFormat = convertHoursValueInListToDateTimeFormat(channelTotalList, referenceDateTime)
+    # Remove Mobile Terminal and Channel position data in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+    channelTotalListDateTimeFormatToCompare = removeLastNumberElementsInListRow(channelTotalListDateTimeFormat, 2)
+
+    print("channelTotalListDateTimeFormatToCompare")
+    print(channelTotalListDateTimeFormatToCompare)
+
+    # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file and return result.
+    resultExists = compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
+    return resultExists
 
 
 def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTerminalNumber):
@@ -1381,6 +1858,50 @@ def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
+
+def read_all_channels_for_selected_Mobile_Terminal(self):
+
+    # Read all channels for selected Mobile Terminal
+    notedChannelsList = []
+    currentChannel = 0
+    elementIsMissing = False
+    while True:
+        notedChannelRow = []
+        # Test if current channel row exist
+        try:
+            testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
+        except NoSuchElementException:
+            elementIsMissing = True
+        # Channel row exist then add channel row to notedChannelRow
+        if elementIsMissing:
+            break
+        else:
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+
+            # Get checkbox-polling Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+
+            # Get checkbox-config Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+
+            # Get checkbox-default Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
+
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
+            notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
+        currentChannel = currentChannel + 1
+        notedChannelsList.append(notedChannelRow)
+    return notedChannelsList
 
 
 def generate_NAF_and_verify_position(self,speedValue,courseValue):
@@ -1708,6 +2229,24 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
 
 
+def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobileTerminalFileName, linkFileName):
+    # Create Mobile Terminal based on linkFile, assetFile and mobileTerminalFile (assetFileName, mobileTerminalFileName)
+
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+
+    # Open saved csv file and read all mobile terminal elements
+    mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
+
+    # Open saved csv file and read all linked elements between assets and mobile terminals
+    linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+
+    # create_one new mobile terminal for mentioned asset
+    for x in range(0, len(linkAssetMobileTerminalAllrows)):
+        assetVesselName = get_selected_asset_column_value_based_on_cfr(assetAllrows, linkAssetMobileTerminalAllrows[x][1], 1)
+        mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetVesselName, mobileTerminalRowValue)
+
 
 def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     # Set wait time for web driver
@@ -1922,8 +2461,6 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     time.sleep(2)
 
 
-
-
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -1993,6 +2530,116 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDateTimeValue):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on mobile terminal tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+    time.sleep(5)
+    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+    # Search for mobile terminal via serial number
+    wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
+    time.sleep(5)
+    self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+    self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
+    wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
+    time.sleep(1)
+    self.driver.find_element_by_id("mt-btn-advanced-search").click()
+    # Click on detail button
+    wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
+    time.sleep(3)
+    self.driver.find_element_by_id("mt-toggle-form").click()
+    # Click on link "Add new channel"
+    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-addChannel", "mt-x-addChannel checked 5")
+    time.sleep(3)
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
+    # Enter channel name
+    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel", "mt-x-addChannel-y-communicationChannel checked 6")
+    time.sleep(2)
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").send_keys(channelRow[1])
+    # Activate Poll if value is "true"
+    if channelRow[2] == "1":
+        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-polling").click()
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[2]/label").click()
+    # Activate Config if value is "true"
+    if channelRow[3] == "1":
+        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-config").click()
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[3]/label").click()
+    # Activate Default if value is "true"
+    if channelRow[4] == "1":
+        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-default").click()
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[4]/label").click()
+    # Enter DNID value
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").send_keys(channelRow[5])
+    # Enter Member Number
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").send_keys(channelRow[6])
+    # Enter Land station
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").send_keys(channelRow[7])
+    # Enter Start Date/Time based on deltaHourValue from file
+    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Enter Stop Date/Time based on deltaHourValue from file
+    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Enter Installer from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").send_keys(channelRow[10])
+    # Enter Installed Date/Time based on deltaHourValue from file
+    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Enter Uninstalled Date/Time based on deltaHourValue from file
+    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Enter Exp. frequency from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").send_keys(channelRow[13])
+    # Enter Grace period from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").send_keys(channelRow[14])
+    # Enter In port from file
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").clear()
+    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").send_keys(channelRow[15])
+
+    # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
+    time.sleep(1)
+    self.driver.find_element_by_id("menu-bar-update").click()
+    # Enter Comment in comment field
+    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 8")
+    time.sleep(2)
+    self.driver.find_element_by_name("comment").clear()
+    self.driver.find_element_by_name("comment").send_keys(commentValue)
+    # Click on Update button
+    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 9")
+    time.sleep(1)
+    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+    # Click on Cancel
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
+    time.sleep(3)
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(2)
+
+
+
+def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, referenceDateTime):
+    # Create addtional channels for Mobile Terminals from file based on channelFile
+
+    # Open saved csv file and read all asset elements
+    channelAllrows = get_elements_from_file(channelFileName)
+
+    # create_one new channel for mentioned mobile terminal
+    for x in range(0, len(channelAllrows)):
+        create_one_new_channel_for_one_mobile_terminal(self, channelAllrows[x], referenceDateTime)
 
 
 def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName):
@@ -2307,25 +2954,25 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0002_create_one_new_asset(self):
+    def test_0002_create_one_new_asset_g2(self):
         # Create new asset (first in the list)
-        create_one_new_asset_from_gui(self, 0)
+        create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0003_check_new_asset_exists(self):
+    def test_0003_check_new_asset_exist_g2(self):
         # Check new asset (first in the list)
-        check_new_asset_exists(self, 0)
+        check_new_asset_exists_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0004_create_one_new_mobile_terminal(self):
+    def test_0004_create_one_new_mobile_terminal_via_asset_g2(self):
         # Create new Mobile Terminal (first in the list)
-        create_one_new_mobile_terminal_from_gui(self, 0)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 0, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0005_check_new_mobile_terminal_exists(self):
+    def test_0005_check_new_mobile_terminal_exists_via_asset_g2(self):
         # Check new Mobile Terminal (first in the list)
         check_new_mobile_terminal_exists(self, 0)
 
@@ -4197,6 +4844,73 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    def test_0101_create_assets_real_trip_1(self):
+        # Create assets, Mobile for RealTrip 1
+        create_asset_from_file(self, assetFileNameListOLD[9])
+        create_mobileterminal_from_file(self, assetFileNameListOLD[9], mobileTerminalFileNameList[9])
+        # Create assets, Mobile for RealTrip 2
+        create_asset_from_file(self, assetFileNameListOLD[10])
+        create_mobileterminal_from_file(self, assetFileNameListOLD[10], mobileTerminalFileNameList[10])
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=256)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 1
+        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[9], tripFileNameList[9])
+        deltaTimeValue = datetime.timedelta(hours=254, minutes=16)
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+        # Create RealTrip 2
+        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[10], tripFileNameList[10])
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0101b_create_report_and_check_position_reports(self):
+        # Create report and check the 1st five position reports in table list
+        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[9], tripFileNameList[9])
+        reload_page_and_goto_default(self)
+        time.sleep(1)
+        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[10], tripFileNameList[10])
+        time.sleep(1)
+
+
+
+class UnionVMSTestCaseExtraG2(unittest.TestCase):
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0052_create_assets_trip_1_2_3_part1(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_part1(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0052_create_assets_trip_1_2_3_part2(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_part2(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0052b_create_report_and_check_asset_in_reporting_view(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0052b_create_report_and_check_asset_in_reporting_view(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
     def test_0055_create_assets_trip_4_part1(self):
         # Create assets, Mobile for Trip 4
         create_asset_from_file(self, assetFileNameListOLD[3])
@@ -4290,73 +5004,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 9
         create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[8], tripFileNameList[8])
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0101_create_assets_real_trip_1(self):
-        # Create assets, Mobile for RealTrip 1
-        create_asset_from_file(self, assetFileNameListOLD[9])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[9], mobileTerminalFileNameList[9])
-        # Create assets, Mobile for RealTrip 2
-        create_asset_from_file(self, assetFileNameListOLD[10])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[10], mobileTerminalFileNameList[10])
-        # Set Current Date and time in UTC x hours back
-        deltaTimeValue = datetime.timedelta(hours=256)
-        currentUTCValue = datetime.datetime.utcnow()
-        currentPositionTimeValue = currentUTCValue - deltaTimeValue
-        # Create RealTrip 1
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[9], tripFileNameList[9])
-        deltaTimeValue = datetime.timedelta(hours=254, minutes=16)
-        currentPositionTimeValue = currentUTCValue - deltaTimeValue
-        # Create RealTrip 2
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[10], tripFileNameList[10])
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0101b_create_report_and_check_position_reports(self):
-        # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[9], tripFileNameList[9])
-        reload_page_and_goto_default(self)
-        time.sleep(1)
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[10], tripFileNameList[10])
-        time.sleep(1)
-
-
-
-class UnionVMSTestCaseExtraG2(unittest.TestCase):
-
-    def setUp(self):
-        # Startup browser and login
-        startup_browser_and_login_to_unionVMS(self)
-        time.sleep(5)
-
-
-    def tearDown(self):
-        shutdown_browser(self)
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0001b_change_default_configuration_parameters(self):
-        # Startup browser and login
-        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3_part1(self):
-        # Startup browser and login
-        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_part1(self)
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3_part2(self):
-        # Startup browser and login
-        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_part2(self)
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0052b_create_report_and_check_asset_in_reporting_view(self):
-        # Startup browser and login
-        UnionVMSTestCaseG2.test_0052b_create_report_and_check_asset_in_reporting_view(self)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -4457,6 +5104,2671 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 9
         create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[16], tripFileNameList[16])
+
+
+
+class UnionVMSTestCaseRulesG2(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001d_create_two_new_assets_and_mobile_terminals_37_38(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 37)
+        create_one_new_mobile_terminal_via_asset_tab(self, 37, 37)
+        create_one_new_asset_from_gui(self, 38)
+        create_one_new_mobile_terminal_via_asset_tab(self, 38, 38)
+
+
+    def test_0034_create_speed_rule_one(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0034_create_speed_rule_one(self)
+
+
+    def test_0035_modify_speed_rule_one_and_add_cfr_condition(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Select Alerts tab (Rules)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        # Click on edit rule icon
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        # Change Rule name
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 4")
+        time.sleep(2)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " CFR")
+        # Change Description
+        wait_for_element_by_name_to_exist(wait, "description", "Name checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " CFR")
+        # Click on composite and select AND statement
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[8]", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        wait_for_element_by_link_text_to_exist(wait, "AND", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("AND").click()
+        # Click on add a new row and enter a second Asset-->CFR statement
+        wait_for_element_by_css_selector_to_exist(wait, "fieldset > div.row > div.col-md-12 > div.addMoreLink", "CSS Selector checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("fieldset > div.row > div.col-md-12 > div.addMoreLink").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[9]", "XPATH checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[9]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'(')])[13]", "XPATH checked 10")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),'(')])[13]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[10]", "XPATH checked 11")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[4]", "XPATH checked 12")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[4]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[11]", "XPATH checked 13")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
+        wait_for_element_by_link_text_to_exist(wait, "CFR", "Link text checked 14")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("CFR").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[12]", "XPATH checked 15")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[12]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'equal to')])[3]", "XPATH checked 16")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),'equal to')])[3]").click()
+        wait_for_element_by_css_selector_to_exist(wait, "div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]", "CSS Selector checked 17")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[37])
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[13]", "XPATH checked 18")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[13]").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),')')])[13]", "XPATH checked 19")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//a[contains(text(),')')])[13]").click()
+        wait_for_element_by_css_selector_to_exist(wait, "span.link", "CSS Selector checked 20")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("span.link").click()
+        # Click on Update rule button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[4]", "XPATH checked 21")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        # Click on Yes button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 22")
+        time.sleep(2)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0036_generate_NAF_position_that_not_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that satisfies the speed part but not the CFR part of the modified rule
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[7][0][0]
+        longStrValue = lolaPositionValues[7][0][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0036b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0037_generate_NAF_position_that_not_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that not satisfies the speed part but the CFR part of the modified rule
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0037b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0038_generate_NAF_position_that_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that triggs the modified rule
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(3)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " CFR" + "\"]").text)
+        # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(3)
+        self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[6][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[6][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0039_modify_speed_rule_one_and_change_cfr_condition(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Select Alerts tab (Rules)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        # Click on edit rule icon
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        # Change Rule name
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 4")
+        time.sleep(2)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR")
+        # Change Description
+        wait_for_element_by_name_to_exist(wait, "description", "Name checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR")
+        # Change the CFR value
+        wait_for_element_by_css_selector_to_exist(wait, "div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]", "CSS Selector checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").clear()
+        self.driver.find_element_by_css_selector("div.autoSuggestionWrapper.fullWidthDropdown > input[name=\"value\"]").send_keys(cfrValue[38])
+        # Click on Update rule button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[4]", "XPATH checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        # Click on Yes button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 8")
+        time.sleep(2)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0040_generate_NAF_position_that_not_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that not satisfies the CFR part of the modified rule
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW CFR" + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0041_modify_speed_rule_one_and_change_condition_from_AND_to_OR(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Select Alerts tab (Rules)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        # Click on edit rule icon
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[6]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[6]").click()
+        # Change Rule name
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 4")
+        time.sleep(2)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
+        # Change Description
+        wait_for_element_by_name_to_exist(wait, "description", "Name checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR")
+        # Change condition state from AND to OR
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[8]", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        wait_for_element_by_link_text_to_exist(wait, "OR", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("OR").click()
+        # Click on Update rule button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[4]", "XPATH checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[4]").click()
+        # Click on Yes button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 9")
+        time.sleep(2)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0042_generate_NAF_position_that_triggs_rule_on_cfr_part(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that triggs the CFR part of modified rule. That should now trigg the rule
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[7][0][0]
+        longStrValue = lolaPositionValues[7][0][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[38], ircsValue[38], cfrValue[38], externalMarkingValue[38], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[38])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(3)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
+        # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(2)
+        self.assertEqual(countryValue[38], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[38], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[38], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[7][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[7][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedValue) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0042b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0043_generate_NAF_position_that_triggs_rule_on_speed_part(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that triggs the speed part of modified rule. That should now trigg the rule
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[6][0][0]
+        longStrValue = lolaPositionValues[6][0][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
+        time.sleep(3)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
+        self.assertEqual("Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR", self.driver.find_element_by_css_selector("td[title=\"Speed > " + str(reportedSpeedDefault[0]) + " NEW2 CFR" + "\"]").text)
+        # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(2)
+        self.assertEqual(countryValue[37], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[37], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[37], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(lolaPositionValues[6][0][0], self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(lolaPositionValues[6][0][1], self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0044_remove_speed_rule_one(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0041_remove_speed_rule_one(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0050_create_user_area(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Startup browser and login
+        # Click on Area Management tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-areas", "uvms-header-menu-item-areas checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-areas").click()
+        # Click on New are button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[5]", "XPATH checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[5]").click()
+        # Click on Coordinates button
+        wait_for_element_by_css_selector_to_exist(wait, "div.editingTools.text-center > div.btn-group > button.btn.btn-default", "CSS Selector checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.editingTools.text-center > div.btn-group > button.btn.btn-default").click()
+        # Click and select WGS84 projection
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/div/span", "XPATH checked 4")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/div/span").click()
+        wait_for_element_by_link_text_to_exist(wait, "WGS 84", "Link text checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("WGS 84").click()
+        # Open saved csv file and read all area elements
+        userAreaAllrows = get_elements_from_file(userAreaFileName)
+        print(userAreaAllrows)
+        # create_one_new_asset
+        for x in range(0, len(userAreaAllrows)):
+            # Click on "plus" button
+            wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/button", "XPATH checked 5")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/button").click()
+            # Enter Long Lat position
+            wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[" + str(6 + x*2) + "]", "XPATH checked 6")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(6 + x*2) + "]").clear()
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(6 + x*2) + "]").send_keys(userAreaAllrows[x][0])
+            wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[" + str(7 + x*2) + "]", "XPATH checked 7")
+            time.sleep(1)
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(7 + x*2) + "]").clear()
+            self.driver.find_element_by_xpath("(//input[@type='text'])[" + str(7 + x*2) + "]").send_keys(userAreaAllrows[x][1])
+        # Click on Apply button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/div/button[2]", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[2]/div[2]/div[2]/div/button[2]").click()
+        # Enter User Area Name
+        wait_for_element_by_name_to_exist(wait, "userAreaName", "Name checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_name("userAreaName").clear()
+        self.driver.find_element_by_name("userAreaName").send_keys(userAreaName)
+        # Enter User Area Type Name
+        wait_for_element_by_name_to_exist(wait, "comboEditableInput", "Name checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_name("comboEditableInput").clear()
+        self.driver.find_element_by_name("comboEditableInput").send_keys(userAreaTypeName)
+        # Click on Save button to save the new User Area.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[3]/div/button", "XPATH checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='area-management-side-panel']/div/div[3]/div/div[2]/div[3]/div/button").click()
+        time.sleep(2)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0051_create_user_area_rule_one(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Alerts tab (Holding Table)
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Select Alerts tab (Rules)
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a", "XPATH checked 2")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[1]/div/div/ul/li[3]/a").click()
+        # Click on create button
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        # Enter Rule name
+        wait_for_element_by_name_to_exist(wait, "name", "Element name checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(userAreaRuleNamne)
+        # Enter Description
+        self.driver.find_element_by_name("description").clear()
+        self.driver.find_element_by_name("description").send_keys(userAreaRuleNamne)
+        # Enter 1st part of the rule
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[3]", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[3]").click()
+        wait_for_element_by_link_text_to_exist(wait, "(", "Link text checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("(").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[4]", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[4]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Area", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Area").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[5]", "XPATH checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[5]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Type", "Link text checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Type").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[7]", "XPATH checked 10")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[7]").click()
+        wait_for_element_by_link_text_to_exist(wait, "USERAREA", "Link text checked 11")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("USERAREA").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[8]", "XPATH checked 12")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[8]").click()
+        wait_for_element_by_link_text_to_exist(wait, ")", "Link text checked 13")
+        time.sleep(1)
+        self.driver.find_element_by_link_text(")").click()
+        # Select "AND" statement
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[9]", "XPATH checked 14")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@id=''])[9]").click()
+        wait_for_element_by_link_text_to_exist(wait, "AND", "Link text checked 15")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("AND").click()
+        # Click on add a new row and enter a second part of the rule statement
+        wait_for_element_by_css_selector_to_exist(wait, "fieldset > div.row > div.col-md-12 > div.addMoreLink", "CSS Selector checked 16")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("fieldset > div.row > div.col-md-12 > div.addMoreLink").click()
+        # Enter 2nd part of the rule
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[10]", "XPATH checked 17")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
+        wait_for_element_by_link_text_to_exist(wait, "(", "Link text checked 18")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("(").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[11]", "XPATH checked 19")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Area", "Link text checked 20")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Area").click()
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div/div/form/fieldset[1]/div[2]/div[3]/table/tbody/tr[2]/td[5]/div/div/input", "XPATH checked 21")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div/div/form/fieldset[1]/div[2]/div[3]/table/tbody/tr[2]/td[5]/div/div/input").send_keys(userAreaName)
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[14]", "XPATH checked 22")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[14]").click()
+        wait_for_element_by_link_text_to_exist(wait, ")", "Link text checked 23")
+        time.sleep(1)
+        self.driver.find_element_by_link_text(")").click()
+        # Click on "Test rule definition"
+        wait_for_element_by_css_selector_to_exist(wait, "span.link", "CSS Selector checked 24")
+        time.sleep(2)
+        self.driver.find_element_by_css_selector("span.link").click()
+        # Check validation of Rule
+        wait_for_element_by_css_selector_to_exist(wait, "span.success", "CSS Selector checked 25")
+        time.sleep(1)
+        self.assertEqual("Rule definition is valid.", self.driver.find_element_by_css_selector("span.success").text)
+        # Submit the new Rule
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[3]", "XPATH checked 26")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 27")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        # Change "Notify by email" to Yes
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[2]", "XPATH checked 28")
+        time.sleep(3)
+        self.driver.find_element_by_xpath("(//button[@id=''])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Yes", "Link text checked 29")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Yes").click()
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
+        # Create new asset (7th in the list)
+        create_one_new_asset_from_gui(self, 34)
+        create_one_new_mobile_terminal_via_asset_tab(self, 34, 34)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0053_generate_NAF_position_that_not_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that is outside defined user area.  The rule should NOT be triggered.
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionAreaValues[2][0]
+        longStrValue = lolaPositionAreaValues[2][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[34], ircsValue[34], cfrValue[34], externalMarkingValue[34], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[34])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        time.sleep(5)
+        # Try to find speed rule name in the Notification list (Should not exist)
+        try:
+            self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + userAreaRuleNamne + "\"]").text)
+        except NoSuchElementException:
+            pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0053b_delay_one_minute(self):
+        # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
+        time.sleep(60)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0054_generate_NAF_position_that_triggs_rule(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Generate NAF position report that is inside defined user area. The rule should be triggered.
+        # Set Current Date and time in UTC 1 hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+        # Set Long/Lat
+        latStrValue = lolaPositionAreaValues[4][0]
+        longStrValue = lolaPositionAreaValues[4][1]
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[34], ircsValue[34], cfrValue[34], externalMarkingValue[34], latStrValue, longStrValue, reportedSpeedDefault[1], reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[34])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        # Click on Alert tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-holding-table").click()
+        # Click on Notifications tab
+        wait_for_element_by_link_text_to_exist(wait, "NOTIFICATIONS", "Link text checked 2")
+        time.sleep(2)
+        self.driver.find_element_by_link_text("NOTIFICATIONS").click()
+        # Check Asset and Rule names
+        wait_for_element_by_link_text_to_exist(wait, vesselName[34], "Link text checked 3")
+        time.sleep(3)
+        self.assertEqual(vesselName[34], self.driver.find_element_by_link_text(vesselName[34]).text)
+        self.assertEqual(userAreaRuleNamne, self.driver.find_element_by_css_selector("td[title=\"" + userAreaRuleNamne + "\"]").text)
+        # Click on details button
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[2]/div/div[3]/div/div/div/div/span/table/tbody/tr/td[8]/button").click()
+        # Check Position parameters
+        wait_for_element_by_css_selector_to_exist(wait, "div.value", "CSS Selector checked 5")
+        time.sleep(2)
+        self.assertEqual(countryValue[34], self.driver.find_element_by_css_selector("div.value").text)
+        self.assertEqual(ircsValue[34], self.driver.find_element_by_xpath("//div[2]/div[2]/div[2]/div").text)
+        self.assertEqual(cfrValue[34], self.driver.find_element_by_xpath("//div[2]/div[2]/div[3]/div").text)
+        self.assertEqual(externalMarkingValue[34], self.driver.find_element_by_xpath("//div[2]/div[2]/div[4]/div").text)
+        self.assertEqual(vesselName[34], self.driver.find_element_by_xpath("//div[2]/div[5]/div").text)
+        self.assertEqual(earlierPositionDateTimeValueString, self.driver.find_element_by_css_selector("div.col-md-9 > div.value").text)
+        self.assertEqual(latStrValue, self.driver.find_element_by_xpath("//div[5]/div[3]/div").text)
+        self.assertEqual(longStrValue, self.driver.find_element_by_xpath("//div[5]/div[4]/div").text)
+        self.assertEqual(str(reportedSpeedDefault[1]) + " kts", self.driver.find_element_by_xpath("//div[5]/div[5]/div").text)
+        self.assertEqual(str(reportedCourseValue) + "°", self.driver.find_element_by_xpath("//div[6]/div").text)
+        # Close position window
+        wait_for_element_by_xpath_to_exist(wait, "//div[7]/div/div/div/div/i", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
+        time.sleep(2)
+
+
+
+
+class UnionVMSTestCaseFiltering(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=500)
+    def test_0201_create_several_assets_for_filtering(self):
+        # Create assets from file with several different values for filtering
+        create_asset_from_file(self, 'assets2xxxx.csv')
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0202_advanced_search_of_assets_fs_geartypes(self):
+        # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on advanced search
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        # Search for all assets with Flag State (F.S.) called "NOR"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates", "asset-dropdown-search-flagstates checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates-item-1", "asset-dropdown-search-flagstates-item-1 checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates-item-1").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-flagstates", "asset-dropdown-search-flagstates checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-flagstates").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
+        filteredAssetList = get_selected_elements_in_list_from_mainList(assetAllrows, 17, str(1))
+        # Get the remaining assets in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetList)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetList[0][17])] + "\"]", "CSS Selector checked 9")
+        time.sleep(5)
+        for x in range(0, len(filteredAssetList)):
+            self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
+            # self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+
+        # Search for all assets with Flag State (F.S.) called "NOR" and gear type called "Pelagic"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-gearType", "asset-dropdown-search-gearType checked 10")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-gearType").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-gearType-item-2", "asset-dropdown-search-gearType-item-2 checked 11")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-gearType-item-2").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 12")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+
+        # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 13")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 14")
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(groupName[3])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 15")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+
+        # Get all assets with geartype Pelagic(2) in the filteredAssetList.
+        filteredAssetListSelected = get_selected_elements_in_list_from_mainList(filteredAssetList, 8, str(2))
+        # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 9")
+        time.sleep(1)
+        for x in range(0, len(filteredAssetListSelected)):
+            self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+        time.sleep(2)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0202b_check_group_exported_to_file(self):
+        # Test case checks that group from test_0202 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Get all assets with Flag State (F.S.) called "NOR" in the asset list.
+        filteredAssetList = get_selected_elements_in_list_from_mainList(assetAllrows, 17, str(1))
+        # Get all assets with geartype Pelagic(2) in the filteredAssetList.
+        filteredAssetListSelected = get_selected_elements_in_list_from_mainList(filteredAssetList, 8, str(2))
+        # Get the remaining assets with geartype that is NOT Pelagic(2) in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
+        # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        # Select Group 4 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-0", "asset-dropdown-saved-search-item-0 checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search-item-0").click()
+        # Select all assets in the list
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-select-all", "asset-checkbox-select-all checked 5")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-checkbox-select-all").click()
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(assetFileName):
+            os.remove(assetFileName)
+        # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
+        time.sleep(2)
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(assetFileName)
+        # Deleting header row
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+        # Sort the allrows list (3rd Column)
+        allrows.sort(key=lambda x: x[3])
+        # Check that the elements in csv file is correct
+        # Adapt filteredAssetListSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredAssetListSelectedCSVformat
+        filteredAssetListSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListSelected)
+        # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
+        filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
+        # Check filteredAssetListSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
+        # Check if resultExists list includes just True states
+        print(resultExists)
+        # The test case shall pass if ALL boolean values in resultExists list are True
+        self.assertTrue(checkAllTrue(resultExists))
+        # Adapt filteredAssetListNonSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredAssetListNonSelectedCSVformat
+        filteredAssetListNonSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListNonSelected)
+        # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
+        filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
+        # Check filteredAssetListNonSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
+        print(resultExists)
+        # The test case shall pass if ALL of the boolean values in resultExists list are False
+        self.assertFalse(checkAnyTrue(resultExists))
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0202c_delay_one_minute(self):
+        # Delay test case to secure change in advance asset list headers.
+        time.sleep(60)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0203_advanced_search_of_assets_length_power(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(10)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on advanced search
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+
+        # Search for all assets with Length inteval (12-14,99) and Power interval "0-99"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-lengthValue", "asset-dropdown-search-lengthValue checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-lengthValue").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-lengthValue-item-1", "asset-dropdown-search-lengthValue-item-1 checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-lengthValue-item-1").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-power", "asset-dropdown-search-power checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-power").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-search-power-item-0", "asset-dropdown-search-power-item-0 checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-search-power-item-0").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+
+        # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 10")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 11")
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(groupName[4])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 12")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(3)
+
+        # Get all assets with Length interval 12-14.99 in the assetAllrows.
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
+        # Get all assets with Power interval 0-99 in the filteredAssetListSelected.
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 11, 0, 100)
+        # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
+
+        # Reload page
+        self.driver.refresh()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 13")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search 14")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-1", "asset-dropdown-saved-search-item-1 15")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search-item-1").click()
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 16")
+        time.sleep(3)
+        for x in range(0, len(filteredAssetListSelected)):
+            self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0203b_check_group_exported_to_file(self):
+        # Test case checks that group from test_0203 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Get all assets with Length interval 12-14.99 in the assetAllrows.
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(assetAllrows, 9, 12, 15)
+        # Get all assets with Power interval 0-99 in the filteredAssetListSelected.
+        filteredAssetListSelected = get_selected_assets_from_assetList_interval(filteredAssetListSelected, 11, 0, 100)
+        # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
+        # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(10)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-1", "asset-dropdown-saved-search-item-1 checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search-item-1").click()
+        # Select all assets in the list
+        wait_for_element_by_id_to_exist(wait, "asset-checkbox-select-all", "asset-checkbox-select-all checked 5")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-checkbox-select-all").click()
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(assetFileName):
+            os.remove(assetFileName)
+        # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-actions", "asset-dropdown-actions checked 6")
+        time.sleep(2)
+        self.driver.find_element_by_id("asset-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        time.sleep(3)
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(assetFileName)
+        # Deleting header row
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+        # Sort the allrows list (3rd Column)
+        allrows.sort(key=lambda x: x[3])
+        # Check that the elements in csv file is correct
+        # Adapt filteredAssetListSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredAssetListSelectedCSVformat
+        filteredAssetListSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListSelected)
+        # Sort the filteredAssetListSelectedCSVformat list (3rd Column)
+        filteredAssetListSelectedCSVformat.sort(key=lambda x: x[3])
+        # Check filteredAssetListSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListSelectedCSVformat, allrows)
+        # Check if resultExists list includes just True states
+        print(resultExists)
+        # The test case shall pass if ALL boolean values in resultExists list are True
+        self.assertTrue(checkAllTrue(resultExists))
+        # Adapt filteredAssetListNonSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredAssetListNonSelectedCSVformat
+        filteredAssetListNonSelectedCSVformat = adapt_asset_list_to_exported_CSV_file_standard(filteredAssetListNonSelected)
+        # Sort the filteredAssetListNonSelectedCSVformat list (3rd Column)
+        filteredAssetListNonSelectedCSVformat.sort(key=lambda x: x[3])
+        # Check filteredAssetListNonSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredAssetListNonSelectedCSVformat, allrows)
+        print(resultExists)
+        # The test case shall pass if ALL of the boolean values in resultExists list are False
+        self.assertFalse(checkAnyTrue(resultExists))
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0204_advanced_search_of_assets_extmark_port(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Click on asset tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
+        time.sleep(10)
+        self.driver.find_element_by_id("uvms-header-menu-item-assets").click()
+        # Click on advanced search
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-toggle-search-view > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#asset-toggle-search-view > span").click()
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 4")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+
+        # Search for all assets with Ext Mark value
+        wait_for_element_by_id_to_exist(wait, "asset-input-search-externalMarking", "asset-input-search-externalMarking checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-input-search-externalMarking").clear()
+        self.driver.find_element_by_id("asset-input-search-externalMarking").send_keys(externalMarkingSearchValue[0])
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+
+        # Get all assets with the marked value in the External Marking field in the asset list.
+        filteredAssetList = get_selected_elements_in_list_from_mainList(assetAllrows, 3, externalMarkingSearchValue[0])
+        # Sort the asset list
+        filteredAssetList.sort(key=lambda x: x[3])
+
+        # Get the remaining assets in the filteredAssetList
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetList)
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + filteredAssetList[0][3] + "\"]", "CSS Selector checked 7")
+        time.sleep(3)
+        for x in range(0, len(filteredAssetList)):
+            self.assertEqual(flagStateIndex[int(filteredAssetList[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetList[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetList[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetList[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetList[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetList[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+
+        # Search for all assets with Ext Mark value and Home port value
+        wait_for_element_by_id_to_exist(wait, "asset-input-search-homeport", "asset-input-search-homeport checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-input-search-homeport").clear()
+        self.driver.find_element_by_id("asset-input-search-homeport").send_keys(homeportSearchValue[0])
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "asset-btn-advanced-search", "asset-btn-advanced-search checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-btn-advanced-search").click()
+
+        # Save current advanced filter to group
+        wait_for_element_by_css_selector_to_exist(wait, "#asset-btn-save-search > span", "CSS Selector checked 10")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#asset-btn-save-search > span").click()
+        wait_for_element_by_name_to_exist(wait, "name", "Name checked 11")
+        time.sleep(1)
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(groupName[5])
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > button.btn.btn-primary", "CSS Selector checked 12")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
+        time.sleep(3)
+
+        # Get all assets with the marked value in the External Marking field in the asset list.
+        filteredAssetListSelected = get_selected_elements_in_list_from_mainList(filteredAssetList, 7, homeportSearchValue[0])
+        # Get remaining assets that is found in assetAllrows but not in filteredAssetListSelected
+        filteredAssetListNonSelected = get_remaining_elements_from_main_list(assetAllrows, filteredAssetListSelected)
+
+        # Reload page
+        self.driver.refresh()
+        # Click on sort IRCS
+        wait_for_element_by_id_to_exist(wait, "asset-sort-ircs", "asset-sort-ircs checked 13")
+        time.sleep(3)
+        self.driver.find_element_by_id("asset-sort-ircs").click()
+        # Select Group 5 filter search
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search", "asset-dropdown-saved-search checked 14")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search").click()
+        wait_for_element_by_id_to_exist(wait, "asset-dropdown-saved-search-item-2", "asset-dropdown-saved-search-item-2 checked 15")
+        time.sleep(1)
+        self.driver.find_element_by_id("asset-dropdown-saved-search-item-2").click()
+
+        # Check that assets in filteredAssetListSelected is presented in the Asset List view
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + flagStateIndex[int(filteredAssetListSelected[0][17])] + "\"]", "CSS Selector checked 16")
+        time.sleep(3)
+        for x in range(0, len(filteredAssetListSelected)):
+            self.assertEqual(flagStateIndex[int(filteredAssetListSelected[x][17])], self.driver.find_element_by_css_selector("td[title=\"" + flagStateIndex[int(filteredAssetListSelected[x][17])] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][3], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][3] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][1], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][1] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][0], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][0] + "\"]").text)
+            self.assertEqual(filteredAssetListSelected[x][2], self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListSelected[x][2] + "\"]").text)
+            self.assertEqual(gearTypeIndex[int(filteredAssetListSelected[x][8])], self.driver.find_element_by_css_selector("td[title=\"" + gearTypeIndex[int(filteredAssetListSelected[x][8])] + "\"]").text)
+            self.assertEqual(licenseTypeValue, self.driver.find_element_by_css_selector("td[title=\"" + licenseTypeValue + "\"]").text)
+
+        # Check that Asset from non-selected asset list (filteredAssetListNonSelected) does not exist in the visual asset list view.
+        for x in range(0, len(filteredAssetListNonSelected)):
+            try:
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][1] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][0] + "\"]").text)
+                self.assertFalse(self.driver.find_element_by_css_selector("td[title=\"" + filteredAssetListNonSelected[x][2] + "\"]").text)
+            except NoSuchElementException:
+                pass
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=500)
+    def test_0205_create_several_mobile_terminals_for_filtering(self):
+        # Create mobile terminals from file with several different values for filtering
+        create_mobileterminal_from_file_based_on_link_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv', 'linkassetmobileterminals2xxxx.csv')
+
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_0206_search_of_mobile_terminals_serialnr_and_export_to_file(self):
+        # Test case tests search functions filtering on Serial Number. Also export list result to file.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
+
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
+
+        # Enter Serial Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalSearchValue[0])
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+
+        # Select all mobile terminals in the list
+        wait_for_element_by_id_to_exist(wait, "mt-checkbox-select-all", "mt-checkbox-select-all checked 5")
+        time.sleep(2)
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(mobileTerminalFileName):
+            os.remove(mobileTerminalFileName)
+        # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "mt-dropdown-actions", "mt-dropdown-actions checked 6")
+        time.sleep(2)
+        self.driver.find_element_by_id("mt-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        # Change back the path to current dir
+        os.chdir(cwd)
+
+        # Get all mobile terminal with Serial Number (F.S.) called "AA" in the asset list.
+        filteredmobileTerminalList = get_selected_elements_in_list_from_mainList(mobileTerminalAllrows, 0, removeChar(mobileTerminalSearchValue[0], "*"))
+        # Get the remaining mobile terminal in the filteredmobileTerminalList
+        filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalList)
+
+        # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(1) + "]/td[2]/span[1]/a", "XPATH checked 8")
+        time.sleep(3)
+        for x in range(0, len(filteredmobileTerminalList)):
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalList[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
+            self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
+            self.assertEqual(filteredmobileTerminalList[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
+            self.assertEqual(filteredmobileTerminalList[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
+            self.assertEqual(filteredmobileTerminalList[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
+            self.assertEqual(filteredmobileTerminalList[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
+
+        # Check that Asset from non-selected mobile terminal list (filteredmobileTerminalListNonSelected) does not exist in the visual mobile terminal list view.
+        for x in range(0, len(filteredmobileTerminalListNonSelected)):
+            print("Checking that MT nr: " +str(x) + " shall NOT exist in the list view")
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalListNonSelected[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
+
+            # Loop around each possible row in the mobile terminal list view
+            for y in range(0, len(mobileTerminalAllrows)):
+                try:
+                    self.assertNotEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[2]/span[1]/a").text)
+                    self.assertNotEqual(filteredmobileTerminalListNonSelected[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[3]").text)
+                    self.assertNotEqual(filteredmobileTerminalListNonSelected[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[7]").text)
+                    self.assertNotEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[8]/span").text)
+                except NoSuchElementException:
+                    pass
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0206b_check_mobile_terminal_exported_to_file(self):
+        # Test case checks that mobile terminals from test_0206 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
+
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
+
+        # Enter Serial Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalSearchValue[0])
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(2)
+
+        # Get all mobile terminal with Serial Number (F.S.) called "AA" in the asset list.
+        filteredmobileTerminalListSelected = get_selected_elements_in_list_from_mainList(mobileTerminalAllrows, 0, removeChar(mobileTerminalSearchValue[0], "*"))
+        # Get the remaining mobile terminal in the filteredmobileTerminalList
+        filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalListSelected)
+
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(mobileTerminalFileName)
+        # Deleting header row
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+
+        # Sort the allrows list (1st Column)
+        allrows.sort(key=lambda x: x[0])
+        print("----------allrows from file-----------------")
+        print(allrows)
+        # Check that the elements in csv file is correct
+        # Adapt filteredmobileTerminalListSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredmobileTerminalListSelectedCSVformat
+        filteredmobileTerminalListSelectedCSVformat = adapt_mobile_terminal_list_to_exported_CSV_file_standard(filteredmobileTerminalListSelected, assetAllrows, linkAssetMobileTerminalAllrows)
+        print(filteredmobileTerminalListSelectedCSVformat)
+        # Sort the filteredmobileTerminalListSelectedCSVformat list (1st Column)
+        filteredmobileTerminalListSelectedCSVformat.sort(key=lambda x: x[0])
+        # Check filteredmobileTerminalListSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListSelectedCSVformat, allrows)
+        # Check if resultExists list includes just True states
+        print(resultExists)
+        # The test case shall pass if ALL boolean values in resultExists list are True
+        self.assertTrue(checkAllTrue(resultExists))
+        # Adapt filteredmobileTerminalListNonSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredmobileTerminalListNonSelectedCSVformat
+        filteredmobileTerminalListNonSelectedCSVformat = adapt_mobile_terminal_list_to_exported_CSV_file_standard(filteredmobileTerminalListNonSelected, assetAllrows, linkAssetMobileTerminalAllrows)
+        print(filteredmobileTerminalListNonSelectedCSVformat)
+        # Sort the filteredmobileTerminalListNonSelectedCSVformat list (1st Column)
+        filteredmobileTerminalListNonSelectedCSVformat.sort(key=lambda x: x[0])
+        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListNonSelectedCSVformat, allrows)
+        print(resultExists)
+        # The test case shall pass if ALL of the boolean values in resultExists list are False
+        self.assertFalse(checkAnyTrue(resultExists))
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_0207_search_of_mobile_terminals_member_nr_satellite_nr_and_export_to_file(self):
+        # Test case tests search functions filtering on member and satellite Number. Also export list result to file.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
+
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
+
+        # Enter Member Number and Satellite Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-memberNumber", "mt-input-search-memberNumber checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-memberNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-memberNumber").send_keys(mobileTerminalSearchValue[1])
+        self.driver.find_element_by_id("mt-input-search-satelliteNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-satelliteNumber").send_keys(mobileTerminalSearchValue[2])
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+
+        # Select all mobile terminals in the list
+        wait_for_element_by_id_to_exist(wait, "mt-checkbox-select-all", "mt-checkbox-select-all checked 5")
+        time.sleep(2)
+        self.driver.find_element_by_id("mt-checkbox-select-all").click()
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Check if file exists. If so remove it
+        if os.path.exists(mobileTerminalFileName):
+            os.remove(mobileTerminalFileName)
+        # Select Action "Export selection"
+        wait_for_element_by_id_to_exist(wait, "mt-dropdown-actions", "mt-dropdown-actions checked 6")
+        time.sleep(2)
+        self.driver.find_element_by_id("mt-dropdown-actions").click()
+        wait_for_element_by_link_text_to_exist(wait, "Export selection to CSV", "Link text checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Export selection to CSV").click()
+        # Change back the path to current dir
+        os.chdir(cwd)
+
+        # Get all mobile terminal with Member Number called "5" in the mobile terminal list.
+        filteredmobileTerminalList = get_selected_elements_in_list_from_mainList(mobileTerminalAllrows, 6, removeChar(mobileTerminalSearchValue[1], "*"))
+        # Get all mobile terminal with Member Number called "5"  PLUS Satellite Number called "1000" in the mobile terminal list.
+        filteredmobileTerminalList = get_selected_elements_in_list_from_mainList(filteredmobileTerminalList, 4, removeChar(mobileTerminalSearchValue[2], "*"))
+
+        # Get the remaining mobile terminal in the filteredmobileTerminalList
+        filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalList)
+
+        # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(1) + "]/td[2]/span[1]/a", "XPATH checked 8")
+        time.sleep(3)
+        for x in range(0, len(filteredmobileTerminalList)):
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalList[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
+
+            self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
+            self.assertEqual(filteredmobileTerminalList[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
+            self.assertEqual(filteredmobileTerminalList[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
+            self.assertEqual(filteredmobileTerminalList[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
+            self.assertEqual(filteredmobileTerminalList[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
+
+        # Check that Asset from non-selected mobile terminal list (filteredmobileTerminalListNonSelected) does not exist in the visual mobile terminal list view.
+        for x in range(0, len(filteredmobileTerminalListNonSelected)):
+            print("Checking that MT nr: " +str(x) + " shall NOT exist in the list view")
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, filteredmobileTerminalListNonSelected[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
+
+            # Loop around each possible row in the mobile terminal list view
+            for y in range(0, len(mobileTerminalAllrows)):
+                try:
+                    self.assertNotEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[2]/span[1]/a").text)
+                    self.assertNotEqual(filteredmobileTerminalListNonSelected[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[3]").text)
+                    self.assertNotEqual(filteredmobileTerminalListNonSelected[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[7]").text)
+                    self.assertNotEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(y + 1) + "]/td[8]/span").text)
+                except NoSuchElementException:
+                    pass
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0207b_check_mobile_terminal_exported_to_file(self):
+        # Test case checks that mobile terminals from test_0207 is exported to file correctly.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file('mobileterminals2xxxx.csv')
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file('linkassetmobileterminals2xxxx.csv')
+
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-name", "mt-sort-name checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-name").click()
+
+        # Enter Member Number and Satellite Number search value
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-memberNumber", "mt-input-search-memberNumber checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-memberNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-memberNumber").send_keys(mobileTerminalSearchValue[1])
+        self.driver.find_element_by_id("mt-input-search-satelliteNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-satelliteNumber").send_keys(mobileTerminalSearchValue[2])
+        # Click on search button
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+        time.sleep(2)
+
+        # Get all mobile terminal with Member Number called "5" in the mobile terminal list.
+        filteredmobileTerminalListSelected = get_selected_elements_in_list_from_mainList(mobileTerminalAllrows, 6, removeChar(mobileTerminalSearchValue[1], "*"))
+        # Get all mobile terminal with Member Number called "5"  PLUS Satellite Number called "1000" in the mobile terminal list.
+        filteredmobileTerminalListSelected = get_selected_elements_in_list_from_mainList(filteredmobileTerminalListSelected, 4, removeChar(mobileTerminalSearchValue[2], "*"))
+
+        # Get the remaining mobile terminal in the filteredmobileTerminalList
+        filteredmobileTerminalListNonSelected = get_remaining_elements_from_main_list(mobileTerminalAllrows, filteredmobileTerminalListSelected)
+
+        # Save path to current dir
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        # Change to Download folder for current user
+        downloadPath = get_download_path()
+        os.chdir(downloadPath)
+        print(os.path.abspath(os.path.dirname(__file__)))
+        # Open saved csv file and read all elements to "allrows"
+        allrows = get_elements_from_file_without_deleting_paths_and_rows(mobileTerminalFileName)
+        # Deleting header row
+        del allrows[0]
+        # Change back the path to current dir
+        os.chdir(cwd)
+        print(cwd)
+
+        # Sort the allrows list (1st Column)
+        allrows.sort(key=lambda x: x[0])
+        print("----------allrows from file-----------------")
+        print(allrows)
+        # Check that the elements in csv file is correct
+        # Adapt filteredmobileTerminalListSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredmobileTerminalListSelectedCSVformat
+        filteredmobileTerminalListSelectedCSVformat = adapt_mobile_terminal_list_to_exported_CSV_file_standard(filteredmobileTerminalListSelected, assetAllrows, linkAssetMobileTerminalAllrows)
+        print(filteredmobileTerminalListSelectedCSVformat)
+        # Sort the filteredmobileTerminalListSelectedCSVformat list (1st Column)
+        filteredmobileTerminalListSelectedCSVformat.sort(key=lambda x: x[0])
+        # Check filteredmobileTerminalListSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListSelectedCSVformat, allrows)
+        # Check if resultExists list includes just True states
+        print(resultExists)
+        # The test case shall pass if ALL boolean values in resultExists list are True
+        self.assertTrue(checkAllTrue(resultExists))
+        # Adapt filteredmobileTerminalListNonSelected list to the "format" as for exported CSV files
+        # The result is saved in filteredmobileTerminalListNonSelectedCSVformat
+        filteredmobileTerminalListNonSelectedCSVformat = adapt_mobile_terminal_list_to_exported_CSV_file_standard(filteredmobileTerminalListNonSelected, assetAllrows, linkAssetMobileTerminalAllrows)
+        print(filteredmobileTerminalListNonSelectedCSVformat)
+        # Sort the filteredmobileTerminalListNonSelectedCSVformat list (1st Column)
+        filteredmobileTerminalListNonSelectedCSVformat.sort(key=lambda x: x[0])
+        # Check filteredmobileTerminalListNonSelectedCSVformat in allrows row by row
+        resultExists = check_sublist_in_other_list_if_it_exists(filteredmobileTerminalListNonSelectedCSVformat, allrows)
+        print(resultExists)
+        # The test case shall pass if ALL of the boolean values in resultExists list are False
+        self.assertFalse(checkAnyTrue(resultExists))
+        time.sleep(2)
+
+
+
+class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_0301_create_several_assets_for_filtering(self):
+        # Create assets from file with several different values for filtering
+        create_asset_from_file(self, tests300FileName[0])
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_0302_create_several_mobile_terminals_for_editing(self):
+        # Create mobile terminals from file with different values.
+        # NOTE: Several mobile terminals are added to the same asset.
+        create_mobileterminal_from_file_based_on_link_file(self, tests300FileName[0], tests300FileName[1], tests300FileName[2])
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0302b_check_mobile_terminal_list(self):
+        # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Open saved csv file and read all asset elements
+        assetAllrows = get_elements_from_file(tests300FileName[0])
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+        # Open saved csv file and read all linked elements between assets and mobile terminals
+        linkAssetMobileTerminalAllrows = get_elements_from_file(tests300FileName[2])
+
+        # Sort mobileTerminalAllrows on 1st column (that is SerialNumber value)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+        time.sleep(1)
+
+        # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
+        for x in range(0, len(mobileTerminalAllrows)):
+            # Get CFR Value based on Link list between assets and mobile terminals
+            tempCFRValue = get_asset_cfr_via_link_list(linkAssetMobileTerminalAllrows, mobileTerminalAllrows[x][0])
+            # Get asset name based on CFR value found in assetAllrows list
+            tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
+            # Get asset name based on CFR value found in assetAllrows list
+            tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
+
+            wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a", "XPATH checked 3")
+            time.sleep(1)
+            self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
+            self.assertEqual(mobileTerminalAllrows[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
+            self.assertEqual(mobileTerminalAllrows[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
+            self.assertEqual(mobileTerminalAllrows[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
+            self.assertEqual(mobileTerminalAllrows[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
+            self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
+
+            # Get Status Value (Active/Inactive) for current mobile terminal in UPPER case.
+            tempStatusValue = statusValue[int(mobileTerminalAllrows[x][14])]
+            tempStatusValue = tempStatusValue.upper()
+
+            wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span", "XPATH checked 3")
+            time.sleep(1)
+            self.assertEqual(tempStatusValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span").text)
+
+
+    @timeout_decorator.timeout(seconds=360)
+    def test_0303_create_several_additional_channels_for_mobile_terminals(self):
+        # Set referenceDateTime to current UTC time
+        referenceDateTime = datetime.datetime.utcnow()
+        # Create assets from file with several different values for filtering
+        create_addtional_channels_for_mobileterminals_from_file(self, tests300FileName[3], referenceDateTime)
+        # Save referenceDateTime to file
+        save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
+
+
+    def test_0304_check_additional_channels_for_mobile_terminals(self):
+        # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
+
+        # Get referenceDateTime from file
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
+        print(referenceDateTimeValueString)
+
+        # Open saved csv file and read all channel elements
+        channelAllrows = get_elements_from_file(tests300FileName[3])
+
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+
+        # Check all channels and mobile terminal data (mobile terminal by mobile terminal)
+        resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
+        self.assertTrue(resultExists)
+
+
+    def test_0305_change_default_channel_for_one_mobile_terminal(self):
+        # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
+
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Get referenceDateTime from file
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
+        print(referenceDateTimeValueString)
+
+        # Open saved csv file and read all channel elements
+        channelAllrows = get_elements_from_file(tests300FileName[3])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        channelAllrows.sort(key=lambda x: x[0])
+
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
+
+        # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+        channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
+        channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+        # Sort the allrows list (1st Column)
+        channelTotalList.sort(key=lambda x: x[0])
+
+
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+
+        # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+
+        # Verifies that default DNID and Member Number is correct for the 2nd serial number in mobileTerminalAllrows list.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 5")
+        time.sleep(3)
+        self.assertEqual(mobileTerminalAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(mobileTerminalAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-toggle-form").click()
+        time.sleep(3)
+
+        # Read all channels for selected Mobile Terminal
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+        # Loop all channels in the list and disable default parameter if default parameter is selected
+        for x in range(0, len(notedChannelsList)):
+            print(notedChannelsList[x])
+            # Disable default parameter if default parameter is selected
+            if notedChannelsList[x][4] == "1":
+                # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
+                self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
+                time.sleep(2)
+
+        # Loop all channels in the list and set default parameter where the first default parameter is zero in the notedChannelsList
+        for x in range(0, len(notedChannelsList)):
+            print(notedChannelsList[x])
+            # Disable default parameter if default parameter is selected
+            if notedChannelsList[x][4] == "0":
+                # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
+                self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
+                time.sleep(1)
+
+        # Click on Save button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_id("menu-bar-update").click()
+        # Enter Comment in comment field
+        wait_for_element_by_name_to_exist(wait, "comment", "Name checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_name("comment").clear()
+        self.driver.find_element_by_name("comment").send_keys(commentValue)
+        # Click on Update button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+        # Click on Cancel
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
+        time.sleep(3)
+        self.driver.find_element_by_id("menu-bar-cancel").click()
+
+        # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 11")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[1][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 12")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+
+        # Verifies that new default DNID and Member Number is correct for the 2nd serial number in channelAllrows list.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 13")
+        time.sleep(3)
+        self.assertEqual(channelAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(channelAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 14")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-toggle-form").click()
+
+        # Read all channels for selected Mobile Terminal
+        time.sleep(3)
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+
+        # Open saved csv file and read all channel elements (Note modified file)
+        channelAllrows = get_elements_from_file(tests300FileName[4])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        channelAllrows.sort(key=lambda x: x[0])
+
+        # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+        channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
+        channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+        # Sort the allrows list (1st Column)
+        channelTotalList.sort(key=lambda x: x[0])
+
+
+        # Convert hour value in channelTotalList to correct Datetime format and save it in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+        channelTotalListDateTimeFormat = convertHoursValueInListToDateTimeFormat(channelTotalList, referenceDateTime)
+        # Remove Mobile Terminal and Channel position data in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
+        channelTotalListDateTimeFormatToCompare = removeLastNumberElementsInListRow(channelTotalListDateTimeFormat, 2)
+
+        # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file and return result.
+        resultExists = compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
+        print(resultExists)
+        self.assertTrue(resultExists)
+
+
+    def test_0306_delete_channel_for_one_mobile_terminal(self):
+        # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
+
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Get referenceDateTime from file
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
+        print(referenceDateTimeValueString)
+
+        # Open saved csv file and read all channel elements
+        channelAllrows = get_elements_from_file(tests300FileName[3])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        channelAllrows.sort(key=lambda x: x[0])
+
+        # Open saved csv file and read all mobile terminal elements
+        mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
+        # Sort the mobileTerminalAllrows list (1st Column)
+        mobileTerminalAllrows.sort(key=lambda x: x[0])
+
+        # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
+        channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
+        channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
+        # Sort the allrows list (1st Column)
+        channelTotalList.sort(key=lambda x: x[0])
+
+
+        # Click on Mobile Terminal tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
+        # Sort on linked asset column
+        wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-sort-serialNumber").click()
+
+        # Search for mobile terminal via serial number (The 9th serial number in mobileTerminalAllrows is used)
+        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
+        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[8][0])
+        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-btn-advanced-search").click()
+
+        # Verifies that default DNID and Member Number is correct for the 9th serial number in mobileTerminalAllrows list.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 5")
+        time.sleep(3)
+        self.assertEqual(mobileTerminalAllrows[8][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(mobileTerminalAllrows[8][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-toggle-form").click()
+
+        # Read all channels for selected Mobile Terminal
+        time.sleep(3)
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+        # Click on delete button for the 1st channel in the list
+        wait_for_element_by_id_to_exist(wait, "mt-0-channel-0-removeChannel", "mt-0-channel-0-removeChannel checked 7")
+        time.sleep(1)
+        self.driver.find_element_by_id("mt-0-channel-0-removeChannel").click()
+
+        # Click on Save button
+        wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 8")
+        time.sleep(1)
+        self.driver.find_element_by_id("menu-bar-update").click()
+        # Enter Comment in comment field
+        wait_for_element_by_name_to_exist(wait, "comment", "Name checked 9")
+        time.sleep(1)
+        self.driver.find_element_by_name("comment").clear()
+        self.driver.find_element_by_name("comment").send_keys(commentValue)
+        time.sleep(1)
+        # Click on Update button
+        wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 10")
+        time.sleep(1)
+        self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
+        # Click on Cancel
+        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
+        time.sleep(3)
+        self.driver.find_element_by_id("menu-bar-cancel").click()
+
+        # Verifies that default DNID and Member Number is correct for the 2nd serial number in notedChannelsList list. The 1st DNID and Member is now deleted.
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 12")
+        time.sleep(3)
+        self.assertEqual(notedChannelsList[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(notedChannelsList[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
+
+        # Click on detail button
+        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 13")
+        time.sleep(3)
+        self.driver.find_element_by_id("mt-toggle-form").click()
+
+        # Read all channels for selected Mobile Terminal
+        time.sleep(3)
+        notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
+
+        # Checks the number of channels read. If the list does not consists of one channel then something is wrong
+        if len(notedChannelsList) == 1:
+            oneChannel = True
+        else:
+            oneChannel = False
+        self.assertTrue(oneChannel)
+
+
+
+class UnionVMSTestCaseAudit(unittest.TestCase):
+
+
+    def setUp(self):
+        # Startup browser and login
+        startup_browser_and_login_to_unionVMS(self)
+        time.sleep(5)
+
+
+    def tearDown(self):
+        shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0401_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0402_check_config_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Filtering on Update Operation
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Update", "Link text checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Update").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        time.sleep(1)
+        # Click on Search button
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+
+        # Check config update value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 5")
+        time.sleep(1)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+
+        # Get saved date/time from file to compare with current value in list row
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[1])
+        # Convert to string format incl removing the second part
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M')
+        # Get the real date and time in the list row.
+        realDateTimeValueString = self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[5]").text
+        # Remove second part from string, that is the 3 last characters in the string
+        realDateTimeValueString = realDateTimeValueString[:-3]
+        self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
+
+        self.assertEqual(auditLogsObjectAffectedValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[6]/span").text)
+
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+
+        # Get saved date/time from file to compare with current value in list row
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+        # Convert to string format incl removing the second part
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M')
+        # Get the real date and time in the list row.
+        realDateTimeValueString = self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[5]").text
+        # Remove second part from string, that is the 3 last characters in the string
+        realDateTimeValueString = realDateTimeValueString[:-3]
+        self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
+
+        self.assertEqual(auditLogsObjectAffectedValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[6]/span").text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0403_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0404_check_alert_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Alerts sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ALARMS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ALARMS > span").click()
+
+        # Check Alert value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultSystemName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+
+        # Get saved date/time from file to compare with current value in list row
+        referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
+        # Convert to string format incl removing the second part
+        referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M')
+        # Get the real date and time in the list row.
+        realDateTimeValueString = self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[5]").text
+        # Remove second part from string, that is the 3 last characters in the string
+        realDateTimeValueString = realDateTimeValueString[:-3]
+        self.assertEqual(referenceDateTimeValueString, realDateTimeValueString)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0405_test_0002_create_one_new_asset(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0002_create_one_new_asset(self)
+
+
+    def test_0406_check_asset_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0407_create_one_new_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0004_create_one_new_mobile_terminal(self)
+
+
+    def test_0408_check_mobile_terminal_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0409_link_asset_and_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0006_link_asset_and_mobile_terminal(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0410_check_link_asset_and_mobile_terminal_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0411_generate_and_verify_manual_position(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0008_generate_and_verify_manual_position(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0412_check_manual_position_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Positions Reports sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
+
+        # Click on Object type
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[3]", "XPATH checked 3")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        # Select Manual position report selection
+        wait_for_element_by_link_text_to_exist(wait, "Manual position report", "Link text checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Manual position report").click()
+        # Click on Object type
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[3]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
+        # Click on Search button
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+
+        # Check Alert value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 7")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0413_generate_NAF_and_verify_position(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0007_generate_NAF_and_verify_position(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0414_check_NAF_position_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#POSITION_REPORTS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultNAFName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0415_create_assets_2_3_4_5_6(self):
+        # Create assets 3-6 in the list
+        for x in range(1, 6):
+            create_one_new_asset_from_gui(self, x)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0416_create_two_assets_to_group_and_check_group(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0018_create_two_assets_to_group_and_check_group(self)
+
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0417_check_asset_group_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[7], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0418_change_global_settings_change_date_format(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0030_change_global_settings_change_date_format(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0419_change_global_settings_change_date_format(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0030_change_global_settings_change_date_format(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0420_check_config_date_time_update_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Filtering on Update Operation
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Update", "Link text checked 4")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Update").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[2]", "XPATH checked 5")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@type='button'])[2]").click()
+        # Click on Search button
+        wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 6")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
+        # Check config update value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 7")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[6]/span").text)
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[6]/span").text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0421_create_one_new_asset_and_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0043_create_one_new_asset_and_mobile_terminal(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0422_generate_manual_poll_and_check(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0046_generate_manual_poll_and_check(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0423_check_poll_creation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[8], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0424_create_modify_and_check_asset_history(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0047_create_modify_and_check_asset_history(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0425_check_asset_creation_and_modifocation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_xpath("(//a[contains(text(),'" + auditLogsObjectAffectedValue[2] + "')])[2]").text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0426_create_one_new_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0050_create_one_new_mobile_terminal(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0427_check_mobile_terminal_creation_and_modifocation_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+
+        # Check config update value in audit list 2nd row
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr[2]/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_xpath("(//a[contains(text(),'" + auditLogsObjectAffectedValue[2] + "')])[2]").text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0428_archive_and_check_mobile_terminal(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0050b_archive_and_check_mobile_terminal(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0429_check_mobile_terminal_archiving_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0430_archive_and_check_asset(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0051_archive_and_check_asset(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0431_check_asset_archiving_change_in_audit_log(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Select Audit Log tab
+        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-audit-log", "uvms-header-menu-item-audit-log checked 1")
+        time.sleep(1)
+        self.driver.find_element_by_id("uvms-header-menu-item-audit-log").click()
+        # Click on Asset and Terminals sub tabs under Audit Log Tab
+        wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
+        time.sleep(3)
+        self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
+
+        # Check Asset and Terminals value in audit list 1st row
+        wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
+        time.sleep(3)
+        self.assertEqual(defaultUserName, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]").text)
+        self.assertEqual(auditLogsOperationValue[3], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[3]").text)
+        self.assertEqual(auditLogsObjectTypeValue[2], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[4]").text)
+        self.assertEqual(auditLogsObjectAffectedValue[2], self.driver.find_element_by_link_text(auditLogsObjectAffectedValue[2]).text)
+        time.sleep(2)
+
+
+
 
 
 
