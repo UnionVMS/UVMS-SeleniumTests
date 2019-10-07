@@ -573,10 +573,6 @@ def create_one_new_asset_from_gui(self, vesselNumber):
 def create_one_new_asset_from_gui_g2(self, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on Realtime tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
@@ -737,15 +733,11 @@ def check_new_asset_exists(self, vesselNumber):
 def check_new_asset_exists_g2(self, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on Realtime tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Enter name in the name search field for the newly created asset
+    # Enter IRCS in the ircs search field for the newly created asset
     wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
@@ -753,7 +745,6 @@ def check_new_asset_exists_g2(self, vesselNumber):
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
-
     # Check that the new asset exists in the list.
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 4")
     time.sleep(defaultSleepTimeValue)
@@ -763,12 +754,10 @@ def check_new_asset_exists_g2(self, vesselNumber):
     self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-flagstate").text)
     self.assertEqual(externalMarkingValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-externalMarking").text)
     self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-cfr").text)
-
     # Click on details button for new asset
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-
     #Get all elements from the Asset table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show div", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
@@ -1465,10 +1454,6 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
 def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on Realtime tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
@@ -1588,6 +1573,70 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
     time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Enter IRCS in the ircs search field for the newly created asset
+    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for new asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    #Get all elements from the Mobile Terminal table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .ng-star-inserted div", "CSS Selector checked 6")
+    time.sleep(defaultSleepTimeValue * 3)
+    allElements = self.driver.find_elements_by_css_selector(".right-column asset-show-mobile-terminal .ng-star-inserted div")
+    # Check Software Version in the list
+    self.assertEqual(softwareVersion, allElements[2].text)
+    # Check Antenna Version in the list
+    self.assertEqual(antennaVersion, allElements[3].text)
+    # Check Satellite Number in the list
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], allElements[4].text)
+    # Check Serial Number in the list
+    self.assertEqual(serialNoValue[mobileTerminalNumber], allElements[5].text)
+    # Click on edit link
+    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
+
+    # Check serial number
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.assertEqual(serialNoValue[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--serialNo .mat-input-element").get_attribute("value"))
+    # Check Transceiver type
+    self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-input-element").get_attribute("value"))
+    # Check Software Version
+    self.assertEqual(softwareVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-input-element").get_attribute("value"))
+    # Check Antenna
+    self.assertEqual(antennaVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").get_attribute("value"))
+    # Check Satellite Number
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").get_attribute("value"))
+    # Check DNID Number
+    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").get_attribute("value"))
+    # Check Member Number
+    self.assertEqual(memberIdnumber[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").get_attribute("value"))
+    # Enter Installed by
+    self.assertEqual(installedByName, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").get_attribute("value"))
+    # Expected frequency
+    self.assertEqual(expectedFrequencyHours, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").get_attribute("value"))
+    # Grace period
+    self.assertEqual(gracePeriodFrequencyHours, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").get_attribute("value"))
+    # In port
+    self.assertEqual(inPortFrequencyHours, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").get_attribute("value"))
+    time.sleep(defaultSleepTimeValue * 10)
+
 
 
 def compareChannelLists(notedList, fileList):
@@ -2803,6 +2852,14 @@ def set_start_stop_date_time(self, startDateTime, stopDateTime):
     self.driver.find_element_by_id("simple-movement-search-to-date-picker").send_keys(stopDateTime)
 
 
+def click_on_real_time_tab(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on Realtime tab
+    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+
 
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -2955,29 +3012,38 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0002_create_one_new_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new asset (first in the list)
         create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0003_check_new_asset_exist_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Check new asset (first in the list)
         check_new_asset_exists_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0004_create_one_new_mobile_terminal_via_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new Mobile Terminal (first in the list)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 0, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0005_check_new_mobile_terminal_exists_via_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Check new Mobile Terminal (first in the list)
-        check_new_mobile_terminal_exists(self, 0)
+        check_new_mobile_terminal_exists_via_asset_tab_g2(self, 0, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0006_link_asset_and_mobile_terminal(self):
         # Link asset 1 with mobile terminal 1 (first in the list)
         link_asset_and_mobile_terminal(self,0)
@@ -2996,30 +3062,39 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0009_create_second_new_asset(self):
+    def test_0009_create_second_new_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new asset (second in the list)
-        create_one_new_asset_from_gui(self, 1)
+        create_one_new_asset_from_gui_g2(self, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0010_check_new_asset_exists(self):
+    def test_0010_check_new_asset_exists_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Check new asset (second in the list)
-        check_new_asset_exists(self, 1)
+        check_new_asset_exists_g2(self, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0011_create_second_new_mobile_terminal(self):
+    def test_0011_create_second_new_mobile_terminal_via_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new Mobile Terminal (second in the list)
-        create_one_new_mobile_terminal_from_gui(self, 1)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 1, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0012_check_second_new_mobile_terminal_exists(self):
+    def test_0012_check_second_new_mobile_terminal_exists_via_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Check new Mobile Terminal (second in the list)
-        check_new_mobile_terminal_exists(self, 1)
+        check_new_mobile_terminal_exists_via_asset_tab_g2(self, 1, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0013_unlink_asset_and_mobile_terminal(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3055,6 +3130,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0015_link_asset_to_another_mobile_terminal(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3115,14 +3191,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0017_create_assets_3_4_5_6(self):
+    def test_0017_create_assets_3_4_5_6_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets 3-6 in the list
         for x in range(2, 6):
-            create_one_new_asset_from_gui(self, x)
-            time.sleep(2)
+            create_one_new_asset_from_gui_g2(self, x)
+            time.sleep(defaultSleepTimeValue * 10)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0018_create_two_assets_to_group_and_check_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3196,6 +3275,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0019_add_two_assets_to_group_and_check_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3290,6 +3370,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0020_remove_one_asset_group_and_check_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3375,6 +3456,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0021_create_second_group_and_add_assets_to_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3457,6 +3539,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0022_delete_second_group_and_check(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3494,6 +3577,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0023_advanced_search_of_assets(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3564,6 +3648,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0024_export_assets_to_excel_file(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3646,12 +3731,16 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=300)
     def test_0025_create_new_mobile_terminal_3_6(self):
-        # Create new Mobile Terminal (Number 3-6 in the list)
-        for x in [2, 3, 4, 5]:
-            create_one_new_mobile_terminal_from_gui(self, x)
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create new Mobile Terminal (Number 3-6 in the list) (Connect via asset number 1)
+        for x in range(2, 6):
+            create_one_new_mobile_terminal_via_asset_tab_g2(self, x, 0)
+            time.sleep(defaultSleepTimeValue * 10)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0026_export_mobile_terminals_to_excel_file(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3794,8 +3883,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         self.assertEqual("ALL", self.driver.find_element_by_css_selector("#ALL > span").text)
         self.assertEqual("EXCHANGE", self.driver.find_element_by_css_selector("#EXCHANGE > span").text)
         self.assertEqual("POSITION REPORTS", self.driver.find_element_by_css_selector("#POSITION_REPORTS > span").text)
-        self.assertEqual("ASSETS AND TERMINALS",
-                         self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").text)
+        self.assertEqual("ASSETS AND TERMINALS", self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").text)
         self.assertEqual("GIS", self.driver.find_element_by_css_selector("#GIS > span").text)
         self.assertEqual("ALERTS", self.driver.find_element_by_css_selector("#ALARMS > span").text)
         self.assertEqual("ACCESS CONTROL", self.driver.find_element_by_css_selector("#ACCESS_CONTROL > span").text)
@@ -4447,11 +4535,14 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0043_create_one_new_asset_and_mobile_terminal(self):
+    def test_0043_create_one_new_asset_and_mobile_terminal_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new asset (7th in the list)
-        create_one_new_asset_from_gui(self, 6)
-        create_one_new_mobile_terminal_via_asset_tab(self, 6, 6)
+        create_one_new_asset_from_gui_g2(self, 6)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 6, 6)
 
+    # Continue fix code here...
 
     @timeout_decorator.timeout(seconds=180)
     def test_0046_generate_manual_poll_and_check(self):
