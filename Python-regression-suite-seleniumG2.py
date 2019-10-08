@@ -4875,7 +4875,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file(assetFileNameListOLD[0])
+        assetAllrows = get_elements_from_file(assetFileNameList[0])
         # Select Reporting tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-reporting", "uvms-header-menu-item-reporting checked 1")
         time.sleep(1)
@@ -5136,31 +5136,33 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=300)
     def test_0101_create_assets_real_trip_1(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 1
-        create_asset_from_file(self, assetFileNameListOLD[9])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[9], mobileTerminalFileNameList[9])
+        create_asset_from_file_g2(self, assetFileNameList[9])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[9], mobileTerminalFileNameList[9])
         # Create assets, Mobile for RealTrip 2
-        create_asset_from_file(self, assetFileNameListOLD[10])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[10], mobileTerminalFileNameList[10])
+        create_asset_from_file_g2(self, assetFileNameList[10])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[10], mobileTerminalFileNameList[10])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=256)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 1
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[9], tripFileNameList[9])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[9], tripFileNameList[9])
         deltaTimeValue = datetime.timedelta(hours=254, minutes=16)
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 2
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[10], tripFileNameList[10])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[10], tripFileNameList[10])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0101b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[9], tripFileNameList[9])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[9], tripFileNameList[9])
         reload_page_and_goto_default(self)
         time.sleep(1)
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[10], tripFileNameList[10])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[10], tripFileNameList[10])
         time.sleep(1)
 
 
