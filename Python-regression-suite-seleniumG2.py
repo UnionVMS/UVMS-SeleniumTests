@@ -1498,6 +1498,12 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Click on button to activate Poll, Config, Default
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Enter DNID Number
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
@@ -1610,7 +1616,6 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
-
     # Check serial number
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
@@ -1623,6 +1628,12 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.assertEqual(antennaVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").get_attribute("value"))
     # Check Satellite Number
     self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").get_attribute("value"))
+    # Check buttons  for Poll, Config and Default are activated
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name #mat-checkbox-2 .mat-checkbox-inner-container").is_selected)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
     # Check DNID Number
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").get_attribute("value"))
     # Check Member Number
@@ -1853,6 +1864,56 @@ def add_second_channel_to_mobileterminal(self, mobileTerminalNumber, newMobileTe
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
 
+
+def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNumber, newMobileTerminalNumber, vesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Enter IRCS in the ircs search field for the newly created asset
+    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for new asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on edit link
+    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
+    # Click on new channel button
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Enter DNID Number
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
+    # Enter Member Number
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
+    # Enter Installed by
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    # Expected frequency
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyHours)
+    # Grace period
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyHours)
+    # In port
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyHours)
+    # Click on save button
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+    time.sleep(defaultSleepTimeValue * 10)
 
 
 def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
@@ -2278,6 +2339,20 @@ def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName)
         create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, assetAllrows[x][1], mobileTerminalAllrows[x])
 
 
+def create_mobileterminal_from_file_g2(self, assetFileName, mobileTerminalFileName):
+    # Create Mobile Terminal for mentioned asset (assetFileName, mobileTerminalFileName)
+
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+
+    # Open saved csv file and read all mobile terminal elements
+    mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
+
+    # create_one new mobile terminal for mentioned asset
+    for x in range(0, len(assetAllrows)):
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, assetAllrows[x][0], mobileTerminalAllrows[x])
+
+
 def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobileTerminalFileName, linkFileName):
     # Create Mobile Terminal based on linkFile, assetFile and mobileTerminalFile (assetFileName, mobileTerminalFileName)
 
@@ -2448,6 +2523,8 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("asset-form--save").click()
 
+    time.sleep(defaultSleepTimeValue * 10)
+
     '''
     # To be fixed when the functionality exists in the new frontend
 
@@ -2506,8 +2583,6 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
     '''
-
-    time.sleep(2)
 
 
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
@@ -2579,6 +2654,85 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(3)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsValue, parameterRow):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Enter IRCS in the ircs search field for the newly created asset
+    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue)
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for the asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on create button for new mobile terminal
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    # Select Transponder system
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--mobileTerminalType").click()
+    # Select Inmarsat-C system
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-option-text").click()
+    # Enter serial number
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--serialNo .mat-input-element").send_keys(parameterRow[0])
+    # Enter Transceiver type
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-input-element").send_keys(parameterRow[1])
+    # Enter Software Version
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-input-element").send_keys(parameterRow[2])
+    # Enter Antenna
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(parameterRow[3])
+    # Enter Satellite Number
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(parameterRow[4])
+    # Click on new channel button
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Click on button to activate Poll, Config, Default
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter DNID Number
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(parameterRow[5])
+    # Enter Member Number
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(parameterRow[6])
+    # Enter Installed by
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(parameterRow[7])
+    # Expected frequency
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(parameterRow[8])
+    # Grace period
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(parameterRow[10])
+    # In port
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(parameterRow[12])
+    # Click on save button
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+
+    time.sleep(defaultSleepTimeValue * 10)
+
 
 
 def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDateTimeValue):
@@ -2710,6 +2864,39 @@ def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName)
             currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
             # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
             nafSource = generate_NAF_string(flagStateIndex[int(assetAllrows[x][17])], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
+            print(nafSource)
+            nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+            totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+            # Generate request
+            r = requests.get(totalNAFrequest)
+            # Check if request is OK (200)
+            if r.ok:
+                print("200 OK")
+            else:
+                print("Request NOT OK!")
+            # Delay 100ms
+            time.sleep(0.1)
+
+
+def create_trip_from_file_g2(currentPositionTimeValue, assetFileName, tripFileName):
+    # Create Trip for mentioned asset and Mobile Terminal(assetFileName, tripFileName)
+
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+
+    # Open saved csv file and read all trip elements for asset
+    assetTripAllrows = get_elements_from_file(tripFileName)
+
+    # create trip for mentioned asset and mobile terminal
+    for x in range(0, len(assetAllrows)):
+        # create number of position reports for the newly created asset/mobile terminal
+        for y in range(0, len(assetTripAllrows)):
+            # Create one position report via NAF
+            currentPositionTimeValue = currentPositionTimeValue + datetime.timedelta(minutes=int(assetTripAllrows[y][5]))
+            currentPositionDateValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y%m%d')
+            currentPositionTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%H%M')
+            # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+            nafSource = generate_NAF_string(assetAllrows[x][17], assetAllrows[x][0], assetAllrows[x][2], assetAllrows[x][3], str("%.3f" % float(assetTripAllrows[y][1])), str("%.3f" % float(assetTripAllrows[y][0])), float(assetTripAllrows[y][3]), assetTripAllrows[y][4], currentPositionDateValueString, currentPositionTimeValueString, assetAllrows[x][1])
             print(nafSource)
             nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
             totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
@@ -4542,7 +4729,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         create_one_new_asset_from_gui_g2(self, 6)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 6, 6)
 
-    # Continue fix code here...
 
     @timeout_decorator.timeout(seconds=180)
     def test_0046_generate_manual_poll_and_check(self):
@@ -4583,6 +4769,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0047_create_modify_and_check_asset_history(self):
         # Create new asset (34th in the list)
         create_one_new_asset_from_gui(self, 34)
@@ -4605,6 +4792,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0048_add_contact_and_check_asset_history(self):
         # Add new contact for selected asset (35th in the list)
         add_contact_to_existing_asset(self, 35, 36)
@@ -4619,25 +4807,35 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0049_add_notes_and_check_asset_history(self):
         # Add new notes for selected asset (35th in the list)
         add_notes_to_existing_asset_and_check(self, 35)
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0050_create_one_new_mobile_terminal(self):
-        # Create new Mobile Terminal (first in the list)
-        create_one_new_mobile_terminal_from_gui(self, 35)
+    def test_0050_create_one_new_mobile_terminal_g2(self):
+        # Test Case has been adapted to the new GUI!
+        # NOTE: To be able to create MT with addtional channel an asset needs to be created first in the new GUI! Asset creation should be removed and fixed later when functionality exist!
+
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create new asset (36th in the list)
+        create_one_new_asset_from_gui_g2(self, 35)
+        # Create new Mobile Terminal (36th in the list)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 35, 35)
         # Add channel to mobile terminal
-        add_second_channel_to_mobileterminal(self, 35, 36)
+        add_second_channel_to_mobileterminal_via_asset_tab_g2(self, 35, 36, 35)
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0050b_archive_and_check_mobile_terminal(self):
         # Archive mobile terminal
         archive_one_mobile_terminal_from_gui(self, 35)
         check_mobile_terminal_archived(self, 35)
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0051_archive_and_check_asset(self):
         # Archive asset
         archive_one_asset_from_gui(self, 35)
@@ -4646,15 +4844,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=300)
     def test_0052_create_assets_trip_1_2_3_part1(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 1
-        create_asset_from_file(self, assetFileNameListOLD[0])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[0], mobileTerminalFileNameList[0])
+        create_asset_from_file_g2(self, assetFileNameList[0])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[0], mobileTerminalFileNameList[0])
         # Create assets, Mobile for Trip 2
-        create_asset_from_file(self, assetFileNameListOLD[1])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[1], mobileTerminalFileNameList[1])
+        create_asset_from_file_g2(self, assetFileNameList[1])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[1], mobileTerminalFileNameList[1])
         # Create assets, Mobile for Trip 3
-        create_asset_from_file(self, assetFileNameListOLD[2])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[2], mobileTerminalFileNameList[2])
+        create_asset_from_file_g2(self, assetFileNameList[2])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[2], mobileTerminalFileNameList[2])
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -4664,9 +4864,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 1-3
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[0], tripFileNameList[0])
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[1], tripFileNameList[1])
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[2], tripFileNameList[2])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[0], tripFileNameList[0])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[1], tripFileNameList[1])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[2], tripFileNameList[2])
         time.sleep(1)
 
 
