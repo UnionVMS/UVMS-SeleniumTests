@@ -4843,7 +4843,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3_part1(self):
+    def test_0052_create_assets_trip_1_2_3_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 1
@@ -4858,7 +4858,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3_part2(self):
+    def test_0052_create_assets_trip_1_2_3_g2_part2(self):
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
@@ -5135,7 +5135,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0101_create_assets_real_trip_1(self):
+    def test_0101_create_assets_real_trip_1_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 1
@@ -5186,15 +5186,15 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3_part1(self):
+    def test_0052_create_assets_trip_1_2_3_g2_part1(self):
         # Startup browser and login
-        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_part1(self)
+        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_g2_part1(self)
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0052_create_assets_trip_1_2_3_part2(self):
+    def test_0052_create_assets_trip_1_2_3_g2_part2(self):
         # Startup browser and login
-        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_part2(self)
+        UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_g2_part2(self)
 
 
     @timeout_decorator.timeout(seconds=300)
@@ -5204,199 +5204,225 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0055_create_assets_trip_4_part1(self):
+    def test_0055_create_assets_trip_4_g2_part1(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 4
-        create_asset_from_file(self, assetFileNameListOLD[3])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[3], mobileTerminalFileNameList[3])
+        create_asset_from_file_g2(self, assetFileNameList[3])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[3], mobileTerminalFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0055_create_assets_trip_4_part2(self):
+    def test_0055_create_assets_trip_4_g2_part2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 4
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[3], tripFileNameList[3])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[3], tripFileNameList[3])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0056_create_assets_trip_5_and_6_part1(self):
+    def test_0056_create_assets_trip_5_and_6_g2_part1(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 5
-        create_asset_from_file(self, assetFileNameListOLD[4])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[4], mobileTerminalFileNameList[4])
+        create_asset_from_file_g2(self, assetFileNameList[4])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[4], mobileTerminalFileNameList[4])
         # Create assets, Mobile for Trip 6
-        create_asset_from_file(self, assetFileNameListOLD[5])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[5], mobileTerminalFileNameList[5])
+        create_asset_from_file_g2(self, assetFileNameList[5])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[5], mobileTerminalFileNameList[5])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0056_create_assets_trip_5_and_6_part2(self):
+    def test_0056_create_assets_trip_5_and_6_g2_part2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 5
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[4], tripFileNameList[4])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[4], tripFileNameList[4])
         deltaTimeValue = datetime.timedelta(hours=61, minutes=40)
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 6
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[5], tripFileNameList[5])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[5], tripFileNameList[5])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[4], tripFileNameList[4])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[4], tripFileNameList[4])
         reload_page_and_goto_default(self)
         time.sleep(1)
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[5], tripFileNameList[5])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[5], tripFileNameList[5])
         time.sleep(1)
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0057_create_assets_trip_7(self):
+    def test_0057_create_assets_trip_7_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 7
-        create_asset_from_file(self, assetFileNameListOLD[6])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[6], mobileTerminalFileNameList[6])
+        create_asset_from_file_g2(self, assetFileNameList[6])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[6], mobileTerminalFileNameList[6])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 7
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[6], tripFileNameList[6])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[6], tripFileNameList[6])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0058_create_assets_trip_8(self):
+    def test_0058_create_assets_trip_8_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 8
-        create_asset_from_file(self, assetFileNameListOLD[7])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[7], mobileTerminalFileNameList[7])
+        create_asset_from_file_g2(self, assetFileNameList[7])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[7], mobileTerminalFileNameList[7])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=24)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 8
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[7], tripFileNameList[7])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[7], tripFileNameList[7])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0059_create_assets_trip_9(self):
+    def test_0059_create_assets_trip_9_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 9
-        create_asset_from_file(self, assetFileNameListOLD[8])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[8], mobileTerminalFileNameList[8])
+        create_asset_from_file_g2(self, assetFileNameList[8])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[8], mobileTerminalFileNameList[8])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=48)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create Trip 9
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[8], tripFileNameList[8])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[8], tripFileNameList[8])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0102_create_assets_real_trip_2(self):
+    def test_0102_create_assets_real_trip_2_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 3
-        create_asset_from_file(self, assetFileNameListOLD[11])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[11], mobileTerminalFileNameList[11])
+        create_asset_from_file_g2(self, assetFileNameList[11])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[11], mobileTerminalFileNameList[11])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=192)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 3
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[11], tripFileNameList[11])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[11], tripFileNameList[11])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0102b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[11], tripFileNameList[11])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[11], tripFileNameList[11])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0103_create_assets_real_trip_3(self):
+    def test_0103_create_assets_real_trip_3_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 4a and 4b
-        create_asset_from_file(self, assetFileNameListOLD[12])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[12], mobileTerminalFileNameList[12])
+        create_asset_from_file_g2(self, assetFileNameList[12])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[12], mobileTerminalFileNameList[12])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=256)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 4a
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[12], tripFileNameList[12][:9] + "a" + tripFileNameList[12][9:])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[12], tripFileNameList[12][:9] + "a" + tripFileNameList[12][9:])
         deltaTimeValue = datetime.timedelta(hours=48)
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 4b
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[12], tripFileNameList[12][:9] + "b" + tripFileNameList[12][9:])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[12], tripFileNameList[12][:9] + "b" + tripFileNameList[12][9:])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0104_create_assets_real_trip_4(self):
+    def test_0104_create_assets_real_trip_4_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 5
-        create_asset_from_file(self, assetFileNameListOLD[13])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[13], mobileTerminalFileNameList[13])
+        create_asset_from_file_g2(self, assetFileNameList[13])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[13], mobileTerminalFileNameList[13])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=48)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 5
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[13], tripFileNameList[13])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[13], tripFileNameList[13])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0104b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[13], tripFileNameList[13])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[13], tripFileNameList[13])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0105_create_assets_real_trip_5(self):
+    def test_0105_create_assets_real_trip_5_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 6
-        create_asset_from_file(self, assetFileNameListOLD[14])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[14], mobileTerminalFileNameList[14])
+        create_asset_from_file_g2(self, assetFileNameList[14])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[14], mobileTerminalFileNameList[14])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 6
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[14], tripFileNameList[14])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[14], tripFileNameList[14])
 
 
     @timeout_decorator.timeout(seconds=300)
     def test_0105b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
-        create_report_and_check_trip_position_reports(self, assetFileNameListOLD[14], tripFileNameList[14])
+        create_report_and_check_trip_position_reports(self, assetFileNameList[14], tripFileNameList[14])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0106_create_assets_real_trip_6(self):
+    def test_0106_create_assets_real_trip_6_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 7
-        create_asset_from_file(self, assetFileNameListOLD[15])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[15], mobileTerminalFileNameList[15])
+        create_asset_from_file_g2(self, assetFileNameList[15])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[15], mobileTerminalFileNameList[15])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=270)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 7
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[15], tripFileNameList[15])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[15], tripFileNameList[15])
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0107_create_assets_real_trip_7(self):
+    def test_0107_create_assets_real_trip_7_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 8
-        create_asset_from_file(self, assetFileNameListOLD[16])
-        create_mobileterminal_from_file(self, assetFileNameListOLD[16], mobileTerminalFileNameList[16])
+        create_asset_from_file_g2(self, assetFileNameList[16])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[16], mobileTerminalFileNameList[16])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=270)
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
         # Create RealTrip 9
-        create_trip_from_file(currentPositionTimeValue, assetFileNameListOLD[16], tripFileNameList[16])
+        create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[16], tripFileNameList[16])
 
 
 
