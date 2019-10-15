@@ -578,9 +578,9 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
     # Click on Create button
-    wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]", "XPATH checked 2")
+    wait_for_element_by_css_selector_to_exist(wait, "button.btn-default.mat-raised-button.mat-button-base", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]").click()
+    self.driver.find_element_by_css_selector("button.btn-default.mat-raised-button.mat-button-base").click()
     # Select F.S value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -626,7 +626,6 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("asset-form--save").click()
 
-
     '''
     # To be fixed when the functionality exists in the new frontend
     # Click on the Contacts tab
@@ -652,6 +651,59 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue * 2)
     '''
     time.sleep(defaultSleepTimeValue)
+
+
+
+def create_one_new_asset_via_rest_g2(self, vesselNumber):
+    # Get Token
+    token = get_token_from_usm()
+    dataBody = {'grossTonnageUnit': grossTonnageTypeValue[vesselNumber]}
+    dataBody.setdefault('flagStateCode', countryValue[vesselNumber])
+    dataBody.setdefault('ircs', ircsValue[vesselNumber])
+    dataBody.setdefault('name', vesselName[vesselNumber])
+    dataBody.setdefault('externalMarking', externalMarkingValue[vesselNumber])
+    dataBody.setdefault('cfr', cfrValue[vesselNumber])
+    dataBody.setdefault('imo', imoValue[vesselNumber])
+    dataBody.setdefault('portOfRegistration', homeportValue[vesselNumber])
+    dataBody.setdefault('mmsi', mmsiValue[vesselNumber])
+    dataBody.setdefault('lengthOverAll', lengthOverAllValue[vesselNumber])
+    dataBody.setdefault('lengthBetweenPerpendiculars', lengthBetweenPerpendicularsValue[vesselNumber])
+    dataBody.setdefault('grossTonnage', grossTonnageValue[vesselNumber])
+    dataBody.setdefault('powerOfMainEngine', powerValue[vesselNumber])
+    dataBody.setdefault('prodOrgName', productOrgNameValue[vesselNumber])
+    dataBody.setdefault('prodOrgCode', productOrgCodeValue[vesselNumber])
+
+    # Create Asset vis REST
+    create_asset_via_rest(token, dataBody)
+
+
+    '''
+
+    # To be fixed when the functionality exists in the new frontend
+    # Click on the Contacts tab
+    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
+    # Click on "Add contact" link
+    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("asset-btn-add-contact").click()
+    # Main Contact Name Value
+    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 10")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
+    print(contactNameValue[vesselNumber])
+    # Main E-mail Value
+    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[vesselNumber])
+    # Main Contact Number Value
+    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
+
+    # Leave new asset view
+    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
+    time.sleep(defaultSleepTimeValue * 3)
+    self.driver.find_element_by_id("menu-bar-cancel").click()
+    time.sleep(defaultSleepTimeValue * 2)
+    '''
+    time.sleep(defaultSleepTimeValue)
+
 
 
 def check_new_asset_exists(self, vesselNumber):
@@ -1471,9 +1523,9 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
@@ -2479,9 +2531,9 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
     # Click on Create button
-    wait_for_element_by_xpath_to_exist(wait, "(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]", "XPATH checked 2")
+    wait_for_element_by_css_selector_to_exist(wait, "button.btn-default.mat-raised-button.mat-button-base", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Asset serach'])[1]/following::span[1]").click()
+    self.driver.find_element_by_css_selector("button.btn-default.mat-raised-button.mat-button-base").click()
     # Select F.S value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -3046,6 +3098,25 @@ def click_on_real_time_tab(self):
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+
+
+def get_token_from_usm():
+    # Get Token
+    url = httpUSMUrlString
+    datas = {"userName": defaultUserName, "password": defaultUserNamePassword}
+    headers = {'Content-type': 'application/json'}
+    rsp = requests.post(url, json=datas, headers=headers)
+    token = rsp.json()['jwtoken']
+    return token
+
+
+def create_asset_via_rest(token, dataBody):
+    # Create Asset vis REST
+    url = httpUrlRestAssetString
+    headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
+    rsp = requests.post(url, json=dataBody, headers=headers)
+    print(rsp)
+
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -8112,12 +8183,16 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0002_create_one_new_asset_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new asset (first in the list)
         create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0003_check_new_asset_exist_g2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Check new asset (first in the list)
         check_new_asset_exists_g2(self, 0)
 
@@ -8573,30 +8648,16 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         shutdown_browser(self)
 
 
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_rest_api(self):
-        # Set wait time for web driver
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-        # Click on Realtime tab
-        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-        # Get Token
-        url = "http://localhost:28080/unionvms/usm-administration/rest/authenticate"
-        datas = {"userName": "vms_admin_se", "password": "password"}
-        headers = {'Content-type': 'application/json'}
-        rsp = requests.post(url, json=datas, headers=headers)
-        token = rsp.json()['jwtoken']
-        print(rsp.json()['jwtoken'])
-        # Create Asset vis REST
-        url = "http://localhost:28080/unionvms/asset/rest/asset"
-        datas = {"grossTonnageUnit": "LONDON", "flagStateCode": "SWE", "externalMarking": "GG-10", "name": "Fartyg0001"}
-        headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
-        print(datas)
-        print(headers)
-        rsp2 = requests.post(url, json=datas, headers=headers)
-        print(rsp2)
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    def test_0002_create_one_new_asset_via_rest_g2(self):
+        # Create new asset (first in the list)
+        create_one_new_asset_via_rest_g2(self, 0)
 
 
 
