@@ -1524,7 +1524,7 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on create button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
-    time.sleep(defaultSleepTimeValue)
+    time.sleep(defaultSleepTimeValue * 10)
     self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
@@ -1546,10 +1546,6 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(antennaVersion)
     # Enter Satellite Number
     self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(satelliteNumber[mobileTerminalNumber])
-    # Click on new channel button
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
     # Click on button to activate Poll, Config, Default
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
@@ -2728,9 +2724,9 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsVa
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
+    time.sleep(defaultSleepTimeValue * 10)
+    self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
@@ -2751,10 +2747,6 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsVa
     self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(parameterRow[3])
     # Enter Satellite Number
     self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(parameterRow[4])
-    # Click on new channel button
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
     # Click on button to activate Poll, Config, Default
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
@@ -3991,7 +3983,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     def test_0025_create_new_mobile_terminal_3_6(self):
         # Click on real time tab
         click_on_real_time_tab(self)
-        # Create new Mobile Terminal (Number 3-6 in the list) (Connect via asset number 1)
+        # Create new Mobile Terminal (Number 3-6 in the list) (Connected via asset number 1)
         for x in range(2, 6):
             create_one_new_mobile_terminal_via_asset_tab_g2(self, x, 0)
             time.sleep(defaultSleepTimeValue * 10)
@@ -6341,7 +6333,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
 
-class UnionVMSTestCaseFiltering(unittest.TestCase):
+class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     def setUp(self):
@@ -7259,7 +7251,7 @@ class UnionVMSTestCaseFiltering(unittest.TestCase):
 
 
 
-class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
+class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
 
 
     def setUp(self):
@@ -7629,7 +7621,7 @@ class UnionVMSTestCaseMobileTerminalChannels(unittest.TestCase):
 
 
 
-class UnionVMSTestCaseAudit(unittest.TestCase):
+class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     def setUp(self):
@@ -7751,9 +7743,9 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0405_test_0002_create_one_new_asset(self):
+    def test_0405_test_0002_create_one_new_asset_g2(self):
         # Startup browser and login
-        UnionVMSTestCaseG2.test_0002_create_one_new_asset(self)
+        UnionVMSTestCaseG2.test_0002_create_one_new_asset_g2(self)
 
 
     def test_0406_check_asset_creation_change_in_audit_log(self):
@@ -7779,9 +7771,9 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0407_create_one_new_mobile_terminal(self):
+    def test_0407_create_one_new_mobile_terminal_g2(self):
         # Startup browser and login
-        UnionVMSTestCaseG2.test_0004_create_one_new_mobile_terminal(self)
+        UnionVMSTestCaseG2.test_0004_create_one_new_mobile_terminal_via_asset_g2(self)
 
 
     def test_0408_check_mobile_terminal_creation_change_in_audit_log(self):
@@ -7807,12 +7799,14 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0409_link_asset_and_mobile_terminal(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0006_link_asset_and_mobile_terminal(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0410_check_link_asset_and_mobile_terminal_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7911,13 +7905,14 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0415_create_assets_2_3_4_5_6(self):
+    def test_0415_create_assets_2_3_4_5_6_g2(self):
         # Create assets 3-6 in the list
         for x in range(1, 6):
-            create_one_new_asset_from_gui(self, x)
+            create_one_new_asset_from_gui_g2(self, x)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0416_create_two_assets_to_group_and_check_group(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0018_create_two_assets_to_group_and_check_group(self)
@@ -7925,6 +7920,7 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0417_check_asset_group_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7998,7 +7994,7 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0421_create_one_new_asset_and_mobile_terminal(self):
         # Startup browser and login
-        UnionVMSTestCaseG2.test_0043_create_one_new_asset_and_mobile_terminal(self)
+        UnionVMSTestCaseG2.test_0043_create_one_new_asset_and_mobile_terminal_g2(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -8031,12 +8027,14 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0424_create_modify_and_check_asset_history(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0047_create_modify_and_check_asset_history(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0425_check_asset_creation_and_modifocation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8066,9 +8064,9 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    def test_0426_create_one_new_mobile_terminal(self):
+    def test_0426_create_one_new_mobile_terminal_g2(self):
         # Startup browser and login
-        UnionVMSTestCaseG2.test_0050_create_one_new_mobile_terminal(self)
+        UnionVMSTestCaseG2.test_0050_create_one_new_mobile_terminal_g2(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -8101,12 +8099,14 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0428_archive_and_check_mobile_terminal(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0050b_archive_and_check_mobile_terminal(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0429_check_mobile_terminal_archiving_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8130,12 +8130,14 @@ class UnionVMSTestCaseAudit(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0430_archive_and_check_asset(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0051_archive_and_check_asset(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0431_check_asset_archiving_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8202,11 +8204,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Realtime tab
-        wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
-        time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+        click_on_real_time_tab(self)
+        # Create assets, Mobile for Trip 1-9
         for x in range(0, 9):
-            # Create assets, Mobile for Trip 1-9
             create_asset_from_file_g2(self, assetFileNameList[x])
         time.sleep(1)
 
@@ -8223,7 +8223,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         # Create Trip 1-3
         for x in range(0, 3):
-            create_trip_from_file(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
+            create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
 
         # Wait to secure that the generated trip is finished.
         time.sleep(10)
@@ -8646,12 +8646,6 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
     def tearDown(self):
         shutdown_browser(self)
-
-
-    @timeout_decorator.timeout(seconds=180)
-    def test_0001b_change_default_configuration_parameters(self):
-        # Startup browser and login
-        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=180)
