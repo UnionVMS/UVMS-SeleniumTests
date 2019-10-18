@@ -622,35 +622,41 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").send_keys(productOrgCodeValue[vesselNumber])
 
     # Click on Save button
-    wait_for_element_by_id_to_exist(wait, "asset-form--save", "asset-form--save checked 11")
+    wait_for_element_by_id_to_exist(wait, "asset-form--save", "asset-form--save checked 6")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("asset-form--save").click()
 
-    '''
-    # To be fixed when the functionality exists in the new frontend
-    # Click on the Contacts tab
-    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
-    # Click on "Add contact" link
-    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 9")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("asset-btn-add-contact").click()
-    # Main Contact Name Value
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 10")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
-    print(contactNameValue[vesselNumber])
-    # Main E-mail Value
-    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[vesselNumber])
-    # Main Contact Number Value
-    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
 
-    # Leave new asset view
-    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(defaultSleepTimeValue * 3)
-    self.driver.find_element_by_id("menu-bar-cancel").click()
-    time.sleep(defaultSleepTimeValue * 2)
-    '''
+    # Click on create button for new contacts
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show-contacts .mat-button-wrapper", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 10)
+    self.driver.find_element_by_css_selector("asset-show-contacts .mat-button-wrapper").click()
+
+    # Enter Contact Name Value
+    wait_for_element_by_css_selector_to_exist(wait, "#contact-form--name input", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#contact-form--name input").send_keys(contactNameValue[vesselNumber])
+    print(contactNameValue[vesselNumber])
+    # Enter Type Organization
+    self.driver.find_element_by_css_selector("#contact-form--type input").send_keys(contactTypeValue[vesselNumber])
+    # Enter E-mail Value
+    self.driver.find_element_by_css_selector("#contact-form--email input").send_keys(contactEmailValue[vesselNumber])
+    # Enter Contact Number Value
+    self.driver.find_element_by_css_selector("#contact-form--phone input").send_keys(contactPhoneNumberValue[vesselNumber])
+    # Enter Contact Country
+    self.driver.find_element_by_css_selector("#contact-form--country input").send_keys(contactCountryValue[vesselNumber])
+    # Enter Contact City
+    self.driver.find_element_by_css_selector("#contact-form--city input").send_keys(contactCityValue[vesselNumber])
+    # Enter Zip Code
+    self.driver.find_element_by_css_selector("#contact-form--zipCode input").send_keys(contactZipCodeValue[vesselNumber])
+
+    # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "asset-form--save checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+
+    time.sleep(defaultSleepTimeValue * 20)
 
 
 
@@ -810,7 +816,7 @@ def check_new_asset_exists_g2(self, vesselNumber):
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    #Get all elements from the Asset table list and save them in allElements list
+    # Get all elements from the Asset table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show div", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
     allElements = self.driver.find_elements_by_css_selector(".left-column asset-show div")
@@ -842,25 +848,25 @@ def check_new_asset_exists_g2(self, vesselNumber):
     self.assertEqual(productOrgNameValue[vesselNumber], allElements[12].text)
     # Check that the Name value is correct.left-column asset-show l
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("asset-show-page h1").text)
-
-    '''
-    # Need to be added following checks when functionality exists
-
-    # Check that the Gear Type value is correct.
-    self.assertEqual(gearTypeValue[vesselNumber], self.driver.find_element_by_id("asset-input-gearType").text)
-    # Check that the License Type value is correct.
-    self.assertEqual(licenseTypeValue, self.driver.find_element_by_id("asset-input-licenseType").text)
-    # Click on the Contacts tab
-    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
-    # Check that the Contact Name value is correct.
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 7")
+    # Get all contacts elements from the Asset table list and save them in allContactsElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show-contacts div", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-name-0").get_attribute("value"))
+    allContactsElements = self.driver.find_elements_by_css_selector(".left-column asset-show-contacts div")
+    # Check that the Contact Name value is correct.
+    self.assertEqual(contactNameValue[vesselNumber], allContactsElements[3].text)
     # Check that the E-mail value is correct.
-    self.assertEqual(contactEmailValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-email-0").get_attribute("value"))
-    # Check that the E-mail value is correct.
-    self.assertEqual(contactPhoneNumberValue[vesselNumber], self.driver.find_element_by_id("asset-input-contact-number-0").get_attribute("value"))
-    '''
+    self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[4].text)
+    # Check that the Contact Country value is correct.
+    self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[5].text)
+    # Check that the Contact City value is correct.
+    self.assertEqual(contactCityValue[vesselNumber], allContactsElements[6].text)
+    # Check that the Phone value is correct.
+    self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[7].text)
+    # Check that the Contact Zip Code value is correct.
+    self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[8].text)
+    # Check that the Type Organization value is correct.
+    self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[9].text)
+
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -3108,6 +3114,7 @@ def create_asset_via_rest(token, dataBody):
     headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
     rsp = requests.post(url, json=dataBody, headers=headers)
     print(rsp)
+    return rsp
 
 
 
