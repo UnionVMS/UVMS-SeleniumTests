@@ -585,9 +585,9 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("#asset-form--flagstate mat-select").click()
-    wait_for_element_by_id_to_exist(wait, "mat-option-SWE", "mat-option-SWE checked 4")
+    wait_for_element_by_id_to_exist(wait, "mat-option-" + countryValue[vesselNumber], "mat-option-COUNTRY checked 4")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mat-option-SWE").click()
+    self.driver.find_element_by_id("mat-option-" + countryValue[vesselNumber]).click()
     # Enter IRCS value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
@@ -608,16 +608,12 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(lengthOverAllValue[vesselNumber])
     # Length between Perpendiculars Value (lengthBetweenPerpendiculars)
     self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").send_keys(lengthBetweenPerpendicularsValue[vesselNumber])
-
     # Gross Tonnage Value
     self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(grossTonnageValue[vesselNumber])
-
     # Main Power Value
     self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").send_keys(powerValue[vesselNumber])
-
     # Main Producer Name Value
     self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").send_keys(productOrgNameValue[vesselNumber])
-
     # Main Producer Code Value
     self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").send_keys(productOrgCodeValue[vesselNumber])
 
@@ -663,6 +659,7 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
 def create_one_new_asset_via_rest_g2(self, vesselNumber):
     # Get Token
     token = get_token_from_usm()
+    # Create Asset via REST
     dataBody = {'grossTonnageUnit': grossTonnageTypeValue[vesselNumber]}
     dataBody.setdefault('flagStateCode', countryValue[vesselNumber])
     dataBody.setdefault('ircs', ircsValue[vesselNumber])
@@ -678,9 +675,28 @@ def create_one_new_asset_via_rest_g2(self, vesselNumber):
     dataBody.setdefault('powerOfMainEngine', powerValue[vesselNumber])
     dataBody.setdefault('prodOrgName', productOrgNameValue[vesselNumber])
     dataBody.setdefault('prodOrgCode', productOrgCodeValue[vesselNumber])
+    print(dataBody)
+    url = httpUrlRestAssetString
+    rsp = create_post_via_rest(token, dataBody, url)
+    print(rsp)
+    print(rsp.text)
+    assetId = get_key_value_of_respone(rsp, "id")
+    print("id :", assetId)
+    # Create Contact via REST
+    dataBody = {'assetId': assetId}
+    dataBody.setdefault('flagStateCode', countryValue[vesselNumber])
+    dataBody.setdefault('name', contactNameValue[vesselNumber])
+    dataBody.setdefault('type', contactTypeValue[vesselNumber])
+    dataBody.setdefault('email', contactEmailValue[vesselNumber])
+    dataBody.setdefault('phoneNumber', contactPhoneNumberValue[vesselNumber])
+    dataBody.setdefault('country', contactCountryValue[vesselNumber])
+    dataBody.setdefault('cityName', contactCityValue[vesselNumber])
+    dataBody.setdefault('zipCode', contactZipCodeValue[vesselNumber])
+    url = httpUrlRestAssetString + "/contacts"
+    rsp = create_post_via_rest(token, dataBody, url)
+    print(rsp)
+    print(rsp.text)
 
-    # Create Asset vis REST
-    create_asset_via_rest(token, dataBody)
 
 
     '''
@@ -853,19 +869,19 @@ def check_new_asset_exists_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue)
     allContactsElements = self.driver.find_elements_by_css_selector(".left-column asset-show-contacts div")
     # Check that the Contact Name value is correct.
-    self.assertEqual(contactNameValue[vesselNumber], allContactsElements[3].text)
+    self.assertEqual(contactNameValue[vesselNumber], allContactsElements[1].text)
     # Check that the E-mail value is correct.
-    self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[4].text)
+    self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[2].text)
     # Check that the Contact Country value is correct.
-    self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[5].text)
+    self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
     # Check that the Contact City value is correct.
-    self.assertEqual(contactCityValue[vesselNumber], allContactsElements[6].text)
+    self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
     # Check that the Phone value is correct.
-    self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[7].text)
+    self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[5].text)
     # Check that the Contact Zip Code value is correct.
-    self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[8].text)
+    self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[6].text)
     # Check that the Type Organization value is correct.
-    self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[9].text)
+    self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[7].text)
 
     time.sleep(defaultSleepTimeValue * 10)
 
@@ -3108,13 +3124,16 @@ def get_token_from_usm():
     return token
 
 
-def create_asset_via_rest(token, dataBody):
+def create_post_via_rest(token, dataBody, url):
     # Create Asset vis REST
-    url = httpUrlRestAssetString
     headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
     rsp = requests.post(url, json=dataBody, headers=headers)
-    print(rsp)
     return rsp
+
+
+def get_key_value_of_respone(rsp, keyId):
+    response_dict = json.loads(rsp.text)
+    return response_dict[keyId]
 
 
 
@@ -3272,7 +3291,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (first in the list)
-        create_one_new_asset_from_gui_g2(self, 0)
+        create_one_new_asset_via_rest_g2(self, 0)
+        #create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3323,7 +3343,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (second in the list)
-        create_one_new_asset_from_gui_g2(self, 1)
+        create_one_new_asset_via_rest_g2(self, 1)
+        #create_one_new_asset_from_gui_g2(self, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3453,7 +3474,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create assets 3-6 in the list
         for x in range(2, 6):
-            create_one_new_asset_from_gui_g2(self, x)
+            #create_one_new_asset_from_gui_g2(self, x)
+            create_one_new_asset_via_rest_g2(self, x)
             time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -4796,7 +4818,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (7th in the list)
-        create_one_new_asset_from_gui_g2(self, 6)
+        #create_one_new_asset_from_gui_g2(self, 6)
+        create_one_new_asset_via_rest_g2(self, 6)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 6, 6)
 
 
@@ -4891,7 +4914,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (36th in the list)
-        create_one_new_asset_from_gui_g2(self, 35)
+        create_one_new_asset_via_rest_g2(self, 35)
         # Create new Mobile Terminal (36th in the list)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 35, 35)
         # Add channel to mobile terminal
