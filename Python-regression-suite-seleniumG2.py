@@ -2522,6 +2522,7 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(2)
 
 
+
 def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     # Get Token
     token = get_token_from_usm()
