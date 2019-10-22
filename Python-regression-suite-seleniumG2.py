@@ -656,7 +656,7 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
 
 
 
-def create_one_new_asset_via_rest_g2(self, vesselNumber):
+def create_one_new_asset_via_rest_g2(vesselNumber):
     # Get Token
     token = get_token_from_usm()
     # Create Asset via REST
@@ -684,7 +684,6 @@ def create_one_new_asset_via_rest_g2(self, vesselNumber):
     print("id :", assetId)
     # Create Contact via REST
     dataBody = {'assetId': assetId}
-    dataBody.setdefault('flagStateCode', countryValue[vesselNumber])
     dataBody.setdefault('name', contactNameValue[vesselNumber])
     dataBody.setdefault('type', contactTypeValue[vesselNumber])
     dataBody.setdefault('email', contactEmailValue[vesselNumber])
@@ -696,34 +695,6 @@ def create_one_new_asset_via_rest_g2(self, vesselNumber):
     rsp = create_post_via_rest(token, dataBody, url)
     print(rsp)
     print(rsp.text)
-
-
-
-    '''
-
-    # To be fixed when the functionality exists in the new frontend
-    # Click on the Contacts tab
-    self.driver.find_element_by_xpath("//*[@id='CONTACTS']/span").click()
-    # Click on "Add contact" link
-    wait_for_element_by_id_to_exist(wait, "asset-btn-add-contact", "asset-btn-add-contact checked 9")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("asset-btn-add-contact").click()
-    # Main Contact Name Value
-    wait_for_element_by_id_to_exist(wait, "asset-input-contact-name-0", "asset-input-contact-name-0 checked 10")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("asset-input-contact-name-0").send_keys(contactNameValue[vesselNumber])
-    print(contactNameValue[vesselNumber])
-    # Main E-mail Value
-    self.driver.find_element_by_id("asset-input-contact-email-0").send_keys(contactEmailValue[vesselNumber])
-    # Main Contact Number Value
-    self.driver.find_element_by_id("asset-input-contact-number-0").send_keys(contactPhoneNumberValue[vesselNumber])
-
-    # Leave new asset view
-    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 12")
-    time.sleep(defaultSleepTimeValue * 3)
-    self.driver.find_element_by_id("menu-bar-cancel").click()
-    time.sleep(defaultSleepTimeValue * 2)
-    '''
     time.sleep(defaultSleepTimeValue)
 
 
@@ -2394,6 +2365,16 @@ def create_asset_from_file_g2(self, assetFileName):
         create_one_new_asset_from_gui_with_parameters_g2(self, assetAllrows[x])
 
 
+def create_asset_from_file_via_rest_g2(assetFileName):
+    # Create asset (assetFileName)
+    # Open saved csv file and read all asset elements
+    assetAllrows = get_elements_from_file(assetFileName)
+    # create_one_new_asset
+    for x in range(0, len(assetAllrows)):
+        create_one_new_asset_via_rest_with_parameters_g2(assetAllrows[x])
+
+
+
 
 def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName):
     # Create Mobile Terminal for mentioned asset (assetFileName, mobileTerminalFileName)
@@ -2541,6 +2522,51 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(2)
 
 
+def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
+    # Get Token
+    token = get_token_from_usm()
+    # Create Asset via REST
+    dataBody = {'grossTonnageUnit': parameterList[23]}
+    dataBody.setdefault('flagStateCode', parameterList[17])
+    dataBody.setdefault('ircs', parameterList[0])
+    dataBody.setdefault('name', parameterList[1])
+    dataBody.setdefault('externalMarking', parameterList[3])
+    dataBody.setdefault('cfr', parameterList[2])
+    dataBody.setdefault('imo', parameterList[4])
+    dataBody.setdefault('portOfRegistration', parameterList[7])
+    dataBody.setdefault('mmsi', parameterList[5])
+    dataBody.setdefault('lengthOverAll', parameterList[9])
+    dataBody.setdefault('lengthBetweenPerpendiculars', parameterList[22])
+    dataBody.setdefault('grossTonnage', parameterList[10])
+    dataBody.setdefault('powerOfMainEngine', parameterList[11])
+    dataBody.setdefault('prodOrgName', parameterList[12])
+    dataBody.setdefault('prodOrgCode', parameterList[13])
+    dataBody.setdefault('vesselType', parameterList[24])
+    print(dataBody)
+    url = httpUrlRestAssetString
+    rsp = create_post_via_rest(token, dataBody, url)
+    print(rsp)
+    print(rsp.text)
+    assetId = get_key_value_of_respone(rsp, "id")
+    print("id :", assetId)
+    # Create Contact via REST
+    dataBody = {'assetId': assetId}
+    dataBody.setdefault('name', parameterList[14])
+    dataBody.setdefault('type', parameterList[25])
+    dataBody.setdefault('email', parameterList[15])
+    dataBody.setdefault('phoneNumber', parameterList[16])
+    dataBody.setdefault('country', parameterList[21])
+    dataBody.setdefault('cityName', parameterList[20])
+    dataBody.setdefault('zipCode', parameterList[19])
+    dataBody.setdefault('streetName', parameterList[18])
+    url = httpUrlRestAssetString + "/contacts"
+    rsp = create_post_via_rest(token, dataBody, url)
+    print(rsp)
+    print(rsp.text)
+    time.sleep(defaultSleepTimeValue)
+
+
+
 def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -2596,6 +2622,51 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     time.sleep(defaultSleepTimeValue * 10)
 
     '''
+
+
+
+    # Get Token
+    token = get_token_from_usm()
+    # Create Asset via REST
+    dataBody = {'grossTonnageUnit': grossTonnageTypeValue[vesselNumber]}
+    dataBody.setdefault('flagStateCode', countryValue[vesselNumber])
+    dataBody.setdefault('ircs', ircsValue[vesselNumber])
+    dataBody.setdefault('name', vesselName[vesselNumber])
+    dataBody.setdefault('externalMarking', externalMarkingValue[vesselNumber])
+    dataBody.setdefault('cfr', cfrValue[vesselNumber])
+    dataBody.setdefault('imo', imoValue[vesselNumber])
+    dataBody.setdefault('portOfRegistration', homeportValue[vesselNumber])
+    dataBody.setdefault('mmsi', mmsiValue[vesselNumber])
+    dataBody.setdefault('lengthOverAll', lengthOverAllValue[vesselNumber])
+    dataBody.setdefault('lengthBetweenPerpendiculars', lengthBetweenPerpendicularsValue[vesselNumber])
+    dataBody.setdefault('grossTonnage', grossTonnageValue[vesselNumber])
+    dataBody.setdefault('powerOfMainEngine', powerValue[vesselNumber])
+    dataBody.setdefault('prodOrgName', productOrgNameValue[vesselNumber])
+    dataBody.setdefault('prodOrgCode', productOrgCodeValue[vesselNumber])
+    print(dataBody)
+    url = httpUrlRestAssetString
+    rsp = create_post_via_rest(token, dataBody, url)
+    print(rsp)
+    print(rsp.text)
+    assetId = get_key_value_of_respone(rsp, "id")
+    print("id :", assetId)
+    # Create Contact via REST
+    dataBody = {'assetId': assetId}
+    dataBody.setdefault('flagStateCode', countryValue[vesselNumber])
+    dataBody.setdefault('name', contactNameValue[vesselNumber])
+    dataBody.setdefault('type', contactTypeValue[vesselNumber])
+    dataBody.setdefault('email', contactEmailValue[vesselNumber])
+    dataBody.setdefault('phoneNumber', contactPhoneNumberValue[vesselNumber])
+    dataBody.setdefault('country', contactCountryValue[vesselNumber])
+    dataBody.setdefault('cityName', contactCityValue[vesselNumber])
+    dataBody.setdefault('zipCode', contactZipCodeValue[vesselNumber])
+    url = httpUrlRestAssetString + "/contacts"
+    rsp = create_post_via_rest(token, dataBody, url)
+    print(rsp)
+    print(rsp.text)
+    time.sleep(defaultSleepTimeValue)
+
+
     # To be fixed when the functionality exists in the new frontend
 
     # Select Gear Type value
@@ -3291,7 +3362,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (first in the list)
-        create_one_new_asset_via_rest_g2(self, 0)
+        create_one_new_asset_via_rest_g2(0)
         #create_one_new_asset_from_gui_g2(self, 0)
 
 
@@ -3343,7 +3414,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (second in the list)
-        create_one_new_asset_via_rest_g2(self, 1)
+        create_one_new_asset_via_rest_g2(1)
         #create_one_new_asset_from_gui_g2(self, 1)
 
 
@@ -3475,7 +3546,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Create assets 3-6 in the list
         for x in range(2, 6):
             #create_one_new_asset_from_gui_g2(self, x)
-            create_one_new_asset_via_rest_g2(self, x)
+            create_one_new_asset_via_rest_g2(x)
             time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -4819,7 +4890,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (7th in the list)
         #create_one_new_asset_from_gui_g2(self, 6)
-        create_one_new_asset_via_rest_g2(self, 6)
+        create_one_new_asset_via_rest_g2(6)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 6, 6)
 
 
@@ -4914,7 +4985,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (36th in the list)
-        create_one_new_asset_via_rest_g2(self, 35)
+        create_one_new_asset_via_rest_g2(35)
         # Create new Mobile Terminal (36th in the list)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 35, 35)
         # Add channel to mobile terminal
@@ -4940,13 +5011,13 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 1
-        create_asset_from_file_g2(self, assetFileNameList[0])
+        create_asset_from_file_via_rest_g2(assetFileNameList[0])
         create_mobileterminal_from_file_g2(self, assetFileNameList[0], mobileTerminalFileNameList[0])
         # Create assets, Mobile for Trip 2
-        create_asset_from_file_g2(self, assetFileNameList[1])
+        create_asset_from_file_via_rest_g2(assetFileNameList[1])
         create_mobileterminal_from_file_g2(self, assetFileNameList[1], mobileTerminalFileNameList[1])
         # Create assets, Mobile for Trip 3
-        create_asset_from_file_g2(self, assetFileNameList[2])
+        create_asset_from_file_via_rest_g2(assetFileNameList[2])
         create_mobileterminal_from_file_g2(self, assetFileNameList[2], mobileTerminalFileNameList[2])
 
 
@@ -5232,10 +5303,10 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 1
-        create_asset_from_file_g2(self, assetFileNameList[9])
+        create_asset_from_file_via_rest_g2(assetFileNameList[9])
         create_mobileterminal_from_file_g2(self, assetFileNameList[9], mobileTerminalFileNameList[9])
         # Create assets, Mobile for RealTrip 2
-        create_asset_from_file_g2(self, assetFileNameList[10])
+        create_asset_from_file_via_rest_g2(assetFileNameList[10])
         create_mobileterminal_from_file_g2(self, assetFileNameList[10], mobileTerminalFileNameList[10])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=256)
@@ -5301,7 +5372,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 4
-        create_asset_from_file_g2(self, assetFileNameList[3])
+        create_asset_from_file_via_rest_g2(assetFileNameList[3])
         create_mobileterminal_from_file_g2(self, assetFileNameList[3], mobileTerminalFileNameList[3])
 
 
@@ -5328,10 +5399,10 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 5
-        create_asset_from_file_g2(self, assetFileNameList[4])
+        create_asset_from_file_via_rest_g2(assetFileNameList[4])
         create_mobileterminal_from_file_g2(self, assetFileNameList[4], mobileTerminalFileNameList[4])
         # Create assets, Mobile for Trip 6
-        create_asset_from_file_g2(self, assetFileNameList[5])
+        create_asset_from_file_via_rest_g2(assetFileNameList[5])
         create_mobileterminal_from_file_g2(self, assetFileNameList[5], mobileTerminalFileNameList[5])
 
 
@@ -5366,7 +5437,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 7
-        create_asset_from_file_g2(self, assetFileNameList[6])
+        create_asset_from_file_via_rest_g2(assetFileNameList[6])
         create_mobileterminal_from_file_g2(self, assetFileNameList[6], mobileTerminalFileNameList[6])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
@@ -5381,7 +5452,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 8
-        create_asset_from_file_g2(self, assetFileNameList[7])
+        create_asset_from_file_via_rest_g2(assetFileNameList[7])
         create_mobileterminal_from_file_g2(self, assetFileNameList[7], mobileTerminalFileNameList[7])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=24)
@@ -5396,7 +5467,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 9
-        create_asset_from_file_g2(self, assetFileNameList[8])
+        create_asset_from_file_via_rest_g2(assetFileNameList[8])
         create_mobileterminal_from_file_g2(self, assetFileNameList[8], mobileTerminalFileNameList[8])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=48)
@@ -5411,7 +5482,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 3
-        create_asset_from_file_g2(self, assetFileNameList[11])
+        create_asset_from_file_via_rest_g2(assetFileNameList[11])
         create_mobileterminal_from_file_g2(self, assetFileNameList[11], mobileTerminalFileNameList[11])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=192)
@@ -5432,7 +5503,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 4a and 4b
-        create_asset_from_file_g2(self, assetFileNameList[12])
+        create_asset_from_file_via_rest_g2(assetFileNameList[12])
         create_mobileterminal_from_file_g2(self, assetFileNameList[12], mobileTerminalFileNameList[12])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=256)
@@ -5451,7 +5522,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 5
-        create_asset_from_file_g2(self, assetFileNameList[13])
+        create_asset_from_file_via_rest_g2(assetFileNameList[13])
         create_mobileterminal_from_file_g2(self, assetFileNameList[13], mobileTerminalFileNameList[13])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=48)
@@ -5472,7 +5543,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 6
-        create_asset_from_file_g2(self, assetFileNameList[14])
+        create_asset_from_file_via_rest_g2(assetFileNameList[14])
         create_mobileterminal_from_file_g2(self, assetFileNameList[14], mobileTerminalFileNameList[14])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
@@ -5493,7 +5564,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 7
-        create_asset_from_file_g2(self, assetFileNameList[15])
+        create_asset_from_file_via_rest_g2(assetFileNameList[15])
         create_mobileterminal_from_file_g2(self, assetFileNameList[15], mobileTerminalFileNameList[15])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=270)
@@ -5508,7 +5579,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create assets, Mobile for RealTrip 8
-        create_asset_from_file_g2(self, assetFileNameList[16])
+        create_asset_from_file_via_rest_g2(assetFileNameList[16])
         create_mobileterminal_from_file_g2(self, assetFileNameList[16], mobileTerminalFileNameList[16])
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=270)
@@ -7303,7 +7374,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=360)
     def test_0301_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
-        create_asset_from_file(self, tests300FileName[0])
+        create_asset_from_file_g2(self, tests300FileName[0])
 
 
     @timeout_decorator.timeout(seconds=360)
@@ -8673,7 +8744,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0002_create_one_new_asset_via_rest_g2(self):
         # Create new asset (first in the list)
-        create_one_new_asset_via_rest_g2(self, 0)
+        create_one_new_asset_via_rest_g2(0)
 
 
 
