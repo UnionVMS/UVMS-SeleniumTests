@@ -2547,7 +2547,7 @@ def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     url = httpUrlRestAssetString
     rsp = create_post_via_rest(token, dataBody, url)
     print(rsp)
-    print(rsp.text)
+    print(rsp.text.encode("utf-8"))
     assetId = get_key_value_of_respone(rsp, "id")
     print("id :", assetId)
     # Create Contact via REST
@@ -2563,7 +2563,7 @@ def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     url = httpUrlRestAssetString + "/contacts"
     rsp = create_post_via_rest(token, dataBody, url)
     print(rsp)
-    print(rsp.text)
+    print(rsp.text.encode("utf-8"))
     time.sleep(defaultSleepTimeValue)
 
 
@@ -3322,6 +3322,10 @@ def get_key_value_of_respone(rsp, keyId):
     response_dict = json.loads(rsp.text)
     return response_dict[keyId]
 
+
+def get_dictionary_list_of_respone(rsp):
+    response_dict = json.loads(rsp.text)
+    return response_dict
 
 
 # -------------------------------------------------------------------------------------------------------------------
