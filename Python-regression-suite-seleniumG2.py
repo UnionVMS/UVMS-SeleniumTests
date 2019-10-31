@@ -5731,11 +5731,13 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0001d_create_two_new_assets_and_mobile_terminals_37_38(self):
-        # Create new asset (7th in the list)
-        create_one_new_asset_from_gui(self, 37)
-        create_one_new_mobile_terminal_via_asset_tab(self, 37, 37)
-        create_one_new_asset_from_gui(self, 38)
-        create_one_new_mobile_terminal_via_asset_tab(self, 38, 38)
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create new asset (38th and 39th in the list)
+        create_one_new_asset_via_rest_g2(37)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 37, 37)
+        create_one_new_asset_via_rest_g2(38)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 38, 38)
 
 
     def test_0034_create_speed_rule_one(self):
@@ -6434,9 +6436,11 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
-        # Create new asset (7th in the list)
-        create_one_new_asset_from_gui(self, 34)
-        create_one_new_mobile_terminal_via_asset_tab(self, 34, 34)
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create new asset (35th in the list)
+        create_one_new_asset_via_rest_g2(34)
+        create_one_new_mobile_terminal_via_asset_tab_g2(self, 34, 34)
 
 
 
