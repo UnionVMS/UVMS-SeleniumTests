@@ -194,6 +194,7 @@ downloadPathWindow = "\Downloads"
 
 referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 
+tests200FileName = ['assets2xxxxG2.csv', 'mobileterminals2xxxxG2.csv', 'linkassetmobileterminals2xxxx.csv']
 tests300FileName = ['assets3xxxxG2.csv', 'mobileterminals3xxxxG2.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
 tests900FileName = ['assetsALLxxG2.csv', 'mobileterminalsALLxxG2.csv', 'linkassetmobileterminalsALLxx.csv', 'channelstomobileterminalsALLxx.csv', 'channelstomobileterminalALLxxx.csv']
 

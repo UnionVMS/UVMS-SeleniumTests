@@ -1501,11 +1501,11 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
-    time.sleep(defaultSleepTimeValue)
+    time.sleep(defaultSleepTimeValue * 5)
     self.driver.find_element_by_link_text("Assets").click()
     # Enter IRCS in the ircs search field for the newly created asset
     wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
-    time.sleep(defaultSleepTimeValue)
+    time.sleep(defaultSleepTimeValue * 5)
     self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
@@ -2374,8 +2374,6 @@ def create_asset_from_file_via_rest_g2(assetFileName):
         create_one_new_asset_via_rest_with_parameters_g2(assetAllrows[x])
 
 
-
-
 def create_mobileterminal_from_file(self, assetFileName, mobileTerminalFileName):
     # Create Mobile Terminal for mentioned asset (assetFileName, mobileTerminalFileName)
 
@@ -2399,9 +2397,9 @@ def create_mobileterminal_from_file_g2(self, assetFileName, mobileTerminalFileNa
     # Open saved csv file and read all mobile terminal elements
     mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
 
-    # create_one new mobile terminal for mentioned asset
+    # create_one new mobile terminal for mentioned asset (using IRCS)
     for x in range(0, len(assetAllrows)):
-        create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, assetAllrows[x][0], mobileTerminalAllrows[x])
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, assetAllrows[x][0], mobileTerminalAllrows[x], True)
 
 
 def create_mobileterminal_from_file_based_on_link_file(self, assetFileName, mobileTerminalFileName, linkFileName):
@@ -2798,17 +2796,22 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselNam
     time.sleep(2)
 
 
-def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsValue, parameterRow):
+def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCfrValue, parameterRow, ircsTrueCfrFalse):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue)
+    # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
+    if ircsTrueCfrFalse == True :
+        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+    else:
+        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -3132,8 +3135,8 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
     time.sleep(2)
 
 
-def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, mobileTerminalFileName, linkFileName):
-    # Create Mobile Terminal based on linkFile and mobileTerminalFile (mobileTerminalFileName, linkFileName)
+def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, mobileTerminalFileName, linkFileName, ircsTrueCfrFalse):
+    # Create Mobile Terminal based on linkFile and mobileTerminalFile (mobileTerminalFileName, linkFileName, ircsTrueCfrFalse)
 
     # Open saved csv file and read all mobile terminal elements
     mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
@@ -3148,7 +3151,7 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
         print(linkAssetMobileTerminalAllrows[x][1])
         print("-----------------------")
         mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
-        create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue)
+        create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue, ircsTrueCfrFalse)
 
 
 def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, channelFileName, linkFileName):
@@ -6577,19 +6580,22 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
-    @timeout_decorator.timeout(seconds=500)
+    @timeout_decorator.timeout(seconds=180)
     def test_0201_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
-        create_asset_from_file(self, 'assets2xxxx.csv')
+        create_asset_from_file_via_rest_g2(tests200FileName[0])
 
+
+    # Create new tests for filtering asset lists.
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0202_advanced_search_of_assets_fs_geartypes(self):
         # Test case tests advanced search functions filtering on flag state and geartypes. Also saving this search to group.
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Open saved csv file and read all asset elements
-        assetAllrows = get_elements_from_file('assets2xxxx.csv')
+        assetAllrows = get_elements_from_file(tests200FileName[0])
         # Click on asset tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-assets", "uvms-header-menu-item-assets checked 1")
         time.sleep(1)
@@ -6701,6 +6707,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0202b_check_group_exported_to_file(self):
         # Test case checks that group from test_0202 is exported to file correctly.
         # Set wait time for web driver
@@ -6790,6 +6797,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0203_advanced_search_of_assets_length_power(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6888,6 +6896,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0203b_check_group_exported_to_file(self):
         # Test case checks that group from test_0203 is exported to file correctly.
         # Set wait time for web driver
@@ -6971,6 +6980,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0204_advanced_search_of_assets_extmark_port(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7099,12 +7109,15 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=500)
     def test_0205_create_several_mobile_terminals_for_filtering(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create mobile terminals from file with several different values for filtering
-        create_mobileterminal_from_file_based_on_link_file(self, 'assets2xxxx.csv', 'mobileterminals2xxxx.csv', 'linkassetmobileterminals2xxxx.csv')
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests200FileName[1], tests200FileName[2], False)
 
 
 
     @timeout_decorator.timeout(seconds=360)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0206_search_of_mobile_terminals_serialnr_and_export_to_file(self):
         # Test case tests search functions filtering on Serial Number. Also export list result to file.
         # Set wait time for web driver
@@ -7203,6 +7216,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0206b_check_mobile_terminal_exported_to_file(self):
         # Test case checks that mobile terminals from test_0206 is exported to file correctly.
         # Set wait time for web driver
@@ -7284,6 +7298,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=360)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0207_search_of_mobile_terminals_member_nr_satellite_nr_and_export_to_file(self):
         # Test case tests search functions filtering on member and satellite Number. Also export list result to file.
         # Set wait time for web driver
@@ -7389,6 +7404,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0207b_check_mobile_terminal_exported_to_file(self):
         # Test case checks that mobile terminals from test_0207 is exported to file correctly.
         # Set wait time for web driver
@@ -8901,7 +8917,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
-        create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests900FileName[1], tests900FileName[2])
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests900FileName[1], tests900FileName[2], True)
 
 
     # Injecting additional channels for all MTs for Prod

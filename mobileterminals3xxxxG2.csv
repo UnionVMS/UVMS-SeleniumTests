@@ -1,11 +1,11 @@
 serialNoValue;transceiverType;softwareVersion;antennaVersion;satelliteNumber;dnidNumber;memberIdnumber;installedByName;expectedFrequencyMinutes;obsolete;gracePeriodFrequencyMinutes;obsolete;inPortFrequencyMinutes;obsolete;Status(Inactive=0,Active=1);channel;poll;config;default;landStation;deltaStart(Hours);deltaStop(Hours);installationDate;uninstallationDate;MobileTerminalPosition;ChannelPosition
 7TT0123BCF01;Sailor 1001M MiniC;A1;A2;434574671;23101;201;Mike Andersson;330;0;405;0;430;0;1;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
-5,66669E+11;Sailor 2000M MiniC;BB;CC;964563402;34502;102;Greger Kurt;240;0;365;0;450;0;1;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
+566668888002;Sailor 2000M MiniC;BB;CC;964563402;34502;102;Greger Kurt;240;0;365;0;450;0;1;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
 3AA045239693;Sailor 2000M MiniC;BB;CC;624676773;56703;333;Mike Slow;235;0;290;0;150;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
 BHFTR00ZZ234;Sailor 5555M MiniC;A1;A1;134566754;89004;333;Jack Brown;55;0;50;0;30;0;1;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
-9,92342E+11;Sailor 6005M MiniC;D1;D1;993452345;91205;888;Tim Black;1105;0;420;0;210;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
+992342345605;Sailor 6005M MiniC;D1;D1;993452345;91205;888;Tim Black;1105;0;420;0;210;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
 YYYG0J00A006;Sailor 6006M MiniC;D1;A;412523456;82336;432;Jill Mark;30;0;45;0;30;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
 2345ABCDEFG7;Sailor 2111M MiniC;A;C;232000127;56327;101;Mike Slow;55;0;120;0;1410;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
-7,8236E+11;Sailor 1111M MiniC;D1;D1;100001278;93448;500;Kim White;0;0;430;0;15;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
+782360056508;Sailor 1111M MiniC;D1;D1;100001278;93448;500;Kim White;0;0;430;0;15;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
 103434PPZ119;Sailor 7757M MiniC;AAA1;BBB1;123425979;42559;501;Ann Smartson;5;0;5;0;5;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
 6ADD02340010;Sailor 9999M MiniC;AAA1;BBB1;999923310;44320;510;Ann Smartson;225;0;155;0;85;0;0;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
