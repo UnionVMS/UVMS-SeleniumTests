@@ -3025,8 +3025,8 @@ def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName)
                 print("200 OK")
             else:
                 print("Request NOT OK!")
-            # Delay 100ms
-            time.sleep(0.1)
+            # Delay 200ms
+            time.sleep(defaultSleepTimeValue)
 
 
 def create_trip_from_file_g2(currentPositionTimeValue, assetFileName, tripFileName):
@@ -3058,8 +3058,8 @@ def create_trip_from_file_g2(currentPositionTimeValue, assetFileName, tripFileNa
                 print("200 OK")
             else:
                 print("Request NOT OK!")
-            # Delay 100ms
-            time.sleep(0.1)
+            # Delay 200ms
+            time.sleep(defaultSleepTimeValue)
 
 
 def create_report_and_check_trip_position_reports(self, assetFileName, tripFileName):
@@ -3133,6 +3133,29 @@ def create_report_and_check_trip_position_reports(self, assetFileName, tripFileN
             self.assertEqual(str("%.5f" % float(str("%.4f" % float(assetTripAllrows[y][3])))) + " kts", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[9]/div").text)
         self.assertEqual(assetTripAllrows[y][4] + "°", self.driver.find_element_by_xpath("//div[@id='map']/div[6]/div/div/div/div/div/div[2]/div/div/table/tbody/tr[" + str(y+1) + "]/td[11]/div").text)
     time.sleep(2)
+
+
+def create_selected_assets_from_fartyg2(linkFileName, ircsTrueCfrFalse):
+    # Create selected asset from Fartyg2 based on linkFile (linkFileName, ircsTrueCfrFalse)
+    print("GET ALL NEEDED ASSETS FROM FARTYG2 ---- Started!!!")
+
+    # Open saved csv file and read all linked elements between assets and mobile terminals
+    linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+
+    # create_one asset based on data from Fartyg2
+    for x in range(0, len(linkAssetMobileTerminalAllrows)):
+        print("-----------------------")
+        print(x)
+        print(linkAssetMobileTerminalAllrows[x][1])
+        print("-----------------------")
+        rsp = get_selected_asset_from_fartyg2(linkAssetMobileTerminalAllrows[x][1], ircsTrueCfrFalse)
+        # Check if request is OK (200)
+        if rsp.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+        time.sleep(defaultSleepTimeValue)
+    print("GET ALL NEEDED ASSETS FROM FARTYG2 ---- Finished!!!")
 
 
 def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, mobileTerminalFileName, linkFileName, ircsTrueCfrFalse):
@@ -3319,6 +3342,18 @@ def create_post_via_rest(token, dataBody, url):
     headers = {'Authorization': token, 'Cache-Control': 'no-cache'}
     rsp = requests.post(url, json=dataBody, headers=headers)
     return rsp
+
+
+def get_selected_asset_from_fartyg2(ircsCfrValue, ircsTrueCfrFalse):
+    # Get selected asset from Fartyg2
+    # Add correct url if value is IRCS OR CFR
+    if ircsTrueCfrFalse == True :
+        url = httpHavProxyString + "/ircs/" + ircsCfrValue
+    else:
+        url = httpHavProxyString + "/cfr/" + ircsCfrValue
+    # Generate request
+    r = requests.get(url)
+    return r
 
 
 def get_key_value_of_respone(rsp, keyId):
@@ -8913,7 +8948,16 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
     # Injecting MTs for Prod (All parts)
     @timeout_decorator.timeout(seconds=1000)
-    def test_0055b_create_several_mobile_terminals_from_file(self):
+    def test_0055b_create_several_assets_from_file_based_on_Fartyg2(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Get get all needed Assets from Fartyg2
+        create_selected_assets_from_fartyg2(tests900FileName[2], True)
+
+
+    # Injecting MTs for Prod (All parts)
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0055c_create_several_mobile_terminals_from_file(self):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create mobile terminals from file with different values and link them to existing assets that are synced in from Fartyg2
