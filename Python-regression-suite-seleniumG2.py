@@ -8470,7 +8470,8 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create assets, Mobile for Trip 1-9
         for x in range(0, 9):
-            create_asset_from_file_g2(self, assetFileNameList[x])
+            create_asset_from_file_via_rest_g2(assetFileNameList[x])
+            #create_asset_from_file_g2(self, assetFileNameList[x])
         time.sleep(1)
 
 
@@ -8584,10 +8585,12 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
             # Check asset Length
             self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
+            # Check vessel Type
+            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[7].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[8].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
 
 
             # Open Track and Forcast settings
@@ -8802,10 +8805,12 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
             # Check asset Length
             self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
+            # Check vessel Type
+            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[7].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[8].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
 
             # Open Track and Forcast settings
             wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper .fa-chevron-right", "CSS Selector checked 11")
