@@ -7499,7 +7499,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=360)
     def test_0301_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
-        create_asset_from_file_g2(self, tests300FileName[0])
+        create_asset_from_file_via_rest_g2(tests300FileName[0])
 
 
     @timeout_decorator.timeout(seconds=360)
@@ -8418,7 +8418,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create assets, Mobile for Trip 1-9
         for x in range(0, 9):
             create_asset_from_file_via_rest_g2(assetFileNameList[x])
-            #create_asset_from_file_g2(self, assetFileNameList[x])
         time.sleep(1)
 
 
