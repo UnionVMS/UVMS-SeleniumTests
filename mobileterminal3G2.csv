@@ -1,0 +1,2 @@
+serialNoValue;transceiverType;softwareVersion;antennaVersion;satelliteNumber;dnidNumber;memberIdnumber;installedByName;expectedFrequencyMinutes;obsolete;gracePeriodFrequencyMinutes;obsolete;inPortFrequencyMinutes;obsolete;Status(Inactive=0,Active=1);channel;poll;config;default;landStation;deltaStart(Hours);deltaStop(Hours);installationDate;uninstallationDate;MobileTerminalPosition;ChannelPosition
+M9003;Type A;A;A;S90003;90003;100;Mike Great;2;0;15;0;3;0;1;VMS;1;1;1;Thrane&Thrane;0;0;0;0;0;0
