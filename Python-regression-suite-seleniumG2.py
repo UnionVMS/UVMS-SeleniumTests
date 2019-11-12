@@ -1958,22 +1958,22 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
     # Expected frequency
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
     # Grace period
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyMinutes)
     # In port
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -3163,32 +3163,32 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
-        self.driver.find_element_by_css_selector(".channel ~ .channel #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
     # Click on Config checkbox if TRUE
     if channelRow[3] == "1":
-        self.driver.find_element_by_css_selector(".channel ~ .channel #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Click on Default checkbox if TRUE
     if channelRow[4] == "1":
-        self.driver.find_element_by_css_selector(".channel ~ .channel #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
     # Enter Land station
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(channelRow[10])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(channelRow[10])
     # Expected frequency
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
     # Grace period
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
     # In port
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
     # Click on save button
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 10")
     time.sleep(defaultSleepTimeValue)
