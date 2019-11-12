@@ -3103,7 +3103,7 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
         create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue, ircsTrueCfrFalse)
 
 
-def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, channelFileName, linkFileName):
+def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, channelFileName, linkFileName, ircsTrueCfrFalse):
     # Create addtional channels for Mobile Terminals from file based on channelFile
 
     # Open saved csv file and read all asset elements
@@ -3113,16 +3113,16 @@ def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from
     linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
 
     # create_one new channel for mentioned mobile terminal
-    for x in range(20, len(linkAssetMobileTerminalAllrows)):
+    for x in range(0, len(linkAssetMobileTerminalAllrows)):
         print("-----------------------")
         print(x)
         print(linkAssetMobileTerminalAllrows[x][0], " : ", linkAssetMobileTerminalAllrows[x][1])
 
         print("-----------------------")
-        create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(self, linkAssetMobileTerminalAllrows[x][1], channelAllrows[x])
+        create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(self, linkAssetMobileTerminalAllrows[x][1], channelAllrows[x], ircsTrueCfrFalse)
 
 
-def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(self, ircsValue, channelRow):
+def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(self, ircsCfrValue, channelRow, ircsTrueCfrFalse):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
@@ -3131,10 +3131,15 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     self.driver.find_element_by_link_text("Assets").click()
     # Deactivate SWE filter
     click_on_flag_state_in_list_tab(self, flagStateIndex[2])
-    # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue)
+    # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
+    if ircsTrueCfrFalse == True :
+        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+    else:
+        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -7504,12 +7509,17 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=360)
     def test_0302_create_several_mobile_terminals_for_editing(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create mobile terminals from file with different values.
+        create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests300FileName[1], tests300FileName[2], False)
         # Create mobile terminals from file with different values.
         # NOTE: Several mobile terminals are added to the same asset.
-        create_mobileterminal_from_file_based_on_link_file(self, tests300FileName[0], tests300FileName[1], tests300FileName[2])
+        #create_mobileterminal_from_file_based_on_link_file(self, tests300FileName[0], tests300FileName[1], tests300FileName[2])
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0302b_check_mobile_terminal_list(self):
         # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
         # Set wait time for web driver
@@ -7565,12 +7575,17 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     def test_0303_create_several_additional_channels_for_mobile_terminals(self):
         # Set referenceDateTime to current UTC time
         referenceDateTime = datetime.datetime.utcnow()
-        # Create assets from file with several different values for filtering
-        create_addtional_channels_for_mobileterminals_from_file(self, tests300FileName[3], referenceDateTime)
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create addtional channel to existing mobile terminal
+        # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed
+        create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests300FileName[3], tests300FileName[2], False)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
 
+    @timeout_decorator.timeout(seconds=360)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0304_check_additional_channels_for_mobile_terminals(self):
         # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
 
@@ -7591,6 +7606,8 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         self.assertTrue(resultExists)
 
 
+    @timeout_decorator.timeout(seconds=360)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0305_change_default_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
@@ -7737,6 +7754,8 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         self.assertTrue(resultExists)
 
 
+    @timeout_decorator.timeout(seconds=360)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0306_delete_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
 
@@ -8929,7 +8948,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
-        create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests900FileName[3], tests900FileName[2])
+        create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests900FileName[3], tests900FileName[2], True)
 
 
 
