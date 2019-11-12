@@ -8886,6 +8886,14 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         # Asset (Number 39) does not exist anymore. Removed from Fartyg2
         for x in range(40, 53):
             print("Number: " + str(x))
+            print("-----------------------")
+            rsp = get_selected_asset_from_fartyg2(ircsValue[x], True)
+            # Check if request is OK (200)
+            if rsp.ok:
+                print("200 OK")
+            else:
+                print("Request NOT OK!")
+            time.sleep(defaultSleepTimeValue)
             create_one_new_mobile_terminal_via_asset_tab_g2(self, x, x)
             time.sleep(1)
 
