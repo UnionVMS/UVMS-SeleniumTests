@@ -3148,18 +3148,34 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    # Click on edit existing mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column .edit-link", "CSS Selector checked 6")
+
+    # Get all Mobile Terminal elements in a list from GUI
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal fieldset", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector(".right-column .edit-link").click()
+    allAssetElements = self.driver.find_elements_by_css_selector("asset-show-mobile-terminal fieldset")
+    # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
+    for y in range(len(allAssetElements)):
+        print("Search for serial number:" + channelRow[0])
+        if channelRow[0] in allAssetElements[y].text :
+            print("Yes! Found serialnumber")
+            # Click on the correct "Edit link" that corresponds to found MT serial number
+            wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link", "CSS Selector checked 6b")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_css_selector("asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link").click()
+            break
+
+    # Click on edit existing mobile terminal
+    #wait_for_element_by_css_selector_to_exist(wait, ".right-column .edit-link", "CSS Selector checked 6")
+    #time.sleep(defaultSleepTimeValue * 10)
+    #self.driver.find_element_by_css_selector(".right-column .edit-link").click()
     # Click on New Channel button
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 10)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
     # Enter Channel name
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name input").send_keys(channelRow[1])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
@@ -7513,9 +7529,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create mobile terminals from file with different values.
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests300FileName[1], tests300FileName[2], False)
-        # Create mobile terminals from file with different values.
-        # NOTE: Several mobile terminals are added to the same asset.
-        #create_mobileterminal_from_file_based_on_link_file(self, tests300FileName[0], tests300FileName[1], tests300FileName[2])
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -7578,7 +7591,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
-        # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed
+        # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed!
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests300FileName[3], tests300FileName[2], False)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
