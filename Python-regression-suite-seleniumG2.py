@@ -3490,7 +3490,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (first in the list)
         create_one_new_asset_via_rest_g2(0)
-        #create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -8613,6 +8612,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
+
+            '''   FUNTION REMOVED IN UNIONVMS 3.40.7.w18
+
             # Click to expand the track list
             wait_for_element_by_css_selector_to_exist(wait, "i.fa-chevron-up", "CSS Selector checked 14")
             time.sleep(defaultSleepTimeValue)
@@ -8644,6 +8646,8 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector("map-track-panel i.fa-times").click()
 
             time.sleep(defaultSleepTimeValue * 10)
+
+            '''
 
             # Close Asset info list
             wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")
@@ -8832,6 +8836,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(5)
 
+
+            '''   FUNTION REMOVED IN UNIONVMS 3.40.7.w18
+
             # Click to expand the track list
             wait_for_element_by_css_selector_to_exist(wait, "i.fa-chevron-up", "CSS Selector checked 14")
             time.sleep(defaultSleepTimeValue)
@@ -8863,6 +8870,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector("map-track-panel i.fa-times").click()
 
             time.sleep(defaultSleepTimeValue * 10)
+
+            '''
+
 
             # Close Asset info list
             wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")
