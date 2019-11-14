@@ -1,4 +1,4 @@
-serialNoValue;channel;poll;config;default;dnidNumber;memberIdnumber;landStation;deltaStart(Hours);deltaStop(Hours);installedByName;installationDate;uninstallationDate;expectedFrequencyHours;gracePeriodFrequencyHours;inPortFrequencyHours;MobileTerminalPosition;ChannelPosition
+serialNoValue;channel;poll;config;default;dnidNumber;memberIdnumber;landStation;deltaStart(Minutes);deltaStop(Minutes);installedByName;installationDate;uninstallationDate;expectedFrequencyMinutes;gracePeriodFrequencyMinutes;inPortFrequencyMinutes;MobileTerminalPosition;ChannelPosition
 7TT0123BCF01;VMS;0;0;0;23102;201;Thrane&Thrane;-72;1440;Mike Andersson;-80;1500;5;6;7;0;1
 566668888002;VMS;0;0;0;34502;105;Thrane&Thrane;-168;1440;Greger Kurt;-170;1600;4;2;1;0;1
 3AA045239693;VMS;0;0;0;56703;66;Thrane&Thrane;-1440;1440;Mike Slow;-1500;1500;3;4;2;0;1

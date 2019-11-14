@@ -1958,22 +1958,22 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
     # Expected frequency
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
     # Grace period
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyMinutes)
     # In port
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -3148,47 +3148,63 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    # Click on edit existing mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column .edit-link", "CSS Selector checked 6")
+
+    # Get all Mobile Terminal elements in a list from GUI
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal fieldset", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector(".right-column .edit-link").click()
+    allAssetElements = self.driver.find_elements_by_css_selector("asset-show-mobile-terminal fieldset")
+    # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
+    for y in range(len(allAssetElements)):
+        print("Search for serial number:" + channelRow[0])
+        if channelRow[0] in allAssetElements[y].text :
+            print("Yes! Found serialnumber")
+            # Click on the correct "Edit link" that corresponds to found MT serial number
+            wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link", "CSS Selector checked 6b")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_css_selector("asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link").click()
+            break
+
+    # Click on edit existing mobile terminal
+    #wait_for_element_by_css_selector_to_exist(wait, ".right-column .edit-link", "CSS Selector checked 6")
+    #time.sleep(defaultSleepTimeValue * 10)
+    #self.driver.find_element_by_css_selector(".right-column .edit-link").click()
     # Click on New Channel button
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 10)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
     # Enter Channel name
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name input").send_keys(channelRow[1])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
-        self.driver.find_element_by_css_selector(".channel ~ .channel #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
     # Click on Config checkbox if TRUE
     if channelRow[3] == "1":
-        self.driver.find_element_by_css_selector(".channel ~ .channel #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Click on Default checkbox if TRUE
     if channelRow[4] == "1":
-        self.driver.find_element_by_css_selector(".channel ~ .channel #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
     # Enter Land station
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(channelRow[10])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(channelRow[10])
     # Expected frequency
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
     # Grace period
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
     # In port
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channel ~ .channel .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
     # Click on save button
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 10")
     time.sleep(defaultSleepTimeValue)
@@ -3474,7 +3490,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (first in the list)
         create_one_new_asset_via_rest_g2(0)
-        #create_one_new_asset_from_gui_g2(self, 0)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -7513,9 +7528,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create mobile terminals from file with different values.
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests300FileName[1], tests300FileName[2], False)
-        # Create mobile terminals from file with different values.
-        # NOTE: Several mobile terminals are added to the same asset.
-        #create_mobileterminal_from_file_based_on_link_file(self, tests300FileName[0], tests300FileName[1], tests300FileName[2])
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -7578,7 +7590,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
-        # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed
+        # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed!
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests300FileName[3], tests300FileName[2], False)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
@@ -8600,6 +8612,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
+
+            '''   FUNTION REMOVED IN UNIONVMS 3.40.7.w18
+
             # Click to expand the track list
             wait_for_element_by_css_selector_to_exist(wait, "i.fa-chevron-up", "CSS Selector checked 14")
             time.sleep(defaultSleepTimeValue)
@@ -8631,6 +8646,8 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector("map-track-panel i.fa-times").click()
 
             time.sleep(defaultSleepTimeValue * 10)
+
+            '''
 
             # Close Asset info list
             wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")
@@ -8819,6 +8836,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(5)
 
+
+            '''   FUNTION REMOVED IN UNIONVMS 3.40.7.w18
+
             # Click to expand the track list
             wait_for_element_by_css_selector_to_exist(wait, "i.fa-chevron-up", "CSS Selector checked 14")
             time.sleep(defaultSleepTimeValue)
@@ -8850,6 +8870,9 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector("map-track-panel i.fa-times").click()
 
             time.sleep(defaultSleepTimeValue * 10)
+
+            '''
+
 
             # Close Asset info list
             wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")

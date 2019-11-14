@@ -195,9 +195,9 @@ downloadPathWindow = "\Downloads"
 
 referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
 
-tests200FileName = ['assets2xxxxG2.csv', 'mobileterminals2xxxxG2.csv', 'linkassetmobileterminals2xxxx.csv']
-tests300FileName = ['assets3xxxxG2.csv', 'mobileterminals3xxxxG2.csv', 'linkassetmobileterminals3xxxx.csv', 'channelstomobileterminals3xxxx.csv', 'channelstomobileterminals3bxxx.csv']
-tests900FileName = ['assetsALLxxG2.csv', 'mobileterminalsALLxxG2.csv', 'linkassetmobileterminalsALLxx.csv', 'channelstomobileterminalsALLxx.csv', 'channelstomobileterminalALLxxx.csv']
+tests200FileName = ['assets2xxxxG2.csv', 'mobileterminals2xxxxG2.csv', 'linkassetmobileterminals2xxxxG2.csv']
+tests300FileName = ['assets3xxxxG2.csv', 'mobileterminals3xxxxG2.csv', 'linkassetmobileterminals3xxxxG2.csv', 'channelstomobileterminals3xxxxG2.csv', 'channelstomobileterminals3bxxxG2.csv']
+tests900FileName = ['assetsALLxxG2.csv', 'mobileterminalsALLxxG2.csv', 'linkassetmobileterminalsALLxxG2.csv', 'channelstomobileterminalsALLxxG2.csv', 'channelstomobileterminalALLxxxG2.csv']
 
 
 defaultSystemName = "UVMS"
