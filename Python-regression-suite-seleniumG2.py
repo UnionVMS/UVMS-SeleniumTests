@@ -1556,6 +1556,10 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
     self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter Land station
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[mobileTerminalNumber])
     # Enter DNID Number
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -1697,6 +1701,8 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name #mat-checkbox-2 .mat-checkbox-inner-container").is_selected)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
+    # Check LandStation
+    self.assertEqual(landStation[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").get_attribute("value"))
     # Check DNID Number
     self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").get_attribute("value"))
     # Check Member Number
@@ -1957,6 +1963,10 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Enter Land station
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[newMobileTerminalNumber])
     # Enter DNID Number
     wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
@@ -1964,7 +1974,7 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     # Enter Member Number
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    #self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
     # Expected frequency
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
@@ -1978,7 +1988,7 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("mobile-terminal-form--save").click()
-    time.sleep(defaultSleepTimeValue * 150)
+    time.sleep(defaultSleepTimeValue * 10)
 
 
 def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
@@ -3148,7 +3158,6 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-
     # Get all Mobile Terminal elements in a list from GUI
     wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal fieldset", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
@@ -3163,11 +3172,6 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
             time.sleep(defaultSleepTimeValue * 10)
             self.driver.find_element_by_css_selector("asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link").click()
             break
-
-    # Click on edit existing mobile terminal
-    #wait_for_element_by_css_selector_to_exist(wait, ".right-column .edit-link", "CSS Selector checked 6")
-    #time.sleep(defaultSleepTimeValue * 10)
-    #self.driver.find_element_by_css_selector(".right-column .edit-link").click()
     # Click on New Channel button
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 10)
@@ -3195,7 +3199,7 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     # Enter Land station
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(channelRow[10])
+    #self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(channelRow[10])
     # Expected frequency
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
@@ -3408,7 +3412,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Save referenceDateTime1 to file
         save_elements_to_file(referenceDateTimeFileName[1], referenceDateTime, True)
         # Check inmarsat plugin is fully synced
-        check_inmarsat_fully_synced(self)
+        # check_inmarsat_fully_synced(self)
 
 
     @timeout_decorator.timeout(seconds=180)
