@@ -674,6 +674,7 @@ def create_one_new_asset_via_rest_g2(vesselNumber):
     dataBody.setdefault('lengthOverAll', lengthOverAllValue[vesselNumber])
     dataBody.setdefault('lengthBetweenPerpendiculars', lengthBetweenPerpendicularsValue[vesselNumber])
     dataBody.setdefault('grossTonnage', grossTonnageValue[vesselNumber])
+    dataBody.setdefault('grossTonnageUnit', grossTonnageTypeValue[vesselNumber])
     dataBody.setdefault('powerOfMainEngine', powerValue[vesselNumber])
     dataBody.setdefault('prodOrgName', productOrgNameValue[vesselNumber])
     dataBody.setdefault('prodOrgCode', productOrgCodeValue[vesselNumber])
@@ -777,7 +778,7 @@ def check_new_asset_exists(self, vesselNumber):
     time.sleep(2)
 
 
-def check_new_asset_exists_g2(self, vesselNumber):
+def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
@@ -839,25 +840,26 @@ def check_new_asset_exists_g2(self, vesselNumber):
     self.assertEqual(productOrgNameValue[vesselNumber], allElements[12].text)
     # Check that the Name value is correct.left-column asset-show l
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("asset-show-page h1").text)
-    # Get all contacts elements from the Asset table list and save them in allContactsElements list
-    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show-contacts div", "CSS Selector checked 7")
-    time.sleep(defaultSleepTimeValue)
-    allContactsElements = self.driver.find_elements_by_css_selector(".left-column asset-show-contacts div")
-    # Check that the Contact Name value is correct.
-    self.assertEqual(contactNameValue[vesselNumber], allContactsElements[1].text)
-    # Check that the E-mail value is correct.
-    self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[2].text)
-    # Check that the Contact Country value is correct.
-    self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
-    # Check that the Contact City value is correct.
-    self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
-    # Check that the Phone value is correct.
-    self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[5].text)
-    # Check that the Contact Zip Code value is correct.
-    self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[6].text)
-    # Check that the Type Organization value is correct.
-    self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[7].text)
-
+    # Check contact parameters if checkContacts is TRUE
+    if checkContacts == True:
+        # Get all contacts elements from the Asset table list and save them in allContactsElements list
+        wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show-contacts div", "CSS Selector checked 7")
+        time.sleep(defaultSleepTimeValue)
+        allContactsElements = self.driver.find_elements_by_css_selector(".left-column asset-show-contacts div")
+        # Check that the Contact Name value is correct.
+        self.assertEqual(contactNameValue[vesselNumber], allContactsElements[1].text)
+        # Check that the E-mail value is correct.
+        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[2].text)
+        # Check that the Contact Country value is correct.
+        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
+        # Check that the Contact City value is correct.
+        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
+        # Check that the Phone value is correct.
+        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[5].text)
+        # Check that the Contact Zip Code value is correct.
+        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[6].text)
+        # Check that the Type Organization value is correct.
+        self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[7].text)
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -948,6 +950,131 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
     time.sleep(5)
     self.driver.find_element_by_id("menu-bar-cancel").click()
     time.sleep(2)
+
+
+def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Deactivate SWE filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Enter IRCS in the ircs search field for the newly created asset
+    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_name("ircs").send_keys(ircsValue[oldVesselNumber])
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for new asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked a")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on edit button for selected asset
+    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show a", "CSS Selector checked 5b")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".left-column asset-show a").click()
+    # Select F.S value
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#asset-form--flagstate mat-select").click()
+    wait_for_element_by_id_to_exist(wait, "mat-option-" + countryValue[newVesselNumber], "mat-option-COUNTRY checked 4")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mat-option-" + countryValue[newVesselNumber]).click()
+    # Enter IRCS value
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#asset-form--ircs input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--ircs input").send_keys(ircsValue[newVesselNumber])
+    # Enter Name value
+    self.driver.find_element_by_css_selector("#asset-form--name input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--name input").send_keys(vesselName[newVesselNumber])
+    # Enter External Marking Value
+    self.driver.find_element_by_css_selector("#asset-form--externalMarking input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--externalMarking input").send_keys(externalMarkingValue[newVesselNumber])
+    # Enter CFR Value
+    self.driver.find_element_by_css_selector("#asset-form--cfr input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--cfr input").send_keys(cfrValue[newVesselNumber])
+    # Enter IMO Value
+    self.driver.find_element_by_css_selector("#asset-form--imo input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--imo input").send_keys(imoValue[newVesselNumber])
+    # Enter HomePort Value
+    self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").send_keys(homeportValue[newVesselNumber])
+    # Enter MMSI Value
+    self.driver.find_element_by_css_selector("#asset-form--mmsi input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--mmsi input").send_keys(mmsiValue[newVesselNumber])
+    # Length of all Value
+    self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(lengthOverAllValue[newVesselNumber])
+    # Length between Perpendiculars Value (lengthBetweenPerpendiculars)
+    self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").send_keys(lengthBetweenPerpendicularsValue[newVesselNumber])
+    # Gross Tonnage Value
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(grossTonnageValue[newVesselNumber])
+    # Gross Tonnage Unit
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--grossTonnage mat-select", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage mat-select").click()
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + grossTonnageTypeValue[newVesselNumber], "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mat-option-" + grossTonnageTypeValue[newVesselNumber]).click()
+    # Main Power Value
+    self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").send_keys(powerValue[newVesselNumber])
+    # Main Producer Name Value
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").send_keys(productOrgNameValue[newVesselNumber])
+    # Main Producer Code Value
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").send_keys(productOrgCodeValue[newVesselNumber])
+    # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "asset-form--save", "asset-form--save checked 6")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("asset-form--save").click()
+
+    time.sleep(defaultSleepTimeValue * 5)
+
+    ''' NOTE: Contacts part is disabled because functionality is not implemented yet!
+    # Click on create button for new contacts
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show-contacts .mat-button-wrapper", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 10)
+    self.driver.find_element_by_css_selector("asset-show-contacts .mat-button-wrapper").click()
+
+    # Enter Contact Name Value
+    wait_for_element_by_css_selector_to_exist(wait, "#contact-form--name input", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#contact-form--name input").send_keys(contactNameValue[vesselNumber])
+    print(contactNameValue[vesselNumber])
+    # Enter Type Organization
+    self.driver.find_element_by_css_selector("#contact-form--type input").send_keys(contactTypeValue[vesselNumber])
+    # Enter E-mail Value
+    self.driver.find_element_by_css_selector("#contact-form--email input").send_keys(contactEmailValue[vesselNumber])
+    # Enter Contact Number Value
+    self.driver.find_element_by_css_selector("#contact-form--phone input").send_keys(contactPhoneNumberValue[vesselNumber])
+    # Enter Contact Country
+    self.driver.find_element_by_css_selector("#contact-form--country input").send_keys(contactCountryValue[vesselNumber])
+    # Enter Contact City
+    self.driver.find_element_by_css_selector("#contact-form--city input").send_keys(contactCityValue[vesselNumber])
+    # Enter Zip Code
+    self.driver.find_element_by_css_selector("#contact-form--zipCode input").send_keys(contactZipCodeValue[vesselNumber])
+
+    # Click on Save button
+    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "asset-form--save checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+
+    time.sleep(defaultSleepTimeValue * 20)
+    '''
+
+
+
+
+
 
 
 def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
@@ -5062,26 +5189,32 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0047_create_modify_and_check_asset_history(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Create new asset (34th in the list)
-        create_one_new_asset_from_gui(self, 34)
+        create_one_new_asset_via_rest_g2(34)
         # Check new asset (34th in the list)
-        check_new_asset_exists(self, 34)
+        check_new_asset_exists_g2(self, 34)
         # Add the used vesselNumbers to a vesselNumberList
-        vesselNumberList = [34]
+        #vesselNumberList = [34]
         # Add secondContactVesselNumberList (Not used here)
-        secondContactVesselNumberList = [0]
+        #secondContactVesselNumberList = [0]
         # Check asset start values
-        check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
-        # Modify asset parameters
-        modify_one_new_asset_from_gui(self, 34, 35)
+        # The functionality is not implemented yet in the new GUI
+        #check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
+        # Modify asset parameters (NOTE: The contacts parameters are not modified)
+        modify_one_new_asset_from_gui_g2(self, 34, 36)
+        # Check new asset (35th in the list) (NOTE: The contacts parameters are not checked)
+        check_new_asset_exists_g2(self, 36, False)
         # Add the used vesselNumbers to a vesselNumberList
-        vesselNumberList = [35, 34]
+        #vesselNumberList = [35, 34]
         # Add secondContactVesselNumberList (Not used here)
-        secondContactVesselNumberList = [0, 0]
+        #secondContactVesselNumberList = [0, 0]
         # Check asset values in the history list and compare these values based on the values in the vesselNumberList
-        check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
+        # The functionality is not implemented yet in the new GUI
+        #check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
+
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -5110,7 +5243,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     def test_0050_create_one_new_mobile_terminal_g2(self):
         # Test Case has been adapted to the new GUI!
         # NOTE: To be able to create MT with addtional channel an asset needs to be created first in the new GUI! Asset creation should be removed and fixed later when functionality exist!
-
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create new asset (36th in the list)
