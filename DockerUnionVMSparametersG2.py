@@ -52,6 +52,7 @@ satelliteNumber = ["0110", "1002", "1300", "0140", "0051", "1600", "910746225", 
 dnidNumber = ["10101", "12100", "10003", "10041", "51000", "10061", "47051", "13000", "41000", "24000", "10430", "10440", "10540", "16004", "17040", "14080", "10094", "10041", "10051", "10250", "10053", "50417", "10457", "17541", "17540", "40175", "54701", "74501", "50741", "14570", "50471", "51407", "17540", "75401", "19991", "29991", "39991", "50000", "60000", "50417", "10457", "17541", "17540", "40175", "54701", "74501", "50741", "14570", "50471", "51407", "27540", "75401", "75402", "50417", "11457", "17541", "17540", "40175", "54701", "74501", "50741", "14570", "50471", "51407", "17540", "75401", "75402"]
 memberIdnumber = ["100", "100", "100", "100", "100", "100", "255", "100", "100", "100", "100", "100", "100", "100", "100", "100", "100", "100", "100", "100", "100", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "100", "100", "100", "100", "100", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]
 activeState = ["1", "1", "0", "0", "0", "0", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0", "0", "0", "0", "0", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+landStation = ["VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS", "VMS"]
 installedByName = "Mike Great"
 expectedFrequencyHours = "0"
 expectedFrequencyMinutes = "2"
@@ -166,7 +167,7 @@ httpNAFRequestString = "http://" + appServerName + ":28080/naf/rest/message/"
 httpUnionVMSurlString = "http://" + appServerName + ":28080/unionvms/"
 httpRealMapUrlString = "http://" + appServerName + ":28080/"
 httpUSMUrlString = "http://" + appServerName + ":28080/unionvms/usm-administration/rest/authenticate"
-httpUrlRestAssetString = "http://" + appServerName + ":28080/unionvms/asset/rest/asset2"
+httpUrlRestAssetString = "http://" + appServerName + ":28080/unionvms/asset/rest/asset"
 connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'" + " port='25432'"
 dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":25432/" + dbServerName
 
