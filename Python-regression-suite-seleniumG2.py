@@ -9103,7 +9103,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
     # Injecting additional channels for all MTs for Prod
     @timeout_decorator.timeout(seconds=180)
-    def test_0055c_create_several_additional_channels_for_mobile_terminals(self):
+    def test_0055d_create_several_additional_channels_for_mobile_terminals(self):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
