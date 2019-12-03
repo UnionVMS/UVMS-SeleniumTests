@@ -3425,8 +3425,6 @@ def click_on_flag_state_in_list_tab(self, flagState):
     self.driver.find_element_by_css_selector("body").click()
 
 
-
-
 def get_token_from_usm():
     # Get Token
     url = httpUSMUrlString
@@ -3464,6 +3462,39 @@ def get_key_value_of_respone(rsp, keyId):
 def get_dictionary_list_of_respone(rsp):
     response_dict = json.loads(rsp.text)
     return response_dict
+
+
+def click_on_map_default_settings(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on My settings tab
+    wait_for_element_by_link_text_to_exist(wait, "My Settings", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("My Settings").click()
+
+
+def activate_one_map_default_settings(self, settingNumberValue):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Activate one of the toggle buttons "Show flags",, "Show tracks", "Show names", "Show speeds" and "Show Forcasts"
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle:nth-child(" + str(settingNumberValue)  + ") .mat-slide-toggle-bar", "CSS Selector checked 1")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-slide-toggle:nth-child(" + str(settingNumberValue)  + ") .mat-slide-toggle-bar").click()
+    time.sleep(defaultSleepTimeValue)
+
+
+
+def activate_map_default_settings(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on My settings
+    click_on_map_default_settings(self)
+    # Activate "Show flags", "Show names" and "Show speeds"
+    activate_one_map_default_settings(self,1)
+    activate_one_map_default_settings(self,3)
+    activate_one_map_default_settings(self,4)
+    # Click on "Save settings" button
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -8567,6 +8598,13 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+    def test_0002_change_map_default_settings(self):
+        # Click on Realtime tab
+        click_on_real_time_tab(self)
+        # Change Map default settings
+        activate_map_default_settings(self)
 
 
     @timeout_decorator.timeout(seconds=300)
