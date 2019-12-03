@@ -3493,6 +3493,14 @@ def activate_map_default_settings(self):
     activate_one_map_default_settings(self,1)
     activate_one_map_default_settings(self,3)
     activate_one_map_default_settings(self,4)
+    # Change Track length to 1 day
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-select-value", "CSS Selector checked 6")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-select-value").click()
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text").click()
+    time.sleep(defaultSleepTimeValue)
     # Click on "Save settings" button
     self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
 
@@ -8608,15 +8616,15 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
-    def test_0052_0059_create_assets_trip_1_9_without_mobile_terminal(self):
+    def test_0003_create_assets_trip_1_16_without_mobile_terminal(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Realtime tab
         click_on_real_time_tab(self)
-        # Create assets, Mobile for Trip 1-9
-        for x in range(0, 9):
+        # Create assets, Mobile for Trip 1-16
+        for x in range(0, 17):
             create_asset_from_file_via_rest_g2(assetFileNameList[x])
-        time.sleep(1)
+            time.sleep(defaultSleepTimeValue)
 
 
     @timeout_decorator.timeout(seconds=1000)
@@ -8643,7 +8651,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(defaultSleepTimeValue * 10)
         self.driver.find_element_by_link_text("Realtime map").click()
 
-
+        '''
         # Activate view on Flags
         wait_for_element_by_css_selector_to_exist(wait, ".fa-flag", "CSS Selector checked 2")
         time.sleep(defaultSleepTimeValue)
@@ -8656,7 +8664,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         wait_for_element_by_css_selector_to_exist(wait, ".fa-tachometer-alt", "CSS Selector checked 4")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector(".fa-tachometer-alt").click()
-
         # Click on show control panel
         wait_for_element_by_css_selector_to_exist(wait, ".fa-cog", "CSS Selector checked 5")
         time.sleep(defaultSleepTimeValue)
@@ -8669,6 +8676,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         wait_for_element_by_css_selector_to_exist(wait, ".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text", "CSS Selector checked 7")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector(".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text").click()
+        '''
 
 
         for x in range(0, 3):
@@ -8687,11 +8695,11 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             print(assetTripAllrows1)
 
             # Enter the Asset name in search field
-            wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 8")
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-0").clear()
+            self.driver.find_element_by_id("mat-input-1").clear()
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-0").send_keys(assetAllrows1[0][1])
+            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
             wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
@@ -8699,6 +8707,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector(".mat-option-text").click()
             time.sleep(defaultSleepTimeValue * 25)
 
+            '''
             # Click in the middle of the Map
             print("Click on Map! Execute!")
             elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
@@ -8706,11 +8715,12 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
             ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
             print("Done!")
+            '''
 
             # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span", "CSS Selector checked 10")
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector(".left-scroll ~ .tabs span").text)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
@@ -8736,12 +8746,13 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             # Check Producer Name
             self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
 
-
+            '''
             # Open Track and Forcast settings
             wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper .fa-chevron-right", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
             self.driver.find_element_by_css_selector(".button-wrapper .fa-chevron-right").click()
             time.sleep(defaultSleepTimeValue * 5)
+            '''
 
             # Activate tracks
             wait_for_element_by_css_selector_to_exist(wait, ".button-block .round", "CSS Selector checked 12")
@@ -8750,11 +8761,11 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
-            wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 13")
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-0").clear()
-            self.driver.find_element_by_id("mat-input-0").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
-            self.driver.find_element_by_id("mat-input-0").send_keys(Keys.ENTER)
+            self.driver.find_element_by_id("mat-input-1").clear()
+            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
+            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
 
             time.sleep(defaultSleepTimeValue * 10)
 
@@ -8780,49 +8791,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 10)
 
 
-            '''   FUNTION REMOVED IN UNIONVMS 3.40.7.w18
-
-            # Click to expand the track list
-            wait_for_element_by_css_selector_to_exist(wait, "i.fa-chevron-up", "CSS Selector checked 14")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("i.fa-chevron-up").click()
-
-            # Get all position elements in a list from GUI
-            wait_for_element_by_css_selector_to_exist(wait, ".track-table tbody tr td", "CSS Selector checked 15")
-            time.sleep(defaultSleepTimeValue * 15)
-            allPositionElements = self.driver.find_elements_by_css_selector(".track-table tbody tr td")
-            # Check position data
-            self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][1]), 3)), allPositionElements[1].text)
-            self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][0]), 3)), allPositionElements[2].text)
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), allPositionElements[3].text)
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), allPositionElements[4].text)
-            currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValue, '%Y-%m-%d %H:%M:00')
-            self.assertEqual(currentPositionDateTimeValueString, allPositionElements[5].text)
-            time.sleep(defaultSleepTimeValue * 15)
-
-            # Delete the postion report in the list
-            wait_for_element_by_css_selector_to_exist(wait, "i.fa-trash", "CSS Selector checked 16")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("i.fa-trash").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Collapse the track list "map-track-panel i.fa-times"
-            wait_for_element_by_css_selector_to_exist(wait, "map-track-panel i.fa-times", "CSS Selector checked 17")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("map-track-panel i.fa-times").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            '''
-
-            # Close Asset info list
-            wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".left-scroll ~ .tabs span .fa-times").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
             # Zoom out two steps
             self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
             time.sleep(defaultSleepTimeValue)
@@ -8831,6 +8799,21 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
             time.sleep(defaultSleepTimeValue)
             self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Goto end position for asset
+            self.driver.find_element_by_css_selector("map-right-column .button-wrapper button").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Click in the middle of the Map with an offset of 15 pixels (to unmark Asset)
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(15, 15).click().perform()
+            print("Done!")
 
             time.sleep(defaultSleepTimeValue * 20)
 
@@ -8862,6 +8845,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         time.sleep(defaultSleepTimeValue * 10)
         self.driver.find_element_by_link_text("Realtime map").click()
 
+        '''
         # Activate view on Flags
         wait_for_element_by_css_selector_to_exist(wait, ".fa-flag", "CSS Selector checked 2")
         time.sleep(defaultSleepTimeValue)
@@ -8887,7 +8871,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         wait_for_element_by_css_selector_to_exist(wait, ".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text", "CSS Selector checked 7")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector(".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text").click()
-
+        '''
 
         # Create Trip 7 and 8
         for x in range(6, 8):
@@ -8912,11 +8896,11 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             print(assetTripAllrows1)
 
             # Enter the Asset name in search field
-            wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 8")
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-0").clear()
+            self.driver.find_element_by_id("mat-input-1").clear()
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-0").send_keys(assetAllrows1[0][1])
+            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
             wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
@@ -8924,6 +8908,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector(".mat-option-text").click()
             time.sleep(defaultSleepTimeValue * 25)
 
+            '''
             # Click in the middle of the Map
             print("Execute!")
             elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
@@ -8931,11 +8916,12 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
             ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
             print("Done!")
+            '''
 
             # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span", "CSS Selector checked 10")
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector(".left-scroll ~ .tabs span").text)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
@@ -8961,11 +8947,13 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             # Check Producer Name
             self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
 
+            '''
             # Open Track and Forcast settings
             wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper .fa-chevron-right", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
             self.driver.find_element_by_css_selector(".button-wrapper .fa-chevron-right").click()
             time.sleep(defaultSleepTimeValue * 5)
+            '''
 
             # Activate tracks
             wait_for_element_by_css_selector_to_exist(wait, ".button-block .round", "CSS Selector checked 12")
@@ -8974,11 +8962,11 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
-            wait_for_element_by_id_to_exist(wait, "mat-input-0", "mat-input-0 checked 13")
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-0").clear()
-            self.driver.find_element_by_id("mat-input-0").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
-            self.driver.find_element_by_id("mat-input-0").send_keys(Keys.ENTER)
+            self.driver.find_element_by_id("mat-input-1").clear()
+            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
+            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
 
             time.sleep(defaultSleepTimeValue * 10)
 
@@ -9003,44 +8991,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(5)
 
-
-            '''   FUNTION REMOVED IN UNIONVMS 3.40.7.w18
-
-            # Click to expand the track list
-            wait_for_element_by_css_selector_to_exist(wait, "i.fa-chevron-up", "CSS Selector checked 14")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("i.fa-chevron-up").click()
-
-            # Get all position elements in a list from GUI
-            wait_for_element_by_css_selector_to_exist(wait, ".track-table tbody tr td", "CSS Selector checked 15")
-            time.sleep(defaultSleepTimeValue * 15)
-            allPositionElements = self.driver.find_elements_by_css_selector(".track-table tbody tr td")
-            # Check position data
-            self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][1]), 3)), allPositionElements[1].text)
-            self.assertEqual(str("%.5f" % round(float(assetTripAllrows1[0][0]), 3)), allPositionElements[2].text)
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][4])), allPositionElements[3].text)
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[0][3])), allPositionElements[4].text)
-            currentPositionDateTimeValueString = datetime.datetime.strftime(currentPositionTimeValueWithIndex[x], '%Y-%m-%d %H:%M:00')
-            self.assertEqual(currentPositionDateTimeValueString, allPositionElements[5].text)
-            time.sleep(defaultSleepTimeValue * 15)
-
-            # Delete the postion report in the list
-            wait_for_element_by_css_selector_to_exist(wait, "i.fa-trash", "CSS Selector checked 16")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("i.fa-trash").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Collapse the track list "map-track-panel i.fa-times"
-            wait_for_element_by_css_selector_to_exist(wait, "map-track-panel i.fa-times", "CSS Selector checked 17")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("map-track-panel i.fa-times").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            '''
-
-
             # Close Asset info list
             wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")
             time.sleep(defaultSleepTimeValue)
@@ -9056,6 +9006,21 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
             time.sleep(defaultSleepTimeValue)
             self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Goto end position for asset
+            self.driver.find_element_by_css_selector("map-right-column .button-wrapper button").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Click in the middle of the Map with an offset of 10 pixels (to unmark Asset)
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(10, 10).click().perform()
+            print("Done!")
 
             time.sleep(defaultSleepTimeValue * 20)
 
