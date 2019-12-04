@@ -3405,6 +3405,10 @@ def click_on_real_time_tab(self):
     wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-realtime", "uvms-header-menu-item-realtime checked 1")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("uvms-header-menu-item-realtime").click()
+    # Click on Filter Map View
+    wait_for_element_by_css_selector_to_exist(wait, ".icon-search", "CSS Selector checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".icon-search").click()
 
 
 def click_on_flag_state_in_list_tab(self, flagState):
@@ -3490,7 +3494,7 @@ def activate_map_default_settings(self):
     # Click on My settings
     click_on_map_default_settings(self)
     # Activate "Show flags", "Show names" and "Show speeds"
-    activate_one_map_default_settings(self,1)
+    #activate_one_map_default_settings(self,1)  # Show flags disable due to problem with selecting asset on map
     activate_one_map_default_settings(self,3)
     activate_one_map_default_settings(self,4)
     # Change Track length to 1 day
@@ -8642,7 +8646,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
 
         # Wait to secure that the generated trip is finished.
-        time.sleep(defaultSleepTimeValue * 50)
+        time.sleep(defaultSleepTimeValue * 30)
 
         # Select Realtime view
         click_on_real_time_tab(self)
@@ -8790,7 +8794,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
-
             # Zoom out two steps
             self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
             time.sleep(defaultSleepTimeValue)
@@ -8807,6 +8810,16 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
+
+            # Dectivate tracks
+            wait_for_element_by_css_selector_to_exist(wait, ".button-block .round", "CSS Selector checked 12")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".button-block .round").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
             # Click in the middle of the Map with an offset of 15 pixels (to unmark Asset)
             print("Execute!")
             elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
@@ -8815,7 +8828,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             ac.move_to_element(elem).move_by_offset(15, 15).click().perform()
             print("Done!")
 
-            time.sleep(defaultSleepTimeValue * 20)
+            time.sleep(defaultSleepTimeValue * 10)
 
         # End pause
         time.sleep(defaultSleepTimeValue * 5)
@@ -8989,13 +9002,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
             print("Done!")
 
-            time.sleep(5)
-
-            # Close Asset info list
-            wait_for_element_by_css_selector_to_exist(wait, ".left-scroll ~ .tabs span .fa-times", "CSS Selector checked 18")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".left-scroll ~ .tabs span .fa-times").click()
-
             time.sleep(defaultSleepTimeValue * 10)
 
             # Zoom out two steps
@@ -9014,6 +9020,16 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
+
+            # Dectivate tracks
+            wait_for_element_by_css_selector_to_exist(wait, ".button-block .round", "CSS Selector checked 12")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".button-block .round").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
             # Click in the middle of the Map with an offset of 10 pixels (to unmark Asset)
             print("Execute!")
             elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
@@ -9022,10 +9038,10 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
             ac.move_to_element(elem).move_by_offset(10, 10).click().perform()
             print("Done!")
 
-            time.sleep(defaultSleepTimeValue * 20)
+            time.sleep(defaultSleepTimeValue * 10)
 
         # End pause
-        time.sleep(1)
+        time.sleep(defaultSleepTimeValue * 5)
 
 
 
