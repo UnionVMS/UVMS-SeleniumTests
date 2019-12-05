@@ -8641,7 +8641,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         currentUTCValue = datetime.datetime.utcnow()
         currentPositionTimeValue = currentUTCValue - deltaTimeValue
 
-        # Create Trip 1-3
+        # Create Trip 0-3
         for x in range(0, 3):
             create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
 
@@ -8886,7 +8886,7 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         self.driver.find_element_by_css_selector(".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text").click()
         '''
 
-        # Create Trip 7 and 8
+        # Create Trip 6-8
         for x in range(6, 8):
             create_trip_from_file_g2(currentPositionTimeValueWithIndex[x], assetFileNameList[x], tripFileNameList[x])
 
@@ -9042,6 +9042,29 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
         # End pause
         time.sleep(defaultSleepTimeValue * 5)
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0201_create_trip_3_17(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=14)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+
+        # Create Trip 3-6
+        for x in range(3, 6):
+            create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
+
+        # Create Trip 8-12
+        for x in range(8, 12):
+            create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
+
+        # Create Trip 13-17
+        for x in range(13, 17):
+            create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
 
 
 
