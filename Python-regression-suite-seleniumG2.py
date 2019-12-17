@@ -3706,7 +3706,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0008_generate_and_verify_manual_position(self):
         # Create a manual position and verify the position
-        generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
+        #generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
+        # NOTE: NAF position report is generate instead manual position because of changed behavior for creation of manual position.
+        # SHALL BE CHANGED BACK WHEN FUNCTION EXISTS
+        # Create a NAF position and verify the position
+        generate_NAF_and_verify_position(self, reportedSpeedValue, reportedCourseValue)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4976,7 +4980,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0037_create_manual_position_with_speed_that_triggs_rule_one(self):
         # Create a manual position and verify the position
-        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        #earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        # NOTE: NAF position report is generate instead manual position because of changed behavior for creation of manual position
+        # SHALL BE CHANGED BACK WHEN FUNCTION EXISTS
+        # Create a NAF position and verify the position
+        earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
@@ -5060,7 +5068,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0039_create_manual_position_with_speed_that_not_triggs_speed_rule_one(self):
         # Create a manual position and verify the position
-        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        #earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        # NOTE: NAF position report is generate instead manual position because of changed behavior for creation of manual position
+        # SHALL BE CHANGED BACK WHEN FUNCTION EXISTS
+        # Create a NAF position and verify the position
+        earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
@@ -9065,6 +9077,39 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create Trip 13-17
         for x in range(13, 17):
             create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0202_generate_NAF_position(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Set Current Date and time in UTC 4 hours back in time
+        currentUTCValue = datetime.datetime.utcnow()
+        earlierPositionTimeValue = currentUTCValue - datetime.timedelta(hours=deltaTimeValue)
+        earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
+        earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
+        earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
+
+        # Set Long/Lat
+        latStrValue = lolaPositionValues[14][0][0]
+        longStrValue = lolaPositionValues[14][0][1]
+
+        # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
+        nafSource = generate_NAF_string(countryValue[1], ircsValue[1], cfrValue[1], externalMarkingValue[1], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[1])
+        print(nafSource)
+        nafSourceURLcoded = urllib.parse.quote_plus(nafSource)
+        totalNAFrequest = httpNAFRequestString + nafSourceURLcoded
+        # Generate request
+        r = requests.get(totalNAFrequest)
+        # Check if request is OK (200)
+        if r.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+
+
 
 
 
