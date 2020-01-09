@@ -129,12 +129,15 @@ def get_target_path():
         # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
         if "MAVEN_PROJECTBASEDIR" in os.environ:
             localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\unionvms-test\\target"
+            print("Maven targetPathWindows is: " + localTargetPathWindows)
         else:
             localTargetPathWindows = targetPathWindows
+            print("Default targetPathWindows is: " + localTargetPathWindows)
         print("targetPathWindows is: " + localTargetPathWindows)
         return localTargetPathWindows
     else:
         targetPathLinux = os.path.abspath(os.path.dirname(__file__))
+        print("Default targetPathLinux is: " + targetPathLinux)
         return targetPathLinux
 
 
