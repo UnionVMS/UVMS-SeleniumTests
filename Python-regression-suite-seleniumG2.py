@@ -123,24 +123,6 @@ def generate_NAF_string(countryValue, ircsValue, cfrValue, externalMarkingValue,
     return nafSource
 
 
-def get_target_path():
-    # Get correct download path
-    if platform.system() == "Windows":
-        # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
-        if "MAVEN_PROJECTBASEDIR" in os.environ:
-            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\unionvms-test\\target"
-            print("Maven targetPathWindows is: " + localTargetPathWindows)
-        else:
-            localTargetPathWindows = targetPathWindows
-            print("Default targetPathWindows is: " + localTargetPathWindows)
-        print("targetPathWindows is: " + localTargetPathWindows)
-        return localTargetPathWindows
-    else:
-        targetPathLinux = os.path.abspath(os.path.dirname(__file__))
-        print("Default targetPathLinux is: " + targetPathLinux)
-        return targetPathLinux
-
-
 def save_elements_to_file(fileName, dataElementToSave, dateTimeState):
     print('----------------------------')
     # Save path to current dir
@@ -2445,13 +2427,16 @@ def get_target_path():
     if platform.system() == "Windows":
         # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default targetPathWindows
         if "MAVEN_PROJECTBASEDIR" in os.environ:
-            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target"
+            localTargetPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\unionvms-test\\target"
+            print("Maven targetPathWindows is: " + localTargetPathWindows)
         else:
             localTargetPathWindows = targetPathWindows
+            print("Default targetPathWindows is: " + localTargetPathWindows)
         print("targetPathWindows is: " + localTargetPathWindows)
         return localTargetPathWindows
     else:
         targetPathLinux = os.path.abspath(os.path.dirname(__file__))
+        print("Default targetPathLinux is: " + targetPathLinux)
         return targetPathLinux
 
 
