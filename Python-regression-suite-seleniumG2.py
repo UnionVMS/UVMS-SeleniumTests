@@ -2446,13 +2446,14 @@ def get_test_report_path():
     if platform.system() == "Windows":
         # Check if environment variable MAVEN_PROJECTBASEDIR exists, if so set correct path otherwise default testResultPathWindows
         if "MAVEN_PROJECTBASEDIR" in os.environ:
-            localTestResultPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\target\\failsafe-reports"
+            localTestResultPathWindows = os.environ["MAVEN_PROJECTBASEDIR"] + "\\unionvms-test\\target\\failsafe-reports"
         else:
             localTestResultPathWindows = testResultPathWindows
         print("testResultPathWindows is:" + localTestResultPathWindows)
         return localTestResultPathWindows
     else:
         testResultPathLinux = os.path.abspath(os.path.dirname(__file__))
+        print("Default testResultPathLinux is: " + testResultPathLinux)
         return testResultPathLinux
 
 if platform.system() == "Windows":
