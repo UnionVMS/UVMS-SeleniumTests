@@ -9000,8 +9000,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
 
-
-
 class UnionVMSTestCaseSpecial(unittest.TestCase):
     #
     #   NOTE: Test cases in this suite shall be executed one by one. The suite is NOT intended to be run in full.
