@@ -3695,11 +3695,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0008_generate_and_verify_manual_position(self):
         # Create a manual position and verify the position
-        #generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
-        # NOTE: NAF position report is generate instead manual position because of changed behavior for creation of manual position.
-        # SHALL BE CHANGED BACK WHEN FUNCTION EXISTS
-        # Create a NAF position and verify the position
-        generate_NAF_and_verify_position(self, reportedSpeedValue, reportedCourseValue)
+        generate_and_verify_manual_position(self, reportedSpeedValue, reportedCourseValue)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4969,11 +4965,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0037_create_manual_position_with_speed_that_triggs_rule_one(self):
         # Create a manual position and verify the position
-        #earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
-        # NOTE: NAF position report is generate instead manual position because of changed behavior for creation of manual position
-        # SHALL BE CHANGED BACK WHEN FUNCTION EXISTS
-        # Create a NAF position and verify the position
-        earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
@@ -5057,11 +5049,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=180)
     def test_0039_create_manual_position_with_speed_that_not_triggs_speed_rule_one(self):
         # Create a manual position and verify the position
-        #earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
-        # NOTE: NAF position report is generate instead manual position because of changed behavior for creation of manual position
-        # SHALL BE CHANGED BACK WHEN FUNCTION EXISTS
-        # Create a NAF position and verify the position
-        earlierPositionDateTimeValueString = generate_NAF_and_verify_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
+        earlierPositionDateTimeValueString = generate_and_verify_manual_position(self, reportedSpeedDefault[0] + 1, reportedCourseValue)
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
         # Click on Alert tab
