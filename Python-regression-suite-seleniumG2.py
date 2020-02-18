@@ -77,7 +77,7 @@ def startup_browser_and_login_to_unionVMS(self):
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
     time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
-    self.driver.find_element_by_id(defaultUserNamePassword).send_keys(defaultUserNamePassword)
+    self.driver.find_element_by_id("password").send_keys(defaultUserNamePassword)
     time.sleep(1)
     self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div/div[2]/div[3]/div[2]/form/div[3]/div/button").click()
     time.sleep(2)
@@ -9063,6 +9063,23 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests900FileName[3], tests900FileName[2], True)
+
+
+
+    # Injecting MTs for Prod (All parts)
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0056_import_selected_asset_from_Fartyg2_to_unionvms(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Get selected asset from Fartyg2
+        rsp = get_selected_asset_from_fartyg2("XXXX", True)
+        # Check if request is OK (200)
+        if rsp.ok:
+            print("200 OK")
+        else:
+            print("Request NOT OK!")
+
+
 
 
 
