@@ -794,9 +794,9 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Get all elements from the Asset table list and save them in allElements list
-    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show div", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show div", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
-    allElements = self.driver.find_elements_by_css_selector(".left-column asset-show div")
+    allElements = self.driver.find_elements_by_css_selector("asset-show div")
     # Check that the F.S value is correct.
     self.assertEqual(countryValue[vesselNumber], allElements[0].text)
     # Check that External Marking Value is correct
@@ -824,27 +824,32 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     # Check that the Product Org Name value is correct.
     self.assertEqual(productOrgNameValue[vesselNumber], allElements[12].text)
     # Check that the Name value is correct.left-column asset-show l
-    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("asset-show-page h1").text)
+    self.assertEqual(vesselName[vesselNumber] + " — Asset information", self.driver.find_element_by_css_selector(".page-title").text)
+
     # Check contact parameters if checkContacts is TRUE
     if checkContacts == True:
-        # Get all contacts elements from the Asset table list and save them in allContactsElements list
-        wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show-contacts div", "CSS Selector checked 7")
+        # Click on Contacts tab
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
         time.sleep(defaultSleepTimeValue)
-        allContactsElements = self.driver.find_elements_by_css_selector(".left-column asset-show-contacts div")
-        # Check that the Contact Name value is correct.
-        self.assertEqual(contactNameValue[vesselNumber], allContactsElements[1].text)
+        self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+        # Get all contacts elements from the Asset table list and save them in allContactsElements list
+        wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 7")
+        time.sleep(defaultSleepTimeValue)
+        allContactsElements = self.driver.find_elements_by_css_selector("contact-show-by-asset-page .field-wrapper div")
         # Check that the E-mail value is correct.
-        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[2].text)
+        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[0].text)
         # Check that the Contact Country value is correct.
-        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
+        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[1].text)
         # Check that the Contact City value is correct.
-        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
+        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[2].text)
         # Check that the Phone value is correct.
-        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[5].text)
+        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[3].text)
         # Check that the Contact Zip Code value is correct.
-        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[6].text)
+        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[4].text)
+        # Check that the Contact Name value is correct.
+        self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_css_selector("contact-show-by-asset-page h2").text)
         # Check that the Type Organization value is correct.
-        self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[7].text)
+        self.assertEqual(contactTypeValue[vesselNumber], self.driver.find_element_by_css_selector("contact-show-by-asset-page .contact-type-name").text)
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -1633,10 +1638,20 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+
+
+    # --------------- CONTINUE ---
+
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
