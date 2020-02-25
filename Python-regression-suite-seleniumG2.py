@@ -1620,6 +1620,7 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
 def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue * 5)
