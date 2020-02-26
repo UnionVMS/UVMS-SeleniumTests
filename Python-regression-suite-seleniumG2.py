@@ -833,7 +833,7 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
         # Get all contacts elements from the Asset table list and save them in allContactsElements list
-        wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 7")
+        wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 8")
         time.sleep(defaultSleepTimeValue)
         allContactsElements = self.driver.find_elements_by_css_selector("contact-show-by-asset-page .field-wrapper div")
         # Check that the E-mail value is correct.
@@ -964,9 +964,9 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on edit button for selected asset
-    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show a", "CSS Selector checked 5b")
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show a", "CSS Selector checked 5b")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".left-column asset-show a").click()
+    self.driver.find_element_by_css_selector("asset-show a").click()
     # Select F.S value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -1620,7 +1620,6 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
 def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue * 5)
@@ -1639,12 +1638,10 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-
     # Click on Mobile Terminals tab
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
-
     # Click on create button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 10)
@@ -1786,22 +1783,56 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    #Get all elements from the Mobile Terminal table list and save them in allElements list
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .ng-star-inserted div", "CSS Selector checked 6")
-    time.sleep(defaultSleepTimeValue * 3)
-    allElements = self.driver.find_elements_by_css_selector(".right-column asset-show-mobile-terminal .ng-star-inserted div")
-    # Check Software Version in the list
-    self.assertEqual(softwareVersion, allElements[2].text)
-    # Check Antenna Version in the list
-    self.assertEqual(antennaVersion, allElements[3].text)
-    # Check Satellite Number in the list
-    self.assertEqual(satelliteNumber[mobileTerminalNumber], allElements[4].text)
-    # Check Serial Number in the list
-    self.assertEqual(serialNoValue[mobileTerminalNumber], allElements[5].text)
-    # Click on edit link
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
+    # Click on Mobile terminal tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    #Get all elements from the Mobile Terminal table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 3)
+    allElements = self.driver.find_elements_by_css_selector(".mobileTerminal div .value")
+    # Check Serial Number in the list
+    self.assertEqual(serialNoValue[mobileTerminalNumber], allElements[1].text)
+    # Check Transceiver type in the list
+    self.assertEqual(transceiverType[mobileTerminalNumber], allElements[3].text)
+    # Check Software Version in the list
+    self.assertEqual(softwareVersion, allElements[4].text)
+    # Check Antenna Version in the list
+    self.assertEqual(antennaVersion, allElements[5].text)
+    # Check Satellite Number in the list
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], allElements[6].text)
+    # Check Installed by in the list
+    self.assertEqual(installedByName, allElements[7].text)
+    # Click on channel to expand
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-expansion-panel-header").click()
+    #Get all elements from the channel table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-body div .value", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 3)
+    allChannelElements = self.driver.find_elements_by_css_selector(".mat-expansion-panel-body div .value")
+    # Check Check LandStation in the list
+    self.assertEqual(landStation[mobileTerminalNumber], allChannelElements[0].text)
+    # Check DNID Number in the list
+    self.assertEqual(dnidNumber[mobileTerminalNumber], allChannelElements[1].text)
+    # Check Member Number in the list
+    self.assertEqual(memberIdnumber[mobileTerminalNumber], allChannelElements[2].text)
+    # Check Poll Channel Active in the list
+    self.assertEqual(statusValue[1], allChannelElements[4].text)
+    # Check Config Channel Active in the list
+    self.assertEqual(statusValue[1], allChannelElements[5].text)
+    # Check Default Channel Active in the list
+    self.assertEqual(statusValue[1], allChannelElements[6].text)
+    # Expected frequency in the list
+    self.assertEqual(expectedFrequencyMinutes, allChannelElements[9].text)
+    # Grace period in the list
+    self.assertEqual(gracePeriodFrequencyMinutes, allChannelElements[10].text)
+    # In port in the list
+    self.assertEqual(inPortFrequencyMinutes, allChannelElements[11].text)
+    # Click on edit link
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
     # Check serial number
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
@@ -1823,7 +1854,11 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10b")
         time.sleep(defaultSleepTimeValue)
         self.assertFalse(self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").is_selected)
-    # Check buttons  for Poll, Config and Default are activated
+    # Click on channel to expand
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-expansion-panel-header").click()
+    # Check buttons for Poll, Config and Default are activated
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name #mat-checkbox-2 .mat-checkbox-inner-container").is_selected)
@@ -2083,14 +2118,28 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+
     # Click on edit link
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
+
     # Click on new channel button
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button span", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button span").click()
+
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
+
+
     # Enter Land station
     wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -2101,8 +2150,6 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
     # Enter Member Number
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
-    # Enter Installed by
-    #self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
     # Expected frequency
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
@@ -2113,9 +2160,9 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -4172,7 +4219,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         time.sleep(1)
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
-        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 11")
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 14")
         time.sleep(3)
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
         self.assertEqual(ircsValue[2], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[2] + "\"]").text)
@@ -4388,7 +4435,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0026_export_mobile_terminals_to_excel_file(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
