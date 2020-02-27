@@ -1783,6 +1783,7 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    time.sleep(defaultSleepTimeValue * 10)
     # Click on Mobile terminal tab
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
@@ -2118,28 +2119,22 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-
     # Click on Mobile Terminals tab
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
-
     # Click on edit link
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
-
     # Click on new channel button
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button span", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button span").click()
-
     # Click to expand channel view
     wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
-
-
     # Enter Land station
     wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -2930,10 +2925,14 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
@@ -2954,13 +2953,15 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(parameterRow[3])
     # Enter Satellite Number
     self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(parameterRow[4])
-    # Enter Channel name
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name input").send_keys(parameterRow[15])
     # Click on button to activate Active if Parameter active State is set to "1"
     if parameterRow[14] == "1":
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
     # Click on button to activate Poll, Config, Default
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
@@ -2973,14 +2974,16 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     # Click on Default checkbox if TRUE
     if parameterRow[18] == "1":
         self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter Land station
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(parameterRow[19])
     # Enter DNID Number
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(parameterRow[5])
     # Enter Member Number
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(parameterRow[6])
-    # Enter Land station
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(parameterRow[19])
+    # Enter Channel name
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-input-element").send_keys(parameterRow[15])
     # Enter Installed by
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(parameterRow[7])
     # Expected frequency
@@ -2993,10 +2996,9 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(parameterRow[12])
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
-
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -5358,14 +5360,13 @@ class UnionVMSTestCaseG2(unittest.TestCase):
     def test_0052_create_assets_trip_1_2_3_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
-        # Create assets, Mobile for Trip 1
+        # Create assets for Trip 1, 2 and 3
         create_asset_from_file_via_rest_g2(assetFileNameList[0])
-        create_mobileterminal_from_file_g2(self, assetFileNameList[0], mobileTerminalFileNameList[0])
-        # Create assets, Mobile for Trip 2
         create_asset_from_file_via_rest_g2(assetFileNameList[1])
-        create_mobileterminal_from_file_g2(self, assetFileNameList[1], mobileTerminalFileNameList[1])
-        # Create assets, Mobile for Trip 3
         create_asset_from_file_via_rest_g2(assetFileNameList[2])
+        # Create MobileTerminals for Trip 1,2 and 3
+        create_mobileterminal_from_file_g2(self, assetFileNameList[0], mobileTerminalFileNameList[0])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[1], mobileTerminalFileNameList[1])
         create_mobileterminal_from_file_g2(self, assetFileNameList[2], mobileTerminalFileNameList[2])
 
 
