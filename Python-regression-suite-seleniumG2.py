@@ -3339,28 +3339,42 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
     # Get all Mobile Terminal elements in a list from GUI
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal fieldset", "CSS Selector checked 6a")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
-    allAssetElements = self.driver.find_elements_by_css_selector("asset-show-mobile-terminal fieldset")
+    allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
     # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
-    for y in range(len(allAssetElements)):
+    for y in range(len(allMobileTerminalElements)):
         print("Search for serial number:" + channelRow[0])
-        if channelRow[0] in allAssetElements[y].text :
+        if channelRow[0] in allMobileTerminalElements[y].text :
             print("Yes! Found serialnumber")
-            # Click on the correct "Edit link" that corresponds to found MT serial number
-            wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link", "CSS Selector checked 6b")
+            # Click on the correct "MT tab" that corresponds to found MT serial number
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_css_selector("asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link").click()
+            self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
             break
+    # Click on edit link
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
     # Click on New Channel button
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 10)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
     # Enter Channel name
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-name input", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
@@ -3391,10 +3405,9 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 10")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
-
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -7721,7 +7734,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     # NOTE NOTE NOTE!!!
     # Data in "mobileterminals3xxxxG2.csv" (alias tests300FileName[1]) has been changed
-    # Testcases in this suite has NOT been updated for that change.
+    # Testcases in this suite have NOT been updated for that change.
 
 
     def setUp(self):
@@ -7755,7 +7768,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0302b_check_mobile_terminal_list(self):
         # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
         # Set wait time for web driver
