@@ -345,7 +345,7 @@ def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList, pollValue,
     channelListPart = []
     for x in range(0, len(mobileTerminalList)):
         # Create one channel row from the mobile terminal list
-        tempChannelPartRow = [mobileTerminalList[x][0], channelDefaultName, pollValue, configValue, defaultValue, mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
+        tempChannelPartRow = [mobileTerminalList[x][0], mobileTerminalList[x][15], pollValue, configValue, defaultValue, mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][21], mobileTerminalList[x][7], mobileTerminalList[x][22], mobileTerminalList[x][23], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][24], mobileTerminalList[x][25]]
         channelListPart.append(tempChannelPartRow)
     return channelListPart
 
@@ -471,6 +471,14 @@ def convertBooleanToZeroOneString(booleanValue):
         return "1"
     else:
         return "0"
+
+
+def checkTheSameStringValue(stringValue1, stringValue2):
+    if stringValue1 == stringValue2:
+        return True
+    else:
+        return False
+
 
 
 def create_one_new_asset_from_gui(self, vesselNumber):
@@ -1925,7 +1933,7 @@ def getAllColumnValuesforSelectedColumn(stringList, columnValue):
     return tmpColumn
 
 
-def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
+def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, linkAssetMobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
     #
     # Set wait time for web driver
@@ -1936,89 +1944,135 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     # Sort the allrows list (1st Column)
     channelTotalList.sort(key=lambda x: x[0])
 
-    # Click on Mobile Terminal tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(1)
-    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    # Sort on linked asset column
-    wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
-    time.sleep(3)
-    self.driver.find_element_by_id("mt-sort-serialNumber").click()
-
-    # Read all Mobile Terminal data presented on Mobile Terminal List Tab.
+    # Set notedMobileTerminalList and notedChannelsList to empty
     notedMobileTerminalList = []
     notedChannelsList = []
-    for x in range(0, len(mobileTerminalAllrows)):
-        # Search for mobile terminal via serial number
-        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber 3")
-        time.sleep(1)
-        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
-        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[x][0])
-        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search 4")
-        time.sleep(1)
-        self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        # Click on detail button
-        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form 5")
-        time.sleep(3)
-        self.driver.find_element_by_id("mt-toggle-form").click()
+
+    # Get all Mobile Terminals data via Linked Asset from GUI
+    print("--------linkAssetMobileTerminalAllrows----------")
+    for x in range(len(linkAssetMobileTerminalAllrows)):
+        # Set current Mobile Terminal
+        currentMobileTerminal = linkAssetMobileTerminalAllrows[x][0]
+        # Set current Asset CFR
+        currentAssetCFR = linkAssetMobileTerminalAllrows[x][1]
+        # Print current Asset and Mobile Terminal
+        print(str(x) + " Current Mobile Terminal: " + currentMobileTerminal)
+        print(str(x) + " Current asset: " + currentAssetCFR)
+
+        # Click on asset tab
+        wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_link_text("Assets").click()
+        # Deactivate SWE filter
+        click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+        # Enter CFR in the CFR search field for the newly created asset
+        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 3")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("cfr").send_keys(currentAssetCFR)
+        # Click on search button
+        wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+        # Click on details button for new asset
+        wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+        time.sleep(defaultSleepTimeValue * 10)
+        # Click on Mobile terminal tab
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 6")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+        # Get all Mobile Terminal elements in a list from GUI
+        wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
+        time.sleep(defaultSleepTimeValue * 10)
+        allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
+        # Got through each MT found in allAssetElements and match it against selected serial number (currentMobileTerminal)
+        for y in range(len(allMobileTerminalElements)):
+            print("Search for serial number:" + currentMobileTerminal)
+            if currentMobileTerminal in allMobileTerminalElements[y].text :
+                print("Yes! Found serialnumber")
+                # Click on the correct "MT tab" that corresponds to found MT serial number
+                wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
+                time.sleep(defaultSleepTimeValue * 10)
+                self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
+                break
+
+        # Get all elements from the Mobile Terminal table list and save them in allElements list
+        wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
+        time.sleep(defaultSleepTimeValue * 3)
+        allElements = self.driver.find_elements_by_css_selector(".mobileTerminal div .value")
+
         # Add elements values to notedMobileTerminal list row
-        wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber 6")
-        time.sleep(3)
         notedMobileTerminal = []
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-softwareVersion").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-antenna").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-satelliteNumber").get_attribute("value"))
+        # Add Serial Number in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[1].text)
+        # Add Transceiver type in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[3].text)
+        # Add Software Version in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[4].text)
+        # Add Antenna Version in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[5].text)
+        # Add Satellite Number in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[6].text)
 
         # Add append notedMobileTerminal row to notedMobileTerminalList
         notedMobileTerminalList.append(notedMobileTerminal)
 
-        # Read all channels for current Mobile Terminal
-        currentChannel = 0
-        elementIsMissing = False
-        while True:
+        # Get all channel elements from the Mobile Terminal table list and save them in allChannelElements list
+        wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel", "CSS Selector checked 7")
+        time.sleep(defaultSleepTimeValue * 3)
+        allChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel")
+        for x in range(len(allChannelElements)):
             notedChannelRow = []
-            # Test if current channel row exist
-            try:
-                testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
-            except NoSuchElementException:
-                elementIsMissing = True
-            # Channel row exist then add channel row to notedChannelRow
-            if elementIsMissing:
-                break
-            else:
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+            # Expand current channel
+            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + x) + ")", "CSS Selector checked 7a")
+            time.sleep(defaultSleepTimeValue * 3)
+            self.driver.find_element_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + x) + ")").click()
 
-                # Get checkbox-polling Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+            # Get all channel values and save them in allCurrentChannelElements list
+            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + x) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content", "CSS Selector checked 7b")
+            time.sleep(defaultSleepTimeValue * 3)
+            allCurrentChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + x) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content .value")
 
-                # Get checkbox-config Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+            # Add Serial Number in the notedChannelsList list
+            notedChannelRow.append(allElements[1].text)
+            # Add Channel in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[3].text)
+            # Add Polling Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(checkTheSameStringValue(allCurrentChannelElements[4].text, statusValue[1])))
+            # Add Config Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(checkTheSameStringValue(allCurrentChannelElements[5].text, statusValue[1])))
+            # Add Default Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(checkTheSameStringValue(allCurrentChannelElements[6].text, statusValue[1])))
+            # Add DNID in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[1].text)
+            # Add Member Number in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[2].text)
+            # Add Land station in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[0].text)
+            # Add Channel Started Date/Time in the notedChannelsList list
+            notedChannelRow.append("")
+            #notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+            # Add Channel Stopped Date/Time in the notedChannelsList list
+            notedChannelRow.append("")
+            #notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+            # Add installedBy Date/Time in the notedChannelsList list
+            notedChannelRow.append(allElements[7].text)
+            # Add installedOn Date/Time in the notedChannelsList list
+            notedChannelRow.append(allElements[8].text)
+            # Add uninstalled Date/Time in the notedChannelsList list
+            notedChannelRow.append(allElements[9].text)
+            # Add frequencyExpected in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[9].text)
+            # Add frequencyGrace in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[10].text)
+            # Add frequencyPort in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[11].text)
 
-                # Get checkbox-default Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
-
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
-
-            currentChannel = currentChannel + 1
             notedChannelsList.append(notedChannelRow)
-        # Click on cancel button
-        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel 7")
-        time.sleep(2)
-        self.driver.find_element_by_id("menu-bar-cancel").click()
-        time.sleep(2)
+
+
+
 
     # Sort the notedMobileTerminalList list (1st Column)
     notedMobileTerminalList.sort(key=lambda x: x[0])
@@ -3280,9 +3334,11 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
 
     # Open saved csv file and read all mobile terminal elements
     mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
+    print(mobileTerminalAllrows)
 
     # Open saved csv file and read all linked elements between assets and mobile terminals
     linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+    print(linkAssetMobileTerminalAllrows)
 
     # create_one new mobile terminal for mentioned asset
     for x in range(0, len(linkAssetMobileTerminalAllrows)):
@@ -7756,6 +7812,8 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=360)
     def test_0301_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
+        print("---Filename---")
+        print(tests300FileName[0])
         create_asset_from_file_via_rest_g2(tests300FileName[0])
 
 
@@ -7764,6 +7822,9 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create mobile terminals from file with different values.
+        print("---Filename---")
+        print(tests300FileName[1])
+        print(tests300FileName[2])
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests300FileName[1], tests300FileName[2], False)
 
 
@@ -7827,15 +7888,21 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
         # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed!
+        print("---Filename---")
+        print(tests300FileName[3])
+        print(tests300FileName[2])
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests300FileName[3], tests300FileName[2], False)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
 
     @timeout_decorator.timeout(seconds=360)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
+    #@unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0304_check_additional_channels_for_mobile_terminals(self):
         # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
+
+        # Click on real time tab
+        click_on_real_time_tab(self)
 
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
@@ -7846,11 +7913,15 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         # Open saved csv file and read all channel elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
 
+        # Open saved csv file and read all asset elements
+        linkAssetMobileTerminalAllrows = get_elements_from_file(tests300FileName[2])
+
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
 
+
         # Check all channels and mobile terminal data (mobile terminal by mobile terminal)
-        resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
+        resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, linkAssetMobileTerminalAllrows, referenceDateTime)
         self.assertTrue(resultExists)
 
 
