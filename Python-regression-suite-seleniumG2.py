@@ -2022,17 +2022,21 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
         wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel", "CSS Selector checked 7")
         time.sleep(defaultSleepTimeValue * 3)
         allChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel")
-        for x in range(len(allChannelElements)):
+        for y in range(len(allChannelElements)):
             notedChannelRow = []
             # Expand current channel
-            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + x) + ")", "CSS Selector checked 7a")
+            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + y) + ")", "CSS Selector checked 7a")
             time.sleep(defaultSleepTimeValue * 3)
-            self.driver.find_element_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + x) + ")").click()
+            self.driver.find_element_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + y) + ")").click()
 
             # Get all channel values and save them in allCurrentChannelElements list
-            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + x) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content", "CSS Selector checked 7b")
+            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + y) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content", "CSS Selector checked 7b")
             time.sleep(defaultSleepTimeValue * 3)
-            allCurrentChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + x) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content .value")
+            allCurrentChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + y) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content .value")
+
+            print("--------allCurrentChannelElements----------")
+            for z in range(len(allCurrentChannelElements)):
+                print(str(z) + " " + allCurrentChannelElements[z].text)
 
             # Add Serial Number in the notedChannelsList list
             notedChannelRow.append(allElements[1].text)
@@ -2051,11 +2055,11 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
             # Add Land station in the notedChannelsList list
             notedChannelRow.append(allCurrentChannelElements[0].text)
             # Add Channel Started Date/Time in the notedChannelsList list
-            notedChannelRow.append("")
-            #notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
+            notedChannelRow.append(allCurrentChannelElements[7].text)
+            #notedChannelRow.append(self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-startDate .mat-input-element").get_attribute("value"))
             # Add Channel Stopped Date/Time in the notedChannelsList list
-            notedChannelRow.append("")
-            #notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
+            notedChannelRow.append(allCurrentChannelElements[8].text)
+            #notedChannelRow.append(self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-endDate .mat-input-element").get_attribute("value"))
             # Add installedBy Date/Time in the notedChannelsList list
             notedChannelRow.append(allElements[7].text)
             # Add installedOn Date/Time in the notedChannelsList list
@@ -3057,114 +3061,139 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
 
 
 
-def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDateTimeValue):
+def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRow, ircsTrueCfrFalse, referenceDateTimeValue):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on mobile terminal tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(5)
-    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    # Search for mobile terminal via serial number
-    wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
-    time.sleep(5)
-    self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
-    self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
-    wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
-    time.sleep(1)
-    self.driver.find_element_by_id("mt-btn-advanced-search").click()
-    # Click on detail button
-    wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
-    time.sleep(3)
-    self.driver.find_element_by_id("mt-toggle-form").click()
-    # Click on link "Add new channel"
-    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-addChannel", "mt-x-addChannel checked 5")
-    time.sleep(3)
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
-    # Enter channel name
-    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel", "mt-x-addChannel-y-communicationChannel checked 6")
-    time.sleep(2)
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").send_keys(channelRow[1])
-    # Activate Poll if value is "true"
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Deactivate SWE filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
+    if ircsTrueCfrFalse == True :
+        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+    else:
+        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for the asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    # Get all Mobile Terminal elements in a list from GUI
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
+    time.sleep(defaultSleepTimeValue * 10)
+    allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
+    # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
+    for y in range(len(allMobileTerminalElements)):
+        print("Search for serial number:" + channelRow[0])
+        if channelRow[0] in allMobileTerminalElements[y].text :
+            print("Yes! Found serialnumber")
+            # Click on the correct "MT tab" that corresponds to found MT serial number
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
+            break
+    # Click on edit button
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
+    # Click on New Channel button
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 10)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
+    # Enter Channel name
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-name input", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
+    # Click on button to activate Poll, Config, Default
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 13")
+    time.sleep(defaultSleepTimeValue)
+    # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
-        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-polling").click()
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[2]/label").click()
-    # Activate Config if value is "true"
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+    # Click on Config checkbox if TRUE
     if channelRow[3] == "1":
-        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-config").click()
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[3]/label").click()
-    # Activate Default if value is "true"
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Click on Default checkbox if TRUE
     if channelRow[4] == "1":
-        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-default").click()
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[4]/label").click()
-    # Enter DNID value
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").send_keys(channelRow[5])
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter DNID Number
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
     # Enter Member Number
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").send_keys(channelRow[6])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
     # Enter Land station
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").send_keys(channelRow[7])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
+
     # Enter Start Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-startDate .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-startDate .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
     # Enter Stop Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Installer from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").send_keys(channelRow[10])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-endDate .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-endDate .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
     # Enter Installed Date/Time based on deltaHourValue from file
-    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Uninstalled Date/Time based on deltaHourValue from file
-    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Exp. frequency from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").send_keys(channelRow[13])
-    # Enter Grace period from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").send_keys(channelRow[14])
-    # Enter In port from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").send_keys(channelRow[15])
+    #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Enter Uninstalled Date/Time based on deltaHourValue from file  2020-03-24 16:58
+    #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
 
-    # Click on Save button
-    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
-    time.sleep(1)
-    self.driver.find_element_by_id("menu-bar-update").click()
-    # Enter Comment in comment field
-    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 8")
-    time.sleep(2)
-    self.driver.find_element_by_name("comment").clear()
-    self.driver.find_element_by_name("comment").send_keys(commentValue)
-    # Click on Update button
-    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 9")
-    time.sleep(1)
-    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-    # Click on Cancel
-    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
-    time.sleep(3)
-    self.driver.find_element_by_id("menu-bar-cancel").click()
-    time.sleep(2)
+    # Expected frequency
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
+    # Grace period
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
+    # In port
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
+    # Click on save button
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    time.sleep(defaultSleepTimeValue * 10)
 
 
 
-def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, referenceDateTime):
+
+def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, linkFileName, ircsTrueCfrFalse, referenceDateTime):
     # Create addtional channels for Mobile Terminals from file based on channelFile
 
     # Open saved csv file and read all asset elements
     channelAllrows = get_elements_from_file(channelFileName)
 
+    # Open saved csv file and read all linked elements between assets and mobile terminals
+    linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+
     # create_one new channel for mentioned mobile terminal
     for x in range(0, len(channelAllrows)):
-        create_one_new_channel_for_one_mobile_terminal(self, channelAllrows[x], referenceDateTime)
+        print("-----------------------")
+        print(x)
+        print(linkAssetMobileTerminalAllrows[x][0], " : ", linkAssetMobileTerminalAllrows[x][1])
+
+        print("-----------------------")
+        create_one_new_channel_for_one_mobile_terminal(self, linkAssetMobileTerminalAllrows[x][1], channelAllrows[x], ircsTrueCfrFalse, referenceDateTime)
 
 
 def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName):
@@ -3413,7 +3442,7 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
             time.sleep(defaultSleepTimeValue * 10)
             self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
             break
-    # Click on edit link
+    # Click on edit button
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
@@ -7788,10 +7817,6 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
 class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
-    # NOTE NOTE NOTE!!!
-    # Data in "mobileterminals3xxxxG2.csv" (alias tests300FileName[1]) has been changed
-    # Testcases in this suite have NOT been updated for that change.
-
 
     def setUp(self):
         # Startup browser and login
@@ -7812,8 +7837,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     @timeout_decorator.timeout(seconds=360)
     def test_0301_create_several_assets_for_filtering(self):
         # Create assets from file with several different values for filtering
-        print("---Filename---")
-        print(tests300FileName[0])
         create_asset_from_file_via_rest_g2(tests300FileName[0])
 
 
@@ -7822,9 +7845,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         # Click on real time tab
         click_on_real_time_tab(self)
         # Create mobile terminals from file with different values.
-        print("---Filename---")
-        print(tests300FileName[1])
-        print(tests300FileName[2])
         create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(self, tests300FileName[1], tests300FileName[2], False)
 
 
@@ -7888,10 +7908,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
         # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed!
-        print("---Filename---")
-        print(tests300FileName[3])
-        print(tests300FileName[2])
-        create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests300FileName[3], tests300FileName[2], False)
+        create_addtional_channels_for_mobileterminals_from_file(self, tests300FileName[3], tests300FileName[2], False, referenceDateTime)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
