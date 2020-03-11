@@ -40,6 +40,17 @@ import json
 # Import parameters from parameter file
 from UnionVMSparametersG2 import *
 
+if platform.system() == "Windows":
+    # Set environment variable HOME to the value of USERPROFILE
+    os.environ["HOME"] = os.environ["USERPROFILE"]
+    print("Set HOME to: " + os.environ["HOME"])
+    # We redefine timeout_decorator on windows
+    class timeout_decorator:
+        @staticmethod
+        def timeout(*args, **kwargs):
+            return lambda f: f # return a no-op decorator
+else:
+    import timeout_decorator
 
 def startup_browser_and_login_to_unionVMS(self):
     # Print Selenium version
@@ -173,7 +184,6 @@ def get_asset_cfr_via_link_list(linkList, serialNumber):
         if serialNumber in linkList[x][0]:
             return linkList[x][1]
     return ""
-
 
 
 def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValue):
@@ -480,7 +490,6 @@ def checkTheSameStringValue(stringValue1, stringValue2):
         return False
 
 
-
 def create_one_new_asset_from_gui(self, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -650,7 +659,6 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue * 20)
 
 
-
 def create_one_new_asset_via_rest_g2(vesselNumber):
     # Get Token
     token = get_token_from_usm()
@@ -692,7 +700,6 @@ def create_one_new_asset_via_rest_g2(vesselNumber):
     print(rsp)
     print(rsp.text)
     time.sleep(defaultSleepTimeValue)
-
 
 
 def check_new_asset_exists(self, vesselNumber):
@@ -801,10 +808,16 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    # Get all elements from the Asset table list and save them in allElements list
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show div", "CSS Selector checked 6")
+    # Check that the Name and Flagstate value title is correct.
+    wait_for_element_by_css_selector_to_exist(wait, ".title h2", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
-    allElements = self.driver.find_elements_by_css_selector("asset-show div")
+    self.assertEqual(vesselName[vesselNumber] + " — " + countryValue[vesselNumber], self.driver.find_element_by_css_selector(".title h2").text)
+    # Check that the Product Org Name + Product Org Code values are correct.
+    self.assertEqual(productOrgNameValue[vesselNumber] + " • Org. nr: " + productOrgCodeValue[vesselNumber], self.driver.find_element_by_css_selector(".title span").text)
+    # Get all elements from the Asset table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show div .value", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 3)
+    allElements = self.driver.find_elements_by_css_selector("asset-show div .value")
     # Check that the F.S value is correct.
     self.assertEqual(countryValue[vesselNumber], allElements[0].text)
     # Check that External Marking Value is correct
@@ -815,33 +828,26 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     self.assertEqual(ircsValue[vesselNumber], allElements[3].text)
     # Check that the IMO value is correct
     self.assertEqual(imoValue[vesselNumber], allElements[4].text)
-    # Check that the HomePort value is correct
-    self.assertEqual(homeportValue[vesselNumber], allElements[5].text)
     # Check that the MMSI value is correct
-    self.assertEqual(mmsiValue[vesselNumber], allElements[6].text)
-    # Check that the Length Type over all value is correct.
-    self.assertEqual(lengthOverAllValue[vesselNumber], allElements[7].text)
-    # Check that the Length Type between perpendiculars value is correct.
-    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], allElements[8].text)
+    self.assertEqual(mmsiValue[vesselNumber], allElements[5].text)
+    # Check that the HomePort value is correct
+    self.assertEqual(homeportValue[vesselNumber], allElements[7].text)
     # Check that the Gross Tonnage value PLUS Gross Tonnage type are correct.
-    self.assertEqual(grossTonnageValue[vesselNumber] +" " + grossTonnageTypeValue[vesselNumber], allElements[9].text)
+    self.assertEqual(grossTonnageValue[vesselNumber] +" " + grossTonnageTypeValue[vesselNumber], allElements[8].text)
     # Check that the Power value is correct.
-    self.assertEqual(powerValue[vesselNumber], allElements[10].text)
-    # Check that the Product Org Code value is correct.
-    self.assertEqual(productOrgCodeValue[vesselNumber], allElements[11].text)
-    # Check that the Product Org Name value is correct.
-    self.assertEqual(productOrgNameValue[vesselNumber], allElements[12].text)
-    # Check that the Name value is correct.left-column asset-show l
-    self.assertEqual(vesselName[vesselNumber] + " — Asset information", self.driver.find_element_by_css_selector(".page-title").text)
-
+    self.assertEqual(powerValue[vesselNumber], allElements[9].text)
+    # Check that the Length Type over all value is correct.
+    self.assertEqual(lengthOverAllValue[vesselNumber], allElements[10].text)
+    # Check that the Length Type between perpendiculars value is correct.
+    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], allElements[11].text)
     # Check contact parameters if checkContacts is TRUE
     if checkContacts == True:
         # Click on Contacts tab
-        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 8")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
         # Get all contacts elements from the Asset table list and save them in allContactsElements list
-        wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 8")
+        wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 9")
         time.sleep(defaultSleepTimeValue)
         allContactsElements = self.driver.find_elements_by_css_selector("contact-show-by-asset-page .field-wrapper div")
         # Check that the E-mail value is correct.
@@ -898,7 +904,6 @@ def click_on_selected_asset_history_event(self, numberEvent):
         self.driver.find_element_by_css_selector("td").click()
     else:
         self.driver.find_element_by_xpath("(//tr[@id='asset-btn-history-item']/td)[" + str((numberEvent*2)+1) + "]").click()
-
 
 
 def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList):
@@ -1068,11 +1073,6 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
 
     time.sleep(defaultSleepTimeValue * 20)
     '''
-
-
-
-
-
 
 
 def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
@@ -1277,7 +1277,6 @@ def archive_one_mobile_terminal_from_gui(self, mobileTerminalNumber):
     time.sleep(2)
 
 
-
 def check_mobile_terminal_archived(self, mobileTerminalNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -1301,9 +1300,6 @@ def check_mobile_terminal_archived(self, mobileTerminalNumber):
     except NoSuchElementException:
         pass
     time.sleep(2)
-
-
-
 
 
 def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
@@ -1458,7 +1454,6 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     time.sleep(1)
     self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
     time.sleep(2)
-
 
 
 def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber):
@@ -1626,6 +1621,8 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
 
 
 def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
+    # Set referenceDateTime to current UTC time
+    referenceDateTime = datetime.datetime.utcnow()
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
@@ -1679,10 +1676,29 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
+
+    # Enter Start Date/Time based on deltaTimeBigValue (Installed on)
+    tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    # Enter Stop Date/Time based on deltaTimeBigValue (Uninstalled on)
+    tempTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+
+    # Enter Installed by
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+
     # Click to expand channel view
     wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
+    # Enter DNID Number
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 14")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[mobileTerminalNumber])
+    # Enter Member Number
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
     # Click on button to activate Poll, Config, Default
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -1693,14 +1709,16 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[mobileTerminalNumber])
-    # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 14")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[mobileTerminalNumber])
-    # Enter Member Number
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
-    # Enter Installed by
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+
+    # Enter Start Date/Time based on deltaTimeBigValue (Channel Start DateTime)
+    tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    # Enter Stop Date/Time based on deltaTimeBigValue (Channel Stop DateTime)
+    tempTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+
     # Expected frequency
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
@@ -1710,12 +1728,16 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     # In port
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
+
+    time.sleep(defaultSleepTimeValue * 100)
+
     # Click on save button
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
-    time.sleep(defaultSleepTimeValue * 10)
+    time.sleep(defaultSleepTimeValue * 100)
 
+    # Continue...
 
 
 def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
@@ -1888,7 +1910,6 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     # In port
     self.assertEqual(inPortFrequencyMinutes, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").get_attribute("value"))
     time.sleep(defaultSleepTimeValue * 10)
-
 
 
 def compareChannelLists(notedList, fileList):
@@ -2458,7 +2479,6 @@ def change_and_check_speed_format(self,unitNumber):
     time.sleep(2)
 
 
-
 def generate_and_verify_manual_position(self,speedValue,courseValue):
     # Set Webdriver wait
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -2537,7 +2557,6 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     return earlierPositionDateTimeValueString
 
 
-
 def get_target_path():
     # Get correct download path
     if platform.system() == "Windows":
@@ -2556,7 +2575,6 @@ def get_target_path():
         return targetPathLinux
 
 
-
 def get_test_report_path():
     # Get correct download path
     if platform.system() == "Windows":
@@ -2571,18 +2589,6 @@ def get_test_report_path():
         testResultPathLinux = os.path.abspath(os.path.dirname(__file__))
         print("Default testResultPathLinux is: " + testResultPathLinux)
         return testResultPathLinux
-
-if platform.system() == "Windows":
-    # Set environment variable HOME to the value of USERPROFILE
-    os.environ["HOME"] = os.environ["USERPROFILE"]
-    print("Set HOME to: " + os.environ["HOME"])
-    # We redefine timeout_decorator on windows
-    class timeout_decorator:
-        @staticmethod
-        def timeout(*args, **kwargs):
-            return lambda f: f # return a no-op decorator
-else:
-    import timeout_decorator
 
 
 def get_elements_from_file(fileName):
@@ -2786,7 +2792,6 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(2)
 
 
-
 def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     # Get Token
     token = get_token_from_usm()
@@ -2829,7 +2834,6 @@ def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     print(rsp)
     print(rsp.text.encode("utf-8"))
     time.sleep(defaultSleepTimeValue)
-
 
 
 def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
@@ -2883,7 +2887,6 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("asset-form--save").click()
     time.sleep(defaultSleepTimeValue * 10)
-
 
 
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
@@ -3060,7 +3063,6 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     time.sleep(defaultSleepTimeValue * 10)
 
 
-
 def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRow, ircsTrueCfrFalse, referenceDateTimeValue):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3173,8 +3175,6 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
-
-
 
 
 def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, linkFileName, ircsTrueCfrFalse, referenceDateTime):
@@ -3496,8 +3496,6 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     time.sleep(defaultSleepTimeValue * 10)
 
 
-
-
 def wait_for_element_by_id_to_exist(wait, nameOfElement, finallyText):
     # Wait for element
     try:
@@ -3563,6 +3561,22 @@ def click_on_real_time_tab(self):
     self.driver.find_element_by_css_selector(".icon-search").click()
 
 
+def select_UTC_time(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on Time zone field
+    wait_for_element_by_css_selector_to_exist(wait, ".timezone-selector .mat-select-value", "CSS Selector checked 1")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".timezone-selector .mat-select-value").click()
+    time.sleep(defaultSleepTimeValue)
+    # Select Etc-UTC Time zone
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-option--timezone-Etc-UTC .mat-option-text", "CSS Selector checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mat-option--timezone-Etc-UTC .mat-option-text").click()
+
+
+
+
 def click_on_flag_state_in_list_tab(self, flagState):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -3587,7 +3601,7 @@ def get_token_from_usm():
     datas = {"userName": defaultUserName, "password": defaultUserNamePassword}
     headers = {'Content-type': 'application/json'}
     rsp = requests.post(url, json=datas, headers=headers)
-    token = rsp.json()['jwtoken']
+    token = rsp.json()['JWToken']
     return token
 
 
@@ -3637,7 +3651,6 @@ def activate_one_map_default_settings(self, settingNumberValue):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mat-slide-toggle:nth-child(" + str(settingNumberValue)  + ") .mat-slide-toggle-bar").click()
     time.sleep(defaultSleepTimeValue)
-
 
 
 def activate_map_default_settings(self):
@@ -3733,8 +3746,12 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         referenceDateTime = datetime.datetime.utcnow()
         # Save referenceDateTime1 to file
         save_elements_to_file(referenceDateTimeFileName[1], referenceDateTime, True)
-        # Check inmarsat plugin is fully synced
-        # check_inmarsat_fully_synced(self)
+        # Set the new frontend to UTC time zone
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Set UTC time zone in the new Frontend
+        select_UTC_time(self)
+
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -3867,7 +3884,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (second in the list)
         create_one_new_asset_via_rest_g2(1)
-        #create_one_new_asset_from_gui_g2(self, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -6884,7 +6900,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
 
-
 class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
@@ -8221,7 +8236,6 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0402_check_config_update_change_in_audit_log(self):
         # Set wait time for web driver
@@ -8742,9 +8756,6 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
 
-
-
-
 class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
@@ -9146,8 +9157,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
         # Create Trip 13-17
         for x in range(13, 17):
             create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
-
-
 
 
 

@@ -61,6 +61,7 @@ gracePeriodFrequencyMinutes = "15"
 inPortFrequencyHours = "0"
 inPortFrequencyMinutes = "3"
 deltaTimeValue = 4
+deltaTimeBigValue = 48
 transponderType = ("Iridium", "Inmarsat-C")
 mobileTerminalHeadline = ("Linked asset", "Serial no.", "Member no.", "DNID", "Transponder type", "Satellite no.", "MMSI no.", "Status")
 mobileTerminalFileName = 'mobileTerminals.csv'
@@ -194,7 +195,7 @@ targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\unionvms-test\\target"
 downloadPathLinux = "/var/lib/jenkins/Downloads"
 downloadPathWindow = "\Downloads"
 
-referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv')
+referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv', 'referenceDateTime3.csv')
 
 tests200FileName = ['assets2xxxxG2.csv', 'mobileterminals2xxxxG2.csv', 'linkassetmobileterminals2xxxxG2.csv']
 tests300FileName = ['assets3xxxxG2.csv', 'mobileterminals3xxxxG2.csv', 'linkassetmobileterminals3xxxxG2.csv', 'channelstomobileterminals3xxxxG2.csv', 'channelstomobileterminals3bxxxG2.csv']
