@@ -1676,7 +1676,6 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
-
     # Enter Start Date/Time based on deltaTimeBigValue (Installed on)
     tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
     self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").clear()
@@ -3154,12 +3153,13 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
 
     # Enter Start Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
-    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-startDate .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-startDate .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Enter Stop Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
-    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-endDate .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-endDate .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+
     # Enter Installed Date/Time based on deltaHourValue from file
     #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
     #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
@@ -3178,11 +3178,15 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     # In port
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
+
+    time.sleep(defaultSleepTimeValue * 100)
+
+
     # Click on save button
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
-    time.sleep(defaultSleepTimeValue * 10)
+    time.sleep(defaultSleepTimeValue * 100)
 
 
 def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, linkFileName, ircsTrueCfrFalse, referenceDateTime):
@@ -6179,30 +6183,35 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_assets_trip_1_2_3_g2_part1(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_g2_part1(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_assets_trip_1_2_3_g2_part2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_g2_part2(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0052b_create_report_and_check_asset_in_reporting_view(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0055_create_assets_trip_4_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6212,6 +6221,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0055_create_assets_trip_4_g2_part2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6224,12 +6234,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0056_create_assets_trip_5_and_6_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6242,6 +6254,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0056_create_assets_trip_5_and_6_g2_part2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6258,6 +6271,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[4], tripFileNameList[4])
@@ -6268,6 +6282,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0057_create_assets_trip_7_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6283,6 +6298,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0058_create_assets_trip_8_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6298,6 +6314,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0059_create_assets_trip_9_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6313,6 +6330,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0102_create_assets_real_trip_2_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6328,12 +6346,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0102b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[11], tripFileNameList[11])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0103_create_assets_real_trip_3_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6353,6 +6373,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0104_create_assets_real_trip_4_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6368,12 +6389,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0104b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[13], tripFileNameList[13])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0105_create_assets_real_trip_5_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6389,12 +6412,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0105b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[14], tripFileNameList[14])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0106_create_assets_real_trip_6_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6410,6 +6435,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0107_create_assets_real_trip_7_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6973,6 +6999,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0050_create_user_area(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7037,6 +7064,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0051_create_user_area_rule_one(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7150,6 +7178,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -7160,6 +7189,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0053_generate_NAF_position_that_not_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7203,12 +7233,14 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0053b_delay_one_minute(self):
         # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
         time.sleep(60)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0054_generate_NAF_position_that_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8270,7 +8302,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
             self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
             self.assertEqual(mobileTerminalAllrows[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
             self.assertEqual(mobileTerminalAllrows[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
-            self.assertEqual(mobileTerminalAllrows[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            #self.assertEqual(mobileTerminalAllrows[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text) (DNID not shown anymore in the old frontend
             self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
             self.assertEqual(mobileTerminalAllrows[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
             self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
