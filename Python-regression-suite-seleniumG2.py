@@ -40,6 +40,17 @@ import json
 # Import parameters from parameter file
 from UnionVMSparametersG2 import *
 
+if platform.system() == "Windows":
+    # Set environment variable HOME to the value of USERPROFILE
+    os.environ["HOME"] = os.environ["USERPROFILE"]
+    print("Set HOME to: " + os.environ["HOME"])
+    # We redefine timeout_decorator on windows
+    class timeout_decorator:
+        @staticmethod
+        def timeout(*args, **kwargs):
+            return lambda f: f # return a no-op decorator
+else:
+    import timeout_decorator
 
 def startup_browser_and_login_to_unionVMS(self):
     # Print Selenium version
@@ -173,7 +184,6 @@ def get_asset_cfr_via_link_list(linkList, serialNumber):
         if serialNumber in linkList[x][0]:
             return linkList[x][1]
     return ""
-
 
 
 def get_selected_asset_column_value_based_on_cfr(assetList, cfrValue, columnValue):
@@ -345,7 +355,7 @@ def get_channel_part_for_one_mobile_terminal_list(mobileTerminalList, pollValue,
     channelListPart = []
     for x in range(0, len(mobileTerminalList)):
         # Create one channel row from the mobile terminal list
-        tempChannelPartRow = [mobileTerminalList[x][0], channelDefaultName, pollValue, configValue, defaultValue, mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][15], mobileTerminalList[x][16], mobileTerminalList[x][17], mobileTerminalList[x][18], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][21], mobileTerminalList[x][22]]
+        tempChannelPartRow = [mobileTerminalList[x][0], mobileTerminalList[x][15], pollValue, configValue, defaultValue, mobileTerminalList[x][5], mobileTerminalList[x][6], mobileTerminalList[x][19], mobileTerminalList[x][20], mobileTerminalList[x][21], mobileTerminalList[x][7], mobileTerminalList[x][22], mobileTerminalList[x][23], mobileTerminalList[x][8], mobileTerminalList[x][10], mobileTerminalList[x][12], mobileTerminalList[x][24], mobileTerminalList[x][25]]
         channelListPart.append(tempChannelPartRow)
     return channelListPart
 
@@ -471,6 +481,13 @@ def convertBooleanToZeroOneString(booleanValue):
         return "1"
     else:
         return "0"
+
+
+def checkTheSameStringValue(stringValue1, stringValue2):
+    if stringValue1 == stringValue2:
+        return True
+    else:
+        return False
 
 
 def create_one_new_asset_from_gui(self, vesselNumber):
@@ -642,7 +659,6 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     time.sleep(defaultSleepTimeValue * 20)
 
 
-
 def create_one_new_asset_via_rest_g2(vesselNumber):
     # Get Token
     token = get_token_from_usm()
@@ -684,7 +700,6 @@ def create_one_new_asset_via_rest_g2(vesselNumber):
     print(rsp)
     print(rsp.text)
     time.sleep(defaultSleepTimeValue)
-
 
 
 def check_new_asset_exists(self, vesselNumber):
@@ -793,10 +808,16 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    # Get all elements from the Asset table list and save them in allElements list
-    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show div", "CSS Selector checked 6")
+    # Check that the Name and Flagstate value title is correct.
+    wait_for_element_by_css_selector_to_exist(wait, ".title h2", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
-    allElements = self.driver.find_elements_by_css_selector(".left-column asset-show div")
+    self.assertEqual(vesselName[vesselNumber] + " — " + countryValue[vesselNumber], self.driver.find_element_by_css_selector(".title h2").text)
+    # Check that the Product Org Name + Product Org Code values are correct.
+    self.assertEqual(productOrgNameValue[vesselNumber] + " • Org. nr: " + productOrgCodeValue[vesselNumber], self.driver.find_element_by_css_selector(".title span").text)
+    # Get all elements from the Asset table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show div .value", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 3)
+    allElements = self.driver.find_elements_by_css_selector("asset-show div .value")
     # Check that the F.S value is correct.
     self.assertEqual(countryValue[vesselNumber], allElements[0].text)
     # Check that External Marking Value is correct
@@ -807,44 +828,42 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     self.assertEqual(ircsValue[vesselNumber], allElements[3].text)
     # Check that the IMO value is correct
     self.assertEqual(imoValue[vesselNumber], allElements[4].text)
-    # Check that the HomePort value is correct
-    self.assertEqual(homeportValue[vesselNumber], allElements[5].text)
     # Check that the MMSI value is correct
-    self.assertEqual(mmsiValue[vesselNumber], allElements[6].text)
-    # Check that the Length Type over all value is correct.
-    self.assertEqual(lengthOverAllValue[vesselNumber], allElements[7].text)
-    # Check that the Length Type between perpendiculars value is correct.
-    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], allElements[8].text)
+    self.assertEqual(mmsiValue[vesselNumber], allElements[5].text)
+    # Check that the HomePort value is correct
+    self.assertEqual(homeportValue[vesselNumber], allElements[7].text)
     # Check that the Gross Tonnage value PLUS Gross Tonnage type are correct.
-    self.assertEqual(grossTonnageValue[vesselNumber] +" " + grossTonnageTypeValue[vesselNumber], allElements[9].text)
+    self.assertEqual(grossTonnageValue[vesselNumber] +" " + grossTonnageTypeValue[vesselNumber], allElements[8].text)
     # Check that the Power value is correct.
-    self.assertEqual(powerValue[vesselNumber], allElements[10].text)
-    # Check that the Product Org Code value is correct.
-    self.assertEqual(productOrgCodeValue[vesselNumber], allElements[11].text)
-    # Check that the Product Org Name value is correct.
-    self.assertEqual(productOrgNameValue[vesselNumber], allElements[12].text)
-    # Check that the Name value is correct.left-column asset-show l
-    self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector("asset-show-page h1").text)
+    self.assertEqual(powerValue[vesselNumber], allElements[9].text)
+    # Check that the Length Type over all value is correct.
+    self.assertEqual(lengthOverAllValue[vesselNumber], allElements[10].text)
+    # Check that the Length Type between perpendiculars value is correct.
+    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], allElements[11].text)
     # Check contact parameters if checkContacts is TRUE
     if checkContacts == True:
-        # Get all contacts elements from the Asset table list and save them in allContactsElements list
-        wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show-contacts div", "CSS Selector checked 7")
+        # Click on Contacts tab
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 8")
         time.sleep(defaultSleepTimeValue)
-        allContactsElements = self.driver.find_elements_by_css_selector(".left-column asset-show-contacts div")
-        # Check that the Contact Name value is correct.
-        self.assertEqual(contactNameValue[vesselNumber], allContactsElements[1].text)
+        self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+        # Get all contacts elements from the Asset table list and save them in allContactsElements list
+        wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 9")
+        time.sleep(defaultSleepTimeValue)
+        allContactsElements = self.driver.find_elements_by_css_selector("contact-show-by-asset-page .field-wrapper div")
         # Check that the E-mail value is correct.
-        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[2].text)
+        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[0].text)
         # Check that the Contact Country value is correct.
-        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
+        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[1].text)
         # Check that the Contact City value is correct.
-        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
+        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[2].text)
         # Check that the Phone value is correct.
-        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[5].text)
+        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[3].text)
         # Check that the Contact Zip Code value is correct.
-        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[6].text)
+        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[4].text)
+        # Check that the Contact Name value is correct.
+        self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_css_selector("contact-show-by-asset-page h2").text)
         # Check that the Type Organization value is correct.
-        self.assertEqual(contactTypeValue[vesselNumber], allContactsElements[7].text)
+        self.assertEqual(contactTypeValue[vesselNumber], self.driver.find_element_by_css_selector("contact-show-by-asset-page .contact-type-name").text)
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -885,7 +904,6 @@ def click_on_selected_asset_history_event(self, numberEvent):
         self.driver.find_element_by_css_selector("td").click()
     else:
         self.driver.find_element_by_xpath("(//tr[@id='asset-btn-history-item']/td)[" + str((numberEvent*2)+1) + "]").click()
-
 
 
 def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList):
@@ -959,9 +977,9 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on edit button for selected asset
-    wait_for_element_by_css_selector_to_exist(wait, ".left-column asset-show a", "CSS Selector checked 5b")
+    wait_for_element_by_css_selector_to_exist(wait, "asset-show a", "CSS Selector checked 5b")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".left-column asset-show a").click()
+    self.driver.find_element_by_css_selector("asset-show a").click()
     # Select F.S value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -1055,11 +1073,6 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
 
     time.sleep(defaultSleepTimeValue * 20)
     '''
-
-
-
-
-
 
 
 def modify_one_new_asset_from_gui(self, oldVesselNumber, newVesselNumber):
@@ -1264,7 +1277,6 @@ def archive_one_mobile_terminal_from_gui(self, mobileTerminalNumber):
     time.sleep(2)
 
 
-
 def check_mobile_terminal_archived(self, mobileTerminalNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -1288,9 +1300,6 @@ def check_mobile_terminal_archived(self, mobileTerminalNumber):
     except NoSuchElementException:
         pass
     time.sleep(2)
-
-
-
 
 
 def add_contact_to_existing_asset(self, currentVesselNumber, newVesselNumber):
@@ -1445,7 +1454,6 @@ def add_notes_to_existing_asset_and_check(self, currentVesselNumber):
     time.sleep(1)
     self.driver.find_element_by_css_selector("div.modal-footer > button.btn.btn-primary").click()
     time.sleep(2)
-
 
 
 def check_contacts_to_existing_asset(self, currentVesselNumber, newVesselNumber):
@@ -1613,6 +1621,8 @@ def create_one_new_mobile_terminal_via_asset_tab(self, mobileTerminalNumber, ves
 
 
 def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
+    # Set referenceDateTime to current UTC time
+    referenceDateTime = datetime.datetime.utcnow()
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on asset tab
@@ -1633,10 +1643,14 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
@@ -1662,24 +1676,46 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
-    # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 11")
+    # Enter Start Date/Time based on deltaTimeBigValue (Installed on)
+    tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    # Enter Stop Date/Time based on deltaTimeBigValue (Uninstalled on)
+    tempTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    # Enter Installed by
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
     # Enter Land station
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[mobileTerminalNumber])
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 14")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
-    # Enter Installed by
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    # Enter Channel Name
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-input-element").send_keys(channelName[mobileTerminalNumber])
+    # Click on button to activate Poll, Config, Default
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter Start Date/Time based on deltaTimeBigValue (Channel Start DateTime)
+    tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    # Enter Stop Date/Time based on deltaTimeBigValue (Channel Stop DateTime)
+    tempTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Expected frequency
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
@@ -1690,10 +1726,12 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 13")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
+    # Save referenceDateTime to file
+    save_elements_to_file(referenceDateTimeFileName[2], referenceDateTime, True)
 
 
 
@@ -1752,6 +1790,12 @@ def check_new_mobile_terminal_exists(self, mobileTerminalNumber):
 def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber, vesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Get referenceDateTime from file
+    referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[2])
+    startTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
+    startTimeValueString = datetime.datetime.strftime(startTimeValue, '%Y-%m-%d %H:%M')
+    stopTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
+    stopTimeValueString = datetime.datetime.strftime(stopTimeValue, '%Y-%m-%d %H:%M')
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
@@ -1770,22 +1814,65 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
-    #Get all elements from the Mobile Terminal table list and save them in allElements list
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .ng-star-inserted div", "CSS Selector checked 6")
-    time.sleep(defaultSleepTimeValue * 3)
-    allElements = self.driver.find_elements_by_css_selector(".right-column asset-show-mobile-terminal .ng-star-inserted div")
-    # Check Software Version in the list
-    self.assertEqual(softwareVersion, allElements[2].text)
-    # Check Antenna Version in the list
-    self.assertEqual(antennaVersion, allElements[3].text)
-    # Check Satellite Number in the list
-    self.assertEqual(satelliteNumber[mobileTerminalNumber], allElements[4].text)
-    # Check Serial Number in the list
-    self.assertEqual(serialNoValue[mobileTerminalNumber], allElements[5].text)
-    # Click on edit link
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 10)
+    # Click on Mobile terminal tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    # Get all elements from the Mobile Terminal table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 3)
+    allElements = self.driver.find_elements_by_css_selector(".mobileTerminal div .value")
+    # Check Serial Number in the list
+    self.assertEqual(serialNoValue[mobileTerminalNumber], allElements[1].text)
+    # Check Transceiver type in the list
+    self.assertEqual(transceiverType[mobileTerminalNumber], allElements[3].text)
+    # Check Software Version in the list
+    self.assertEqual(softwareVersion, allElements[4].text)
+    # Check Antenna Version in the list
+    self.assertEqual(antennaVersion, allElements[5].text)
+    # Check Satellite Number in the list
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], allElements[6].text)
+    # Check Installed by in the list
+    self.assertEqual(installedByName, allElements[7].text)
+    # Check Installed on DateTime in the list
+    self.assertEqual(startTimeValueString, allElements[8].text)
+    # Check Uninstalled on DateTime in the list
+    self.assertEqual(stopTimeValueString, allElements[9].text)
+    # Click on channel to expand
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-expansion-panel-header").click()
+    #Get all elements from the channel table list and save them in allElements list
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-body div .value", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 3)
+    allChannelElements = self.driver.find_elements_by_css_selector(".mat-expansion-panel-body div .value")
+    # Check Check LandStation in the list
+    self.assertEqual(landStation[mobileTerminalNumber], allChannelElements[0].text)
+    # Check DNID Number in the list
+    self.assertEqual(dnidNumber[mobileTerminalNumber], allChannelElements[1].text)
+    # Check Member Number in the list
+    self.assertEqual(memberIdnumber[mobileTerminalNumber], allChannelElements[2].text)
+    # Check Poll Channel Active in the list
+    self.assertEqual(statusValue[1], allChannelElements[4].text)
+    # Check Config Channel Active in the list
+    self.assertEqual(statusValue[1], allChannelElements[5].text)
+    # Check Default Channel Active in the list
+    self.assertEqual(statusValue[1], allChannelElements[6].text)
+    # Check Channel Started on DateTime in the list
+    self.assertEqual(startTimeValueString, allChannelElements[7].text)
+    # Check Channel Stopped on DateTime in the list
+    self.assertEqual(stopTimeValueString, allChannelElements[8].text)
+    # Expected frequency in the list
+    self.assertEqual(expectedFrequencyMinutes, allChannelElements[9].text)
+    # Grace period in the list
+    self.assertEqual(gracePeriodFrequencyMinutes, allChannelElements[10].text)
+    # In port in the list
+    self.assertEqual(inPortFrequencyMinutes, allChannelElements[11].text)
+    # Click on edit link
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
     # Check serial number
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
@@ -1807,7 +1894,11 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10b")
         time.sleep(defaultSleepTimeValue)
         self.assertFalse(self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").is_selected)
-    # Check buttons  for Poll, Config and Default are activated
+    # Click on channel to expand
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-expansion-panel-header").click()
+    # Check buttons for Poll, Config and Default are activated
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name #mat-checkbox-2 .mat-checkbox-inner-container").is_selected)
@@ -1828,7 +1919,6 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     # In port
     self.assertEqual(inPortFrequencyMinutes, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").get_attribute("value"))
     time.sleep(defaultSleepTimeValue * 10)
-
 
 
 def compareChannelLists(notedList, fileList):
@@ -1873,7 +1963,7 @@ def getAllColumnValuesforSelectedColumn(stringList, columnValue):
     return tmpColumn
 
 
-def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime):
+def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, linkAssetMobileTerminalAllrows, referenceDateTime):
     # The method check mobile terminal values and all additional channel values are correct presented on screen for all mobile terminals.
     #
     # Set wait time for web driver
@@ -1884,89 +1974,139 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
     # Sort the allrows list (1st Column)
     channelTotalList.sort(key=lambda x: x[0])
 
-    # Click on Mobile Terminal tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(1)
-    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    # Sort on linked asset column
-    wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
-    time.sleep(3)
-    self.driver.find_element_by_id("mt-sort-serialNumber").click()
-
-    # Read all Mobile Terminal data presented on Mobile Terminal List Tab.
+    # Set notedMobileTerminalList and notedChannelsList to empty
     notedMobileTerminalList = []
     notedChannelsList = []
-    for x in range(0, len(mobileTerminalAllrows)):
-        # Search for mobile terminal via serial number
-        wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber 3")
-        time.sleep(1)
-        self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
-        self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(mobileTerminalAllrows[x][0])
-        wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search 4")
-        time.sleep(1)
-        self.driver.find_element_by_id("mt-btn-advanced-search").click()
-        # Click on detail button
-        wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form 5")
-        time.sleep(3)
-        self.driver.find_element_by_id("mt-toggle-form").click()
+
+    # Get all Mobile Terminals data via Linked Asset from GUI
+    print("--------linkAssetMobileTerminalAllrows----------")
+    for x in range(len(linkAssetMobileTerminalAllrows)):
+        # Set current Mobile Terminal
+        currentMobileTerminal = linkAssetMobileTerminalAllrows[x][0]
+        # Set current Asset CFR
+        currentAssetCFR = linkAssetMobileTerminalAllrows[x][1]
+        # Print current Asset and Mobile Terminal
+        print(str(x) + " Current Mobile Terminal: " + currentMobileTerminal)
+        print(str(x) + " Current asset: " + currentAssetCFR)
+
+        # Click on asset tab
+        wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_link_text("Assets").click()
+        # Deactivate SWE filter
+        click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+        # Enter CFR in the CFR search field for the newly created asset
+        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 3")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("cfr").send_keys(currentAssetCFR)
+        # Click on search button
+        wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+        # Click on details button for new asset
+        wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+        time.sleep(defaultSleepTimeValue * 10)
+        # Click on Mobile terminal tab
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 6")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+        # Get all Mobile Terminal elements in a list from GUI
+        wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
+        time.sleep(defaultSleepTimeValue * 10)
+        allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
+        # Got through each MT found in allAssetElements and match it against selected serial number (currentMobileTerminal)
+        for y in range(len(allMobileTerminalElements)):
+            print("Search for serial number:" + currentMobileTerminal)
+            if currentMobileTerminal in allMobileTerminalElements[y].text :
+                print("Yes! Found serialnumber")
+                # Click on the correct "MT tab" that corresponds to found MT serial number
+                wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
+                time.sleep(defaultSleepTimeValue * 10)
+                self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
+                break
+
+        # Get all elements from the Mobile Terminal table list and save them in allElements list
+        wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
+        time.sleep(defaultSleepTimeValue * 3)
+        allElements = self.driver.find_elements_by_css_selector(".mobileTerminal div .value")
+
         # Add elements values to notedMobileTerminal list row
-        wait_for_element_by_id_to_exist(wait, "mt-0-serialNumber", "mt-0-serialNumber 6")
-        time.sleep(3)
         notedMobileTerminal = []
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-tranciverType").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-softwareVersion").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-antenna").get_attribute("value"))
-        notedMobileTerminal.append(self.driver.find_element_by_id("mt-0-satelliteNumber").get_attribute("value"))
+        # Add Serial Number in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[1].text)
+        # Add Transceiver type in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[3].text)
+        # Add Software Version in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[4].text)
+        # Add Antenna Version in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[5].text)
+        # Add Satellite Number in the notedMobileTerminal list
+        notedMobileTerminal.append(allElements[6].text)
 
         # Add append notedMobileTerminal row to notedMobileTerminalList
         notedMobileTerminalList.append(notedMobileTerminal)
 
-        # Read all channels for current Mobile Terminal
-        currentChannel = 0
-        elementIsMissing = False
-        while True:
+        # Get all channel elements from the Mobile Terminal table list and save them in allChannelElements list
+        wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel", "CSS Selector checked 7")
+        time.sleep(defaultSleepTimeValue * 3)
+        allChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel")
+        for y in range(len(allChannelElements)):
             notedChannelRow = []
-            # Test if current channel row exist
-            try:
-                testValue = self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value")
-            except NoSuchElementException:
-                elementIsMissing = True
-            # Channel row exist then add channel row to notedChannelRow
-            if elementIsMissing:
-                break
-            else:
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-serialNumber").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-communicationChannel").get_attribute("value"))
+            # Expand current channel
+            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + y) + ")", "CSS Selector checked 7a")
+            time.sleep(defaultSleepTimeValue * 3)
+            self.driver.find_element_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + y) + ")").click()
 
-                # Get checkbox-polling Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-polling").is_selected()))
+            # Get all channel values and save them in allCurrentChannelElements list
+            wait_for_element_by_css_selector_to_exist(wait, "#channels mat-expansion-panel:nth-child(" + str(1 + y) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content", "CSS Selector checked 7b")
+            time.sleep(defaultSleepTimeValue * 3)
+            allCurrentChannelElements = self.driver.find_elements_by_css_selector("#channels mat-expansion-panel:nth-child(" + str(1 + y) + ") .mat-expansion-panel-header ~ .mat-expansion-panel-content .value")
 
-                # Get checkbox-config Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-config").is_selected()))
+            print("--------allCurrentChannelElements----------")
+            for z in range(len(allCurrentChannelElements)):
+                print(str(z) + " " + allCurrentChannelElements[z].text)
 
-                # Get checkbox-default Value and convert boolean value to zero or one in String type
-                notedChannelRow.append(convertBooleanToZeroOneString(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-checkbox-default").is_selected()))
+            # Add Serial Number in the notedChannelsList list
+            notedChannelRow.append(allElements[1].text)
+            # Add Channel in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[3].text)
+            # Add Polling Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(checkTheSameStringValue(allCurrentChannelElements[4].text, statusValue[1])))
+            # Add Config Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(checkTheSameStringValue(allCurrentChannelElements[5].text, statusValue[1])))
+            # Add Default Value and convert boolean value to zero or one in String type
+            notedChannelRow.append(convertBooleanToZeroOneString(checkTheSameStringValue(allCurrentChannelElements[6].text, statusValue[1])))
+            # Add DNID in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[1].text)
+            # Add Member Number in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[2].text)
+            # Add Land station in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[0].text)
+            # Add Channel Started Date/Time in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[7].text)
+            #notedChannelRow.append(self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-startDate .mat-input-element").get_attribute("value"))
+            # Add Channel Stopped Date/Time in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[8].text)
+            #notedChannelRow.append(self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-endDate .mat-input-element").get_attribute("value"))
+            # Add installedBy Date/Time in the notedChannelsList list
+            notedChannelRow.append(allElements[7].text)
+            # Add installedOn Date/Time in the notedChannelsList list
+            notedChannelRow.append(allElements[8].text)
+            # Add uninstalled Date/Time in the notedChannelsList list
+            notedChannelRow.append(allElements[9].text)
+            # Add frequencyExpected in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[9].text)
+            # Add frequencyGrace in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[10].text)
+            # Add frequencyPort in the notedChannelsList list
+            notedChannelRow.append(allCurrentChannelElements[11].text)
 
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-dnid").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-memberId").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-lesDescription").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-started").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-stopped").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedBy").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-installedOn").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-uninstalled").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyExpected").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyGrace").get_attribute("value"))
-                notedChannelRow.append(self.driver.find_element_by_id("mt-0-channel-" + str(currentChannel) + "-frequencyPort").get_attribute("value"))
-
-            currentChannel = currentChannel + 1
             notedChannelsList.append(notedChannelRow)
-        # Click on cancel button
-        wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel 7")
-        time.sleep(2)
-        self.driver.find_element_by_id("menu-bar-cancel").click()
-        time.sleep(2)
+
+
+
 
     # Sort the notedMobileTerminalList list (1st Column)
     notedMobileTerminalList.sort(key=lambda x: x[0])
@@ -2067,14 +2207,22 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
     # Click on edit link
-    wait_for_element_by_css_selector_to_exist(wait, ".right-column asset-show-mobile-terminal .edit-link", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".right-column asset-show-mobile-terminal .edit-link").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
     # Click on new channel button
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 10")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button span", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button span").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
     # Enter Land station
     wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -2085,8 +2233,6 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
     # Enter Member Number
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
-    # Enter Installed by
-    #self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
     # Expected frequency
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
@@ -2097,9 +2243,9 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -2342,7 +2488,6 @@ def change_and_check_speed_format(self,unitNumber):
     time.sleep(2)
 
 
-
 def generate_and_verify_manual_position(self,speedValue,courseValue):
     # Set Webdriver wait
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -2378,13 +2523,11 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[3]", "XPATH checked 5")
     time.sleep(1)
     self.driver.find_element_by_xpath("(//button[@type='submit'])[3]").click()
-
     # Save current UTC date and time to file (Used in Audit test cases)
     # Set referenceDateTime to current UTC time
     referenceDateTime = datetime.datetime.utcnow()
     # Save referenceDateTime1 to file
     save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
-
     # Click on Confirm button
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[3]", "XPATH checked 6")
     time.sleep(1)
@@ -2421,7 +2564,6 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     return earlierPositionDateTimeValueString
 
 
-
 def get_target_path():
     # Get correct download path
     if platform.system() == "Windows":
@@ -2440,7 +2582,6 @@ def get_target_path():
         return targetPathLinux
 
 
-
 def get_test_report_path():
     # Get correct download path
     if platform.system() == "Windows":
@@ -2455,18 +2596,6 @@ def get_test_report_path():
         testResultPathLinux = os.path.abspath(os.path.dirname(__file__))
         print("Default testResultPathLinux is: " + testResultPathLinux)
         return testResultPathLinux
-
-if platform.system() == "Windows":
-    # Set environment variable HOME to the value of USERPROFILE
-    os.environ["HOME"] = os.environ["USERPROFILE"]
-    print("Set HOME to: " + os.environ["HOME"])
-    # We redefine timeout_decorator on windows
-    class timeout_decorator:
-        @staticmethod
-        def timeout(*args, **kwargs):
-            return lambda f: f # return a no-op decorator
-else:
-    import timeout_decorator
 
 
 def get_elements_from_file(fileName):
@@ -2670,7 +2799,6 @@ def create_one_new_asset_from_gui_with_parameters(self, parameterList):
     time.sleep(2)
 
 
-
 def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     # Get Token
     token = get_token_from_usm()
@@ -2713,7 +2841,6 @@ def create_one_new_asset_via_rest_with_parameters_g2(parameterList):
     print(rsp)
     print(rsp.text.encode("utf-8"))
     time.sleep(defaultSleepTimeValue)
-
 
 
 def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
@@ -2767,7 +2894,6 @@ def create_one_new_asset_from_gui_with_parameters_g2(self, parameterList):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("asset-form--save").click()
     time.sleep(defaultSleepTimeValue * 10)
-
 
 
 def create_one_new_mobile_terminal_via_asset_tab_with_parameters(self, vesselName, parameterRow):
@@ -2867,10 +2993,14 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal .mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector("asset-show-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
@@ -2891,13 +3021,15 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(parameterRow[3])
     # Enter Satellite Number
     self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(parameterRow[4])
-    # Enter Channel name
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name input").send_keys(parameterRow[15])
     # Click on button to activate Active if Parameter active State is set to "1"
     if parameterRow[14] == "1":
         wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
     # Click on button to activate Poll, Config, Default
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
@@ -2910,14 +3042,16 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     # Click on Default checkbox if TRUE
     if parameterRow[18] == "1":
         self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter Land station
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(parameterRow[19])
     # Enter DNID Number
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(parameterRow[5])
     # Enter Member Number
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(parameterRow[6])
-    # Enter Land station
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(parameterRow[19])
+    # Enter Channel name
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-input-element").send_keys(parameterRow[15])
     # Enter Installed by
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(parameterRow[7])
     # Expected frequency
@@ -2930,122 +3064,148 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(parameterRow[12])
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
-
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
-
-def create_one_new_channel_for_one_mobile_terminal(self, channelRow, referenceDateTimeValue):
+def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRow, ircsTrueCfrFalse, referenceDateTimeValue):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on mobile terminal tab
-    wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
-    time.sleep(5)
-    self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
-    # Search for mobile terminal via serial number
-    wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 2")
-    time.sleep(5)
-    self.driver.find_element_by_id("mt-input-search-serialNumber").clear()
-    self.driver.find_element_by_id("mt-input-search-serialNumber").send_keys(channelRow[0])
-    wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 3")
-    time.sleep(1)
-    self.driver.find_element_by_id("mt-btn-advanced-search").click()
-    # Click on detail button
-    wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 4")
-    time.sleep(3)
-    self.driver.find_element_by_id("mt-toggle-form").click()
-    # Click on link "Add new channel"
-    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-addChannel", "mt-x-addChannel checked 5")
-    time.sleep(3)
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-addChannel").click()
-    # Enter channel name
-    wait_for_element_by_id_to_exist(wait, "mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel", "mt-x-addChannel-y-communicationChannel checked 6")
-    time.sleep(2)
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-communicationChannel").send_keys(channelRow[1])
-    # Activate Poll if value is "true"
+    # Click on asset tab
+    wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_link_text("Assets").click()
+    # Deactivate SWE filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
+    if ircsTrueCfrFalse == True :
+        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+    else:
+        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
+    # Click on search button
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-search-form button[type='submit']").click()
+    # Click on details button for the asset
+    wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    # Get all Mobile Terminal elements in a list from GUI
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
+    time.sleep(defaultSleepTimeValue * 10)
+    allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
+    # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
+    for y in range(len(allMobileTerminalElements)):
+        print("Search for serial number:" + channelRow[0])
+        if channelRow[0] in allMobileTerminalElements[y].text :
+            print("Yes! Found serialnumber")
+            # Click on the correct "MT tab" that corresponds to found MT serial number
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
+            break
+    # Click on edit button
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
+    # Click on New Channel button
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 10)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
+    # Enter Channel name
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-name input", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
+    # Click on button to activate Poll, Config, Default
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 13")
+    time.sleep(defaultSleepTimeValue)
+    # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
-        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-polling").click()
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[2]/label").click()
-    # Activate Config if value is "true"
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+    # Click on Config checkbox if TRUE
     if channelRow[3] == "1":
-        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-config").click()
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[3]/label").click()
-    # Activate Default if value is "true"
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Click on Default checkbox if TRUE
     if channelRow[4] == "1":
-        self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-checkbox-default").click()
-        self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[4]/div/div[2]/div[4]/label").click()
-    # Enter DNID value
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-dnid").send_keys(channelRow[5])
+        self.driver.find_element_by_css_selector(".channels :last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    # Enter DNID Number
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
     # Enter Member Number
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-memberId").send_keys(channelRow[6])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
     # Enter Land station
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-lesDescription").send_keys(channelRow[7])
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
+
     # Enter Start Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-started").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Enter Stop Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-stopped").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Installer from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedBy").send_keys(channelRow[10])
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+
     # Enter Installed Date/Time based on deltaHourValue from file
-    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Uninstalled Date/Time based on deltaHourValue from file
-    tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Exp. frequency from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyExpected").send_keys(channelRow[13])
-    # Enter Grace period from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyGrace").send_keys(channelRow[14])
-    # Enter In port from file
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").clear()
-    self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-frequencyPort").send_keys(channelRow[15])
+    #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
+    # Enter Uninstalled Date/Time based on deltaHourValue from file  2020-03-24 16:58
+    #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
+    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
 
-    # Click on Save button
-    wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
-    time.sleep(1)
-    self.driver.find_element_by_id("menu-bar-update").click()
-    # Enter Comment in comment field
-    wait_for_element_by_name_to_exist(wait, "comment", "Name checked 8")
-    time.sleep(2)
-    self.driver.find_element_by_name("comment").clear()
-    self.driver.find_element_by_name("comment").send_keys(commentValue)
-    # Click on Update button
-    wait_for_element_by_css_selector_to_exist(wait, "div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary", "CSS Selector checked 9")
-    time.sleep(1)
-    self.driver.find_element_by_css_selector("div.modal-footer > div.row > div.col-md-12 > button.btn.btn-primary").click()
-    # Click on Cancel
-    wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
-    time.sleep(3)
-    self.driver.find_element_by_id("menu-bar-cancel").click()
-    time.sleep(2)
+    # Expected frequency
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
+    # Grace period
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
+    # In port
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
+
+    time.sleep(defaultSleepTimeValue * 100)
 
 
+    # Click on save button
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    time.sleep(defaultSleepTimeValue * 100)
 
-def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, referenceDateTime):
+
+def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, linkFileName, ircsTrueCfrFalse, referenceDateTime):
     # Create addtional channels for Mobile Terminals from file based on channelFile
 
     # Open saved csv file and read all asset elements
     channelAllrows = get_elements_from_file(channelFileName)
 
+    # Open saved csv file and read all linked elements between assets and mobile terminals
+    linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+
     # create_one new channel for mentioned mobile terminal
     for x in range(0, len(channelAllrows)):
-        create_one_new_channel_for_one_mobile_terminal(self, channelAllrows[x], referenceDateTime)
+        print("-----------------------")
+        print(x)
+        print(linkAssetMobileTerminalAllrows[x][0], " : ", linkAssetMobileTerminalAllrows[x][1])
+
+        print("-----------------------")
+        create_one_new_channel_for_one_mobile_terminal(self, linkAssetMobileTerminalAllrows[x][1], channelAllrows[x], ircsTrueCfrFalse, referenceDateTime)
 
 
 def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName):
@@ -3215,12 +3375,14 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
 
     # Open saved csv file and read all mobile terminal elements
     mobileTerminalAllrows = get_elements_from_file(mobileTerminalFileName)
+    print(mobileTerminalAllrows)
 
     # Open saved csv file and read all linked elements between assets and mobile terminals
     linkAssetMobileTerminalAllrows = get_elements_from_file(linkFileName)
+    print(linkAssetMobileTerminalAllrows)
 
     # create_one new mobile terminal for mentioned asset
-    for x in range(0, len(linkAssetMobileTerminalAllrows)):
+    for x in range(61, len(linkAssetMobileTerminalAllrows)):
         print("-----------------------")
         print(x)
         print(linkAssetMobileTerminalAllrows[x][1])
@@ -3274,28 +3436,42 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     wait_for_element_by_css_selector_to_exist(wait, ".asset-table tbody tr:first-child .cdk-column-name", "CSS Selector checked 5")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
+    # Click on Mobile Terminals tab
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
     # Get all Mobile Terminal elements in a list from GUI
-    wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal fieldset", "CSS Selector checked 6a")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
-    allAssetElements = self.driver.find_elements_by_css_selector("asset-show-mobile-terminal fieldset")
+    allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
     # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
-    for y in range(len(allAssetElements)):
+    for y in range(len(allMobileTerminalElements)):
         print("Search for serial number:" + channelRow[0])
-        if channelRow[0] in allAssetElements[y].text :
+        if channelRow[0] in allMobileTerminalElements[y].text :
             print("Yes! Found serialnumber")
-            # Click on the correct "Edit link" that corresponds to found MT serial number
-            wait_for_element_by_css_selector_to_exist(wait, "asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link", "CSS Selector checked 6b")
+            # Click on the correct "MT tab" that corresponds to found MT serial number
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_css_selector("asset-show-mobile-terminal :nth-child(" + str(2 + y) + ") .edit-link").click()
+            self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
             break
+    # Click on edit button
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
     # Click on New Channel button
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 10)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    # Click to expand channel view
+    wait_for_element_by_css_selector_to_exist(wait, "mat-expansion-panel-header", "CSS Selector checked 11")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mat-expansion-panel-header").click()
     # Enter Channel name
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child .mobile-terminal-form--channel-name input", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels :last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
@@ -3326,13 +3502,10 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
     # Click on save button
-    wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--save", "mobile-terminal-form--save checked 10")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mobile-terminal-form--save").click()
-
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
-
-
 
 
 def wait_for_element_by_id_to_exist(wait, nameOfElement, finallyText):
@@ -3398,6 +3571,22 @@ def click_on_real_time_tab(self):
     wait_for_element_by_css_selector_to_exist(wait, ".icon-search", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".icon-search").click()
+
+
+def select_UTC_time(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on Time zone field
+    wait_for_element_by_css_selector_to_exist(wait, ".timezone-selector .mat-select-value", "CSS Selector checked 1")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".timezone-selector .mat-select-value").click()
+    time.sleep(defaultSleepTimeValue)
+    # Select Etc-UTC Time zone
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-option--timezone-Etc-UTC .mat-option-text", "CSS Selector checked 2")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mat-option--timezone-Etc-UTC .mat-option-text").click()
+
+
 
 
 def click_on_flag_state_in_list_tab(self, flagState):
@@ -3476,20 +3665,18 @@ def activate_one_map_default_settings(self, settingNumberValue):
     time.sleep(defaultSleepTimeValue)
 
 
-
 def activate_map_default_settings(self):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on My settings
     click_on_map_default_settings(self)
     # Activate "Show flags", "Show names" and "Show speeds"
-    #activate_one_map_default_settings(self,1)  # Show flags disable due to problem with selecting asset on map
     activate_one_map_default_settings(self,3)
     activate_one_map_default_settings(self,4)
     # Change Track length to 1 day
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-select-value", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, "[formcontrolname=tracksMinuteCap] .mat-select-value", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-select-value").click()
+    self.driver.find_element_by_css_selector("[formcontrolname=tracksMinuteCap] .mat-select-value").click()
     wait_for_element_by_css_selector_to_exist(wait, ".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text").click()
@@ -3570,28 +3757,28 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         referenceDateTime = datetime.datetime.utcnow()
         # Save referenceDateTime1 to file
         save_elements_to_file(referenceDateTimeFileName[1], referenceDateTime, True)
-        # Check inmarsat plugin is fully synced
-        # check_inmarsat_fully_synced(self)
+        # Set the new frontend to UTC time zone
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Set UTC time zone in the new Frontend
+        select_UTC_time(self)
+
 
 
     @timeout_decorator.timeout(seconds=180)
     def test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
         # Generate NAF position report with unknown Asset
-
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
         # Set Current Date and time in UTC 4 hours into the future (This will make position report to be placed in Holding Table)
         currentUTCValue = datetime.datetime.utcnow()
         earlierPositionTimeValue = currentUTCValue + datetime.timedelta(hours=deltaTimeValue)
         earlierPositionDateValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y%m%d')
         earlierPositionTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%H%M')
         earlierPositionDateTimeValueString = datetime.datetime.strftime(earlierPositionTimeValue, '%Y-%m-%d %H:%M:00')
-
         # Set Long/Lat
         latStrValue = lolaPositionValues[6][0][0]
         longStrValue = lolaPositionValues[6][0][1]
-
         # generate_NAF_string(self,countryValue,ircsValue,cfrValue,externalMarkingValue,latValue,longValue,speedValue,courseValue,dateValue,timeValue,vesselNameValue)
         nafSource = generate_NAF_string(countryValue[37], ircsValue[37], cfrValue[37], externalMarkingValue[37], latStrValue, longStrValue, reportedSpeedValue, reportedCourseValue, earlierPositionDateValueString, earlierPositionTimeValueString, vesselName[37])
         print(nafSource)
@@ -3604,13 +3791,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             print("200 OK")
         else:
             print("Request NOT OK!")
-
         # Save current UTC date and time to file (Used in Audit test cases)
         # Set referenceDateTime to current UTC time
         referenceDateTime = datetime.datetime.utcnow()
         # Save referenceDateTime1 to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
-
         # Select Alarms tab (Holding Table)
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-holding-table", "uvms-header-menu-item-holding-table checked 1")
         time.sleep(3)
@@ -3623,7 +3808,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         wait_for_element_by_link_text_to_exist(wait, vesselName[37], "Link text checked 3")
         time.sleep(2)
         self.assertEqual(vesselName[37], self.driver.find_element_by_link_text(vesselName[37]).text)
-
         # Click on Details button
         wait_for_element_by_xpath_to_exist(wait, "(//button[@type='button'])[9]", "XPATH checked 4")
         time.sleep(3)
@@ -3704,7 +3888,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (second in the list)
         create_one_new_asset_via_rest_g2(1)
-        #create_one_new_asset_from_gui_g2(self, 1)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -4156,7 +4339,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         time.sleep(1)
         self.assertEqual(countryValue[2], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[2] + "\"]").text)
         self.assertEqual(externalMarkingValue[2], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[2] + "\"]").text)
-        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 11")
+        wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + vesselName[2] + "\"]", "CSS Selector checked 14")
         time.sleep(3)
         self.assertEqual(vesselName[2], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[2] + "\"]").text)
         self.assertEqual(ircsValue[2], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[2] + "\"]").text)
@@ -4372,7 +4555,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0026_export_mobile_terminals_to_excel_file(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4523,6 +4705,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0028_view_audit_and_export_log_to_file(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -5277,12 +5460,14 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Add channel to mobile terminal
         add_second_channel_to_mobileterminal_via_asset_tab_g2(self, 35, 36, 35)
 
+
     @timeout_decorator.timeout(seconds=180)
     @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0050b_archive_and_check_mobile_terminal(self):
         # Archive mobile terminal
         archive_one_mobile_terminal_from_gui(self, 35)
         check_mobile_terminal_archived(self, 35)
+
 
     @timeout_decorator.timeout(seconds=180)
     @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
@@ -5293,21 +5478,22 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_assets_trip_1_2_3_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
-        # Create assets, Mobile for Trip 1
+        # Create assets for Trip 1, 2 and 3
         create_asset_from_file_via_rest_g2(assetFileNameList[0])
-        create_mobileterminal_from_file_g2(self, assetFileNameList[0], mobileTerminalFileNameList[0])
-        # Create assets, Mobile for Trip 2
         create_asset_from_file_via_rest_g2(assetFileNameList[1])
-        create_mobileterminal_from_file_g2(self, assetFileNameList[1], mobileTerminalFileNameList[1])
-        # Create assets, Mobile for Trip 3
         create_asset_from_file_via_rest_g2(assetFileNameList[2])
+        # Create MobileTerminals for Trip 1,2 and 3
+        create_mobileterminal_from_file_g2(self, assetFileNameList[0], mobileTerminalFileNameList[0])
+        create_mobileterminal_from_file_g2(self, assetFileNameList[1], mobileTerminalFileNameList[1])
         create_mobileterminal_from_file_g2(self, assetFileNameList[2], mobileTerminalFileNameList[2])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_assets_trip_1_2_3_g2_part2(self):
         # Set Current Date and time in UTC x hours back
         deltaTimeValue = datetime.timedelta(hours=72)
@@ -5321,6 +5507,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -5381,7 +5568,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         #    pass
         #time.sleep(5)
 
+
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052c_export_position_reports_to_excel_file(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -5493,6 +5682,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052d_export_map_to_file_check_that_map_file_exists(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -5585,6 +5775,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0101_create_assets_real_trip_1_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5607,6 +5798,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0101b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[9], tripFileNameList[9])
@@ -5616,8 +5808,371 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         time.sleep(1)
 
 
+    def test_0502_change_map_default_settings(self):
+        # Click on Realtime tab
+        click_on_real_time_tab(self)
+        # Change Map default settings
+        activate_map_default_settings(self)
+
+
+    @timeout_decorator.timeout(seconds=300)
+    def test_0503_create_assets_trip_1_16_without_mobile_terminal(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+        # Click on Realtime tab
+        click_on_real_time_tab(self)
+        # Create assets, Mobile for Trip 1-16
+        for x in range(0, 17):
+            create_asset_from_file_via_rest_g2(assetFileNameList[x])
+            time.sleep(defaultSleepTimeValue)
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0504a_realtime_search_for_asset_and_click_asset_on_map(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Set Current Date and time in UTC x hours back
+        deltaTimeValue = datetime.timedelta(hours=14)
+        currentUTCValue = datetime.datetime.utcnow()
+        currentPositionTimeValue = currentUTCValue - deltaTimeValue
+
+        # Create Trip 0-3
+        for x in range(0, 3):
+            create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
+
+        # Wait to secure that the generated trip is finished.
+        time.sleep(defaultSleepTimeValue * 30)
+
+        # Select Realtime view
+        click_on_real_time_tab(self)
+        # Click on Realtime map
+        wait_for_element_by_link_text_to_exist(wait, "Realtime map", "Link text checked 1")
+        time.sleep(defaultSleepTimeValue * 10)
+        self.driver.find_element_by_link_text("Realtime map").click()
+
+        for x in range(0, 3):
+            # Print Asset Index Value
+            print("Print Asset Index Value: " + str(x))
+
+            # Open saved csv files and read all asset elements
+            assetAllrows1 = get_elements_from_file(assetFileNameList[x])
+
+            # Open saved csv files and read all trip elements
+            assetTripAllrows1 = get_elements_from_file(tripFileNameList[x])
+
+            print("-----assetAllrows1-----")
+            print(assetAllrows1)
+            print("-----assetTripAllrows1-----")
+            print(assetTripAllrows1)
+
+            # Enter the Asset name in search field
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_id("mat-input-1").clear()
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
+
+            # Click on the first item in the list to select asset
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".mat-option-text").click()
+            time.sleep(defaultSleepTimeValue * 25)
+
+            # Check Asset Name
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
+            time.sleep(defaultSleepTimeValue)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
+            time.sleep(defaultSleepTimeValue)
+
+            # Get all asset elements in a list from GUI
+            allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
+            # Check IRCS
+            self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
+            # Check MMSI
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
+            # Check Speed
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), allAssetElements[2].text)
+            # Check Course
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
+            # Check Flag state
+            self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
+            # Check Ext Marking
+            self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
+            # Check asset Length
+            self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
+            # Check vessel Type
+            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
+            # Check Org name
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
+            # Check Producer Name
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
+
+            # Activate tracks
+            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            # Enter the coordinates for the position report
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_id("mat-input-1").clear()
+            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
+            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Zoom in two steps
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Click in the middle of the Map
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
+            print("Done!")
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Zoom out two steps
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Expand additional asset information
+            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Goto end position for asset
+            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Dectivate tracks
+            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Click in the middle of the Map with an offset of 15 pixels (to unmark Asset)
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(15, 15).click().perform()
+            print("Done!")
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+        # End pause
+        time.sleep(defaultSleepTimeValue * 5)
+
+
+
+    @timeout_decorator.timeout(seconds=1000)
+    def test_0504b_realtime_search_for_asset_and_click_asset_on_map(self):
+        # Set wait time for web driver
+        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+
+        # Set Current Date and time in UTC x hours back
+        currentUTCValue = datetime.datetime.utcnow()
+        # Set deltaTimeValueWithIndex
+        deltaTimeValueWithIndex = [datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0) ,datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0) ]
+        deltaTimeValueWithIndex[6] = datetime.timedelta(hours=14)
+        deltaTimeValueWithIndex[7] = datetime.timedelta(hours=8)
+        # Set currentPositionTimeValue from correct deltaTimeValueWithIndex value
+        currentPositionTimeValueWithIndex = [currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue]
+        for x in range(6, 8):
+            currentPositionTimeValueWithIndex[x] = currentUTCValue - deltaTimeValueWithIndex[x]
+
+        # Select Realtime view
+        click_on_real_time_tab(self)
+        # Click on Realtime map
+        wait_for_element_by_link_text_to_exist(wait, "Realtime map", "Link text checked 1")
+        time.sleep(defaultSleepTimeValue * 10)
+        self.driver.find_element_by_link_text("Realtime map").click()
+
+        # Create Trip 6-8
+        for x in range(6, 8):
+            create_trip_from_file_g2(currentPositionTimeValueWithIndex[x], assetFileNameList[x], tripFileNameList[x])
+
+        # Wait to secure that the generated trip is finished.
+        time.sleep(defaultSleepTimeValue * 50)
+
+        for x in range(6, 8):
+            # Print Asset Index Value
+            print("Print Asset Index Value: " + str(x))
+
+            # Open saved csv files and read all asset elements
+            assetAllrows1 = get_elements_from_file(assetFileNameList[x])
+
+            # Open saved csv files and read all trip elements
+            assetTripAllrows1 = get_elements_from_file(tripFileNameList[x])
+
+            print("-----assetAllrows1-----")
+            print(assetAllrows1)
+            print("-----assetTripAllrows1-----")
+            print(assetTripAllrows1)
+
+            # Enter the Asset name in search field
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_id("mat-input-1").clear()
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
+
+            # Click on the first item in the list to select asset
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".mat-option-text").click()
+            time.sleep(defaultSleepTimeValue * 25)
+
+
+            # Check Asset Name
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
+            time.sleep(defaultSleepTimeValue)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
+            time.sleep(defaultSleepTimeValue)
+
+            # Get all asset elements in a list from GUI
+            allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
+            # Check IRCS
+            self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
+            # Check MMSI
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
+            # Check Speed
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), allAssetElements[2].text)
+            # Check Course
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
+            # Check Flag state
+            self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
+            # Check Ext Marking
+            self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
+            # Check asset Length
+            self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
+            # Check vessel Type
+            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
+            # Check Org name
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
+            # Check Producer Name
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
+
+
+            # Activate tracks
+            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            # Enter the coordinates for the position report
+            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_id("mat-input-1").clear()
+            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
+            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Zoom in two steps
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Click in the middle of the Map
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
+            print("Done!")
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Zoom out two steps
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+            # Expand additional asset information
+            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Goto end position for asset
+            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Dectivate tracks
+            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+
+            # Click in the middle of the Map with an offset of 10 pixels (to unmark Asset)
+            print("Execute!")
+            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
+            ac = ActionChains(self.driver)
+            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
+            ac.move_to_element(elem).move_by_offset(10, 10).click().perform()
+            print("Done!")
+
+            time.sleep(defaultSleepTimeValue * 10)
+
+        # End pause
+        time.sleep(defaultSleepTimeValue * 5)
+
+
 
 class UnionVMSTestCaseExtraG2(unittest.TestCase):
+
+    # NOTE: The test suite is diabled due to broken functionality under Reports tab in the old Frontend GUI
 
     def setUp(self):
         # Startup browser and login
@@ -5630,30 +6185,35 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_assets_trip_1_2_3_g2_part1(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_g2_part1(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_assets_trip_1_2_3_g2_part2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0052_create_assets_trip_1_2_3_g2_part2(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052b_create_report_and_check_asset_in_reporting_view(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0052b_create_report_and_check_asset_in_reporting_view(self)
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0055_create_assets_trip_4_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5663,6 +6223,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0055_create_assets_trip_4_g2_part2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5675,12 +6236,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0055b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[3], tripFileNameList[3])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0056_create_assets_trip_5_and_6_g2_part1(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5693,6 +6256,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0056_create_assets_trip_5_and_6_g2_part2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5709,6 +6273,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0056b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[4], tripFileNameList[4])
@@ -5719,6 +6284,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0057_create_assets_trip_7_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5734,6 +6300,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0058_create_assets_trip_8_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5749,6 +6316,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0059_create_assets_trip_9_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5764,6 +6332,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0102_create_assets_real_trip_2_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5779,12 +6348,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0102b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[11], tripFileNameList[11])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0103_create_assets_real_trip_3_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5804,6 +6375,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0104_create_assets_real_trip_4_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5819,12 +6391,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0104b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[13], tripFileNameList[13])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0105_create_assets_real_trip_5_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5840,12 +6414,14 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0105b_create_report_and_check_position_reports(self):
         # Create report and check the 1st five position reports in table list
         create_report_and_check_trip_position_reports(self, assetFileNameList[14], tripFileNameList[14])
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0106_create_assets_real_trip_6_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -5861,6 +6437,7 @@ class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0107_create_assets_real_trip_7_g2(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6424,6 +7001,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0050_create_user_area(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6488,6 +7066,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0051_create_user_area_rule_one(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6601,6 +7180,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -6611,6 +7191,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0053_generate_NAF_position_that_not_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6654,12 +7235,14 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0053b_delay_one_minute(self):
         # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
         time.sleep(60)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0054_generate_NAF_position_that_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -6720,7 +7303,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_xpath("//div[7]/div/div/div/div/i").click()
         time.sleep(2)
-
 
 
 
@@ -6954,6 +7536,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0202c_delay_one_minute(self):
         # Delay test case to secure change in advance asset list headers.
         time.sleep(60)
@@ -7656,10 +8239,6 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
 class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
-    # NOTE NOTE NOTE!!!
-    # Data in "mobileterminals3xxxxG2.csv" (alias tests300FileName[1]) has been changed
-    # Testcases in this suite has NOT been updated for that change.
-
 
     def setUp(self):
         # Startup browser and login
@@ -7692,7 +8271,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0302b_check_mobile_terminal_list(self):
         # Test case checks that mobile terminals from test_0302 presented correctly in the mobile terminal list.
         # Set wait time for web driver
@@ -7703,7 +8281,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
         # Open saved csv file and read all linked elements between assets and mobile terminals
         linkAssetMobileTerminalAllrows = get_elements_from_file(tests300FileName[2])
-
         # Sort mobileTerminalAllrows on 1st column (that is SerialNumber value)
         mobileTerminalAllrows.sort(key=lambda x: x[0])
         # Click on Mobile Terminal tab
@@ -7715,7 +8292,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         time.sleep(3)
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
         time.sleep(1)
-
         # Check that mobile terminals in filteredmobileTerminalList is presented in the Mobile Terminal List view
         for x in range(0, len(mobileTerminalAllrows)):
             # Get CFR Value based on Link list between assets and mobile terminals
@@ -7724,21 +8300,18 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
             tempAssetName = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 1)
             # Get asset name based on CFR value found in assetAllrows list
             tempMMSIValue = get_selected_asset_column_value_based_on_cfr(assetAllrows, tempCFRValue, 5)
-
             wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a", "XPATH checked 3")
             time.sleep(1)
             self.assertEqual(tempAssetName, self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[2]/span[1]/a").text)
             self.assertEqual(mobileTerminalAllrows[x][0], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[3]").text)
             self.assertEqual(mobileTerminalAllrows[x][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[4]").text)
-            self.assertEqual(mobileTerminalAllrows[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text)
+            #self.assertEqual(mobileTerminalAllrows[x][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[5]").text) (DNID not shown anymore in the old frontend
             self.assertEqual(transponderType[1], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[6]").text)
             self.assertEqual(mobileTerminalAllrows[x][4], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[7]").text)
             self.assertEqual(tempMMSIValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[8]/span").text)
-
             # Get Status Value (Active/Inactive) for current mobile terminal in UPPER case.
             tempStatusValue = statusValue[int(mobileTerminalAllrows[x][14])]
             tempStatusValue = tempStatusValue.upper()
-
             wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span", "XPATH checked 3")
             time.sleep(1)
             self.assertEqual(tempStatusValue, self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr[" + str(x+1) + "]/td[9]/span").text)
@@ -7752,30 +8325,29 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
         # NOTE: Not correct behavior when adding 3rd channel or more for one MT. Need to be fixed!
-        create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests300FileName[3], tests300FileName[2], False)
+        create_addtional_channels_for_mobileterminals_from_file(self, tests300FileName[3], tests300FileName[2], False, referenceDateTime)
         # Save referenceDateTime to file
         save_elements_to_file(referenceDateTimeFileName[0], referenceDateTime, True)
 
 
     @timeout_decorator.timeout(seconds=360)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
+    #@unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0304_check_additional_channels_for_mobile_terminals(self):
         # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
-
+        # Click on real time tab
+        click_on_real_time_tab(self)
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
-
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
-
         # Open saved csv file and read all channel elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
-
+        # Open saved csv file and read all asset elements
+        linkAssetMobileTerminalAllrows = get_elements_from_file(tests300FileName[2])
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
-
         # Check all channels and mobile terminal data (mobile terminal by mobile terminal)
-        resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, referenceDateTime)
+        resultExists = check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalAllrows, linkAssetMobileTerminalAllrows, referenceDateTime)
         self.assertTrue(resultExists)
 
 
@@ -7783,33 +8355,25 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0305_change_default_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
-
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
-
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
-
         # Open saved csv file and read all channel elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
         # Sort the mobileTerminalAllrows list (1st Column)
         channelAllrows.sort(key=lambda x: x[0])
-
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
         # Sort the mobileTerminalAllrows list (1st Column)
         mobileTerminalAllrows.sort(key=lambda x: x[0])
-
         # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
         channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
         channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
         # Sort the allrows list (1st Column)
         channelTotalList.sort(key=lambda x: x[0])
-
-
         # Click on Mobile Terminal tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
@@ -7818,7 +8382,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
         time.sleep(3)
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
-
         # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
         wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
         time.sleep(1)
@@ -7827,22 +8390,18 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
         time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-
         # Verifies that default DNID and Member Number is correct for the 2nd serial number in mobileTerminalAllrows list.
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 5")
         time.sleep(3)
         self.assertEqual(mobileTerminalAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(mobileTerminalAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-
         # Click on detail button
         wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
         time.sleep(3)
-
         # Read all channels for selected Mobile Terminal
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
-
         # Loop all channels in the list and disable default parameter if default parameter is selected
         for x in range(0, len(notedChannelsList)):
             print(notedChannelsList[x])
@@ -7851,7 +8410,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
                 # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
                 self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
                 time.sleep(2)
-
         # Loop all channels in the list and set default parameter where the first default parameter is zero in the notedChannelsList
         for x in range(0, len(notedChannelsList)):
             print(notedChannelsList[x])
@@ -7860,7 +8418,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
                 # Note: Xpath is needed here to change the value for the radio button. Element ID does not work.
                 self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div/div[1]/div/div/div[4]/div/div[2]/form/fieldset/div/div[3]/div[" + str(x + 3) + "]/div/div[2]/div[4]/label").click()
                 time.sleep(1)
-
         # Click on Save button
         wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 7")
         time.sleep(1)
@@ -7878,7 +8435,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 10")
         time.sleep(3)
         self.driver.find_element_by_id("menu-bar-cancel").click()
-
         # Search for mobile terminal via serial number (The 2nd serial number in mobileTerminalAllrows is used)
         wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 11")
         time.sleep(3)
@@ -7887,40 +8443,31 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 12")
         time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-
         # Verifies that new default DNID and Member Number is correct for the 2nd serial number in channelAllrows list.
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 13")
         time.sleep(3)
         self.assertEqual(channelAllrows[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(channelAllrows[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-
         # Click on detail button
         wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 14")
         time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
-
         # Read all channels for selected Mobile Terminal
         time.sleep(3)
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
-
-
         # Open saved csv file and read all channel elements (Note modified file)
         channelAllrows = get_elements_from_file(tests300FileName[4])
         # Sort the mobileTerminalAllrows list (1st Column)
         channelAllrows.sort(key=lambda x: x[0])
-
         # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
         channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
         channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
         # Sort the allrows list (1st Column)
         channelTotalList.sort(key=lambda x: x[0])
-
-
         # Convert hour value in channelTotalList to correct Datetime format and save it in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
         channelTotalListDateTimeFormat = convertHoursValueInListToDateTimeFormat(channelTotalList, referenceDateTime)
         # Remove Mobile Terminal and Channel position data in channelTotalListDateTimeFormat. This action makes it easier to compare later with the resultList
         channelTotalListDateTimeFormatToCompare = removeLastNumberElementsInListRow(channelTotalListDateTimeFormat, 2)
-
         # Compare notedChannelsList read from GUI and read channelTotalListDateTimeFormatToCompare from file and return result.
         resultExists = compareChannelLists(notedChannelsList, channelTotalListDateTimeFormatToCompare)
         print(resultExists)
@@ -7931,33 +8478,25 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
     @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0306_delete_channel_for_one_mobile_terminal(self):
         # Test case changes the default channel for selected mobile terminal from test_0302 and test_0303
-
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
         # Get referenceDateTime from file
         referenceDateTime = get_reference_date_time_from_file(referenceDateTimeFileName[0])
-
         referenceDateTimeValueString = datetime.datetime.strftime(referenceDateTime, '%Y-%m-%d %H:%M:%S')
         print(referenceDateTimeValueString)
-
         # Open saved csv file and read all channel elements
         channelAllrows = get_elements_from_file(tests300FileName[3])
         # Sort the mobileTerminalAllrows list (1st Column)
         channelAllrows.sort(key=lambda x: x[0])
-
         # Open saved csv file and read all mobile terminal elements
         mobileTerminalAllrows = get_elements_from_file(tests300FileName[1])
         # Sort the mobileTerminalAllrows list (1st Column)
         mobileTerminalAllrows.sort(key=lambda x: x[0])
-
         # Create new channel list that includes channel data from mobileTerminalAllrows plus channelAllrows
         channelListPartFromMobileTerminal = get_channel_part_for_one_mobile_terminal_list(mobileTerminalAllrows, pollConfigDefaultChangeValue[0], pollConfigDefaultChangeValue[1], pollConfigDefaultChangeValue[2])
         channelTotalList = get_additional_list_result_from_from_two_channel_lists(channelAllrows, channelListPartFromMobileTerminal)
         # Sort the allrows list (1st Column)
         channelTotalList.sort(key=lambda x: x[0])
-
-
         # Click on Mobile Terminal tab
         wait_for_element_by_id_to_exist(wait, "uvms-header-menu-item-communication", "uvms-header-menu-item-communication checked 1")
         time.sleep(1)
@@ -7966,7 +8505,6 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "mt-sort-serialNumber", "mt-sort-serialNumber checked 2")
         time.sleep(3)
         self.driver.find_element_by_id("mt-sort-serialNumber").click()
-
         # Search for mobile terminal via serial number (The 9th serial number in mobileTerminalAllrows is used)
         wait_for_element_by_id_to_exist(wait, "mt-input-search-serialNumber", "mt-input-search-serialNumber checked 3")
         time.sleep(1)
@@ -7975,27 +8513,22 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "mt-btn-advanced-search", "mt-btn-advanced-search checked 4")
         time.sleep(1)
         self.driver.find_element_by_id("mt-btn-advanced-search").click()
-
         # Verifies that default DNID and Member Number is correct for the 9th serial number in mobileTerminalAllrows list.
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 5")
         time.sleep(3)
         self.assertEqual(mobileTerminalAllrows[8][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(mobileTerminalAllrows[8][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-
         # Click on detail button
         wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 6")
         time.sleep(1)
         self.driver.find_element_by_id("mt-toggle-form").click()
-
         # Read all channels for selected Mobile Terminal
         time.sleep(3)
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
-
         # Click on delete button for the 1st channel in the list
         wait_for_element_by_id_to_exist(wait, "mt-0-channel-0-removeChannel", "mt-0-channel-0-removeChannel checked 7")
         time.sleep(1)
         self.driver.find_element_by_id("mt-0-channel-0-removeChannel").click()
-
         # Click on Save button
         wait_for_element_by_id_to_exist(wait, "menu-bar-update", "menu-bar-update checked 8")
         time.sleep(1)
@@ -8014,22 +8547,18 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
         wait_for_element_by_id_to_exist(wait, "menu-bar-cancel", "menu-bar-cancel checked 11")
         time.sleep(3)
         self.driver.find_element_by_id("menu-bar-cancel").click()
-
         # Verifies that default DNID and Member Number is correct for the 2nd serial number in notedChannelsList list. The 1st DNID and Member is now deleted.
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]", "XPATH checked 12")
         time.sleep(3)
         self.assertEqual(notedChannelsList[1][6], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[4]").text)
         self.assertEqual(notedChannelsList[1][5], self.driver.find_element_by_xpath("//div[@id='content']/div/div[3]/div[2]/div/div/div/div/div[3]/div/div/div/div/span/table/tbody/tr/td[5]").text)
-
         # Click on detail button
         wait_for_element_by_id_to_exist(wait, "mt-toggle-form", "mt-toggle-form checked 13")
         time.sleep(3)
         self.driver.find_element_by_id("mt-toggle-form").click()
-
         # Read all channels for selected Mobile Terminal
         time.sleep(3)
         notedChannelsList = read_all_channels_for_selected_Mobile_Terminal(self)
-
         # Checks the number of channels read. If the list does not consists of one channel then something is wrong
         if len(notedChannelsList) == 1:
             oneChannel = True
@@ -8053,13 +8582,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0401_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
-
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0402_check_config_update_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8122,12 +8652,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0403_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0404_check_alert_update_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8161,11 +8693,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0405_test_0002_create_one_new_asset_g2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0002_create_one_new_asset_g2(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0406_check_asset_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8189,11 +8724,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0407_create_one_new_mobile_terminal_g2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0004_create_one_new_mobile_terminal_via_asset_g2(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0408_check_mobile_terminal_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8248,12 +8786,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0411_generate_and_verify_manual_position(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0008_generate_and_verify_manual_position(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0412_check_manual_position_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8294,12 +8834,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0413_generate_NAF_and_verify_position(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0007_generate_NAF_and_verify_position(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0414_check_NAF_position_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8323,6 +8865,7 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0415_create_assets_2_3_4_5_6_g2(self):
         # Create assets 3-6 in the list
         for x in range(1, 6):
@@ -8361,18 +8904,21 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0418_change_global_settings_change_date_format(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0030_change_global_settings_change_date_format(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0419_change_global_settings_change_date_format(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0030_change_global_settings_change_date_format(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0420_check_config_date_time_update_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8410,18 +8956,21 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0421_create_one_new_asset_and_mobile_terminal(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0043_create_one_new_asset_and_mobile_terminal_g2(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0422_generate_manual_poll_and_check(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0046_generate_manual_poll_and_check(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0423_check_poll_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8482,12 +9031,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0426_create_one_new_mobile_terminal_g2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0050_create_one_new_mobile_terminal_g2(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0427_check_mobile_terminal_creation_and_modifocation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8567,7 +9118,6 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
         wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
         self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
-
         # Check Asset and Terminals value in audit list 1st row
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
         time.sleep(3)
@@ -8579,390 +9129,27 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
 
-
-
-
 class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
-
+    # NOTE: All important testcases from this test suite have been moved to the main test suite UnionVMSTestCaseG2
 
     def setUp(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(defaultSleepTimeValue * 10)
 
-
     def tearDown(self):
         shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
-    def test_0002_change_map_default_settings(self):
-        # Click on Realtime tab
-        click_on_real_time_tab(self)
-        # Change Map default settings
-        activate_map_default_settings(self)
-
-
-    @timeout_decorator.timeout(seconds=300)
-    def test_0003_create_assets_trip_1_16_without_mobile_terminal(self):
-        # Set wait time for web driver
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-        # Click on Realtime tab
-        click_on_real_time_tab(self)
-        # Create assets, Mobile for Trip 1-16
-        for x in range(0, 17):
-            create_asset_from_file_via_rest_g2(assetFileNameList[x])
-            time.sleep(defaultSleepTimeValue)
-
-
     @timeout_decorator.timeout(seconds=1000)
-    def test_0200a_realtime_search_for_asset_and_click_asset_on_map(self):
-        # Set wait time for web driver
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
-        # Set Current Date and time in UTC x hours back
-        deltaTimeValue = datetime.timedelta(hours=14)
-        currentUTCValue = datetime.datetime.utcnow()
-        currentPositionTimeValue = currentUTCValue - deltaTimeValue
-
-        # Create Trip 0-3
-        for x in range(0, 3):
-            create_trip_from_file_g2(currentPositionTimeValue, assetFileNameList[x], tripFileNameList[x])
-
-        # Wait to secure that the generated trip is finished.
-        time.sleep(defaultSleepTimeValue * 30)
-
-        # Select Realtime view
-        click_on_real_time_tab(self)
-        # Click on Realtime map
-        wait_for_element_by_link_text_to_exist(wait, "Realtime map", "Link text checked 1")
-        time.sleep(defaultSleepTimeValue * 10)
-        self.driver.find_element_by_link_text("Realtime map").click()
-
-        for x in range(0, 3):
-            # Print Asset Index Value
-            print("Print Asset Index Value: " + str(x))
-
-            # Open saved csv files and read all asset elements
-            assetAllrows1 = get_elements_from_file(assetFileNameList[x])
-
-            # Open saved csv files and read all trip elements
-            assetTripAllrows1 = get_elements_from_file(tripFileNameList[x])
-
-            print("-----assetAllrows1-----")
-            print(assetAllrows1)
-            print("-----assetTripAllrows1-----")
-            print(assetTripAllrows1)
-
-            # Enter the Asset name in search field
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
-            time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
-            time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
-
-            # Click on the first item in the list to select asset
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-option-text").click()
-            time.sleep(defaultSleepTimeValue * 25)
-
-            # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
-            time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
-            time.sleep(defaultSleepTimeValue)
-
-            # Get all asset elements in a list from GUI
-            allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
-            # Check IRCS
-            self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
-            # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
-            # Check Speed
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), allAssetElements[2].text)
-            # Check Course
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
-            # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
-            # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
-            # Check asset Length
-            self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
-            # Check vessel Type
-            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
-            # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
-            # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
-
-            # Activate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-checkbox-inner-container", "CSS Selector checked 12")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-checkbox-inner-container").click()
-            time.sleep(defaultSleepTimeValue * 5)
-
-            # Enter the coordinates for the position report
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
-            time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
-            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
-            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Zoom in two steps
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Click in the middle of the Map
-            print("Execute!")
-            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
-            ac = ActionChains(self.driver)
-            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
-            ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
-            print("Done!")
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Zoom out two steps
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Expand additional asset information
-            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Dectivate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-checkbox-inner-container", "CSS Selector checked 12")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-checkbox-inner-container").click()
-            time.sleep(defaultSleepTimeValue * 5)
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Click in the middle of the Map with an offset of 15 pixels (to unmark Asset)
-            print("Execute!")
-            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
-            ac = ActionChains(self.driver)
-            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
-            ac.move_to_element(elem).move_by_offset(15, 15).click().perform()
-            print("Done!")
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-        # End pause
-        time.sleep(defaultSleepTimeValue * 5)
-
-
-
-    @timeout_decorator.timeout(seconds=1000)
-    def test_0200b_realtime_search_for_asset_and_click_asset_on_map(self):
-        # Set wait time for web driver
-        wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-
-        # Set Current Date and time in UTC x hours back
-        currentUTCValue = datetime.datetime.utcnow()
-        # Set deltaTimeValueWithIndex
-        deltaTimeValueWithIndex = [datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0) ,datetime.timedelta(hours=0), datetime.timedelta(hours=0), datetime.timedelta(hours=0) ]
-        deltaTimeValueWithIndex[6] = datetime.timedelta(hours=14)
-        deltaTimeValueWithIndex[7] = datetime.timedelta(hours=8)
-        # Set currentPositionTimeValue from correct deltaTimeValueWithIndex value
-        currentPositionTimeValueWithIndex = [currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue, currentUTCValue]
-        for x in range(6, 8):
-            currentPositionTimeValueWithIndex[x] = currentUTCValue - deltaTimeValueWithIndex[x]
-
-        # Select Realtime view
-        click_on_real_time_tab(self)
-        # Click on Realtime map
-        wait_for_element_by_link_text_to_exist(wait, "Realtime map", "Link text checked 1")
-        time.sleep(defaultSleepTimeValue * 10)
-        self.driver.find_element_by_link_text("Realtime map").click()
-
-        # Create Trip 6-8
-        for x in range(6, 8):
-            create_trip_from_file_g2(currentPositionTimeValueWithIndex[x], assetFileNameList[x], tripFileNameList[x])
-
-        # Wait to secure that the generated trip is finished.
-        time.sleep(defaultSleepTimeValue * 50)
-
-        for x in range(6, 8):
-            # Print Asset Index Value
-            print("Print Asset Index Value: " + str(x))
-
-            # Open saved csv files and read all asset elements
-            assetAllrows1 = get_elements_from_file(assetFileNameList[x])
-
-            # Open saved csv files and read all trip elements
-            assetTripAllrows1 = get_elements_from_file(tripFileNameList[x])
-
-            print("-----assetAllrows1-----")
-            print(assetAllrows1)
-            print("-----assetTripAllrows1-----")
-            print(assetTripAllrows1)
-
-            # Enter the Asset name in search field
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
-            time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
-            time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
-
-            # Click on the first item in the list to select asset
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-option-text").click()
-            time.sleep(defaultSleepTimeValue * 25)
-
-
-            # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
-            time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
-            time.sleep(defaultSleepTimeValue)
-
-            # Get all asset elements in a list from GUI
-            allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
-            # Check IRCS
-            self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
-            # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
-            # Check Speed
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), allAssetElements[2].text)
-            # Check Course
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
-            # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
-            # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
-            # Check asset Length
-            self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
-            # Check vessel Type
-            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
-            # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
-            # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
-
-
-            # Activate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-checkbox-inner-container", "CSS Selector checked 12")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-checkbox-inner-container").click()
-            time.sleep(defaultSleepTimeValue * 5)
-
-            # Enter the coordinates for the position report
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
-            time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
-            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
-            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Zoom in two steps
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-in").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Click in the middle of the Map
-            print("Execute!")
-            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
-            ac = ActionChains(self.driver)
-            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
-            ac.move_to_element(elem).move_by_offset(0, 0).click().perform()
-            print("Done!")
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Zoom out two steps
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("button.ol-zoom-out").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-            # Expand additional asset information
-            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Dectivate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-checkbox-inner-container", "CSS Selector checked 12")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-checkbox-inner-container").click()
-            time.sleep(defaultSleepTimeValue * 5)
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-
-            # Click in the middle of the Map with an offset of 10 pixels (to unmark Asset)
-            print("Execute!")
-            elem = self.driver.find_element_by_css_selector("#realtime-map canvas")
-            ac = ActionChains(self.driver)
-            ac.move_to_element_with_offset(self.driver.find_element_by_tag_name('body'), 0, 0)
-            ac.move_to_element(elem).move_by_offset(10, 10).click().perform()
-            print("Done!")
-
-            time.sleep(defaultSleepTimeValue * 10)
-
-        # End pause
-        time.sleep(defaultSleepTimeValue * 5)
-
-
-    @timeout_decorator.timeout(seconds=1000)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0201_create_trip_3_17(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8986,8 +9173,6 @@ class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
 
 
 
-
-
 class UnionVMSTestCaseSpecial(unittest.TestCase):
     #
     #   NOTE: Test cases in this suite shall be executed one by one. The suite is NOT intended to be run in full.
@@ -9001,6 +9186,12 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
     def tearDown(self):
         shutdown_browser(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -9038,7 +9229,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         create_one_new_asset_via_rest_g2(self, 52)
 
 
-    # Injecting MTs for Prod (All parts)
+    # Create Assets for Prod based on asset info from Fartyg2 (All parts)
     @timeout_decorator.timeout(seconds=1000)
     def test_0055b_create_several_assets_from_file_based_on_Fartyg2(self):
         # Click on real time tab
