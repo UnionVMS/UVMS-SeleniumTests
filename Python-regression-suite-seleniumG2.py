@@ -3382,7 +3382,7 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
     print(linkAssetMobileTerminalAllrows)
 
     # create_one new mobile terminal for mentioned asset
-    for x in range(61, len(linkAssetMobileTerminalAllrows)):
+    for x in range(0, len(linkAssetMobileTerminalAllrows)):
         print("-----------------------")
         print(x)
         print(linkAssetMobileTerminalAllrows[x][1])
@@ -7001,7 +7001,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0050_create_user_area(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7066,7 +7065,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0051_create_user_area_rule_one(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7180,7 +7178,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -7191,7 +7188,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0053_generate_NAF_position_that_not_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7235,14 +7231,12 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0053b_delay_one_minute(self):
         # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
         time.sleep(60)
 
 
     @timeout_decorator.timeout(seconds=180)
-    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0054_generate_NAF_position_that_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
