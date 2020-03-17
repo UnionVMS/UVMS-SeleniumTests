@@ -3007,7 +3007,7 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_id("mobile-terminal-form--mobileTerminalType").click()
     # Select Inmarsat-C system
     wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 8")
-    time.sleep(defaultSleepTimeValue)
+    time.sleep(defaultSleepTimeValue * 5)
     self.driver.find_element_by_css_selector(".mat-option-text").click()
     # Enter serial number
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--serialNo .mat-input-element", "CSS Selector checked 9")
