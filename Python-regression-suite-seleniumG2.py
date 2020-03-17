@@ -3382,7 +3382,7 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
     print(linkAssetMobileTerminalAllrows)
 
     # create_one new mobile terminal for mentioned asset
-    for x in range(0, len(linkAssetMobileTerminalAllrows)):
+    for x in range(61, len(linkAssetMobileTerminalAllrows)):
         print("-----------------------")
         print(x)
         print(linkAssetMobileTerminalAllrows[x][1])
@@ -6172,6 +6172,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
+    # NOTE: The test suite is diabled due to broken functionality under Reports tab in the old Frontend GUI
+
     def setUp(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
@@ -7534,6 +7536,7 @@ class UnionVMSTestCaseFilteringG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0202c_delay_one_minute(self):
         # Delay test case to secure change in advance asset list headers.
         time.sleep(60)
@@ -8579,12 +8582,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0401_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0402_check_config_update_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8647,12 +8652,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0403_generate_NAF_position_for_unknown_asset_and_check_holding_table(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001c_generate_NAF_position_for_unknown_asset_and_check_holding_table(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0404_check_alert_update_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8686,11 +8693,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0405_test_0002_create_one_new_asset_g2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0002_create_one_new_asset_g2(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0406_check_asset_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8714,11 +8724,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0407_create_one_new_mobile_terminal_g2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0004_create_one_new_mobile_terminal_via_asset_g2(self)
 
 
+    @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0408_check_mobile_terminal_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8773,12 +8786,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0411_generate_and_verify_manual_position(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0008_generate_and_verify_manual_position(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0412_check_manual_position_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8819,12 +8834,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0413_generate_NAF_and_verify_position(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0007_generate_NAF_and_verify_position(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0414_check_NAF_position_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8848,6 +8865,7 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=300)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0415_create_assets_2_3_4_5_6_g2(self):
         # Create assets 3-6 in the list
         for x in range(1, 6):
@@ -8886,18 +8904,21 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0418_change_global_settings_change_date_format(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0030_change_global_settings_change_date_format(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0419_change_global_settings_change_date_format(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0030_change_global_settings_change_date_format(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0420_check_config_date_time_update_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -8935,18 +8956,21 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0421_create_one_new_asset_and_mobile_terminal(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0043_create_one_new_asset_and_mobile_terminal_g2(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0422_generate_manual_poll_and_check(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0046_generate_manual_poll_and_check(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0423_check_poll_creation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -9007,12 +9031,14 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0426_create_one_new_mobile_terminal_g2(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0050_create_one_new_mobile_terminal_g2(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0427_check_mobile_terminal_creation_and_modifocation_change_in_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -9092,7 +9118,6 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
         wait_for_element_by_css_selector_to_exist(wait, "#ASSETS_AND_TERMINALS > span", "CSS Selector checked 2")
         time.sleep(3)
         self.driver.find_element_by_css_selector("#ASSETS_AND_TERMINALS > span").click()
-
         # Check Asset and Terminals value in audit list 1st row
         wait_for_element_by_xpath_to_exist(wait, "//div[@id='content']/div/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div/span/table/tbody/tr/td[2]", "XPATH checked 3")
         time.sleep(3)
@@ -9105,25 +9130,26 @@ class UnionVMSTestCaseAuditG2(unittest.TestCase):
 
 
 class UnionVMSTestCaseRealTimeMap(unittest.TestCase):
-
+    # NOTE: All important testcases from this test suite have been moved to the main test suite UnionVMSTestCaseG2
 
     def setUp(self):
         # Startup browser and login
         startup_browser_and_login_to_unionVMS(self)
         time.sleep(defaultSleepTimeValue * 10)
 
-
     def tearDown(self):
         shutdown_browser(self)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0001b_change_default_configuration_parameters(self):
         # Startup browser and login
         UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
 
 
     @timeout_decorator.timeout(seconds=1000)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0201_create_trip_3_17(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -9163,6 +9189,12 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    def test_0001b_change_default_configuration_parameters(self):
+        # Startup browser and login
+        UnionVMSTestCaseG2.test_0001b_change_default_configuration_parameters(self)
+
+
+    @timeout_decorator.timeout(seconds=180)
     def test_0002_create_one_new_asset_via_rest_g2(self):
         # Create new asset (first in the list)
         create_one_new_asset_via_rest_g2(0)
@@ -9197,7 +9229,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         create_one_new_asset_via_rest_g2(self, 52)
 
 
-    # Injecting MTs for Prod (All parts)
+    # Create Assets for Prod based on asset info from Fartyg2 (All parts)
     @timeout_decorator.timeout(seconds=1000)
     def test_0055b_create_several_assets_from_file_based_on_Fartyg2(self):
         # Click on real time tab
