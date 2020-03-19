@@ -579,8 +579,6 @@ def create_one_new_asset_from_gui_g2(self, vesselNumber):
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
     # Click on Create button
     wait_for_element_by_css_selector_to_exist(wait, "button.btn-default.mat-raised-button.mat-button-base", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
@@ -785,12 +783,12 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+    wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    self.driver.find_element_by_name("Search").send_keys(ircsValue[vesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -962,12 +960,12 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+    wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue[oldVesselNumber])
+    self.driver.find_element_by_name("Search").send_keys(ircsValue[oldVesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -1629,12 +1627,12 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue * 5)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+    wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 2")
     time.sleep(defaultSleepTimeValue * 5)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    self.driver.find_element_by_name("Search").send_keys(ircsValue[vesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -1800,12 +1798,12 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 3")
+    wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 3")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    self.driver.find_element_by_name("Search").send_keys(ircsValue[vesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
     time.sleep(defaultSleepTimeValue)
@@ -1904,20 +1902,6 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name #mat-checkbox-2 .mat-checkbox-inner-container").is_selected)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
-    # Check LandStation
-    self.assertEqual(landStation[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").get_attribute("value"))
-    # Check DNID Number
-    self.assertEqual(dnidNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").get_attribute("value"))
-    # Check Member Number
-    self.assertEqual(memberIdnumber[mobileTerminalNumber], self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").get_attribute("value"))
-    # Enter Installed by
-    self.assertEqual(installedByName, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").get_attribute("value"))
-    # Expected frequency
-    self.assertEqual(expectedFrequencyMinutes, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").get_attribute("value"))
-    # Grace period
-    self.assertEqual(gracePeriodFrequencyMinutes, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").get_attribute("value"))
-    # In port
-    self.assertEqual(inPortFrequencyMinutes, self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").get_attribute("value"))
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -1993,12 +1977,10 @@ def check_channel_and_mobile_terminal_data(self, channelAllrows, mobileTerminalA
         wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
         time.sleep(defaultSleepTimeValue)
         self.driver.find_element_by_link_text("Assets").click()
-        # Deactivate SWE filter
-        click_on_flag_state_in_list_tab(self, flagStateIndex[2])
         # Enter CFR in the CFR search field for the newly created asset
-        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 3")
+        wait_for_element_by_name_to_exist(wait, "Search", "cfr checked 3")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("cfr").send_keys(currentAssetCFR)
+        self.driver.find_element_by_name("Search").send_keys(currentAssetCFR)
         # Click on search button
         wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
         time.sleep(defaultSleepTimeValue)
@@ -2193,12 +2175,12 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field for the newly created asset
-    wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 3")
+    wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 3")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_name("ircs").send_keys(ircsValue[vesselNumber])
+    self.driver.find_element_by_name("Search").send_keys(ircsValue[vesselNumber])
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 4")
     time.sleep(defaultSleepTimeValue)
@@ -2974,17 +2956,17 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
     if ircsTrueCfrFalse == True :
-        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+        self.driver.find_element_by_name("Search").send_keys(ircsCfrValue)
     else:
-        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        wait_for_element_by_name_to_exist(wait, "Search", "cfr checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
+        self.driver.find_element_by_name("Search").send_keys(ircsCfrValue)
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -3077,17 +3059,17 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
     if ircsTrueCfrFalse == True :
-        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+        self.driver.find_element_by_name("Search").send_keys(ircsCfrValue)
     else:
-        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        wait_for_element_by_name_to_exist(wait, "Search", "cfr checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
+        self.driver.find_element_by_name("Search").send_keys(ircsCfrValue)
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -3160,15 +3142,6 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
 
-    # Enter Installed Date/Time based on deltaHourValue from file
-    #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[11]))
-    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").clear()
-    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-installedOn").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-    # Enter Uninstalled Date/Time based on deltaHourValue from file  2020-03-24 16:58
-    #tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[12]))
-    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").clear()
-    #self.driver.find_element_by_id("mt-" + channelRow[16] + "-channel-" + channelRow[17] + "-uninstalled").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M:%S"))
-
     # Expected frequency
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
@@ -3179,14 +3152,11 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
 
-    time.sleep(defaultSleepTimeValue * 100)
-
-
     # Click on save button
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
-    time.sleep(defaultSleepTimeValue * 100)
+    time.sleep(defaultSleepTimeValue * 10)
 
 
 def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, linkFileName, ircsTrueCfrFalse, referenceDateTime):
@@ -3417,17 +3387,17 @@ def create_second_channel_for_one_mobile_terminal_without_referenceDateTime_g2(s
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("Assets").click()
-    # Deactivate SWE filter
-    click_on_flag_state_in_list_tab(self, flagStateIndex[2])
+    # Activate DNK,SWE,NOR filter
+    click_on_flag_state_in_list_tab(self, flagStateIndex)
     # Enter IRCS in the ircs search field OR CFR in the cfr search field for the newly created asset
     if ircsTrueCfrFalse == True :
-        wait_for_element_by_name_to_exist(wait, "ircs", "ircs checked 2")
+        wait_for_element_by_name_to_exist(wait, "Search", "ircs checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("ircs").send_keys(ircsCfrValue)
+        self.driver.find_element_by_name("Search").send_keys(ircsCfrValue)
     else:
-        wait_for_element_by_name_to_exist(wait, "cfr", "cfr checked 2")
+        wait_for_element_by_name_to_exist(wait, "Search", "cfr checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_name("cfr").send_keys(ircsCfrValue)
+        self.driver.find_element_by_name("Search").send_keys(ircsCfrValue)
     # Click on search button
     wait_for_element_by_css_selector_to_exist(wait, ".asset-search-form button[type='submit']",  "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -3589,18 +3559,23 @@ def select_UTC_time(self):
 
 
 
-def click_on_flag_state_in_list_tab(self, flagState):
+def click_on_flag_state_in_list_tab(self, flagStates):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on Flagstates field
-    wait_for_element_by_css_selector_to_exist(wait, "mat-form-field", "CSS Selector checked 1")
+    # Click on Custom radion button
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button .mat-radio-inner-circle", "CSS Selector checked 1")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mat-form-field").click()
+    self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button .mat-radio-inner-circle").click()
+    # Click on Custom radion button List
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
-    # Select/Deselect Flagstate in list
-    wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + flagState + " .mat-option-text", "CSS Selector checked 2")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mat-option-" + flagState + " .mat-option-text").click()
+    self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select").click()
+    # Select/Deselect Flagstates in list
+    for x in range(len(flagStates)):
+        print(str(x) + " " + flagStates[x])
+        wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + flagStates[x] + " .mat-option-text", "CSS Selector checked 2")
+        time.sleep(defaultSleepTimeValue)
+        self.driver.find_element_by_css_selector("#mat-option-" + flagStates[x] + " .mat-option-text").click()
     # Click on body surface
     wait_for_element_by_css_selector_to_exist(wait, "body", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -4563,9 +4538,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_id("uvms-header-menu-item-communication").click()
         # Search on MemberID 100
-        wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[9]", "XPATH checked 2")
-        time.sleep(1)
-        self.driver.find_element_by_xpath("(//input[@type='text'])[9]").send_keys(memberIdnumber[0])
+        #wait_for_element_by_xpath_to_exist(wait, "(//input[@type='text'])[9]", "XPATH checked 2")
+        #time.sleep(1)
+        #self.driver.find_element_by_xpath("(//input[@type='text'])[9]").send_keys(memberIdnumber[0])
         wait_for_element_by_xpath_to_exist(wait, "//button[@type='submit']", "XPATH checked 3")
         time.sleep(1)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
@@ -4670,6 +4645,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0027_view_audit_log(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
