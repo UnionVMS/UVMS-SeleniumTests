@@ -7127,6 +7127,12 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         wait_for_element_by_link_text_to_exist(wait, "Area", "Link text checked 20")
         time.sleep(1)
         self.driver.find_element_by_link_text("Area").click()
+        wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[12]", "XPATH checked 19b")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("(//button[@id=''])[12]").click()
+        wait_for_element_by_link_text_to_exist(wait, "Code", "Link text checked 19c")
+        time.sleep(1)
+        self.driver.find_element_by_link_text("Code").click()
         wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div/div/form/fieldset[1]/div[2]/div[3]/table/tbody/tr[2]/td[5]/div/div/input", "XPATH checked 21")
         time.sleep(1)
         self.driver.find_element_by_xpath("//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div/div/form/fieldset[1]/div[2]/div[3]/table/tbody/tr[2]/td[5]/div/div/input").send_keys(userAreaName)
@@ -8309,7 +8315,7 @@ class UnionVMSTestCaseMobileTerminalChannelsG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=360)
-    #@unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0304_check_additional_channels_for_mobile_terminals(self):
         # Test case checks that mobile terminals from test_0302 and test_0303 are presented correctly mobile terminal by mobile terminal.
         # Click on real time tab
