@@ -809,7 +809,7 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     # Check that the Name and Flagstate value title is correct.
     wait_for_element_by_css_selector_to_exist(wait, ".title h2", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 3)
-    self.assertEqual(vesselName[vesselNumber] + " — " + countryValue[vesselNumber], self.driver.find_element_by_css_selector(".title h2").text)
+    self.assertEqual(externalMarkingValue[vesselNumber] + " • " + ircsValue[vesselNumber], self.driver.find_element_by_css_selector(".title h2").text)
     # Check that the Product Org Name + Product Org Code values are correct.
     self.assertEqual(productOrgNameValue[vesselNumber] + " • Org. nr: " + productOrgCodeValue[vesselNumber], self.driver.find_element_by_css_selector(".title span").text)
     # Get all elements from the Asset table list and save them in allElements list
@@ -1645,12 +1645,10 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
-
     # Click on attach button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--attach", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 2)
     self.driver.find_element_by_css_selector("#mobile-terminal-show--attach").click()
-
     # Enter serial number
     wait_for_element_by_css_selector_to_exist(wait, ".mat-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
@@ -1681,11 +1679,6 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(antennaVersion)
     # Enter Satellite Number
     self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(satelliteNumber[mobileTerminalNumber])
-    # Click on button to activate Active if value is set 1
-    #if activeState[mobileTerminalNumber] == "1":
-    #    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
-    #    time.sleep(defaultSleepTimeValue)
-    #    self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
     # Enter Start Date/Time based on deltaTimeBigValue (Installed on)
     tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
     self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").clear()
@@ -1875,11 +1868,11 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     # Check Channel Stopped on DateTime in the list
     self.assertEqual(stopTimeValueString, allChannelElements[8].text)
     # Expected frequency in the list
-    self.assertEqual(expectedFrequencyMinutes, allChannelElements[9].text)
+    self.assertEqual(expectedFrequencyMinutes + " min", allChannelElements[9].text)
     # Grace period in the list
-    self.assertEqual(gracePeriodFrequencyMinutes, allChannelElements[10].text)
+    self.assertEqual(gracePeriodFrequencyMinutes + " min", allChannelElements[10].text)
     # In port in the list
-    self.assertEqual(inPortFrequencyMinutes, allChannelElements[11].text)
+    self.assertEqual(inPortFrequencyMinutes + " min", allChannelElements[11].text)
     # Check if Active state is set if value is set 1
     if activeState[mobileTerminalNumber] == "1":
         wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle-bar", "CSS Selector checked 12a")
@@ -3143,7 +3136,6 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
     # Enter Land station
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
-
     # Enter Start Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
     self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
@@ -3152,7 +3144,6 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
     self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
-
     # Expected frequency
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
@@ -3162,7 +3153,6 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     # In port
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
     self.driver.find_element_by_css_selector(".channels :last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
-
     # Click on save button
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
@@ -3184,9 +3174,11 @@ def create_addtional_channels_for_mobileterminals_from_file(self, channelFileNam
         print("-----------------------")
         print(x)
         print(linkAssetMobileTerminalAllrows[x][0], " : ", linkAssetMobileTerminalAllrows[x][1])
-
         print("-----------------------")
         create_one_new_channel_for_one_mobile_terminal(self, linkAssetMobileTerminalAllrows[x][1], channelAllrows[x], ircsTrueCfrFalse, referenceDateTime)
+        # Reload page
+        self.driver.refresh()
+
 
 
 def create_trip_from_file(currentPositionTimeValue, assetFileName, tripFileName):
@@ -3370,6 +3362,8 @@ def create_mobileterminal_from_file_based_on_link_file_without_assetfilename_g2(
         print("-----------------------")
         mobileTerminalRowValue = get_selected_Mobile_terminal_row_based_on_serialNumber(mobileTerminalAllrows, linkAssetMobileTerminalAllrows[x][0])
         create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, linkAssetMobileTerminalAllrows[x][1], mobileTerminalRowValue, ircsTrueCfrFalse)
+        # Reload page
+        self.driver.refresh()
 
 
 def create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, channelFileName, linkFileName, ircsTrueCfrFalse):
@@ -4061,7 +4055,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         self.driver.find_element_by_link_text(groupName[0]).click()
         # Check Assets in Group
         wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS Selector checked 11")
-        time.sleep(3)
+        time.sleep(5)
         self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
         self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
         self.assertEqual(vesselName[0], self.driver.find_element_by_css_selector("td[title=\"" + vesselName[0] + "\"]").text)
@@ -4535,6 +4529,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Create new Mobile Terminal (Number 3-6 in the list) (Connected via asset number 1)
         for x in range(2, 6):
             create_one_new_mobile_terminal_via_asset_tab_g2(self, x, 0)
+            # Refresh page (To reset cache)
+            self.driver.refresh()
             time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -5389,6 +5385,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         create_one_new_asset_via_rest_g2(34)
         # Check new asset (34th in the list)
         check_new_asset_exists_g2(self, 34)
+        # Refresh page
+        self.driver.refresh()
         # Add the used vesselNumbers to a vesselNumberList
         #vesselNumberList = [34]
         # Add secondContactVesselNumberList (Not used here)
@@ -5398,8 +5396,12 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         #check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
         # Modify asset parameters (NOTE: The contacts parameters are not modified)
         modify_one_new_asset_from_gui_g2(self, 34, 36)
+        # Refresh page
+        self.driver.refresh()
         # Check new asset (35th in the list) (NOTE: The contacts parameters are not checked)
         check_new_asset_exists_g2(self, 36, False)
+        # Refresh page
+        self.driver.refresh()
         # Add the used vesselNumbers to a vesselNumberList
         #vesselNumberList = [35, 34]
         # Add secondContactVesselNumberList (Not used here)
@@ -5442,6 +5444,8 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         create_one_new_asset_via_rest_g2(35)
         # Create new Mobile Terminal (36th in the list)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 35, 35)
+        # Refresh page
+        self.driver.refresh()
         # Add channel to mobile terminal
         add_second_channel_to_mobileterminal_via_asset_tab_g2(self, 35, 36, 35)
 
@@ -6156,7 +6160,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 class UnionVMSTestCaseExtraG2(unittest.TestCase):
 
-    # NOTE: The test suite is diabled due to broken functionality under Reports tab in the old Frontend GUI
+    # NOTE: The test suite is disabled due to broken functionality under Reports tab in the old Frontend GUI
 
     def setUp(self):
         # Startup browser and login
@@ -6463,6 +6467,8 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         # Create new asset (38th and 39th in the list)
         create_one_new_asset_via_rest_g2(37)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 37, 37)
+        # Refresh page
+        self.driver.refresh()
         create_one_new_asset_via_rest_g2(38)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 38, 38)
 

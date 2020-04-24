@@ -5293,8 +5293,8 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         #print(answerValue['vesselName'])
         #print(answerValue['ircs'])
         print('---------------------------------------------------- 1')
-        referenceDateTime = datetime.datetime(year=2020, month=3, day=11, hour=0, minute=0, second=0)
-        answerValue2 = client.service.getVesselByCFRFromHistoric('SWE000008442', referenceDateTime)
+        referenceDateTime = datetime.datetime(year=2020, month=4, day=15, hour=0, minute=0, second=0)
+        answerValue2 = client.service.getVesselByCFRFromHistoric('GBR000C16470', referenceDateTime)
         print(answerValue2)
         #print('---------------------------------------------------- 2')
         #answerValue3 = client.service.getVesselEuFormatByCFR('DNK000036587')
@@ -5303,7 +5303,7 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         #answerValue4 = client.service.getVesselEuFormatByIRCS(answerValue2['ircs'])
         #print(answerValue4)
         print('---------------------------------------------------- 4')
-        answerValue5 = client.service.getVesselEuFormatByIRCS('SCPZ')
+        answerValue5 = client.service.getVesselEuFormatByIRCS('SGNZ')
         print(answerValue5)
 
 
