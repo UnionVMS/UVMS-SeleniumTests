@@ -841,9 +841,9 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     # Check contact parameters if checkContacts is TRUE
     if checkContacts == True:
         # Click on Contacts tab
-        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 8")
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(6) .text", "CSS Selector checked 8")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+        self.driver.find_element_by_css_selector(".side-menu li:nth-child(6) .text").click()
         # Get all contacts elements from the Asset table list and save them in allContactsElements list
         wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 9")
         time.sleep(defaultSleepTimeValue)
@@ -1642,9 +1642,9 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
     # Click on attach button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--attach", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 2)
@@ -1820,9 +1820,9 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     time.sleep(defaultSleepTimeValue * 10)
     # Click on Mobile terminal tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
     # Get all elements from the Mobile Terminal table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 3)
@@ -2188,9 +2188,9 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
     # Click on edit link
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
@@ -2970,9 +2970,9 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
     # Click on attach button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--attach", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 2)
@@ -3086,9 +3086,9 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(4) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(4) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
     # Get all Mobile Terminal elements in a list from GUI
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
@@ -4001,6 +4001,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0018_create_two_assets_to_group_and_check_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4074,6 +4075,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0019_add_two_assets_to_group_and_check_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4168,6 +4170,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0020_remove_one_asset_group_and_check_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4253,6 +4256,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0021_create_second_group_and_add_assets_to_group(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4335,6 +4339,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0022_delete_second_group_and_check(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4372,6 +4377,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0023_advanced_search_of_assets(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4442,6 +4448,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0024_export_assets_to_excel_file(self):
         # Set Webdriver wait
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -4911,6 +4918,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality is not implemented yet!")  # Test Case disabled because functionality is not implemented yet!
     def test_0032_check_view_help_text(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -5796,6 +5804,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         create_report_and_check_trip_position_reports(self, assetFileNameList[10], tripFileNameList[10])
         time.sleep(1)
 
+
     @timeout_decorator.timeout(seconds=180)
     def test_0502_change_map_default_settings(self):
         # Click on Realtime tab
@@ -5881,7 +5890,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check MMSI
             self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
             # Check Speed
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), allAssetElements[2].text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", allAssetElements[2].text)
             # Check Course
             self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
             # Check Flag state
@@ -5889,7 +5898,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check Ext Marking
             self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[6].text)
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
             # Check Org name
@@ -6055,7 +6064,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check MMSI
             self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
             # Check Speed
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])), allAssetElements[2].text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", allAssetElements[2].text)
             # Check Course
             self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
             # Check Flag state
@@ -6063,7 +6072,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check Ext Marking
             self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9], allAssetElements[6].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[6].text)
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
             # Check Org name
@@ -6523,9 +6532,9 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[10]", "XPATH checked 11")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
-        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[4]", "XPATH checked 12")
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[3]", "XPATH checked 12")
         time.sleep(1)
-        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[4]").click()
+        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[3]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[11]", "XPATH checked 13")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
