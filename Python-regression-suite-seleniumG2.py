@@ -3566,13 +3566,13 @@ def click_on_flag_state_in_list_tab(self, flagStates):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on Custom radion button
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button .mat-radio-inner-circle", "CSS Selector checked 1")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button  .mat-radio-label-content", "CSS Selector checked 1")
     time.sleep(defaultSleepTimeValue * 3)
-    self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button .mat-radio-inner-circle").click()
+    self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button  .mat-radio-label-content").click()
     # Click on Custom radion button List
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select", "CSS Selector checked 2")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select").click()
+    #wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select", "CSS Selector checked 2")
+    #time.sleep(defaultSleepTimeValue)
+    #self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select").click()
     # Select/Deselect Flagstates in list
     for x in range(len(flagStates)):
         print(str(x) + " " + flagStates[x])
@@ -6532,9 +6532,9 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[10]", "XPATH checked 11")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
-        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[3]", "XPATH checked 12")
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[2]", "XPATH checked 12")
         time.sleep(1)
-        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[3]").click()
+        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[2]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[11]", "XPATH checked 13")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
@@ -7062,7 +7062,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         time.sleep(2)
 
 
-
     @timeout_decorator.timeout(seconds=180)
     def test_0051_create_user_area_rule_one(self):
         # Set wait time for web driver
@@ -7189,7 +7188,6 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         # Create new asset (35th in the list)
         create_one_new_asset_via_rest_g2(34)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 34, 34)
-
 
 
     @timeout_decorator.timeout(seconds=180)
