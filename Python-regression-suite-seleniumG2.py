@@ -848,16 +848,16 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
         wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 9")
         time.sleep(defaultSleepTimeValue)
         allContactsElements = self.driver.find_elements_by_css_selector("contact-show-by-asset-page .field-wrapper div")
-        # Check that the E-mail value is correct.
-        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[0].text)
-        # Check that the Contact Country value is correct.
-        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[1].text)
-        # Check that the Contact City value is correct.
-        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[2].text)
         # Check that the Phone value is correct.
-        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[3].text)
+        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[0].text)
+        # Check that the E-mail value is correct.
+        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[1].text)
         # Check that the Contact Zip Code value is correct.
-        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[4].text)
+        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[2].text)
+        # Check that the Contact Country value is correct.
+        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
+        # Check that the Contact City value is correct.
+        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
         # Check that the Contact Name value is correct.
         self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_css_selector("contact-show-by-asset-page h2").text)
         # Check that the Type Organization value is correct.
