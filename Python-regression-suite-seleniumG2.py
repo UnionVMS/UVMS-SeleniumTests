@@ -5884,9 +5884,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 25)
 
             # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .content-container span", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
@@ -5960,17 +5960,10 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 10)
 
 
-            # Expand additional asset information
-            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
-            time.sleep(defaultSleepTimeValue * 10)
-
-
             # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
+            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mat-button-wrapper", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
+            self.driver.find_element_by_css_selector("map-asset-panel-show .mat-button-wrapper").click()
 
             time.sleep(defaultSleepTimeValue * 10)
 
@@ -6061,11 +6054,10 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             self.driver.find_element_by_css_selector(".ri-ship-fill").click()
             time.sleep(defaultSleepTimeValue * 25)
 
-
             # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .content-container span", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
@@ -6139,20 +6131,10 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
-            # Expand additional asset information
-            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
-            time.sleep(defaultSleepTimeValue * 10)
-
-
             # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
+            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mat-button-wrapper", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
+            self.driver.find_element_by_css_selector("map-asset-panel-show .mat-button-wrapper").click()
 
             # Dectivate tracks
             wait_for_element_by_css_selector_to_exist(wait, ".asset-information  .mat-checkbox-inner-container", "CSS Selector checked 12")
