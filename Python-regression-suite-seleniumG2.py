@@ -848,16 +848,16 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
         wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 9")
         time.sleep(defaultSleepTimeValue)
         allContactsElements = self.driver.find_elements_by_css_selector("contact-show-by-asset-page .field-wrapper div")
-        # Check that the E-mail value is correct.
-        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[0].text)
-        # Check that the Contact Country value is correct.
-        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[1].text)
-        # Check that the Contact City value is correct.
-        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[2].text)
         # Check that the Phone value is correct.
-        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[3].text)
+        self.assertEqual(contactPhoneNumberValue[vesselNumber], allContactsElements[0].text)
+        # Check that the E-mail value is correct.
+        self.assertEqual(contactEmailValue[vesselNumber], allContactsElements[1].text)
         # Check that the Contact Zip Code value is correct.
-        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[4].text)
+        self.assertEqual(contactZipCodeValue[vesselNumber], allContactsElements[2].text)
+        # Check that the Contact Country value is correct.
+        self.assertEqual(contactCountryValue[vesselNumber], allContactsElements[3].text)
+        # Check that the Contact City value is correct.
+        self.assertEqual(contactCityValue[vesselNumber], allContactsElements[4].text)
         # Check that the Contact Name value is correct.
         self.assertEqual(contactNameValue[vesselNumber], self.driver.find_element_by_css_selector("contact-show-by-asset-page h2").text)
         # Check that the Type Organization value is correct.
@@ -5872,15 +5872,21 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
+            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9a")
             time.sleep(defaultSleepTimeValue)
             self.driver.find_element_by_css_selector(".mat-option-text").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            # Click on the ship (Detail asset information) icon in the list to select asset
+            wait_for_element_by_css_selector_to_exist(wait, ".ri-ship-fill", "CSS Selector checked 9b")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".ri-ship-fill").click()
             time.sleep(defaultSleepTimeValue * 25)
 
             # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .content-container span", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
@@ -5907,9 +5913,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
 
             # Activate tracks
-            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mat-checkbox-inner-container", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
@@ -5954,29 +5960,21 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 10)
 
 
-            # Expand additional asset information
-            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
-            time.sleep(defaultSleepTimeValue * 10)
-
-
             # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
+            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mat-button-wrapper", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
+            self.driver.find_element_by_css_selector("map-asset-panel-show .mat-button-wrapper").click()
 
             time.sleep(defaultSleepTimeValue * 10)
 
 
             # Dectivate tracks
-            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information  .mat-checkbox-inner-container", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             time.sleep(defaultSleepTimeValue * 10)
-
 
             # Click in the middle of the Map with an offset of 15 pixels (to unmark Asset)
             print("Execute!")
@@ -6048,13 +6046,18 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
             time.sleep(defaultSleepTimeValue)
             self.driver.find_element_by_css_selector(".mat-option-text").click()
+            time.sleep(defaultSleepTimeValue * 5)
+
+            # Click on the ship (Detail asset information) icon in the list to select asset
+            wait_for_element_by_css_selector_to_exist(wait, ".ri-ship-fill", "CSS Selector checked 9b")
+            time.sleep(defaultSleepTimeValue)
+            self.driver.find_element_by_css_selector(".ri-ship-fill").click()
             time.sleep(defaultSleepTimeValue * 25)
 
-
             # Check Asset Name
-            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .label", "CSS Selector checked 10")
+            wait_for_element_by_css_selector_to_exist(wait, "map-right-column .content-container span", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .label").text)
+            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
@@ -6082,9 +6085,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
             # Activate tracks
-            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mat-checkbox-inner-container", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
@@ -6128,29 +6131,18 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
             time.sleep(defaultSleepTimeValue * 10)
 
-            # Expand additional asset information
-            wait_for_element_by_css_selector_to_exist(wait, ".expand-asset-options .icon-elipsis", "CSS Selector checked 11")
-            time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".expand-asset-options .icon-elipsis").click()
-            time.sleep(defaultSleepTimeValue * 10)
-
-
             # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, ".button-wrapper-expanded .mat-button-wrapper", "CSS Selector checked 11")
+            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mat-button-wrapper", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".button-wrapper-expanded .mat-button-wrapper").click()
-
-            time.sleep(defaultSleepTimeValue * 10)
-
+            self.driver.find_element_by_css_selector("map-asset-panel-show .mat-button-wrapper").click()
 
             # Dectivate tracks
-            wait_for_element_by_css_selector_to_exist(wait, "#assets-map-panels .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information  .mat-checkbox-inner-container", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("#assets-map-panels .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             time.sleep(defaultSleepTimeValue * 10)
-
 
             # Click in the middle of the Map with an offset of 10 pixels (to unmark Asset)
             print("Execute!")
@@ -6532,9 +6524,9 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[10]", "XPATH checked 11")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[10]").click()
-        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[2]", "XPATH checked 12")
+        wait_for_element_by_xpath_to_exist(wait, "(//a[contains(text(),'Asset')])[3]", "XPATH checked 12")
         time.sleep(1)
-        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[2]").click()
+        self.driver.find_element_by_xpath("(//a[contains(text(),'Asset')])[3]").click()
         wait_for_element_by_xpath_to_exist(wait, "(//button[@id=''])[11]", "XPATH checked 13")
         time.sleep(1)
         self.driver.find_element_by_xpath("(//button[@id=''])[11]").click()
@@ -9251,7 +9243,6 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create addtional channel to existing mobile terminal
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests900FileName[3], tests900FileName[2], True)
-
 
 
     # Injecting MTs for Prod (All parts)
