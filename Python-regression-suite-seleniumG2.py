@@ -9245,7 +9245,6 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
         create_addtional_channels_for_mobileterminals_without_referenceDateTime_from_file_g2(self, tests900FileName[3], tests900FileName[2], True)
 
 
-
     # Injecting MTs for Prod (All parts)
     @timeout_decorator.timeout(seconds=1000)
     def test_0056_import_selected_asset_from_Fartyg2_to_unionvms(self):
