@@ -1,6 +1,6 @@
 import unittest
 import time
-import timeout_decorator
+# import timeout_decorator
 import os
 import datetime
 import random
@@ -5459,7 +5459,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Check asset values in the history list and compare these values based on the values in the vesselNumberList
         # The functionality is not implemented yet in the new GUI
         #check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
-
 
 
     @timeout_decorator.timeout(seconds=180)
