@@ -1,6 +1,6 @@
 import unittest
 import time
-import timeout_decorator
+# import timeout_decorator
 import os
 import datetime
 import random
@@ -1645,6 +1645,13 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+
+    # Click on Mobile Terminals Sub tab ---TEMP---
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+
+
     # Click on attach button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--attach", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 2)
@@ -1729,6 +1736,12 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 5)
+
+    # Click on Mobile Terminals Sub tab ---TEMP---
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+
     # Click on button to activate Active if value is set 1
     if activeState[mobileTerminalNumber] == "1":
         wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle-bar", "CSS Selector checked 16")
@@ -1823,6 +1836,12 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+
+    # Click on Mobile Terminals Sub tab ---TEMP---
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+
     # Get all elements from the Mobile Terminal table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 3)
@@ -1897,7 +1916,7 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     # Check buttons for Poll, Config and Default are activated
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name #mat-checkbox-2 .mat-checkbox-inner-container").is_selected)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").is_selected)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
     self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
     time.sleep(defaultSleepTimeValue * 10)
@@ -2191,6 +2210,12 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+
+    # Click on Mobile Terminals Sub tab ---TEMP---
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+
     # Click on edit link
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
@@ -2199,6 +2224,10 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button span", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button span").click()
+    # Enter Channel Name
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-input-element", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-input-element").send_keys(channelName[mobileTerminalNumber])
     # Enter Land station
     wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
@@ -2973,6 +3002,12 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+
+    # Click on Mobile Terminals Sub tab ---TEMP---
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+
     # Click on attach button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--attach", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 2)
@@ -3089,6 +3124,12 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+
+    # Click on Mobile Terminals Sub tab ---TEMP---
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+
     # Get all Mobile Terminal elements in a list from GUI
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
@@ -3099,9 +3140,10 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
         if channelRow[0] in allMobileTerminalElements[y].text :
             print("Yes! Found serialnumber")
             # Click on the correct "MT tab" that corresponds to found MT serial number
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")", "CSS Selector checked 6b")
+            print("y value is " + str(y))
+            wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-list-wrapper .mat-tab-list .mat-tab-label:nth-child(" + str(y - 1) + ")", "CSS Selector checked 6b")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_css_selector(".mat-tab-list .mat-tab-label:nth-child(" + str(1 + y) + ")").click()
+            self.driver.find_element_by_css_selector(".mobile-terminal-list-wrapper .mat-tab-list .mat-tab-label:nth-child(" + str(y - 1) + ")").click()
             break
     time.sleep(defaultSleepTimeValue * 5)
     # Click on edit button
@@ -5417,7 +5459,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         # Check asset values in the history list and compare these values based on the values in the vesselNumberList
         # The functionality is not implemented yet in the new GUI
         #check_asset_history_list(self, vesselNumberList, secondContactVesselNumberList)
-
 
 
     @timeout_decorator.timeout(seconds=180)
