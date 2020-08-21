@@ -71,6 +71,12 @@ def startup_browser_and_login_to_unionVMS(self):
     self.driver.get(httpUnionVMSurlString)
     print("The http URL is: " + httpUnionVMSurlString)
     time.sleep(2)
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Current dir (cwd) before saving screenshot")
+    print(cwd)
+    self.driver.save_screenshot('screenshot1.png')
+
 
     # if Hav och vatten proxy page is presented, then autologin
     try:
@@ -93,7 +99,7 @@ def startup_browser_and_login_to_unionVMS(self):
     cwd = os.path.abspath(os.path.dirname(__file__))
     print("Current dir (cwd) before saving screenshot")
     print(cwd)
-    self.driver.save_screenshot('screenshot.png')
+    self.driver.save_screenshot('screenshot2.png')
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
     time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
