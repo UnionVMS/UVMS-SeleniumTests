@@ -57,9 +57,10 @@ def startup_browser_and_login_to_unionVMS(self):
     print("Selenium version")
     print(selenium.__version__)
     # Start Chrome browser
-    options = webdriver.ChromeOptions()
-    options.add_argument('--disable-features=VizDisplayCompositor')
-    self.driver = webdriver.Chrome(options=options)
+    #options = webdriver.ChromeOptions()
+    #options.add_argument('--disable-features=VizDisplayCompositor')
+    #self.driver = webdriver.Chrome(options=options)
+    self.driver = webdriver.Chrome()
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Print Chrome version
@@ -88,6 +89,11 @@ def startup_browser_and_login_to_unionVMS(self):
     except:
         pass
 
+    # Save path to current dir
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Current dir (cwd) before saving screenshot")
+    print(cwd)
+    self.driver.save_screenshot('screenshot.png')
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
     time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
