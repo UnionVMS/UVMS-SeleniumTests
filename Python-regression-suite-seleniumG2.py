@@ -57,10 +57,16 @@ def startup_browser_and_login_to_unionVMS(self):
     print("Selenium version")
     print(selenium.__version__)
     # Start Chrome browser
-    #options = webdriver.ChromeOptions()
-    #options.add_argument('--disable-features=VizDisplayCompositor')
-    #self.driver = webdriver.Chrome(options=options)
-    self.driver = webdriver.Chrome()
+    if platform.system() == "Windows":
+        print("Windows Environment")
+        self.driver = webdriver.Chrome()
+    else:
+        print("Linux Environment with headless chrome active")
+        options = webdriver.ChromeOptions()
+        options.add_argument('--disable-features=VizDisplayCompositor')
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        self.driver = webdriver.Chrome(options=options)
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Print Chrome version
@@ -71,11 +77,6 @@ def startup_browser_and_login_to_unionVMS(self):
     self.driver.get(httpUnionVMSurlString)
     print("The http URL is: " + httpUnionVMSurlString)
     time.sleep(2)
-    # Save path to current dir
-    cwd = os.path.abspath(os.path.dirname(__file__))
-    print("Current dir (cwd) before saving screenshot")
-    print(cwd)
-    self.driver.save_screenshot('screenshot1.png')
 
 
     # if Hav och vatten proxy page is presented, then autologin
@@ -97,7 +98,7 @@ def startup_browser_and_login_to_unionVMS(self):
 
     # Save path to current dir
     cwd = os.path.abspath(os.path.dirname(__file__))
-    print("Current dir (cwd) before saving screenshot")
+    print("Current dir (cwd) before saving screenshot 2")
     print(cwd)
     self.driver.save_screenshot('screenshot2.png')
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
