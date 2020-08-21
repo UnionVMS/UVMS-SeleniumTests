@@ -57,7 +57,9 @@ def startup_browser_and_login_to_unionVMS(self):
     print("Selenium version")
     print(selenium.__version__)
     # Start Chrome browser
-    self.driver = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.add_argument('--disable-features=VizDisplayCompositor')
+    self.driver = webdriver.Chrome(options=options)
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Print Chrome version
