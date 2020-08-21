@@ -66,6 +66,7 @@ def startup_browser_and_login_to_unionVMS(self):
     # Maximize browser window
     self.driver.maximize_window()
     self.driver.get(httpUnionVMSurlString)
+    print("The http URL is: " + httpUnionVMSurlString)
     time.sleep(2)
 
     # if Hav och vatten proxy page is presented, then autologin
