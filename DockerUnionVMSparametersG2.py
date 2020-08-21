@@ -193,7 +193,9 @@ targetPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-frontend-test/unionvms
 
 targetPathWindows = "C:\\UVMS-Docker-uvms-docker\\unionvms-test\\target"
 
-downloadPathLinux = "/var/lib/jenkins/Downloads"
+#downloadPathLinux = "/var/lib/jenkins/Downloads"
+downloadPathLinux = "/var/lib/jenkins/workspace/UVMS-Docker-frontend-test/unionvms-test/target"
+
 downloadPathWindow = "\Downloads"
 
 referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv', 'referenceDateTime3.csv')
