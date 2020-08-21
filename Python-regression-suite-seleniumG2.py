@@ -1876,9 +1876,9 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     # Check Uninstalled on DateTime in the list
     self.assertEqual(stopTimeValueString, allElements[9].text)
     # Click on channel to expand
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header", "CSS Selector checked 7")
-    time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector(".mat-expansion-panel-header").click()
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header .mat-expansion-indicator", "CSS Selector checked 7")
+    time.sleep(defaultSleepTimeValue * 20)
+    self.driver.find_element_by_css_selector(".mat-expansion-panel-header .mat-expansion-indicator").click()
     #Get all elements from the channel table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-body div .value", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 3)
