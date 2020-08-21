@@ -96,11 +96,8 @@ def startup_browser_and_login_to_unionVMS(self):
     except:
         pass
 
-    # Save path to current dir
-    cwd = os.path.abspath(os.path.dirname(__file__))
-    print("Current dir (cwd) before saving screenshot 2")
-    print(cwd)
-    self.driver.save_screenshot('screenshot2.png')
+    # Save screenshot
+    #self.driver.save_screenshot('screenshot2.png')
     wait_for_element_by_id_to_exist(wait, "userId", "userId checked 0")
     time.sleep(1)
     self.driver.find_element_by_id("userId").send_keys(defaultUserName)
@@ -1880,7 +1877,7 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.assertEqual(stopTimeValueString, allElements[9].text)
     # Click on channel to expand
     wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-header", "CSS Selector checked 7")
-    time.sleep(defaultSleepTimeValue)
+    time.sleep(defaultSleepTimeValue * 10)
     self.driver.find_element_by_css_selector(".mat-expansion-panel-header").click()
     #Get all elements from the channel table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".mat-expansion-panel-body div .value", "CSS Selector checked 7")
@@ -2441,7 +2438,7 @@ def generate_NAF_and_verify_position(self,speedValue,courseValue):
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
     # Enter Vessel to verify position data
     wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS selector checked 5")
-    time.sleep(1)
+    time.sleep(3)
     self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
     self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
     self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
@@ -2495,7 +2492,7 @@ def change_and_check_speed_format(self,unitNumber):
     set_start_stop_date_time(self, startDateTimeDefault, stopDateTimeDefault)
     # Click on search button
     wait_for_element_by_xpath_to_exist(wait, "(//button[@type='submit'])[2]", "XPATH checked 8")
-    time.sleep(1)
+    time.sleep(5)
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
     wait_for_element_by_xpath_to_exist(wait, "//*[@id='content']/div[1]/div[3]/div[2]/div/div[2]/div/div[4]/div/div/div/div/span/table/tbody/tr[1]/td[11]", "XPATH checked 9")
     time.sleep(1)
@@ -2568,7 +2565,7 @@ def generate_and_verify_manual_position(self,speedValue,courseValue):
     self.driver.find_element_by_xpath("(//button[@type='submit'])[2]").click()
     # Verifies position data
     wait_for_element_by_css_selector_to_exist(wait, "td[title=\"" + countryValue[0] + "\"]", "CSS Selector checked 10")
-    time.sleep(1)
+    time.sleep(3)
     self.assertEqual(countryValue[0], self.driver.find_element_by_css_selector("td[title=\"" + countryValue[0] + "\"]").text)
     self.assertEqual(externalMarkingValue[0], self.driver.find_element_by_css_selector("td[title=\"" + externalMarkingValue[0] + "\"]").text)
     self.assertEqual(ircsValue[0], self.driver.find_element_by_css_selector("td[title=\"" + ircsValue[0] + "\"]").text)
@@ -4882,19 +4879,19 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         time.sleep(1)
         self.driver.find_element_by_css_selector("#globalSettings > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#reporting > span", "CSS Selector checked 4")
-        time.sleep(0.2)
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#reporting > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#asset > span", "CSS Selector checked 5")
-        time.sleep(0.2)
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#asset > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#exchange > span", "CSS Selector checked 6")
-        time.sleep(0.2)
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#exchange > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#movementrules > span", "CSS Selector checked 7")
-        time.sleep(0.2)
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#movementrules > span").click()
         wait_for_element_by_css_selector_to_exist(wait, "#systemMonitor > span", "CSS Selector checked 8")
-        time.sleep(0.2)
+        time.sleep(1)
         self.driver.find_element_by_css_selector("#systemMonitor > span").click()
         # Check sub tab names
         self.assertEqual("SYSTEM MONITOR", self.driver.find_element_by_css_selector("#systemMonitor > span").text)
