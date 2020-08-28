@@ -1750,6 +1750,17 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 5)
 
+    # Add comment text to save dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+
+    # Click save button under dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
+    time.sleep(defaultSleepTimeValue * 5)
+
     # Click on Mobile Terminals Sub tab ---TEMP---
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
@@ -2264,7 +2275,19 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    time.sleep(defaultSleepTimeValue * 5)
+
+    # Add comment text to save dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+
+    # Click save button under dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
+
 
 
 def link_asset_and_mobile_terminal(self, mobileTerminalNumber):
@@ -3098,6 +3121,19 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 5)
+
+    # Add comment text to save dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+
+    # Click save button under dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
+    time.sleep(defaultSleepTimeValue * 5)
+
+
     # NOTE: ACTIVATION OF mt DISABLED. ACTIVATION OF MT NEEDS REWORK IN THESE SELENIUM SUITES TO WORK AFTER FRONTEND RELEASE 0.11.2
     # Click on button to activate Active if value is set 1
     #if parameterRow[14] == "1":
@@ -3212,7 +3248,21 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    time.sleep(defaultSleepTimeValue * 5)
+
+    # Add comment text to save dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+
+    # Click save button under dialog
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
+
+
+
 
 
 def create_addtional_channels_for_mobileterminals_from_file(self, channelFileName, linkFileName, ircsTrueCfrFalse, referenceDateTime):
@@ -3795,7 +3845,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Set UTC time zone in the new Frontend
         select_UTC_time(self)
-
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -5940,31 +5989,44 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check Asset Name
             wait_for_element_by_css_selector_to_exist(wait, "map-right-column .content-container span", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
+            tempString = assetAllrows1[0][1] + " — " + assetAllrows1[0][3]
+            self.assertEqual(tempString, self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
             allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
+
             # Check IRCS
             self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
+            # Check vessel Type
+            self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
-            # Check Speed
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", allAssetElements[2].text)
-            # Check Course
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[3].text)
             # Check Flag state
             self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
             # Check Ext Marking
             self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
             # Check asset Length
             self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[6].text)
-            # Check vessel Type
-            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[7].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[8].text)
+
+
+            # Get all Position elements in a list from GUI
+            allAssetElements3 = self.driver.find_elements_by_css_selector(".asset-information .position-fields div")
+
+            print("-----allAssetElements3-----")
+            for x in range(len(allAssetElements3)):
+                print(str(x) + " " + allAssetElements3[x].text)
+                print("--------------------")
+
+            # Check Speed
+            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", self.driver.find_element_by_css_selector(".asset-information .position-fields div").text)
+            # Check Course
+            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), self.driver.find_element_by_css_selector(".asset-information .position-fields div ~ div").text)
+
 
             # Activate tracks
             wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mat-checkbox-inner-container", "CSS Selector checked 12")
@@ -6111,31 +6173,43 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check Asset Name
             wait_for_element_by_css_selector_to_exist(wait, "map-right-column .content-container span", "CSS Selector checked 10")
             time.sleep(defaultSleepTimeValue)
-            self.assertEqual(assetAllrows1[0][1], self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
+            tempString = assetAllrows1[0][1] + " — " + assetAllrows1[0][3]
+            self.assertEqual(tempString, self.driver.find_element_by_css_selector("map-right-column .content-container span").text)
             time.sleep(defaultSleepTimeValue)
 
             # Get all asset elements in a list from GUI
             allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
+
             # Check IRCS
             self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
+            # Check vessel Type
+            self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[1].text)
-            # Check Speed
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", allAssetElements[2].text)
-            # Check Course
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), allAssetElements[3].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[3].text)
             # Check Flag state
             self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
             # Check Ext Marking
             self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
             # Check asset Length
             self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[6].text)
-            # Check vessel Type
-            self.assertEqual(assetAllrows1[0][24], allAssetElements[7].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[8].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[7].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[9].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[8].text)
+
+
+            # Get all Position elements in a list from GUI
+            allAssetElements3 = self.driver.find_elements_by_css_selector(".asset-information .position-fields div")
+
+            print("-----allAssetElements3-----")
+            for x in range(len(allAssetElements3)):
+                print(str(x) + " " + allAssetElements3[x].text)
+                print("--------------------")
+
+            # Check Speed
+            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", self.driver.find_element_by_css_selector(".asset-information .position-fields div").text)
+            # Check Course
+            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), self.driver.find_element_by_css_selector(".asset-information .position-fields div ~ div").text)
 
 
             # Activate tracks
