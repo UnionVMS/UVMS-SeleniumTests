@@ -5996,22 +5996,30 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Get all asset elements in a list from GUI
             allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
 
+            print("--------allAssetElements----------")
+            for x in range(len(allAssetElements)):
+                print(str(x) + " " + allAssetElements[x].text)
+
+            print("--------assetAllrows1----------")
+            for x in range(len(assetAllrows1[0])):
+                print(str(x) + " " + assetAllrows1[0][x])
+
             # Check IRCS
             self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[3].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[13].text)
             # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
+            self.assertEqual(assetAllrows1[0][17], allAssetElements[14].text)
             # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
+            self.assertEqual(assetAllrows1[0][3], allAssetElements[15].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[6].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[16].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[7].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[17].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[8].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[18].text)
 
 
             # Get all Position elements in a list from GUI
@@ -6023,9 +6031,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
                 print("--------------------")
 
             # Check Speed
-            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", self.driver.find_element_by_css_selector(".asset-information .position-fields div").text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][3])) + " kn", allAssetElements3[0].text)
             # Check Course
-            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), self.driver.find_element_by_css_selector(".asset-information .position-fields div ~ div").text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][4])), allAssetElements3[1].text)
 
 
             # Activate tracks
@@ -6180,22 +6188,30 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Get all asset elements in a list from GUI
             allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
 
+            print("--------allAssetElements----------")
+            for x in range(len(allAssetElements)):
+                print(str(x) + " " + allAssetElements[x].text)
+
+            print("--------assetAllrows1----------")
+            for x in range(len(assetAllrows1[0])):
+                print(str(x) + " " + assetAllrows1[0][x])
+
             # Check IRCS
             self.assertEqual(assetAllrows1[0][0], allAssetElements[0].text)
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[3].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[13].text)
             # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[4].text)
+            self.assertEqual(assetAllrows1[0][17], allAssetElements[14].text)
             # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[5].text)
+            self.assertEqual(assetAllrows1[0][3], allAssetElements[15].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[6].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[16].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[7].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[17].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[8].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[18].text)
 
 
             # Get all Position elements in a list from GUI
@@ -6207,9 +6223,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
                 print("--------------------")
 
             # Check Speed
-            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][3])) + " kn", self.driver.find_element_by_css_selector(".asset-information .position-fields div").text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][3])) + " kn", allAssetElements3[0].text)
             # Check Course
-            #self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1)-1][4])), self.driver.find_element_by_css_selector(".asset-information .position-fields div ~ div").text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][4])), allAssetElements3[1].text)
 
 
             # Activate tracks
@@ -9337,6 +9353,9 @@ class UnionVMSTestCaseSpecial(unittest.TestCase):
             time.sleep(defaultSleepTimeValue)
             create_one_new_mobile_terminal_via_asset_tab_g2(self, x, x)
             time.sleep(1)
+            # Reload page
+            self.driver.refresh()
+
 
 
     # Create Special Asset for Prod
