@@ -1713,6 +1713,12 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[mobileTerminalNumber])
+    # Click on button to activate Poll, Config, Default
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 12")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Enter DNID Number
     wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 14")
     time.sleep(defaultSleepTimeValue)
@@ -1721,12 +1727,6 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
     # Enter Channel Name
     self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-input-element").send_keys(channelName[mobileTerminalNumber])
-    # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 12")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
     # Enter Start Date/Time based on deltaTimeBigValue (Channel Start DateTime)
     tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
     self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
@@ -3248,7 +3248,20 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
-    time.sleep(defaultSleepTimeValue * 5)
+    time.sleep(defaultSleepTimeValue * 10)
+
+    # Check if Warning sign popup window appears. If popup windows appears then click on "save anyway" button else skip
+    try:
+        print("---Try Warning sign popup Window---")
+        print(self.driver.find_element_by_css_selector(".mat-dialog-title").text)
+        if self.driver.find_element_by_css_selector(".mat-dialog-title").text == "Warning!":
+            print("---Found Warning sign popup Window---")
+            time.sleep(defaultSleepTimeValue * 10)
+            self.driver.find_element_by_css_selector(".mat-dialog-actions .mat-focus-indicator ~ .mat-focus-indicator .mat-button-wrapper").click()
+            time.sleep(defaultSleepTimeValue * 10)
+    except:
+        pass
+
 
     # Add comment text to save dialog
     wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
