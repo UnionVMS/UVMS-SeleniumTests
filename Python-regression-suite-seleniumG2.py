@@ -991,6 +991,18 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     wait_for_element_by_css_selector_to_exist(wait, "asset-show a", "CSS Selector checked 5b")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("asset-show a").click()
+
+    # NOTE: Order changed, because of Gross Tonnage Unit needs to be edit first. Otherwise the test case hangs and fails.
+    # Gross Tonnage Unit
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--grossTonnage mat-select .mat-select-arrow-wrapper", "CSS Selector checked 5b")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage mat-select .mat-select-arrow-wrapper").click()
+    print("It comes to this grossTonnage!!!")
+    time.sleep(defaultSleepTimeValue * 5)
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + grossTonnageTypeValue[newVesselNumber], "CSS Selector checked 5c")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector("#mat-option-" + grossTonnageTypeValue[newVesselNumber]).click()
+
     # Select F.S value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -999,53 +1011,75 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("mat-option-" + countryValue[newVesselNumber]).click()
     # Enter IRCS value
-    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5")
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5a")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("#asset-form--ircs input").clear()
     self.driver.find_element_by_css_selector("#asset-form--ircs input").send_keys(ircsValue[newVesselNumber])
+    print("It comes to this ircs!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Enter Name value
     self.driver.find_element_by_css_selector("#asset-form--name input").clear()
     self.driver.find_element_by_css_selector("#asset-form--name input").send_keys(vesselName[newVesselNumber])
+    print("It comes to this name!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Enter External Marking Value
     self.driver.find_element_by_css_selector("#asset-form--externalMarking input").clear()
     self.driver.find_element_by_css_selector("#asset-form--externalMarking input").send_keys(externalMarkingValue[newVesselNumber])
+    print("It comes to this externalMarking!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Enter CFR Value
     self.driver.find_element_by_css_selector("#asset-form--cfr input").clear()
     self.driver.find_element_by_css_selector("#asset-form--cfr input").send_keys(cfrValue[newVesselNumber])
+    print("It comes to this cfr!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Enter IMO Value
     self.driver.find_element_by_css_selector("#asset-form--imo input").clear()
     self.driver.find_element_by_css_selector("#asset-form--imo input").send_keys(imoValue[newVesselNumber])
+    print("It comes to this imo!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Enter HomePort Value
     self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").clear()
     self.driver.find_element_by_css_selector("#asset-form--portOfRegistration input").send_keys(homeportValue[newVesselNumber])
+    print("It comes to this portOfRegistration!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Enter MMSI Value
     self.driver.find_element_by_css_selector("#asset-form--mmsi input").clear()
     self.driver.find_element_by_css_selector("#asset-form--mmsi input").send_keys(mmsiValue[newVesselNumber])
+    print("It comes to this mmsi!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Length of all Value
     self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").clear()
     self.driver.find_element_by_css_selector("#asset-form--lengthOverAll input").send_keys(lengthOverAllValue[newVesselNumber])
+    print("It comes to this lengthOverAll!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Length between Perpendiculars Value (lengthBetweenPerpendiculars)
     self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").clear()
     self.driver.find_element_by_css_selector("#asset-form--lengthBetweenPerpendiculars input").send_keys(lengthBetweenPerpendicularsValue[newVesselNumber])
-    # Gross Tonnage Value
-    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").clear()
-    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(grossTonnageValue[newVesselNumber])
-    # Gross Tonnage Unit
-    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--grossTonnage mat-select", "CSS Selector checked 5")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#asset-form--grossTonnage mat-select").click()
-    wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + grossTonnageTypeValue[newVesselNumber], "CSS Selector checked 5")
-    time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mat-option-" + grossTonnageTypeValue[newVesselNumber]).click()
+    print("It comes to this lengthBetweenPerpendiculars!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Main Power Value
     self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").clear()
     self.driver.find_element_by_css_selector("#asset-form--powerOfMainEngine input").send_keys(powerValue[newVesselNumber])
+    print("It comes to this powerOfMainEngine!!!")
+    time.sleep(defaultSleepTimeValue * 5)
     # Main Producer Name Value
     self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").clear()
     self.driver.find_element_by_css_selector("#asset-form--prodOrgName input").send_keys(productOrgNameValue[newVesselNumber])
+    print("It comes to this prodOrgName!!!")
+    print(productOrgNameValue[newVesselNumber])
+    time.sleep(defaultSleepTimeValue * 5)
     # Main Producer Code Value
     self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").clear()
     self.driver.find_element_by_css_selector("#asset-form--prodOrgCode input").send_keys(productOrgCodeValue[newVesselNumber])
+    print("It comes to this prodOrgCode!!!")
+    print(productOrgCodeValue[newVesselNumber])
+    time.sleep(defaultSleepTimeValue * 5)
+    # Gross Tonnage Value
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").clear()
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage input").send_keys(grossTonnageValue[newVesselNumber])
+    print("It comes to this grossTonnageValue!!!")
+    time.sleep(defaultSleepTimeValue * 5)
+
     # Click on Save button
     wait_for_element_by_id_to_exist(wait, "asset-form--save", "asset-form--save checked 6")
     time.sleep(defaultSleepTimeValue)
@@ -1687,6 +1721,7 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("mobile-terminal-form--mobileTerminalType").click()
+    time.sleep(defaultSleepTimeValue)
     # Select Inmarsat-C system
     wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
