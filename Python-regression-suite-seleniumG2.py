@@ -854,9 +854,9 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     # Check contact parameters if checkContacts is TRUE
     if checkContacts == True:
         # Click on Contacts tab
-        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(6) .text", "CSS Selector checked 8")
+        wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(8) .text", "CSS Selector checked 8")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_css_selector(".side-menu li:nth-child(6) .text").click()
+        self.driver.find_element_by_css_selector(".side-menu li:nth-child(8) .text").click()
         # Get all contacts elements from the Asset table list and save them in allContactsElements list
         wait_for_element_by_css_selector_to_exist(wait, "contact-show-by-asset-page .field-wrapper div", "CSS Selector checked 9")
         time.sleep(defaultSleepTimeValue)
@@ -1689,9 +1689,9 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(7) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
@@ -1892,9 +1892,9 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     time.sleep(defaultSleepTimeValue * 10)
     # Click on Mobile terminal tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(7) .text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
@@ -2266,9 +2266,9 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(7) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
@@ -3070,9 +3070,9 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(7) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
@@ -3205,9 +3205,9 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").click()
     # Click on Mobile Terminals tab
-    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(5) .text", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".side-menu li:nth-child(7) .text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".side-menu li:nth-child(5) .text").click()
+    self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
     wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
