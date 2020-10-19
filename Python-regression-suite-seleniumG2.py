@@ -3710,9 +3710,9 @@ def select_UTC_time(self):
     self.driver.find_element_by_css_selector(".timezone-selector .mat-select-value").click()
     time.sleep(defaultSleepTimeValue)
     # Select Etc-UTC Time zone
-    wait_for_element_by_css_selector_to_exist(wait, "#mat-option--timezone-Etc-UTC .mat-option-text", "CSS Selector checked 2")
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-option--timezone-UTC .mat-option-text", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mat-option--timezone-Etc-UTC .mat-option-text").click()
+    self.driver.find_element_by_css_selector("#mat-option--timezone-UTC .mat-option-text").click()
 
 
 def click_on_flag_state_in_list_tab(self, flagStates):
@@ -6057,17 +6057,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[13].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[12].text)
             # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[14].text)
+            self.assertEqual(assetAllrows1[0][17], allAssetElements[13].text)
             # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[15].text)
+            self.assertEqual(assetAllrows1[0][3], allAssetElements[14].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[16].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[15].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[17].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[16].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[18].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[17].text)
 
 
             # Get all Position elements in a list from GUI
@@ -6249,17 +6249,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[13].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetElements[12].text)
             # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[14].text)
+            self.assertEqual(assetAllrows1[0][17], allAssetElements[13].text)
             # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[15].text)
+            self.assertEqual(assetAllrows1[0][3], allAssetElements[14].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[16].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[15].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[17].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetElements[16].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[18].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetElements[17].text)
 
 
             # Get all Position elements in a list from GUI
