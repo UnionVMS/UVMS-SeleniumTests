@@ -1791,9 +1791,9 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 5)
 
     # Click on Mobile Terminals Sub tab ---TEMP---
@@ -2318,9 +2318,9 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -3163,9 +3163,9 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 5)
 
 
@@ -3297,16 +3297,15 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     except:
         pass
 
-
     # Add comment text to save dialog
     wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-button ~ .mat-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
