@@ -3815,6 +3815,21 @@ def activate_map_default_settings(self):
     self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
 
 
+def activate_experimental_features_default_settings(self):
+    # Set wait time for web driver
+    wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    # Click on My settings
+    click_on_map_default_settings(self)
+    # Activate experimental features setting
+    wait_for_element_by_css_selector_to_exist(wait, ".user-settings .mat-slide-toggle", "CSS Selector checked 6")
+    time.sleep(defaultSleepTimeValue)
+    self.driver.find_element_by_css_selector(".user-settings .mat-slide-toggle").click()
+    time.sleep(defaultSleepTimeValue)
+    # Click on "Save settings" button
+    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+
+
+
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -3892,6 +3907,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Set UTC time zone in the new Frontend
         select_UTC_time(self)
+        # Activate experimental features
+        activate_experimental_features_default_settings(self)
+        time.sleep(defaultSleepTimeValue * 10)
 
 
     @timeout_decorator.timeout(seconds=180)
