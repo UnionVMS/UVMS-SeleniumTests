@@ -6061,9 +6061,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Get all asset elements in a list from GUI
             allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
 
+            # Get all asset elements (Other fields) in a list from GUI
+            allAssetOtherFieldsElements = self.driver.find_elements_by_css_selector(".asset-information--other-fields div")
+
+
             print("--------allAssetElements----------")
             for x in range(len(allAssetElements)):
                 print(str(x) + " " + allAssetElements[x].text)
+
+            print("--------allAssetOtherFieldsElements----------")
+            for x in range(len(allAssetOtherFieldsElements)):
+                print(str(x) + " " + allAssetOtherFieldsElements[x].text)
 
             print("--------assetAllrows1----------")
             for x in range(len(assetAllrows1[0])):
@@ -6074,17 +6082,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[12].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetOtherFieldsElements[0].text)
             # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[13].text)
+            self.assertEqual(assetAllrows1[0][17], allAssetOtherFieldsElements[1].text)
             # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[14].text)
+            self.assertEqual(assetAllrows1[0][3], allAssetOtherFieldsElements[2].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[15].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetOtherFieldsElements[3].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[16].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetOtherFieldsElements[4].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[17].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetOtherFieldsElements[5].text)
 
 
             # Get all Position elements in a list from GUI
@@ -6253,9 +6261,16 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Get all asset elements in a list from GUI
             allAssetElements = self.driver.find_elements_by_css_selector(".asset-information div")
 
+            # Get all asset elements (Other fields) in a list from GUI
+            allAssetOtherFieldsElements = self.driver.find_elements_by_css_selector(".asset-information--other-fields div")
+
             print("--------allAssetElements----------")
             for x in range(len(allAssetElements)):
                 print(str(x) + " " + allAssetElements[x].text)
+
+            print("--------allAssetOtherFieldsElements----------")
+            for x in range(len(allAssetOtherFieldsElements)):
+                print(str(x) + " " + allAssetOtherFieldsElements[x].text)
 
             print("--------assetAllrows1----------")
             for x in range(len(assetAllrows1[0])):
@@ -6266,17 +6281,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check vessel Type
             self.assertEqual(assetAllrows1[0][24], allAssetElements[1].text)
             # Check MMSI
-            self.assertEqual(assetAllrows1[0][5], allAssetElements[12].text)
+            self.assertEqual(assetAllrows1[0][5], allAssetOtherFieldsElements[0].text)
             # Check Flag state
-            self.assertEqual(assetAllrows1[0][17], allAssetElements[13].text)
+            self.assertEqual(assetAllrows1[0][17], allAssetOtherFieldsElements[1].text)
             # Check Ext Marking
-            self.assertEqual(assetAllrows1[0][3], allAssetElements[14].text)
+            self.assertEqual(assetAllrows1[0][3], allAssetOtherFieldsElements[2].text)
             # Check asset Length
-            self.assertEqual(assetAllrows1[0][9] + " m", allAssetElements[15].text)
+            self.assertEqual(assetAllrows1[0][9] + " m", allAssetOtherFieldsElements[3].text)
             # Check Org name
-            self.assertEqual(assetAllrows1[0][13], allAssetElements[16].text)
+            self.assertEqual(assetAllrows1[0][13], allAssetOtherFieldsElements[4].text)
             # Check Producer Name
-            self.assertEqual(assetAllrows1[0][12], allAssetElements[17].text)
+            self.assertEqual(assetAllrows1[0][12], allAssetOtherFieldsElements[5].text)
 
 
             # Get all Position elements in a list from GUI
