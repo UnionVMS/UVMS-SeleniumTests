@@ -78,7 +78,6 @@ def startup_browser_and_login_to_unionVMS(self):
     print("The http URL is: " + httpUnionVMSurlString)
     time.sleep(2)
 
-
     # if Hav och vatten proxy page is presented, then autologin
     try:
         if self.driver.find_element_by_xpath("/html/head/title"):
