@@ -6106,7 +6106,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check Speed
             self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][3])) + " kn", allAssetElements3[0].text)
             # Check Course
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][4])), allAssetElements3[1].text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][4])) + "°" , allAssetElements3[1].text)
 
 
             # Activate tracks
@@ -6305,7 +6305,7 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             # Check Speed
             self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][3])) + " kn", allAssetElements3[0].text)
             # Check Course
-            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][4])), allAssetElements3[1].text)
+            self.assertEqual(str("%.2f" % float(assetTripAllrows1[len(assetTripAllrows1) - 1][4])) + "°" , allAssetElements3[1].text)
 
 
             # Activate tracks
