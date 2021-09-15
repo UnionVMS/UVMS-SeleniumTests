@@ -164,6 +164,7 @@ appServerName = "localhost"
 dbServerName = "db71u"
 hostdbServerName = "localhost"
 
+httpHavProxyString = ''
 httpNationalServiceEndpointString = 'http://osbutv.havochvatten.se:8011/esb/Vessel/v2?wsdl'
 httpNAFRequestString = "http://" + appServerName + ":28080/naf/rest/message/"
 httpUnionVMSurlString = "http://" + appServerName + ":28080/unionvms/"

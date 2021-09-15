@@ -38,6 +38,7 @@ import json
 
 
 # Import parameters from parameter file
+from DockerUnionVMSparametersG2 import httpHavProxyString
 from UnionVMSparametersG2 import *
 
 if platform.system() == "Windows":
@@ -811,7 +812,7 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     self.assertEqual(vesselName[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-name").text)
     self.assertEqual(ircsValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-ircs").text)
     self.assertEqual(mmsiValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-mmsi").text)
-    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-flagstate").text)
+    self.assertEqual(countryValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-flagStateCode").text)
     self.assertEqual(externalMarkingValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-externalMarking").text)
     self.assertEqual(cfrValue[vesselNumber], self.driver.find_element_by_css_selector(".asset-table tbody tr:first-child .cdk-column-cfr").text)
     # Click on details button for new asset
