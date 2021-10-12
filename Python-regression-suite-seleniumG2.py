@@ -38,7 +38,6 @@ import json
 
 
 # Import parameters from parameter file
-from DockerUnionVMSparametersG2 import httpHavProxyString
 from UnionVMSparametersG2 import *
 
 if platform.system() == "Windows":
@@ -969,9 +968,6 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
 def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    click_on_real_time_tab(self)
-    # Enable experiment features for edit link
-    activate_experimental_features_default_settings(self)
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
@@ -5515,7 +5511,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (7th in the list)
         create_one_new_asset_via_rest_g2(6)
+        # Refresh page (To reset cache)
+        self.driver.refresh()
+        time.sleep(defaultSleepTimeValue * 10)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 6, 6)
+
 
 
     @timeout_decorator.timeout(seconds=180)
@@ -5558,6 +5558,19 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0047_create_modify_and_check_asset_history(self):
+        # Click on real time tab
+        click_on_real_time_tab(self)
+        # Create new asset (34th in the list)
+        create_one_new_asset_via_rest_g2(34)
+        # Refresh page (To reset cache)
+        self.driver.refresh()
+        time.sleep(defaultSleepTimeValue * 10)
+        # Check new asset (34th in the list)
+        check_new_asset_exists_g2(self, 34)
+        # Refresh page
+        self.driver.refresh()
+        # Add the used vesselNumbers to a vesselNumberList
+        #vesselNumberList = [34]
         # Add secondContactVesselNumberList (Not used here)
         #secondContactVesselNumberList = [0]
         # Check asset start values
@@ -5610,6 +5623,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (36th in the list)
         create_one_new_asset_via_rest_g2(35)
+        # Refresh page (To reset cache)
+        self.driver.refresh()
+        time.sleep(defaultSleepTimeValue * 10)
         # Create new Mobile Terminal (36th in the list)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 35, 35)
         # Refresh page
@@ -6683,10 +6699,16 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (38th and 39th in the list)
         create_one_new_asset_via_rest_g2(37)
+        # Refresh page (To reset cache)
+        self.driver.refresh()
+        time.sleep(defaultSleepTimeValue * 10)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 37, 37)
         # Refresh page
         self.driver.refresh()
         create_one_new_asset_via_rest_g2(38)
+        # Refresh page (To reset cache)
+        self.driver.refresh()
+        time.sleep(defaultSleepTimeValue * 10)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 38, 38)
 
 
@@ -7395,6 +7417,9 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create new asset (35th in the list)
         create_one_new_asset_via_rest_g2(34)
+        # Refresh page (To reset cache)
+        self.driver.refresh()
+        time.sleep(defaultSleepTimeValue * 10)
         create_one_new_mobile_terminal_via_asset_tab_g2(self, 34, 34)
 
 

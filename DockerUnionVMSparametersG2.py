@@ -164,15 +164,38 @@ appServerName = "localhost"
 dbServerName = "db71u"
 hostdbServerName = "localhost"
 
-httpHavProxyString = ''
+# appServerName = "liaswf05p"
+# dbServerName = "db71p"
+# hostdbServerName = "livmdb71p"
+
+# appServerName = "liaswf05t"
+# dbServerName = "db71t"
+# hostdbServerName = "livmdb71t"
+
+# appServerName = "liaswf05u"
+# dbServerName = "unionvmsdev"
+# hostdbServerName = "livmdb71u"
+
+# appServerName = "localhost"
+# dbServerName = "db71u"
+# hostdbServerName = "localhost"
+
 httpNationalServiceEndpointString = 'http://osbutv.havochvatten.se:8011/esb/Vessel/v2?wsdl'
 httpNAFRequestString = "http://" + appServerName + ":28080/naf/rest/message/"
 httpUnionVMSurlString = "http://" + appServerName + ":28080/unionvms/"
 httpRealMapUrlString = "http://" + appServerName + ":28080/"
 httpUSMUrlString = "http://" + appServerName + ":28080/unionvms/usm-administration/rest/authenticate"
 httpUrlRestAssetString = "http://" + appServerName + ":28080/unionvms/asset/rest/asset"
-connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'" + " port='25432'"
-dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":25432/" + dbServerName
+httpHavProxyString = "http://" + appServerName + ":28080/unionvms/hav-vessel-proxy-cache/rest/vessel"
+connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'"
+if hostdbServerName == "localhost":
+    connectToDatabaseString = "dbname='"+ dbServerName + "' user='postgres' host='" + hostdbServerName + "' password='postgres'" + " port='25432'"
+
+dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":5432/" + dbServerName
+if hostdbServerName == "localhost":
+    dbURLjdbcString = "-Ddb.url=jdbc:postgresql://" + hostdbServerName + ":25432/" + dbServerName
+
+
 
 sourceValue= ('NAF', 'MANUAL')
 groupName = ("Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6")
@@ -204,7 +227,6 @@ referenceDateTimeFileName = ('referenceDateTime1.csv', 'referenceDateTime2.csv',
 tests200FileName = ['assets2xxxxG2.csv', 'mobileterminals2xxxxG2.csv', 'linkassetmobileterminals2xxxxG2.csv']
 tests300FileName = ['assets3xxxxG2.csv', 'mobileterminals3xxxxG2.csv', 'linkassetmobileterminals3xxxxG2.csv', 'channelstomobileterminals3xxxxG2.csv', 'channelstomobileterminals3bxxxG2.csv']
 tests900FileName = ['assetsALLxxG2.csv', 'mobileterminalsALLxxG2.csv', 'linkassetmobileterminalsALLxxG2.csv', 'channelstomobileterminalsALLxxG2.csv', 'channelstomobileterminalALLxxxG2.csv']
-
 
 defaultSystemName = "UVMS"
 defaultNAFName = "NAF"
