@@ -969,6 +969,9 @@ def check_asset_history_list(self, vesselNumberList, secondContactVesselNumberLi
 def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
+    click_on_real_time_tab(self)
+    # Enable experiment features for edit link
+    activate_experimental_features_default_settings(self)
     # Click on asset tab
     wait_for_element_by_link_text_to_exist(wait, "Assets", "Link Text Assets checked 2")
     time.sleep(defaultSleepTimeValue)
@@ -3784,7 +3787,6 @@ def click_on_map_default_settings(self):
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_link_text("My Settings").click()
 
-
 def activate_one_map_default_settings(self, settingNumberValue):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -5556,16 +5558,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
     @timeout_decorator.timeout(seconds=180)
     def test_0047_create_modify_and_check_asset_history(self):
-        # Click on real time tab
-        click_on_real_time_tab(self)
-        # Create new asset (34th in the list)
-        create_one_new_asset_via_rest_g2(34)
-        # Check new asset (34th in the list)
-        check_new_asset_exists_g2(self, 34)
-        # Refresh page
-        self.driver.refresh()
-        # Add the used vesselNumbers to a vesselNumberList
-        #vesselNumberList = [34]
         # Add secondContactVesselNumberList (Not used here)
         #secondContactVesselNumberList = [0]
         # Check asset start values
