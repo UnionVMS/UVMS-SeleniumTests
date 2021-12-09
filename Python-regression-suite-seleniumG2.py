@@ -847,9 +847,9 @@ def check_new_asset_exists_g2(self, vesselNumber, checkContacts=True):
     # Check that the Power value is correct.
     self.assertEqual(powerValue[vesselNumber], allElements[9].text)
     # Check that the Length Type over all value is correct.
-    self.assertEqual(lengthOverAllValue[vesselNumber], allElements[10].text)
+    self.assertEqual(lengthOverAllValue[vesselNumber] + " m", allElements[10].text)
     # Check that the Length Type between perpendiculars value is correct.
-    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber], allElements[11].text)
+    self.assertEqual(lengthBetweenPerpendicularsValue[vesselNumber] + " m", allElements[11].text)
     # Check contact parameters if checkContacts is TRUE
     if checkContacts == True:
         # Click on Contacts tab
@@ -1003,12 +1003,12 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
     self.driver.find_element_by_css_selector("#mat-option-" + grossTonnageTypeValue[newVesselNumber]).click()
 
     # Select F.S value
-    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagstate mat-select", "CSS Selector checked 3")
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--flagStateCode mat-select", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#asset-form--flagstate mat-select").click()
-    wait_for_element_by_id_to_exist(wait, "mat-option-" + countryValue[newVesselNumber], "mat-option-COUNTRY checked 4")
+    self.driver.find_element_by_css_selector("#asset-form--flagStateCode mat-select").click()
+    wait_for_element_by_id_to_exist(wait, "mat-option-" + countryValue[newVesselNumber] + " " + countryValueFull[newVesselNumber], "mat-option-COUNTRY checked 4")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_id("mat-option-" + countryValue[newVesselNumber]).click()
+    self.driver.find_element_by_id("mat-option-" + countryValue[newVesselNumber] + " " + countryValueFull[newVesselNumber]).click()
     # Enter IRCS value
     wait_for_element_by_css_selector_to_exist(wait, "#asset-form--ircs input", "CSS Selector checked 5a")
     time.sleep(defaultSleepTimeValue)
@@ -1782,7 +1782,7 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
-    time.sleep(defaultSleepTimeValue * 5)
+    time.sleep(defaultSleepTimeValue * 10)
 
     # Add comment text to save dialog
     wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
