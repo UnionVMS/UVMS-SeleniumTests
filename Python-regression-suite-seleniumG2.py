@@ -38,7 +38,7 @@ import json
 
 
 # Import parameters from parameter file
-from UnionVMSparametersG2 import *
+from DockerUnionVMSparametersG2 import *
 
 if platform.system() == "Windows":
     # Set environment variable HOME to the value of USERPROFILE
@@ -7230,6 +7230,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality has been removed!")  # Test Case disabled because functionality has been removed!
     def test_0050_create_user_area(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7293,6 +7294,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality has been removed!")  # Test Case disabled because functionality has been removed!
     def test_0051_create_user_area_rule_one(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7412,6 +7414,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality has been removed!")  # Test Case disabled because functionality has been removed!
     def test_0052_create_one_new_asset_and_mobile_terminal_34(self):
         # Click on real time tab
         click_on_real_time_tab(self)
@@ -7424,6 +7427,7 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality has been removed!")  # Test Case disabled because functionality has been removed!
     def test_0053_generate_NAF_position_that_not_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
@@ -7467,12 +7471,14 @@ class UnionVMSTestCaseRulesG2(unittest.TestCase):
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality has been removed!")  # Test Case disabled because functionality has been removed!
     def test_0053b_delay_one_minute(self):
         # Delay test case to secure minute change between generated NAF messages. Otherwise the MAF messages can be interpreted as duplicated messages.
         time.sleep(60)
 
 
     @timeout_decorator.timeout(seconds=180)
+    @unittest.skip("Test Case disabled because functionality has been removed!")  # Test Case disabled because functionality has been removed!
     def test_0054_generate_NAF_position_that_triggs_rule(self):
         # Set wait time for web driver
         wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
