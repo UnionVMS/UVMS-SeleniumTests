@@ -59,7 +59,9 @@ def startup_browser_and_login_to_unionVMS(self):
     # Start Chrome browser
     if platform.system() == "Windows":
         print("Windows Environment")
-        self.driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-search-engine-choice-screen")
+        self.driver = webdriver.Chrome(options=options)
     else:
         print("Linux Environment with headless chrome active")
         options = webdriver.ChromeOptions()
