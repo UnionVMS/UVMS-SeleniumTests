@@ -995,9 +995,9 @@ def modify_one_new_asset_from_gui_g2(self, oldVesselNumber, newVesselNumber):
 
     # NOTE: Order changed, because of Gross Tonnage Unit needs to be edit first. Otherwise the test case hangs and fails.
     # Gross Tonnage Unit
-    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--grossTonnage mat-select .mat-select-arrow-wrapper", "CSS Selector checked 5b")
+    wait_for_element_by_css_selector_to_exist(wait, "#asset-form--grossTonnage mat-select .mat-mdc-select-arrow-wrapper", "CSS Selector checked 5b")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#asset-form--grossTonnage mat-select .mat-select-arrow-wrapper").click()
+    self.driver.find_element_by_css_selector("#asset-form--grossTonnage mat-select .mat-mdc-select-arrow-wrapper").click()
     print("It comes to this grossTonnage!!!")
     time.sleep(defaultSleepTimeValue * 5)
     wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + grossTonnageTypeValue[newVesselNumber], "CSS Selector checked 5c")
@@ -1695,9 +1695,9 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+    self.driver.find_element_by_css_selector(".mdc-tab__content").click()
 
 
     # Click on attach button for new mobile terminal
@@ -1705,18 +1705,18 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     time.sleep(defaultSleepTimeValue * 2)
     self.driver.find_element_by_css_selector("#mobile-terminal-show--attach").click()
     # Enter serial number
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-input-element", "CSS Selector checked 9")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-input-element").send_keys(serialNoValue[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".mat-mdc-input-element").send_keys(serialNoValue[mobileTerminalNumber])
     # Click on search button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".search-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 5)
-    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".search-button-wrapper").click()
     time.sleep(defaultSleepTimeValue)
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, "[name=create] .mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, "[name=create] .mdc-button__label", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 5)
-    self.driver.find_element_by_css_selector("[name=create] .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("[name=create] .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue)
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
@@ -1724,89 +1724,89 @@ def create_one_new_mobile_terminal_via_asset_tab_g2(self, mobileTerminalNumber, 
     self.driver.find_element_by_id("mobile-terminal-form--mobileTerminalType").click()
     time.sleep(defaultSleepTimeValue)
     # Select Inmarsat-C system
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-option", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-option-text").click()
+    self.driver.find_element_by_css_selector(".mat-mdc-option").click()
     # Enter Transceiver type
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-input-element").send_keys(transceiverType[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-mdc-input-element").send_keys(transceiverType[mobileTerminalNumber])
     # Enter Software Version
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-input-element").send_keys(softwareVersion)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-mdc-input-element").send_keys(softwareVersion)
     # Enter Antenna
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(antennaVersion)
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-mdc-input-element").send_keys(antennaVersion)
     # Enter Satellite Number
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(satelliteNumber[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-mdc-input-element").send_keys(satelliteNumber[mobileTerminalNumber])
     # Enter Start Date/Time based on deltaTimeBigValue (Installed on)
     tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
-    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").clear()
-    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker .mat-mdc-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Enter Stop Date/Time based on deltaTimeBigValue (Uninstalled on)
     tempTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
-    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
-    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector("[formgroupname=mobileTerminalFields] ngx-datetime-picker ~ ngx-datetime-picker .mat-mdc-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(installedByName)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-mdc-input-element").send_keys(installedByName)
     # Enter Land station
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 13")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-lesDescription .mat-mdc-input-element", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-mdc-input-element").send_keys(landStation[mobileTerminalNumber])
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mdc-checkbox").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mdc-checkbox").click()
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 14")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-mdc-input-element", "CSS Selector checked 14")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-mdc-input-element").send_keys(dnidNumber[mobileTerminalNumber])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-mdc-input-element").send_keys(memberIdnumber[mobileTerminalNumber])
     # Enter Channel Name
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-input-element").send_keys(channelName[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-mdc-input-element").send_keys(channelName[mobileTerminalNumber])
     # Enter Start Date/Time based on deltaTimeBigValue (Channel Start DateTime)
     tempTimeValue = referenceDateTime - datetime.timedelta(hours=deltaTimeBigValue)
-    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker .mat-mdc-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Enter Stop Date/Time based on deltaTimeBigValue (Channel Stop DateTime)
     tempTimeValue = referenceDateTime + datetime.timedelta(hours=deltaTimeBigValue)
-    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels ngx-datetime-picker ~ ngx-datetime-picker .mat-mdc-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Expected frequency
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").send_keys(expectedFrequencyMinutes)
     # Grace period
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").send_keys(gracePeriodFrequencyMinutes)
     # In port
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
-    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 10)
 
     # Add comment text to save dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-input-element", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 5)
 
     # Click on Mobile Terminals Sub tab ---TEMP---
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+    self.driver.find_element_by_css_selector(".mdc-tab__content").click()
 
     # Click on button to activate Active if value is set 1
     if activeState[mobileTerminalNumber] == "1":
-        wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle-bar", "CSS Selector checked 16")
+        wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-slide-toggle", "CSS Selector checked 16")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_css_selector(".mat-slide-toggle-bar").click()
+        self.driver.find_element_by_css_selector(".mat-mdc-slide-toggle").click()
     time.sleep(defaultSleepTimeValue * 5)
     # Save referenceDateTime to file
     save_elements_to_file(referenceDateTimeFileName[2], referenceDateTime, True)
@@ -1898,9 +1898,9 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+    self.driver.find_element_by_css_selector(".mdc-tab__content").click()
 
     # Get all elements from the Mobile Terminal table list and save them in allElements list
     wait_for_element_by_css_selector_to_exist(wait, ".mobileTerminal div .value", "CSS Selector checked 7")
@@ -1954,31 +1954,31 @@ def check_new_mobile_terminal_exists_via_asset_tab_g2(self, mobileTerminalNumber
     self.assertEqual(inPortFrequencyMinutes + " min", allChannelElements[11].text)
     # Check if Active state is set if value is set 1
     if activeState[mobileTerminalNumber] == "1":
-        wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle-bar", "CSS Selector checked 12a")
+        wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-slide-toggle", "CSS Selector checked 12a")
         time.sleep(defaultSleepTimeValue)
-        self.assertTrue(self.driver.find_element_by_css_selector(".mat-slide-toggle-bar").is_selected)
+        self.assertTrue(self.driver.find_element_by_css_selector(".mat-mdc-slide-toggle").is_selected)
     else:
-        wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle-bar", "CSS Selector checked 12b")
+        wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-slide-toggle", "CSS Selector checked 12b")
         time.sleep(defaultSleepTimeValue)
-        self.assertFalse(self.driver.find_element_by_css_selector(".mat-slide-toggle-bar").is_selected)
+        self.assertFalse(self.driver.find_element_by_css_selector(".mat-mdc-slide-toggle").is_selected)
     # Click on edit link
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit .mdc-button__label", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit .mdc-button__label").click()
     # Check Transceiver type
-    self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-input-element").get_attribute("value"))
+    self.assertEqual(transceiverType[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-mdc-input-element").get_attribute("value"))
     # Check Software Version
-    self.assertEqual(softwareVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-input-element").get_attribute("value"))
+    self.assertEqual(softwareVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-mdc-input-element").get_attribute("value"))
     # Check Antenna
-    self.assertEqual(antennaVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").get_attribute("value"))
+    self.assertEqual(antennaVersion, self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-mdc-input-element").get_attribute("value"))
     # Check Satellite Number
-    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").get_attribute("value"))
+    self.assertEqual(satelliteNumber[mobileTerminalNumber], self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-mdc-input-element").get_attribute("value"))
     # Check buttons for Poll, Config and Default are activated
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 11")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").is_selected)
-    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
-    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").is_selected)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox").is_selected)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mdc-checkbox").is_selected)
+    self.assertTrue(self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mdc-checkbox").is_selected)
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -2272,56 +2272,56 @@ def add_second_channel_to_mobileterminal_via_asset_tab_g2(self, mobileTerminalNu
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+    self.driver.find_element_by_css_selector(".mdc-tab__content").click()
 
     # Click on edit link
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit .mdc-button__label", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit .mdc-button__label").click()
     # Click on new channel button
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button span", "CSS Selector checked 10")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button .mdc-button__label", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button span").click()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button .mdc-button__label").click()
     # Enter Channel Name
-    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-input-element", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-mdc-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-input-element").send_keys(channelName[mobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-mdc-input-element").send_keys(channelName[mobileTerminalNumber])
     # Enter Land station
-    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-input-element", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-mdc-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(landStation[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-mdc-input-element").send_keys(landStation[newMobileTerminalNumber])
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-mdc-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-mdc-input-element").send_keys(dnidNumber[newMobileTerminalNumber])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-memberNumber .mat-mdc-input-element").send_keys(memberIdnumber[newMobileTerminalNumber])
     # Expected frequency
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(expectedFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").send_keys(expectedFrequencyMinutes)
     # Grace period
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(gracePeriodFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").send_keys(gracePeriodFrequencyMinutes)
     # In port
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(inPortFrequencyMinutes)
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").send_keys(inPortFrequencyMinutes)
     # Click on save button
-    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mdc-button__label", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 5)
 
     # Add comment text to save dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-input-element", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-dialog-actions .mat-mdc-raised-button .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-dialog-actions .mat-mdc-raised-button .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -3076,97 +3076,97 @@ def create_one_new_mobile_terminal_via_asset_tab_with_parameters_g2(self, ircsCf
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+    self.driver.find_element_by_css_selector(".mdc-tab__content").click()
 
     # Click on attach button for new mobile terminal
     wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--attach", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 2)
     self.driver.find_element_by_css_selector("#mobile-terminal-show--attach").click()
     # Enter serial number
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-input-element", "CSS Selector checked 9")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-input-element").send_keys(parameterRow[0])
+    self.driver.find_element_by_css_selector(".mat-mdc-input-element").send_keys(parameterRow[0])
     # Click on search button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".search-button-wrapper", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 5)
-    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".search-button-wrapper").click()
     time.sleep(defaultSleepTimeValue)
     # Click on create button for new mobile terminal
-    wait_for_element_by_css_selector_to_exist(wait, "[name=create] .mat-button-wrapper", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, "[name=create] .mdc-button__label", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue * 5)
-    self.driver.find_element_by_css_selector("[name=create] .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("[name=create] .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue)
     # Select Transponder system
     wait_for_element_by_id_to_exist(wait, "mobile-terminal-form--mobileTerminalType", "mobile-terminal-form--mobileTerminalType checked 7")
     time.sleep(defaultSleepTimeValue)
     self.driver.find_element_by_id("mobile-terminal-form--mobileTerminalType").click()
     # Select Inmarsat-C system
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-option", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue * 5)
-    self.driver.find_element_by_css_selector(".mat-option-text").click()
+    self.driver.find_element_by_css_selector(".mat-mdc-option").click()
     # Enter Transceiver type
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-input-element").send_keys(parameterRow[1])
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--transceiverType .mat-mdc-input-element").send_keys(parameterRow[1])
     # Enter Software Version
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-input-element").send_keys(parameterRow[2])
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--softwareVersion .mat-mdc-input-element").send_keys(parameterRow[2])
     # Enter Antenna
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-input-element").send_keys(parameterRow[3])
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--antenna .mat-mdc-input-element").send_keys(parameterRow[3])
     # Enter Satellite Number
-    self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-input-element").send_keys(parameterRow[4])
+    self.driver.find_element_by_css_selector("#mobile-terminal-form--satelliteNumber .mat-mdc-input-element").send_keys(parameterRow[4])
     # Click on button to activate Active if Parameter active State is set to "1"
     #if parameterRow[14] == "1":
     #    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
     #    time.sleep(defaultSleepTimeValue)
     #    self.driver.find_element_by_css_selector("#mobile-terminal-form--active mat-checkbox .mat-checkbox-inner-container").click()
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 10")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox", "CSS Selector checked 10")
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if parameterRow[16] == "1":
-        self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox").click()
     # Click on Config checkbox if TRUE
     if parameterRow[17] == "1":
-        self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mdc-checkbox").click()
     # Click on Default checkbox if TRUE
     if parameterRow[18] == "1":
-        self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector("#mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mdc-checkbox").click()
     # Enter Land station
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(parameterRow[19])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-lesDescription .mat-mdc-input-element").send_keys(parameterRow[19])
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 11")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--channel-dnid .mat-mdc-input-element", "CSS Selector checked 11")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-input-element").send_keys(parameterRow[5])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-dnid .mat-mdc-input-element").send_keys(parameterRow[5])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(parameterRow[6])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-memberNumber .mat-mdc-input-element").send_keys(parameterRow[6])
     # Enter Channel name
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-input-element").send_keys(parameterRow[15])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-name .mat-mdc-input-element").send_keys(parameterRow[15])
     # Enter Installed by
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-input-element").send_keys(parameterRow[7])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-installedBy .mat-mdc-input-element").send_keys(parameterRow[7])
     # Expected frequency
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(parameterRow[8])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").send_keys(parameterRow[8])
     # Grace period
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(parameterRow[10])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").send_keys(parameterRow[10])
     # In port
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(parameterRow[12])
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").send_keys(parameterRow[12])
     # Click on save button
-    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 5)
 
     # Add comment text to save dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-input-element", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 5)
 
 
@@ -3211,14 +3211,14 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
     self.driver.find_element_by_css_selector(".side-menu li:nth-child(7) .text").click()
 
     # Click on Mobile Terminals Sub tab ---TEMP---
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-label-content", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-tab-label-content").click()
+    self.driver.find_element_by_css_selector(".mdc-tab__content").click()
 
     # Get all Mobile Terminal elements in a list from GUI
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-tab-list .mat-tab-label", "CSS Selector checked 6a")
+    wait_for_element_by_css_selector_to_exist(wait, ".mdc-tab__content", "CSS Selector checked 6a")
     time.sleep(defaultSleepTimeValue * 10)
-    allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mat-tab-list .mat-tab-label")
+    allMobileTerminalElements = self.driver.find_elements_by_css_selector(".mdc-tab__content")
     # Got through each MT found in allAssetElements and match it against selected serial number (channelRow[0])
     for y in range(len(allMobileTerminalElements)):
         print("Search for serial number:" + channelRow[0])
@@ -3226,87 +3226,88 @@ def create_one_new_channel_for_one_mobile_terminal(self, ircsCfrValue, channelRo
             print("Yes! Found serialnumber")
             # Click on the correct "MT tab" that corresponds to found MT serial number
             print("y value is " + str(y))
-            wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-list-wrapper .mat-tab-list .mat-tab-label:nth-child(" + str(y - 1) + ")", "CSS Selector checked 6b")
+            wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-list-wrapper .mat-mdc-tab-labels .mdc-tab:nth-child(" + str(y - 1) + ")", "CSS Selector checked 6b")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_css_selector(".mobile-terminal-list-wrapper .mat-tab-list .mat-tab-label:nth-child(" + str(y - 1) + ")").click()
+            self.driver.find_element_by_css_selector(".mobile-terminal-list-wrapper .mat-mdc-tab-labels .mdc-tab:nth-child(" + str(y - 1) + ")").click()
             break
     time.sleep(defaultSleepTimeValue * 5)
     # Click on edit button
-    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit span", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "#mobile-terminal-show--edit .mdc-button__label", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit span").click()
+    self.driver.find_element_by_css_selector("#mobile-terminal-show--edit .mdc-button__label").click()
     # Click on New Channel button
-    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button", "CSS Selector checked 7")
+    wait_for_element_by_css_selector_to_exist(wait, ".mobile-terminal-form--new-channel-button .mdc-button__label", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue * 10)
-    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button").click()
+    self.driver.find_element_by_css_selector(".mobile-terminal-form--new-channel-button .mdc-button__label").click()
     # Enter Channel name
-    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name input", "CSS Selector checked 12")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-mdc-input-element", "CSS Selector checked 12")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name input").send_keys(channelRow[1])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-name .mat-mdc-input-element").send_keys(channelRow[1])
     # Click on button to activate Poll, Config, Default
-    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container", "CSS Selector checked 13")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox", "CSS Selector checked 13")
     time.sleep(defaultSleepTimeValue)
     # Click on Poll checkbox if TRUE
     if channelRow[2] == "1":
-        self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox .mdc-checkbox").click()
     # Click on Config checkbox if TRUE
     if channelRow[3] == "1":
-        self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox .mdc-checkbox").click()
     # Click on Default checkbox if TRUE
     if channelRow[4] == "1":
-        self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mat-checkbox-inner-container").click()
+        self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child #mobile-terminal-form--channel-name mat-checkbox ~ mat-checkbox ~ mat-checkbox .mdc-checkbox").click()
     # Enter DNID Number
-    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-input-element", "CSS Selector checked 9")
+    wait_for_element_by_css_selector_to_exist(wait, ".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-mdc-input-element", "CSS Selector checked 9")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-input-element").send_keys(channelRow[5])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-dnid .mat-mdc-input-element").send_keys(channelRow[5])
     # Enter Member Number
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-memberNumber .mat-input-element").send_keys(channelRow[6])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-memberNumber .mat-mdc-input-element").send_keys(channelRow[6])
     # Enter Land station
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-input-element").send_keys(channelRow[7])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-lesDescription .mat-mdc-input-element").send_keys(channelRow[7])
     # Enter Start Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[8]))
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker .mat-mdc-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Enter Stop Date/Time based on deltaHourValue from file
     tempTimeValue = referenceDateTimeValue + datetime.timedelta(hours=int(channelRow[9]))
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker ~ ngx-datetime-picker .mat-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker ~ ngx-datetime-picker .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child ngx-datetime-picker ~ ngx-datetime-picker .mat-mdc-input-element").send_keys(tempTimeValue.strftime("%Y-%m-%d %H:%M"))
     # Expected frequency
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-input-element").send_keys(channelRow[13])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequency .mat-mdc-input-element").send_keys(channelRow[13])
     # Grace period
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-input-element").send_keys(channelRow[14])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-frequencyGracePeriod .mat-mdc-input-element").send_keys(channelRow[14])
     # In port
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").clear()
-    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-input-element").send_keys(channelRow[15])
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").clear()
+    self.driver.find_element_by_css_selector(".channels .mat-expansion-panel:last-child .mobile-terminal-form--channel-expectedFrequencyInPort .mat-mdc-input-element").send_keys(channelRow[15])
     # Click on save button
-    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, ".active-mobile-terminal .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".active-mobile-terminal .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".active-mobile-terminal .mdc-button__label").click()
     time.sleep(defaultSleepTimeValue * 10)
 
     # Check if Warning sign popup window appears. If popup windows appears then click on "save anyway" button else skip
     try:
         print("---Try Warning sign popup Window---")
-        print(self.driver.find_element_by_css_selector(".mat-dialog-title").text)
-        if self.driver.find_element_by_css_selector(".mat-dialog-title").text == "Warning!":
+        print(self.driver.find_element_by_css_selector(".mat-mdc-dialog-title").text)
+        if self.driver.find_element_by_css_selector(".mat-mdc-dialog-title").text == "Warning!":
             print("---Found Warning sign popup Window---")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_css_selector(".mat-dialog-actions .mat-focus-indicator ~ .mat-focus-indicator .mat-button-wrapper").click()
+            self.driver.find_element_by_css_selector(".mdc-dialog__container .mat-mdc-raised-button .mdc-button__label").click()
             time.sleep(defaultSleepTimeValue * 10)
     except:
         pass
 
     # Add comment text to save dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-input-element", "CSS Selector checked 8")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-input-element", "CSS Selector checked 8")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-input-element").send_keys(commentValue)
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-input-element").send_keys(commentValue)
 
     # Click save button under dialog
-    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper", "CSS Selector checked 15")
+    wait_for_element_by_css_selector_to_exist(wait, "mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label", "CSS Selector checked 15")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-dialog-actions .mat-raised-button .mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector("mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label").click()
+    # mobile-terminal-save-dialog .mat-mdc-raised-button .mdc-button__label
     time.sleep(defaultSleepTimeValue * 10)
 
 
@@ -3705,33 +3706,29 @@ def select_UTC_time(self):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Click on Time zone field
-    wait_for_element_by_css_selector_to_exist(wait, ".timezone-selector .mat-select-value", "CSS Selector checked 1")
+    wait_for_element_by_css_selector_to_exist(wait, ".timezone-selector .mat-mdc-select-value", "CSS Selector checked 1")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".timezone-selector .mat-select-value").click()
+    self.driver.find_element_by_css_selector(".timezone-selector .mat-mdc-select-value").click()
     time.sleep(defaultSleepTimeValue)
     # Select Etc-UTC Time zone
-    wait_for_element_by_css_selector_to_exist(wait, "#mat-option--timezone-UTC .mat-option-text", "CSS Selector checked 2")
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-option--timezone-UTC", "CSS Selector checked 2")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("#mat-option--timezone-UTC .mat-option-text").click()
+    self.driver.find_element_by_css_selector("#mat-option--timezone-UTC").click()
 
 
 def click_on_flag_state_in_list_tab(self, flagStates):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
-    # Click on Custom radion button
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button  .mat-radio-label-content", "CSS Selector checked 1")
-    time.sleep(defaultSleepTimeValue * 3)
-    self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button  .mat-radio-label-content").click()
     # Click on Custom radion button List
-    #wait_for_element_by_css_selector_to_exist(wait, ".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select", "CSS Selector checked 2")
-    #time.sleep(defaultSleepTimeValue)
-    #self.driver.find_element_by_css_selector(".mat-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button mat-select").click()
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button .mdc-label", "CSS Selector checked 1")
+    time.sleep(defaultSleepTimeValue * 3)
+    self.driver.find_element_by_css_selector(".mat-mdc-radio-group mat-radio-button ~ mat-radio-button ~ mat-radio-button .mdc-label").click()
     # Select/Deselect Flagstates in list
     for x in range(len(flagStates)):
         print(str(x) + " " + flagStates[x])
-        wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + flagStates[x] + " .mat-option-text", "CSS Selector checked 2")
+        wait_for_element_by_css_selector_to_exist(wait, "#mat-option-" + flagStates[x] + " .mdc-list-item__primary-text", "CSS Selector checked 2")
         time.sleep(defaultSleepTimeValue)
-        self.driver.find_element_by_css_selector("#mat-option-" + flagStates[x] + " .mat-option-text").click()
+        self.driver.find_element_by_css_selector("#mat-option-" + flagStates[x] + " .mdc-list-item__primary-text").click()
     # Click on body surface
     wait_for_element_by_css_selector_to_exist(wait, "body", "CSS Selector checked 3")
     time.sleep(defaultSleepTimeValue)
@@ -3789,9 +3786,11 @@ def activate_one_map_default_settings(self, settingNumberValue):
     # Set wait time for web driver
     wait = WebDriverWait(self.driver, WebDriverWaitTimeValue)
     # Activate one of the toggle buttons "Show flags",, "Show tracks", "Show names", "Show speeds" and "Show Forcasts"
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle:nth-child(" + str(settingNumberValue)  + ") .mat-slide-toggle-bar", "CSS Selector checked 1")
+    #wait_for_element_by_css_selector_to_exist(wait, ".mat-slide-toggle:nth-child(" + str(settingNumberValue) + ") .mat-slide-toggle-bar", "CSS Selector checked 1")
+    wait_for_element_by_css_selector_to_exist(wait, "#mat-mdc-slide-toggle-" + str(settingNumberValue)  + "-button", "CSS Selector checked 1")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-slide-toggle:nth-child(" + str(settingNumberValue)  + ") .mat-slide-toggle-bar").click()
+    #self.driver.find_element_by_css_selector(".mat-slide-toggle:nth-child(" + str(settingNumberValue)  + ") .mat-slide-toggle-bar").click()
+    self.driver.find_element_by_css_selector("#mat-mdc-slide-toggle-" + str(settingNumberValue)  + "-button").click()
     time.sleep(defaultSleepTimeValue)
 
 
@@ -3804,15 +3803,15 @@ def activate_map_default_settings(self):
     activate_one_map_default_settings(self,3)
     activate_one_map_default_settings(self,4)
     # Change Track length to 1 day
-    wait_for_element_by_css_selector_to_exist(wait, "[formcontrolname=tracksMinuteCap] .mat-select-value", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, "[formcontrolname=tracksMinuteCap] .mat-mdc-select-value-text", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector("[formcontrolname=tracksMinuteCap] .mat-select-value").click()
-    wait_for_element_by_css_selector_to_exist(wait, ".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text", "CSS Selector checked 7")
+    self.driver.find_element_by_css_selector("[formcontrolname=tracksMinuteCap] .mat-mdc-select-value-text").click()
+    wait_for_element_by_css_selector_to_exist(wait, ".mat-mdc-option ~ .mat-mdc-option ~ .mat-mdc-option ~ .mat-mdc-option ~ .mat-mdc-option .mdc-list-item__primary-text", "CSS Selector checked 7")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".mat-option ~ .mat-option ~ .mat-option ~ .mat-option ~ .mat-option .mat-option-text").click()
+    self.driver.find_element_by_css_selector(".mat-mdc-option ~ .mat-mdc-option ~ .mat-mdc-option ~ .mat-mdc-option ~ .mat-mdc-option .mdc-list-item__primary-text").click()
     time.sleep(defaultSleepTimeValue)
     # Click on "Save settings" button
-    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".mdc-button__label").click()
 
 
 def activate_experimental_features_default_settings(self):
@@ -3821,12 +3820,12 @@ def activate_experimental_features_default_settings(self):
     # Click on My settings
     click_on_map_default_settings(self)
     # Activate experimental features setting
-    wait_for_element_by_css_selector_to_exist(wait, ".user-settings .mat-slide-toggle", "CSS Selector checked 6")
+    wait_for_element_by_css_selector_to_exist(wait, ".user-settings .mat-mdc-slide-toggle", "CSS Selector checked 6")
     time.sleep(defaultSleepTimeValue)
-    self.driver.find_element_by_css_selector(".user-settings .mat-slide-toggle").click()
+    self.driver.find_element_by_css_selector(".user-settings .mat-mdc-slide-toggle").click()
     time.sleep(defaultSleepTimeValue)
     # Click on "Save settings" button
-    self.driver.find_element_by_css_selector(".mat-button-wrapper").click()
+    self.driver.find_element_by_css_selector(".mdc-button__label").click()
 
 
 
@@ -4164,7 +4163,6 @@ class UnionVMSTestCaseG2(unittest.TestCase):
         click_on_real_time_tab(self)
         # Create assets 3-6 in the list
         for x in range(2, 6):
-            #create_one_new_asset_from_gui_g2(self, x)
             create_one_new_asset_via_rest_g2(x)
             time.sleep(defaultSleepTimeValue * 10)
 
@@ -6050,9 +6048,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9a")
+            wait_for_element_by_css_selector_to_exist(wait, ".mdc-list-item__primary-text", "CSS Selector checked 9a")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-option-text").click()
+            self.driver.find_element_by_css_selector(".mdc-list-item__primary-text").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             # Click on the ship (Detail asset information) icon in the list to select asset
@@ -6120,9 +6118,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
             # Activate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mdc-checkbox", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mdc-checkbox").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
@@ -6168,17 +6166,17 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
             # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mat-button-wrapper", "CSS Selector checked 11")
+            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mdc-button__label", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("map-asset-panel-show .mat-button-wrapper").click()
+            self.driver.find_element_by_css_selector("map-asset-panel-show .mdc-button__label").click()
 
             time.sleep(defaultSleepTimeValue * 10)
 
 
             # Dectivate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".asset-information  .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mdc-checkbox", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mdc-checkbox").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             time.sleep(defaultSleepTimeValue * 10)
@@ -6250,9 +6248,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
-            wait_for_element_by_css_selector_to_exist(wait, ".mat-option-text", "CSS Selector checked 9")
+            wait_for_element_by_css_selector_to_exist(wait, ".mdc-list-item__primary-text", "CSS Selector checked 9")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".mat-option-text").click()
+            self.driver.find_element_by_css_selector(".mdc-list-item__primary-text").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             # Click on the ship (Detail asset information) icon in the list to select asset
@@ -6319,9 +6317,9 @@ class UnionVMSTestCaseG2(unittest.TestCase):
 
 
             # Activate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information .mdc-checkbox", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mdc-checkbox").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
@@ -6366,14 +6364,14 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 10)
 
             # Goto end position for asset
-            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mat-button-wrapper", "CSS Selector checked 11")
+            wait_for_element_by_css_selector_to_exist(wait, "map-asset-panel-show .mdc-button__label", "CSS Selector checked 11")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector("map-asset-panel-show .mat-button-wrapper").click()
+            self.driver.find_element_by_css_selector("map-asset-panel-show .mdc-button__label").click()
 
             # Dectivate tracks
-            wait_for_element_by_css_selector_to_exist(wait, ".asset-information  .mat-checkbox-inner-container", "CSS Selector checked 12")
+            wait_for_element_by_css_selector_to_exist(wait, ".asset-information  .mdc-checkbox", "CSS Selector checked 12")
             time.sleep(defaultSleepTimeValue)
-            self.driver.find_element_by_css_selector(".asset-information .mat-checkbox-inner-container").click()
+            self.driver.find_element_by_css_selector(".asset-information .mdc-checkbox").click()
             time.sleep(defaultSleepTimeValue * 5)
 
             time.sleep(defaultSleepTimeValue * 10)
