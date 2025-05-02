@@ -6041,11 +6041,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             print(assetTripAllrows1)
 
             # Enter the Asset name in search field
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
+            wait_for_element_by_id_to_exist(wait, "asset-search-field", "asset-search-field checked 8")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
+            self.driver.find_element_by_id("asset-search-field").clear()
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
+            self.driver.find_element_by_id("asset-search-field").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
             wait_for_element_by_css_selector_to_exist(wait, ".mdc-list-item__primary-text", "CSS Selector checked 9a")
@@ -6124,11 +6124,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
+            wait_for_element_by_id_to_exist(wait, "asset-search-field", "asset-search-field checked 13")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
-            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
-            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
+            self.driver.find_element_by_id("asset-search-field").clear()
+            self.driver.find_element_by_id("asset-search-field").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
+            self.driver.find_element_by_id("asset-search-field").send_keys(Keys.ENTER)
 
             time.sleep(defaultSleepTimeValue * 10)
 
@@ -6241,11 +6241,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             print(assetTripAllrows1)
 
             # Enter the Asset name in search field
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 8")
+            wait_for_element_by_id_to_exist(wait, "asset-search-field", "asset-search-field checked 8")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
+            self.driver.find_element_by_id("asset-search-field").clear()
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").send_keys(assetAllrows1[0][1])
+            self.driver.find_element_by_id("asset-search-field").send_keys(assetAllrows1[0][1])
 
             # Click on the first item in the list to select asset
             wait_for_element_by_css_selector_to_exist(wait, ".mdc-list-item__primary-text", "CSS Selector checked 9")
@@ -6323,11 +6323,11 @@ class UnionVMSTestCaseG2(unittest.TestCase):
             time.sleep(defaultSleepTimeValue * 5)
 
             # Enter the coordinates for the position report
-            wait_for_element_by_id_to_exist(wait, "mat-input-1", "mat-input-1 checked 13")
+            wait_for_element_by_id_to_exist(wait, "asset-search-field", "asset-search-field checked 13")
             time.sleep(defaultSleepTimeValue * 10)
-            self.driver.find_element_by_id("mat-input-1").clear()
-            self.driver.find_element_by_id("mat-input-1").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
-            self.driver.find_element_by_id("mat-input-1").send_keys(Keys.ENTER)
+            self.driver.find_element_by_id("asset-search-field").clear()
+            self.driver.find_element_by_id("asset-search-field").send_keys("/c " + str("%.3f" % float(assetTripAllrows1[0][1])) + " " + str("%.3f" % float(assetTripAllrows1[0][0])))
+            self.driver.find_element_by_id("asset-search-field").send_keys(Keys.ENTER)
 
             time.sleep(defaultSleepTimeValue * 10)
 
